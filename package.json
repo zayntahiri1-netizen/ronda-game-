@@ -28,9 +28,7 @@
     "@capacitor/status-bar": "^6.0.0"
   },
   "devDependencies": {
-    "@capacitor/assets": "^3.0.0",
-    "@capacitor/cli": "^6.0.0",
-    "sharp": "^0.33.0"
+    "@capacitor/cli": "^6.0.0"
   },
   "keywords": ["ronda", "moroccan", "card-game", "capacitor", "android", "ios"],
   "author": "Ronda Team",
