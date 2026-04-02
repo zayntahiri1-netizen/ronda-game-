@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2732 2732" width="2732" height="2732">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="45%" r="65%">
+      <stop offset="0%"   stop-color="#0f1a2e"/>
+      <stop offset="100%" stop-color="#030508"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#f5d060"/>
+      <stop offset="50%"  stop-color="#c9a227"/>
+      <stop offset="100%" stop-color="#9b7a1a"/>
+    </linearGradient>
+    <radialGradient id="goldRadial" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#f5d060"/>
+      <stop offset="100%" stop-color="#c9a227"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="20" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="cardFace" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#fdf8ee"/>
+      <stop offset="100%" stop-color="#f0e0c0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="2732" height="2732" fill="url(#bg)"/>
+
+  <!-- Large mandala background -->
+  <g transform="translate(1366, 1366)" opacity="0.07">
+    <circle r="900"  fill="none" stroke="url(#gold)" stroke-width="3"/>
+    <circle r="750"  fill="none" stroke="url(#gold)" stroke-width="2"/>
+    <circle r="600"  fill="none" stroke="url(#gold)" stroke-width="1.5"/>
+    <polygon points="0,-850 850,0 0,850 -850,0" fill="none" stroke="url(#gold)" stroke-width="2.5"/>
+    <polygon points="0,-850 850,0 0,850 -850,0" fill="none" stroke="url(#gold)" stroke-width="2.5" transform="rotate(45)"/>
+    <polygon points="0,-700 700,0 0,700 -700,0" fill="none" stroke="url(#gold)" stroke-width="2" transform="rotate(22.5)"/>
+    <!-- 8-point stars at cardinal points -->
+    <g fill="url(#gold)" opacity="0.6">
+      <g transform="translate(0,-850)"><polygon points="0,-30 8,-8 30,0 8,8 0,30 -8,8 -30,0 -8,-8"/></g>
+      <g transform="translate(850,0)"><polygon  points="0,-30 8,-8 30,0 8,8 0,30 -8,8 -30,0 -8,-8"/></g>
+      <g transform="translate(0,850)"><polygon  points="0,-30 8,-8 30,0 8,8 0,30 -8,8 -30,0 -8,-8"/></g>
+      <g transform="translate(-850,0)"><polygon points="0,-30 8,-8 30,0 8,8 0,30 -8,8 -30,0 -8,-8"/></g>
+    </g>
+  </g>
+
+  <!-- ═══════════════ CARDS ═══════════════ -->
+  <!-- Card left -->
+  <g transform="translate(1366, 1366) rotate(-22) translate(-220, 60)" filter="url(#softGlow)">
+    <rect x="-140" y="-200" width="280" height="400" rx="28" ry="28"
+          fill="url(#cardFace)" stroke="url(#gold)" stroke-width="5"/>
+    <text x="-120" y="-148" font-size="64" fill="#cc2222" font-family="Georgia">♥</text>
+    <text x="0" y="60" font-size="140" fill="#cc2222" font-family="Georgia" text-anchor="middle">♥</text>
+  </g>
+
+  <!-- Card right -->
+  <g transform="translate(1366, 1366) rotate(22) translate(220, 60)" filter="url(#softGlow)">
+    <rect x="-140" y="-200" width="280" height="400" rx="28" ry="28"
+          fill="url(#cardFace)" stroke="url(#gold)" stroke-width="5"/>
+    <text x="-120" y="-148" font-size="64" fill="#1a1a99" font-family="Georgia">♠</text>
+    <text x="0" y="60" font-size="140" fill="#1a1a99" font-family="Georgia" text-anchor="middle">♠</text>
+  </g>
+
+  <!-- Card center (main) -->
+  <g transform="translate(1366, 1340)" filter="url(#softGlow)">
+    <rect x="-160" y="-220" width="320" height="460" rx="32" ry="32"
+          fill="url(#cardFace)" stroke="url(#gold)" stroke-width="7"/>
+    <rect x="-140" y="-200" width="280" height="420" rx="20" ry="20"
+          fill="none" stroke="url(#gold)" stroke-width="2.5" opacity="0.5"/>
+    <text x="-135" y="-158" font-size="70" fill="#cc1111" font-family="Georgia">♦</text>
+    <text x="-135" y="-90"  font-size="50" fill="#333"   font-family="Georgia" font-weight="bold">R</text>
+    <text x="0" y="80" font-size="160" fill="#cc1111" font-family="Georgia" text-anchor="middle">♦</text>
+  </g>
+
+  <!-- ═══════════════ TITLE ═══════════════ -->
+  <!-- Glow behind text -->
+  <text x="1366" y="740" font-size="280" font-weight="900"
+        font-family="Arial, sans-serif" text-anchor="middle"
+        fill="#c9a227" opacity="0.15" filter="url(#glow)">روندة</text>
+
+  <!-- Main Arabic title -->
+  <text x="1366" y="740" font-size="260" font-weight="900"
+        font-family="Arial, sans-serif" text-anchor="middle"
+        fill="url(#gold)" filter="url(#softGlow)">روندة</text>
+
+  <!-- Decorative divider -->
+  <g transform="translate(1366, 790)">
+    <line x1="-380" y1="0" x2="-100" y2="0" stroke="url(#gold)" stroke-width="3" opacity="0.7"/>
+    <polygon points="0,-14 14,0 0,14 -14,0" fill="url(#gold)"/>
+    <line x1="100" y1="0" x2="380" y2="0" stroke="url(#gold)" stroke-width="3" opacity="0.7"/>
+  </g>
+
+  <!-- Subtitle -->
+  <text x="1366" y="870" font-size="80" font-family="Arial, sans-serif"
+        text-anchor="middle" fill="url(#gold)" opacity="0.7" letter-spacing="18">RONDA</text>
+
+  <!-- Tagline -->
+  <text x="1366" y="980" font-size="56" font-family="Arial, sans-serif"
+        text-anchor="middle" fill="#ffffff" opacity="0.4">لعبة الورق المغربية الأصيلة</text>
+
+  <!-- Bottom gold line -->
+  <line x1="683" y1="2560" x2="2049" y2="2560" stroke="url(#gold)" stroke-width="2" opacity="0.3"/>
+  <text x="1366" y="2620" font-size="52" font-family="Arial, sans-serif"
+        text-anchor="middle" fill="url(#gold)" opacity="0.4" letter-spacing="8">♦ ♠ ♥ ♣</text>
+
+  <!-- Corner ornaments -->
+  <g fill="url(#gold)" opacity="0.25">
+    <g transform="translate(120, 120)"><polygon points="0,-60 16,-16 60,0 16,16 0,60 -16,16 -60,0 -16,-16"/></g>
+    <g transform="translate(2612, 120)"><polygon points="0,-60 16,-16 60,0 16,16 0,60 -16,16 -60,0 -16,-16"/></g>
+    <g transform="translate(120, 2612)"><polygon points="0,-60 16,-16 60,0 16,16 0,60 -16,16 -60,0 -16,-16"/></g>
+    <g transform="translate(2612, 2612)"><polygon points="0,-60 16,-16 60,0 16,16 0,60 -16,16 -60,0 -16,-16"/></g>
+  </g>
+</svg>
