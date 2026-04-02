@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  هذه الإضافات تُدمج في ios/App/App/Info.plist بعد `npx cap add ios`
+  انسخها يدوياً أو استخدم الأمر: npx cap sync ios
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+
+    <!-- اسم التطبيق -->
+    <key>CFBundleDisplayName</key>
+    <string>Ronda روندة</string>
+
+    <key>CFBundleName</key>
+    <string>Ronda</string>
+
+    <key>CFBundleIdentifier</key>
+    <string>com.ronda.cardgame</string>
+
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+
+    <key>CFBundleVersion</key>
+    <string>1</string>
+
+    <!-- دعم اللغة العربية -->
+    <key>CFBundleDevelopmentRegion</key>
+    <string>ar</string>
+
+    <key>CFBundleLocalizations</key>
+    <array>
+        <string>ar</string>
+        <string>en</string>
+    </array>
+
+    <!-- الاتجاه: Portrait فقط -->
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+    </array>
+
+    <key>UISupportedInterfaceOrientations~ipad</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationPortraitUpsideDown</string>
+    </array>
+
+    <!-- Status bar -->
+    <key>UIStatusBarStyle</key>
+    <string>UIStatusBarStyleLightContent</string>
+
+    <key>UIViewControllerBasedStatusBarAppearance</key>
+    <false/>
+
+    <!-- الشاشة الكاملة -->
+    <key>UIRequiresFullScreen</key>
+    <true/>
+
+    <!-- لا يوجد file sharing -->
+    <key>UIFileSharingEnabled</key>
+    <false/>
+
+    <!-- منع إعادة الضبط عند التشغيل في الخلفية -->
+    <key>UIApplicationExitsOnSuspend</key>
+    <false/>
+
+    <!-- الشبكة -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <false/>
+        <key>NSExceptionDomains</key>
+        <dict>
+            <key>supabase.co</key>
+            <dict>
+                <key>NSExceptionAllowsInsecureHTTPLoads</key>
+                <false/>
+                <key>NSIncludesSubdomains</key>
+                <true/>
+            </dict>
+            <key>ably.io</key>
+            <dict>
+                <key>NSExceptionAllowsInsecureHTTPLoads</key>
+                <false/>
+                <key>NSIncludesSubdomains</key>
+                <true/>
+            </dict>
+            <key>firebase.google.com</key>
+            <dict>
+                <key>NSExceptionAllowsInsecureHTTPLoads</key>
+                <false/>
+                <key>NSIncludesSubdomains</key>
+                <true/>
+            </dict>
+        </dict>
+    </dict>
+
+    <!-- URL Scheme للـ deep links -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>com.ronda.cardgame</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>com.ronda.cardgame</string>
+            </array>
+        </dict>
+    </array>
+
+</dict>
+</plist>

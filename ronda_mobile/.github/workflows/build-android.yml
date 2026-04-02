@@ -1,0 +1,177 @@
+name: 🎴 Ronda - Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    name: Build APK & AAB
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. سحب الكود ────────────────────────────────────
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── 2. إعداد Java 17 ────────────────────────────────
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # ── 3. إعداد Node.js ────────────────────────────────
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # ── 4. تثبيت المكتبات ────────────────────────────────
+      - name: Install dependencies
+        run: npm install --ignore-scripts
+
+      # ── 5. تثبيت Capacitor CLI ──────────────────────────
+      - name: Install Capacitor CLI
+        run: npm install -g @capacitor/cli
+
+      # ── 6. إضافة Android ────────────────────────────────
+      - name: Add Android platform
+        run: npx cap add android
+
+      # ── 7. مزامنة Capacitor ──────────────────────────────
+      - name: Capacitor sync
+        run: npx cap sync android
+
+      # ── 8. تطبيق الـ patches بأمان ──────────────────────
+      - name: Apply Android patches (safe)
+        run: |
+          # ① strings.xml — اسم التطبيق فقط
+          mkdir -p android/app/src/main/res/values
+          cp android-patches/strings.xml android/app/src/main/res/values/strings.xml
+          echo "✓ strings.xml"
+
+          # ② network_security_config.xml
+          mkdir -p android/app/src/main/res/xml
+          cp android-patches/network_security_config.xml android/app/src/main/res/xml/network_security_config.xml
+          echo "✓ network_security_config.xml"
+
+          # ③ تطبيق الـ permissions على الـ Manifest الموجود (لا استبدال كامل)
+          MANIFEST="android/app/src/main/AndroidManifest.xml"
+
+          # أضف الـ permissions إذا لم تكن موجودة
+          if ! grep -q "android.permission.VIBRATE" "$MANIFEST"; then
+            sed -i 's|<application|<uses-permission android:name="android.permission.VIBRATE" />\n    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n\n    <application|' "$MANIFEST"
+          fi
+
+          # أضف network security config إذا لم يكن موجوداً
+          if ! grep -q "networkSecurityConfig" "$MANIFEST"; then
+            sed -i 's|android:hardwareAccelerated="true"|android:hardwareAccelerated="true"\n            android:networkSecurityConfig="@xml/network_security_config"|' "$MANIFEST"
+          fi
+          echo "✓ AndroidManifest patched"
+
+      # ── 9. إعداد Keystore ────────────────────────────────
+      - name: Setup keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > release-keystore.jks
+            echo "✓ Keystore from secrets"
+          else
+            keytool -genkeypair -v \
+              -keystore release-keystore.jks \
+              -alias ronda-key \
+              -keyalg RSA -keysize 2048 -validity 10000 \
+              -storepass ronda2024 -keypass ronda2024 \
+              -dname "CN=Ronda, O=RondaGames, L=Casablanca, C=MA" \
+              -noprompt
+            echo "⚠ Temporary keystore created"
+          fi
+
+      # ── 10. صلاحيات gradlew ──────────────────────────────
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
+
+      # ── 11. بناء Debug APK (أسرع) ───────────────────────
+      - name: Build Debug APK
+        run: |
+          cd android
+          ./gradlew assembleDebug --no-daemon
+        continue-on-error: true
+
+      # ── 12. بناء Release APK ─────────────────────────────
+      - name: Build Release APK
+        env:
+          KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          KS_PASS="${KEYSTORE_PASS:-ronda2024}"
+          KS_ALIAS="${KEY_ALIAS:-ronda-key}"
+          cd android
+          ./gradlew assembleRelease \
+            -Pandroid.injected.signing.store.file="$(pwd)/../release-keystore.jks" \
+            -Pandroid.injected.signing.store.password="$KS_PASS" \
+            -Pandroid.injected.signing.key.alias="$KS_ALIAS" \
+            -Pandroid.injected.signing.key.password="$KS_PASS" \
+            --no-daemon
+        continue-on-error: true
+
+      # ── 13. بناء AAB للـ Play Store ──────────────────────
+      - name: Build Release AAB
+        env:
+          KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          KS_PASS="${KEYSTORE_PASS:-ronda2024}"
+          KS_ALIAS="${KEY_ALIAS:-ronda-key}"
+          cd android
+          ./gradlew bundleRelease \
+            -Pandroid.injected.signing.store.file="$(pwd)/../release-keystore.jks" \
+            -Pandroid.injected.signing.store.password="$KS_PASS" \
+            -Pandroid.injected.signing.key.alias="$KS_ALIAS" \
+            -Pandroid.injected.signing.key.password="$KS_PASS" \
+            --no-daemon
+
+      # ── 14. رفع الملفات ──────────────────────────────────
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ronda-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: warn
+
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ronda-release-apk
+          path: android/app/build/outputs/apk/release/app-release*.apk
+          if-no-files-found: warn
+
+      - name: Upload AAB (Play Store)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ronda-release-aab
+          path: android/app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: warn
+
+      # ── 15. ملخص ────────────────────────────────────────
+      - name: Build Summary
+        if: always()
+        run: |
+          echo "## 🎴 Ronda Build Results" >> $GITHUB_STEP_SUMMARY
+          for f in \
+            "android/app/build/outputs/apk/debug/app-debug.apk|Debug APK" \
+            "android/app/build/outputs/apk/release/app-release.apk|Release APK" \
+            "android/app/build/outputs/bundle/release/app-release.aab|AAB Play Store"; do
+            FILE="${f%%|*}"; LABEL="${f##*|}"
+            if [ -f "$FILE" ]; then
+              echo "✅ **$LABEL:** $(du -sh $FILE | cut -f1)" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "❌ **$LABEL:** لم يُنشأ" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📥 حمّل من **Artifacts** أعلى الصفحة" >> $GITHUB_STEP_SUMMARY
