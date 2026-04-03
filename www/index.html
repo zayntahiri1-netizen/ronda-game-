@@ -2747,8 +2747,10 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
   0%,100%{transform:translateY(0)}
   50%{transform:translateY(-4px)}
 }
-.carousel2-compact .gcsc2{flex:1;min-height:0;height:auto}
-.carousel2-compact .gcbody2{flex-shrink:0;padding:8px 12px 10px}
+.carousel2-compact .gcsc2{flex:0 0 auto;height:clamp(80px,18vh,130px)}
+.carousel2-compact .gcbody2{flex:1;min-height:0;padding:8px 12px 10px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.carousel2-compact .gcbody2::-webkit-scrollbar{width:2px}
+.carousel2-compact .gcbody2::-webkit-scrollbar-thumb{background:rgba(212,164,60,.2);border-radius:2px}
 .carousel2-compact .gctitle2{font-size:.8rem}
 .carousel2-compact .gcsub2{font-size:.58rem;margin-bottom:.25rem;opacity:.75}
 .carousel2-compact .betlbl2{font-size:.5rem}
@@ -5207,15 +5209,19 @@ body.admob-banner-on{padding-bottom:60px}
   overflow:hidden;
 }
 
-/* body البطاقة — يملأ الباقي مع scroll داخلي إذا لزم */
+/* body البطاقة — يملأ الباقي مع scroll داخلي */
 .carousel2-compact .gcbody2{
   flex:1;
   min-height:0;
   display:flex;
   flex-direction:column;
   padding:6px 10px 7px!important;
-  overflow:hidden;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
 }
+.carousel2-compact .gcbody2::-webkit-scrollbar{display:none}
 
 /* عنوان صغير */
 .carousel2-compact .gctitle2{font-size:.75rem!important}
@@ -5253,11 +5259,12 @@ body.admob-banner-on{padding-bottom:60px}
 }
 .carousel2-compact .bgem-big{min-width:38px!important;font-size:.5rem!important}
 
-/* أزرار اللعب — أصغر وأضيق */
-.carousel2-compact .play-btns{gap:3px!important}
+/* أزرار اللعب — أصغر وأضيق، لا تُقلّص أبداً */
+.carousel2-compact .play-btns{gap:3px!important;flex-shrink:0!important}
 .carousel2-compact .pbtn{
   padding:5px 8px!important;
   border-radius:10px!important;
+  flex-shrink:0!important;
 }
 .carousel2-compact .pbtn-ico{font-size:.8rem!important;width:18px!important}
 .carousel2-compact .pbtn-txt b{font-size:.58rem!important;margin-bottom:0!important}
@@ -5331,9 +5338,9 @@ body.admob-banner-on{padding-bottom:60px}
   .trio-icon{font-size:.85rem!important}
   .mini-ach-row{gap:.15rem!important}
   .lobby-divider{padding:.06rem .5rem!important}
-  /* البطاقات: ارتفاع الصورة أصغر */
+  /* البطاقات: ارتفاع الصورة أصغر — gcbody2 يبقى scrollable */
   .carousel2-compact .gcsc2{height:clamp(60px,13vh,90px)!important}
-  .carousel2-compact .gcbody2{padding:4px 8px 5px!important}
+  .carousel2-compact .gcbody2{padding:4px 8px 5px!important;overflow-y:auto!important}
   .carousel2-compact .gctitle2{font-size:.68rem!important}
   .carousel2-compact .abtn2{padding:.38rem .5rem!important;font-size:.7rem!important}
 }
@@ -15137,6 +15144,18 @@ function resolveDeclarations(){
 /* [FIX-NOTIF] تطبيق نتيجة الإعلان على الضيف (يُستدعى عند وصول decl_result من المضيف) */
 function _applyDeclResult(msg){
   if(!G || G.over) return;
+
+  // [FIX-STALE] تجاهل الرسائل القديمة من جولات/توزيعات سابقة
+  // هذا يمنع ظهور "روندة تعادل" بدون مناسبة بسبب رسائل متأخرة
+  if(msg.dealNumber !== undefined && msg.dealNumber !== (G.dealNumber||0)){
+    window._DEV_MODE && console.log('[DECL] تجاهل رسالة قديمة — deal',msg.dealNumber,'≠ current',G.dealNumber);
+    return;
+  }
+  if(msg.round !== undefined && msg.round < (G.round||0)){
+    window._DEV_MODE && console.log('[DECL] تجاهل رسالة قديمة — round',msg.round,'<',G.round);
+    return;
+  }
+
   const { declType, winnerRealSeat, bonus, label } = msg;
 
   // تحويل winnerRealSeat (منظور المضيف) → localSeat (منظوري أنا)
