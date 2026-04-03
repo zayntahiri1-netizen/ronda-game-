@@ -1,221 +1,138 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
   <defs>
-    <!-- Background gradient: deep midnight blue to near-black -->
-    <radialGradient id="bgGrad" cx="50%" cy="40%" r="60%">
-      <stop offset="0%"   stop-color="#0f1a2e"/>
-      <stop offset="100%" stop-color="#030508"/>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#0a1f0e"/>
+      <stop offset="50%"  stop-color="#0d2a12"/>
+      <stop offset="100%" stop-color="#061508"/>
+    </linearGradient>
+    <radialGradient id="glowCenter" cx="50%" cy="52%" r="45%">
+      <stop offset="0%"   stop-color="#1a4020" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#061508" stop-opacity="0"/>
     </radialGradient>
-
-    <!-- Gold gradient for main elements -->
-    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%"   stop-color="#f5d060"/>
-      <stop offset="40%"  stop-color="#c9a227"/>
-      <stop offset="70%"  stop-color="#e8c050"/>
-      <stop offset="100%" stop-color="#9b7a1a"/>
+    <linearGradient id="cardWhite" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f0ede8"/>
     </linearGradient>
-
-    <!-- Card face gradient -->
-    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%"   stop-color="#fdf6e3"/>
-      <stop offset="100%" stop-color="#f0e0b0"/>
+    <linearGradient id="cardBack" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#1a3a6b"/>
+      <stop offset="100%" stop-color="#0f2347"/>
     </linearGradient>
-
-    <!-- Red gradient for suit -->
-    <linearGradient id="redGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%"   stop-color="#e84040"/>
-      <stop offset="100%" stop-color="#b01010"/>
+    <linearGradient id="goldRing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#f0d060"/>
+      <stop offset="30%"  stop-color="#d4a43c"/>
+      <stop offset="70%"  stop-color="#f0d060"/>
+      <stop offset="100%" stop-color="#b8882a"/>
     </linearGradient>
-
-    <!-- Glow filter -->
-    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur stdDeviation="12" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
+    <filter id="cardShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="6" dy="10" stdDeviation="10" flood-color="#000000" flood-opacity="0.55"/>
     </filter>
-
-    <!-- Inner glow for gold -->
-    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="6" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
+    <filter id="textShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#000000" flood-opacity="0.7"/>
     </filter>
-
-    <!-- Drop shadow -->
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.8"/>
+    <filter id="goldGlow">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
     </filter>
-
-    <!-- Clip for rounded square -->
-    <clipPath id="roundedClip">
-      <rect width="1024" height="1024" rx="200" ry="200"/>
-    </clipPath>
   </defs>
 
-  <!-- Rounded square background -->
-  <rect width="1024" height="1024" rx="200" ry="200" fill="url(#bgGrad)"/>
+  <!-- خلفية -->
+  <circle cx="512" cy="512" r="512" fill="url(#bgGrad)"/>
+  <circle cx="512" cy="512" r="512" fill="url(#glowCenter)"/>
 
-  <!-- ═══════════════════════════════════════
-       MOROCCAN ZELLIGE BORDER PATTERN
-       ═══════════════════════════════════════ -->
-  <g clip-path="url(#roundedClip)" opacity="0.35">
-    <!-- Top border band -->
-    <rect x="0" y="0" width="1024" height="72" fill="none" stroke="url(#goldGrad)" stroke-width="1.5"/>
-    <!-- Bottom border band -->
-    <rect x="0" y="952" width="1024" height="72" fill="none" stroke="url(#goldGrad)" stroke-width="1.5"/>
+  <!-- إطار ذهبي -->
+  <circle cx="512" cy="512" r="498" fill="none" stroke="url(#goldRing)" stroke-width="8" opacity="0.7"/>
+  <circle cx="512" cy="512" r="485" fill="none" stroke="url(#goldRing)" stroke-width="2" opacity="0.3"/>
 
-    <!-- Geometric corner star - Top Left -->
-    <g transform="translate(72, 72)" fill="url(#goldGrad)" opacity="0.7">
-      <polygon points="0,-36 8,-8 36,0 8,8 0,36 -8,8 -36,0 -8,-8" />
-      <polygon points="0,-22 5,-5 22,0 5,5 0,22 -5,5 -22,0 -5,-5" opacity="0.5"/>
+  <!-- طاولة اللعب -->
+  <ellipse cx="512" cy="610" rx="420" ry="250" fill="#0f5c1e" opacity="0.5"/>
+  <ellipse cx="512" cy="610" rx="400" ry="232" fill="none" stroke="#1a8030" stroke-width="3" opacity="0.35"/>
+
+  <!-- بطاقة مقلوبة يسار -->
+  <g transform="rotate(-16, 330, 540)" filter="url(#cardShadow)">
+    <rect x="252" y="440" width="148" height="215" rx="16" ry="16" fill="url(#cardBack)"/>
+    <rect x="260" y="448" width="132" height="199" rx="12" ry="12" fill="none" stroke="#3a6cc8" stroke-width="2" opacity="0.5"/>
+    <text x="326" y="558" font-size="46" text-anchor="middle" fill="#2a5ca8" opacity="0.5">✦</text>
+    <text x="270" y="470" font-size="18" fill="#3a6cc8" opacity="0.5">♠</text>
+  </g>
+
+  <!-- بطاقة مقلوبة يمين -->
+  <g transform="rotate(16, 700, 540)" filter="url(#cardShadow)">
+    <rect x="626" y="440" width="148" height="215" rx="16" ry="16" fill="url(#cardBack)"/>
+    <rect x="634" y="448" width="132" height="199" rx="12" ry="12" fill="none" stroke="#3a6cc8" stroke-width="2" opacity="0.5"/>
+    <text x="700" y="558" font-size="46" text-anchor="middle" fill="#2a5ca8" opacity="0.5">✦</text>
+    <text x="644" y="470" font-size="18" fill="#3a6cc8" opacity="0.5">♥</text>
+  </g>
+
+  <!-- البطاقة الرئيسية 12 -->
+  <g filter="url(#cardShadow)">
+    <rect x="357" y="350" width="310" height="410" rx="24" ry="24" fill="#000000" opacity="0.3" transform="translate(8,14)"/>
+    <rect x="357" y="350" width="310" height="410" rx="24" ry="24" fill="url(#cardWhite)"/>
+    <rect x="369" y="362" width="286" height="386" rx="18" ry="18" fill="none" stroke="#c8b090" stroke-width="1.5" opacity="0.35"/>
+
+    <!-- 12 أعلى -->
+    <text x="385" y="415" font-family="Georgia, serif" font-size="60" font-weight="900" fill="#111111">12</text>
+    <text x="390" y="462" font-family="Arial" font-size="38" fill="#111111">♠</text>
+
+    <!-- وجه الملك -->
+    <!-- رأس -->
+    <ellipse cx="512" cy="548" rx="70" ry="78" fill="#f5d5a8"/>
+    <!-- تاج ذهبي -->
+    <path d="M442,490 L452,462 L474,484 L512,454 L550,484 L572,462 L582,490 Z" fill="#d4a43c" stroke="#b8882a" stroke-width="2"/>
+    <circle cx="452" cy="462" r="8" fill="#cc2222"/>
+    <circle cx="512" cy="454" r="10" fill="#cc2222"/>
+    <circle cx="572" cy="462" r="8" fill="#cc2222"/>
+    <!-- شعر -->
+    <path d="M442,500 Q442,468 512,463 Q582,468 582,500" fill="#3a1e08"/>
+    <!-- عيون -->
+    <ellipse cx="488" cy="538" rx="10" ry="11" fill="#2a1408" opacity="0.85"/>
+    <ellipse cx="536" cy="538" rx="10" ry="11" fill="#2a1408" opacity="0.85"/>
+    <circle cx="491" cy="536" r="3" fill="white" opacity="0.4"/>
+    <circle cx="539" cy="536" r="3" fill="white" opacity="0.4"/>
+    <!-- أنف -->
+    <path d="M508,548 Q512,560 516,548" fill="none" stroke="#c4906a" stroke-width="2"/>
+    <!-- فم + شارب -->
+    <path d="M494,558 Q512,572 530,558" fill="none" stroke="#7a3020" stroke-width="3" stroke-linecap="round"/>
+    <path d="M496,550 Q512,556 528,550" fill="none" stroke="#3a1e08" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- لحية -->
+    <path d="M458,588 Q512,618 566,588 Q572,622 512,634 Q452,622 458,588Z" fill="#3a1e08" opacity="0.55"/>
+    <!-- ملابس ملكية -->
+    <path d="M452,625 L480,605 L512,616 L544,605 L572,625 L563,672 L512,682 L461,672 Z" fill="#8b0000"/>
+    <path d="M491,616 L512,626 L533,616 L533,672 L512,680 L491,672 Z" fill="#6b0000"/>
+    <text x="512" y="662" font-size="22" text-anchor="middle" fill="#d4a43c">♠</text>
+
+    <!-- 12 أسفل مقلوب -->
+    <g transform="rotate(180, 512, 760)">
+      <text x="385" y="415" font-family="Georgia, serif" font-size="60" font-weight="900" fill="#111111">12</text>
+      <text x="390" y="462" font-family="Arial" font-size="38" fill="#111111">♠</text>
     </g>
-    <!-- Top Right -->
-    <g transform="translate(952, 72)" fill="url(#goldGrad)" opacity="0.7">
-      <polygon points="0,-36 8,-8 36,0 8,8 0,36 -8,8 -36,0 -8,-8" />
-    </g>
-    <!-- Bottom Left -->
-    <g transform="translate(72, 952)" fill="url(#goldGrad)" opacity="0.7">
-      <polygon points="0,-36 8,-8 36,0 8,8 0,36 -8,8 -36,0 -8,-8" />
-    </g>
-    <!-- Bottom Right -->
-    <g transform="translate(952, 952)" fill="url(#goldGrad)" opacity="0.7">
-      <polygon points="0,-36 8,-8 36,0 8,8 0,36 -8,8 -36,0 -8,-8" />
-    </g>
-
-    <!-- Repeating star pattern - top border -->
-    <g fill="url(#goldGrad)" opacity="0.5">
-      <g transform="translate(200, 36)"><polygon points="0,-18 4,-4 18,0 4,4 0,18 -4,4 -18,0 -4,-4"/></g>
-      <g transform="translate(350, 36)"><polygon points="0,-18 4,-4 18,0 4,4 0,18 -4,4 -18,0 -4,-4"/></g>
-      <g transform="translate(512, 36)"><polygon points="0,-18 4,-4 18,0 4,4 0,18 -4,4 -18,0 -4,-4"/></g>
-      <g transform="translate(674, 36)"><polygon points="0,-18 4,-4 18,0 4,4 0,18 -4,4 -18,0 -4,-4"/></g>
-      <g transform="translate(824, 36)"><polygon points="0,-18 4,-4 18,0 4,4 0,18 -4,4 -18,0 -4,-4"/></g>
-    </g>
-
-    <!-- Vertical arabesque lines -->
-    <line x1="36" y1="108" x2="36" y2="916" stroke="url(#goldGrad)" stroke-width="2" opacity="0.4"/>
-    <line x1="988" y1="108" x2="988" y2="916" stroke="url(#goldGrad)" stroke-width="2" opacity="0.4"/>
   </g>
 
-  <!-- ═══════════════════════════════════════
-       LARGE BACKGROUND STAR / MANDALA
-       ═══════════════════════════════════════ -->
-  <g transform="translate(512, 512)" opacity="0.12" filter="url(#glow)">
-    <!-- 16-point geometric star -->
-    <polygon points="0,-380 25,-25 380,0 25,25 0,380 -25,25 -380,0 -25,-25"
-             fill="none" stroke="url(#goldGrad)" stroke-width="2"/>
-    <polygon points="0,-340 18,-18 340,0 18,18 0,340 -18,18 -340,0 -18,-18"
-             fill="none" stroke="url(#goldGrad)" stroke-width="1.5"/>
-    <!-- Rotating inner polygon -->
-    <polygon points="0,-280 280,0 0,280 -280,0"
-             fill="none" stroke="url(#goldGrad)" stroke-width="2"/>
-    <polygon points="0,-280 280,0 0,280 -280,0"
-             fill="none" stroke="url(#goldGrad)" stroke-width="1.5"
-             transform="rotate(45)"/>
-    <!-- Circles -->
-    <circle r="200" fill="none" stroke="url(#goldGrad)" stroke-width="1.5"/>
-    <circle r="280" fill="none" stroke="url(#goldGrad)" stroke-width="1"/>
-    <circle r="340" fill="none" stroke="url(#goldGrad)" stroke-width="0.8"/>
-  </g>
+  <!-- شريط الاسم -->
+  <rect x="130" y="162" width="764" height="148" rx="24" ry="24" fill="#000000" opacity="0.60"/>
+  <rect x="130" y="162" width="764" height="148" rx="24" ry="24" fill="none" stroke="url(#goldRing)" stroke-width="3.5" opacity="0.85"/>
 
-  <!-- ═══════════════════════════════════════
-       PLAYING CARDS - FANNED BEHIND
-       ═══════════════════════════════════════ -->
-  <!-- Card 3 - far left, tilted -20° -->
-  <g transform="translate(512, 560) rotate(-20)" filter="url(#shadow)">
-    <rect x="-110" y="-160" width="220" height="320" rx="20" ry="20"
-          fill="url(#cardGrad)" stroke="#c9a227" stroke-width="3"/>
-    <!-- Card back decorative lines -->
-    <rect x="-95" y="-145" width="190" height="290" rx="12" ry="12"
-          fill="none" stroke="#c9a227" stroke-width="1.5" opacity="0.4"/>
-    <!-- Suit: hearts top-left -->
-    <text x="-90" y="-110" font-size="52" fill="url(#redGrad)" font-family="Georgia, serif">♥</text>
-    <text x="-90" y="-60"  font-size="36" fill="#222" font-family="Georgia, serif" font-weight="bold">7</text>
-  </g>
+  <!-- نص توهج -->
+  <text x="512" y="276" font-family="Cairo, Tajawal, Arial, sans-serif"
+        font-size="102" font-weight="900" text-anchor="middle"
+        fill="#d4a43c" opacity="0.2" filter="url(#goldGlow)">روندة</text>
+  <!-- نص رئيسي -->
+  <text x="512" y="276" font-family="Cairo, Tajawal, Arial, sans-serif"
+        font-size="102" font-weight="900" text-anchor="middle"
+        fill="url(#goldRing)" filter="url(#textShadow)">روندة</text>
 
-  <!-- Card 2 - slight right tilt +12° -->
-  <g transform="translate(512, 540) rotate(12)" filter="url(#shadow)">
-    <rect x="-110" y="-160" width="220" height="320" rx="20" ry="20"
-          fill="url(#cardGrad)" stroke="#c9a227" stroke-width="3"/>
-    <rect x="-95" y="-145" width="190" height="290" rx="12" ry="12"
-          fill="none" stroke="#c9a227" stroke-width="1.5" opacity="0.4"/>
-    <text x="-90" y="-110" font-size="52" fill="#1a1a8c" font-family="Georgia, serif">♠</text>
-    <text x="-90" y="-60"  font-size="36" fill="#222" font-family="Georgia, serif" font-weight="bold">A</text>
-    <!-- Big center suit -->
-    <text x="0" y="30" font-size="90" fill="#1a1a8c" font-family="Georgia, serif"
-          text-anchor="middle">♠</text>
-  </g>
+  <!-- خط تحت النص -->
+  <line x1="210" y1="294" x2="814" y2="294" stroke="url(#goldRing)" stroke-width="2" opacity="0.45"/>
 
-  <!-- Card 1 - CENTER, straight -->
-  <g transform="translate(512, 520)" filter="url(#shadow)">
-    <rect x="-120" y="-170" width="240" height="340" rx="22" ry="22"
-          fill="url(#cardGrad)" stroke="url(#goldGrad)" stroke-width="4"/>
-    <!-- Inner border -->
-    <rect x="-104" y="-154" width="208" height="308" rx="14" ry="14"
-          fill="none" stroke="url(#goldGrad)" stroke-width="2" opacity="0.6"/>
-    <!-- Top-left corner -->
-    <text x="-100" y="-120" font-size="44" fill="url(#redGrad)" font-family="Georgia, serif">♦</text>
-    <text x="-100" y="-76"  font-size="32" fill="#222" font-family="Georgia, serif" font-weight="bold">R</text>
-    <!-- Center large suit -->
-    <text x="0" y="50" font-size="110" fill="url(#redGrad)" font-family="Georgia, serif"
-          text-anchor="middle" filter="url(#goldGlow)">♦</text>
-    <!-- Bottom-right corner (inverted) -->
-    <text x="100" y="150" font-size="44" fill="url(#redGrad)" font-family="Georgia, serif"
-          text-anchor="end" transform="rotate(180, 0, 130)">♦</text>
-  </g>
+  <!-- نجوم زخرفية -->
+  <text x="170" y="264" font-size="30" fill="#d4a43c" opacity="0.65">✦</text>
+  <text x="824" y="264" font-size="30" fill="#d4a43c" opacity="0.65">✦</text>
 
-  <!-- ═══════════════════════════════════════
-       ARABIC TITLE "روندة"
-       ═══════════════════════════════════════ -->
-  <!-- Outer glow for title -->
-  <text x="512" y="245"
-        font-size="148" font-weight="900"
-        font-family="'Arial', sans-serif"
-        text-anchor="middle"
-        fill="#c9a227"
-        opacity="0.2"
-        filter="url(#glow)">روندة</text>
+  <!-- أيقونات البطاقات أسفل -->
+  <text x="348" y="900" font-size="54" text-anchor="middle" fill="#cc2222" opacity="0.8">♥</text>
+  <text x="448" y="900" font-size="54" text-anchor="middle" fill="#111111" opacity="0.8">♠</text>
+  <text x="576" y="900" font-size="54" text-anchor="middle" fill="#cc2222" opacity="0.8">♦</text>
+  <text x="676" y="900" font-size="54" text-anchor="middle" fill="#111111" opacity="0.8">♣</text>
 
-  <!-- Main title -->
-  <text x="512" y="245"
-        font-size="148" font-weight="900"
-        font-family="'Arial', sans-serif"
-        text-anchor="middle"
-        fill="url(#goldGrad)"
-        filter="url(#goldGlow)">روندة</text>
-
-  <!-- Decorative line under title -->
-  <g transform="translate(512, 265)">
-    <line x1="-220" y1="0" x2="-60" y2="0" stroke="url(#goldGrad)" stroke-width="2.5" opacity="0.7"/>
-    <polygon points="0,-8 8,0 0,8 -8,0" fill="url(#goldGrad)"/>
-    <line x1="60" y1="0" x2="220" y2="0" stroke="url(#goldGrad)" stroke-width="2.5" opacity="0.7"/>
-  </g>
-
-  <!-- ═══════════════════════════════════════
-       SUBTITLE
-       ═══════════════════════════════════════ -->
-  <text x="512" y="870"
-        font-size="46"
-        font-family="'Arial', sans-serif"
-        text-anchor="middle"
-        fill="url(#goldGrad)"
-        opacity="0.85"
-        letter-spacing="4">RONDA</text>
-
-  <!-- Small decorative dots -->
-  <circle cx="330" cy="858" r="5" fill="url(#goldGrad)" opacity="0.6"/>
-  <circle cx="694" cy="858" r="5" fill="url(#goldGrad)" opacity="0.6"/>
-  <circle cx="360" cy="858" r="3" fill="url(#goldGrad)" opacity="0.4"/>
-  <circle cx="664" cy="858" r="3" fill="url(#goldGrad)" opacity="0.4"/>
-
-  <!-- ═══════════════════════════════════════
-       SUBTLE VIGNETTE OVERLAY
-       ═══════════════════════════════════════ -->
-  <radialGradient id="vignette" cx="50%" cy="50%" r="70%">
-    <stop offset="50%" stop-color="transparent"/>
-    <stop offset="100%" stop-color="#000" stop-opacity="0.6"/>
-  </radialGradient>
-  <rect width="1024" height="1024" rx="200" ry="200" fill="url(#vignette)"/>
+  <!-- لمعة علوية ناعمة -->
+  <ellipse cx="390" cy="195" rx="210" ry="75" fill="white" opacity="0.035"/>
 </svg>
