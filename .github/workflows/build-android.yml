@@ -22,14 +22,14 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # ── 3. إعداد Node.js ────────────────────────────────
+      # ── 3. إعداد Node.js 24 ─────────────────────────────
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
 
-      # ── 4. تثبيت المكتبات ────────────────────────────────
+      # ── 4. تثبيت المكتبات (بما فيها admob) ──────────────
       - name: Install dependencies
         run: npm install --ignore-scripts
 
@@ -41,7 +41,7 @@ jobs:
       - name: Add Android platform
         run: npx cap add android
 
-      # ── 7. مزامنة Capacitor ──────────────────────────────
+      # ── 7. مزامنة Capacitor (يضيف AdMob native تلقائياً)
       - name: Capacitor sync
         run: npx cap sync android
 
@@ -58,19 +58,37 @@ jobs:
           cp android-patches/network_security_config.xml android/app/src/main/res/xml/network_security_config.xml
           echo "✓ network_security_config.xml"
 
-          # ③ تطبيق الـ permissions على الـ Manifest الموجود (لا استبدال كامل)
+          # ③ تعديل الـ Manifest
           MANIFEST="android/app/src/main/AndroidManifest.xml"
 
-          # أضف الـ permissions إذا لم تكن موجودة
+          # أضف VIBRATE و POST_NOTIFICATIONS إذا لم تكن موجودة
           if ! grep -q "android.permission.VIBRATE" "$MANIFEST"; then
             sed -i 's|<application|<uses-permission android:name="android.permission.VIBRATE" />\n    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n\n    <application|' "$MANIFEST"
+            echo "✓ VIBRATE + POST_NOTIFICATIONS permissions added"
           fi
 
-          # أضف network security config إذا لم يكن موجوداً
+          # ⚠️ الأهم: أضف AD_ID permission (مطلوب لـ AdMob)
+          if ! grep -q "com.google.android.gms.permission.AD_ID" "$MANIFEST"; then
+            sed -i 's|<application|<uses-permission android:name="com.google.android.gms.permission.AD_ID" />\n\n    <application|' "$MANIFEST"
+            echo "✓ AD_ID permission added"
+          fi
+
+          # ⚠️ الأهم: أضف AdMob APPLICATION_ID meta-data داخل <application>
+          # بدون هذا يحدث CRASH فوري عند فتح التطبيق
+          if ! grep -q "com.google.android.gms.ads.APPLICATION_ID" "$MANIFEST"; then
+            sed -i 's|</application>|        <meta-data\n            android:name="com.google.android.gms.ads.APPLICATION_ID"\n            android:value="ca-app-pub-1725525147318224~6321541009" />\n\n    </application>|' "$MANIFEST"
+            echo "✓ AdMob APPLICATION_ID meta-data added"
+          fi
+
+          # أضف networkSecurityConfig إذا لم يكن موجوداً
           if ! grep -q "networkSecurityConfig" "$MANIFEST"; then
             sed -i 's|android:hardwareAccelerated="true"|android:hardwareAccelerated="true"\n            android:networkSecurityConfig="@xml/network_security_config"|' "$MANIFEST"
+            echo "✓ networkSecurityConfig added"
           fi
+
           echo "✓ AndroidManifest patched"
+          echo "=== Manifest final check ==="
+          grep -E "APPLICATION_ID|AD_ID|VIBRATE|networkSecurity" "$MANIFEST" || true
 
       # ── 9. إعداد Keystore ────────────────────────────────
       - name: Setup keystore
@@ -95,7 +113,7 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
-      # ── 11. بناء Debug APK (أسرع) ───────────────────────
+      # ── 11. بناء Debug APK ───────────────────────────────
       - name: Build Debug APK
         run: |
           cd android
@@ -163,9 +181,9 @@ jobs:
         run: |
           echo "## 🎴 Ronda Build Results" >> $GITHUB_STEP_SUMMARY
           for f in \
-            "android/app/build/outputs/apk/debug/app-debug.apk|Debug APK" \
-            "android/app/build/outputs/apk/release/app-release.apk|Release APK" \
-            "android/app/build/outputs/bundle/release/app-release.aab|AAB Play Store"; do
+            "android/app/build/outputs/apk/debug/app-debug.apk|Debug APK للتصحيح" \
+            "android/app/build/outputs/apk/release/app-release.apk|Release APK للإصدار" \
+            "android/app/build/outputs/bundle/release/app-release.aab|AAB متجر جوجل بلاي"; do
             FILE="${f%%|*}"; LABEL="${f##*|}"
             if [ -f "$FILE" ]; then
               echo "✅ **$LABEL:** $(du -sh $FILE | cut -f1)" >> $GITHUB_STEP_SUMMARY
