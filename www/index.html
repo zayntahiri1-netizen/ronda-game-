@@ -5045,6 +5045,113 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
   animation:coinRain var(--dur,1.2s) ease-in var(--dl,0s) forwards;
 }
 
+/* ═══════════════════════════════════════════════════════
+   💰 ADMOB — نافذة "رصيد نفد" + إعلانات مكافأة
+═══════════════════════════════════════════════════════ */
+#admobLowGoldOverlay{
+  display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(0,0,0,.82);backdrop-filter:blur(6px);
+  align-items:center;justify-content:center;
+  animation:admobFadeIn .25s ease;
+}
+#admobLowGoldOverlay.on{display:flex}
+@keyframes admobFadeIn{from{opacity:0}to{opacity:1}}
+.admob-card{
+  background:linear-gradient(160deg,#0e1929 0%,#111c2e 60%,#0a1520 100%);
+  border:1px solid rgba(212,164,60,.25);border-radius:22px;
+  width:min(92vw,360px);padding:1.4rem 1.2rem 1.2rem;
+  box-shadow:0 20px 60px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.04);
+  position:relative;overflow:hidden;
+  animation:admobSlideUp .3s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes admobSlideUp{
+  from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}
+}
+.admob-card::before{
+  content:'';position:absolute;top:-40px;left:50%;transform:translateX(-50%);
+  width:200px;height:80px;
+  background:radial-gradient(ellipse,rgba(212,164,60,.18) 0%,transparent 70%);
+  pointer-events:none;
+}
+.admob-icon{
+  text-align:center;font-size:3.2rem;margin-bottom:.3rem;
+  animation:admobBounce .6s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes admobBounce{
+  0%{transform:scale(0) rotate(-20deg)}80%{transform:scale(1.15) rotate(5deg)}100%{transform:scale(1) rotate(0)}
+}
+.admob-title{
+  text-align:center;font-family:var(--fd,'Cairo'),sans-serif;
+  font-size:1.15rem;font-weight:900;color:#f0d070;margin-bottom:.2rem;
+}
+.admob-sub{
+  text-align:center;font-size:.72rem;color:rgba(255,255,255,.55);
+  margin-bottom:1rem;line-height:1.5;
+}
+.admob-sep{
+  height:1px;background:linear-gradient(90deg,transparent,rgba(212,164,60,.2),transparent);
+  margin:.8rem 0;
+}
+.admob-sec-title{
+  text-align:center;font-size:.63rem;color:rgba(255,255,255,.35);
+  letter-spacing:.06em;text-transform:uppercase;margin-bottom:.6rem;
+}
+.admob-rew-btn{
+  display:flex;align-items:center;gap:.75rem;
+  background:rgba(255,255,255,.04);border:1px solid rgba(212,164,60,.18);
+  border-radius:14px;padding:.7rem .9rem;cursor:pointer;width:100%;margin-bottom:.5rem;
+  transition:background .18s,border-color .18s,transform .12s;
+  position:relative;overflow:hidden;
+  font-family:var(--fa,'Tajawal'),sans-serif;direction:rtl;
+}
+.admob-rew-btn:active{transform:scale(.97)}
+.admob-rew-btn:hover{background:rgba(212,164,60,.09);border-color:rgba(212,164,60,.35)}
+.admob-rew-btn.used{opacity:.38;pointer-events:none;border-color:rgba(255,255,255,.06)}
+.admob-rew-btn.loading{pointer-events:none}
+.admob-rew-btn .arb-ico{font-size:1.5rem;flex-shrink:0}
+.admob-rew-btn .arb-body{flex:1;text-align:right}
+.admob-rew-btn .arb-coins{
+  font-size:.88rem;font-weight:800;color:#f0d070;
+  font-family:var(--fd,'Cairo'),sans-serif;
+}
+.admob-rew-btn .arb-desc{font-size:.6rem;color:rgba(255,255,255,.45);margin-top:.05rem}
+.admob-rew-btn .arb-badge{
+  background:linear-gradient(135deg,#d4a43c,#f0d070);color:#1a0f00;
+  font-size:.55rem;font-weight:900;padding:.2rem .5rem;border-radius:20px;flex-shrink:0;
+  font-family:var(--fd,'Cairo'),sans-serif;
+}
+.admob-rew-btn .arb-check{color:#4ade80;font-size:1.2rem;flex-shrink:0;animation:admobFadeIn .3s ease}
+.admob-rew-btn::after{
+  content:'';position:absolute;bottom:0;right:0;
+  height:2px;width:0%;background:linear-gradient(90deg,#d4a43c,#f0d070);
+  transition:width .1s linear;border-radius:0 0 14px 14px;
+}
+.admob-rew-btn.loading::after{width:100%;transition:width 30s linear}
+.admob-shop-btn{
+  display:flex;align-items:center;justify-content:center;gap:.5rem;
+  background:linear-gradient(135deg,rgba(192,57,43,.7),rgba(231,76,60,.5));
+  border:1px solid rgba(231,76,60,.35);border-radius:14px;padding:.65rem;
+  cursor:pointer;width:100%;margin-top:.2rem;
+  font-size:.78rem;font-weight:700;color:#fff;
+  font-family:var(--fa,'Tajawal'),sans-serif;
+  transition:background .18s,transform .12s;direction:rtl;
+}
+.admob-shop-btn:active{transform:scale(.97)}
+.admob-shop-btn:hover{background:linear-gradient(135deg,rgba(192,57,43,.9),rgba(231,76,60,.7))}
+.admob-close{
+  position:absolute;top:.7rem;left:.8rem;width:28px;height:28px;border-radius:50%;
+  background:rgba(255,255,255,.08);border:none;color:rgba(255,255,255,.4);
+  font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .15s,color .15s;font-family:monospace;
+}
+.admob-close:hover{background:rgba(255,255,255,.15);color:#fff}
+#admobBannerSlot{
+  position:fixed;bottom:0;left:0;right:0;height:60px;z-index:1000;
+  background:transparent;pointer-events:none;transition:opacity .4s;
+}
+#admobBannerSlot.visible{pointer-events:auto}
+body.admob-banner-on{padding-bottom:60px}
+
 </style>
 
 <style>
@@ -9072,7 +9179,7 @@ function createRoom(priv){
   // قراءة الرهان من البطاقة المناسبة حسب pMode
   const cardNum = (pMode==='2v2') ? 2 : (pMode==='4p') ? 3 : 1;
   const entry = _betValues[cardNum] || 500;
-  if(P.gold<entry){toast('💰 رصيدك لا يكفي للرهان — اختر مبلغاً أقل أو اجمع المزيد!','warn');return;}
+  if(P.gold<entry){if(typeof _admobShowLowGold==='function')_admobShowLowGold();else toast('💰 رصيدك لا يكفي للرهان — اختر مبلغاً أقل أو اجمع المزيد!','warn');return;}
   P.gold-=entry; updateUI(); saveP();
   const code=rndCode();
   // ✅ استخدم pMode الحالي لتحديد عدد اللاعبين
@@ -13544,7 +13651,7 @@ function startAI(lvl,mode){
 
   // ── الرهان من البطاقة 4 ──
   const betAmt = _betValues[4] || 500;
-  if(P.gold < betAmt){ toast('💰 رصيدك لا يكفي للرهان — اختر مبلغاً أقل أو اجمع المزيد!','warn'); window._startAIInProgress=false; return; }
+  if(P.gold < betAmt){ if(typeof _admobShowLowGold==='function')_admobShowLowGold();else toast('💰 رصيدك لا يكفي للرهان — اختر مبلغاً أقل أو اجمع المزيد!','warn'); window._startAIInProgress=false; return; }
   P.gold -= betAmt; updateUI(); saveP();
 
   // [FIX-AI-LOTTERY] نضبط isHost=true قبل القرعة حتى يظهر زر "اكشف"
@@ -13594,7 +13701,7 @@ function startMulti(mode,n,isTeam){
   // الرهان: 4p → بطاقة 3، 2v2 → بطاقة 2، 2p → بطاقة 1
   const cardNum = isTeam ? 2 : (n===4 ? 3 : 1);
   const betAmt = _betValues[cardNum] || 500;
-  if(P.gold < betAmt){ toast('💰 رصيدك لا يكفي للرهان — اختر مبلغاً أقل أو اجمع المزيد!','warn'); return; }
+  if(P.gold < betAmt){ if(typeof _admobShowLowGold==='function')_admobShowLowGold();else toast('💰 رصيدك لا يكفي للرهان — اختر مبلغاً أقل أو اجمع المزيد!','warn'); return; }
   P.gold -= betAmt; updateUI(); saveP();
 
   /* seat0=أنا, seat1=يمين(oppSideLeft في RTL), seat2=أعلى(oppAv), seat3=يسار(oppSideRight في RTL) */
@@ -14688,6 +14795,8 @@ function bcSend_PhaseSync(){
 
 function startGame(){
   clearTimer();
+  // إشعار AdMob ببدء المباراة (يخفي البانر)
+  if(typeof _admobGameStart==='function') _admobGameStart();
   // [Elastic Animation] هيّئ مدد الأنيميشن حسب RTT الحالي
   _applyElasticAnim();
   // [4a] أظهر/أخفِ زر الـ chat حسب وضع اللعب
@@ -16675,6 +16784,8 @@ function qc(msg){
 /* ── END GAME ── */
 function endGame(won, sub=''){
   G.over=true; clearTimer();
+  // إشعار AdMob بانتهاء المباراة (يُظهر البانر + البيني بين الجولات)
+  if(typeof _admobGameEnd==='function') setTimeout(_admobGameEnd, 800);
   if(window._oppAbsenceTimeout){ clearTimeout(window._oppAbsenceTimeout); window._oppAbsenceTimeout=null; }
   clearGameState();
   G._rematchLvl = G.aiLvl;
@@ -17529,7 +17640,7 @@ function mo2(id){
   // [FIX-BET-FRIENDS] قراءة الرهان من البطاقة المناسبة حسب pMode
   const _mo2CardNum = (cfg.pMode==='2v2') ? 2 : (cfg.pMode==='4p') ? 3 : 1;
   const _mo2Entry   = _betValues[_mo2CardNum] || 500;
-  if(P.gold < _mo2Entry){ toast('💰 رصيدك لا يكفي للرهان — اختر مبلغاً أقل أو اجمع المزيد!','warn'); if(el) el.classList.remove('open'); return; }
+  if(P.gold < _mo2Entry){ if(typeof _admobShowLowGold==='function')_admobShowLowGold();else toast('💰 رصيدك لا يكفي للرهان — اختر مبلغاً أقل أو اجمع المزيد!','warn'); if(el) el.classList.remove('open'); return; }
   P.gold -= _mo2Entry; updateUI(); saveP();
 
   room = {
@@ -19036,7 +19147,8 @@ function ss7(tmId, fillId, txId, modalId) {
   const _betCard    = _betCardMap[modalId] || 1;
   const _worldEntry = _betValues[_betCard] || 500;
   if(P.gold < _worldEntry){
-    toast(`💰 رصيدك لا يكفي للرهان (${_worldEntry.toLocaleString('ar')} ذهبية مطلوبة)`,'warn');
+    if(typeof _admobShowLowGold==='function') _admobShowLowGold();
+    else toast(`💰 رصيدك لا يكفي للرهان (${_worldEntry.toLocaleString('ar')} ذهبية مطلوبة)`,'warn');
     return;
   }
   P.gold -= _worldEntry; updateUI(); saveP();
@@ -19531,7 +19643,8 @@ function joinByCodePlay(id){
     if(_guestEntry > 0){
       if(P.gold < _guestEntry){
         _joinByCodeInProgress = false;
-        toast(`💰 رصيدك لا يكفي للرهان (${_guestEntry.toLocaleString('ar')} ذهبية مطلوبة)`,'warn');
+        if(typeof _admobShowLowGold==='function') _admobShowLowGold();
+        else toast(`💰 رصيدك لا يكفي للرهان (${_guestEntry.toLocaleString('ar')} ذهبية مطلوبة)`,'warn');
         return;
       }
       P.gold -= _guestEntry; updateUI(); saveP();
@@ -27548,7 +27661,8 @@ function _acceptGameInvite(code, pModeVal, modeVal, entry, cardId, maxVal, isPm2
   const card = document.getElementById(cardId);
   if(card) card.remove();
   if(entry > 0 && P.gold < entry){
-    toast(`💰 رصيدك لا يكفي (${entry.toLocaleString('ar')} مطلوبة)`,'warn');
+    if(typeof _admobShowLowGold==='function') _admobShowLowGold();
+    else toast(`💰 رصيدك لا يكفي (${entry.toLocaleString('ar')} مطلوبة)`,'warn');
     return;
   }
   if(entry > 0){ P.gold -= entry; updateUI(); saveP(); }
@@ -27836,6 +27950,487 @@ setTimeout(_refreshFriendsUI, 2000); // أولي
 </script>
 
 <!-- ════════════════════════════════════════════════════
+     📢 AdMob — نظام الإعلانات الكامل
+     Banner • Interstitial • Rewarded (100 / 500 / 1000)
+     ════════════════════════════════════════════════════ -->
+<script>
+(function(){
+'use strict';
+
+/* ══════════════════════════════════════════════════════
+   ⚙️  ثوابت الوحدات الإعلانية
+══════════════════════════════════════════════════════ */
+const _AM = {
+  APP_ID      : 'ca-app-pub-1725525147318224~6321541009',
+  BANNER      : 'ca-app-pub-1725525147318224/9078837334',
+  INTERSTITIAL: 'ca-app-pub-1725525147318224/6284115625',
+  REW_100     : 'ca-app-pub-1725525147318224/1081656762',
+  REW_500     : 'ca-app-pub-1725525147318224/6926279306',
+  REW_1000    : 'ca-app-pub-1725525147318224/4581918070',
+};
+
+/* ══════════════════════════════════════════════════════
+   🔌  كشف بيئة التشغيل
+══════════════════════════════════════════════════════ */
+// هل التطبيق يعمل داخل Capacitor (Android/iOS) ؟
+function _isNative(){
+  return !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+}
+
+// الحصول على مكتبة AdMob من Capacitor
+function _getPlugin(){
+  try{
+    return window.Capacitor &&
+           window.Capacitor.Plugins &&
+           window.Capacitor.Plugins.AdMob || null;
+  }catch(e){ return null; }
+}
+
+/* ══════════════════════════════════════════════════════
+   📊 الحالة الداخلية
+══════════════════════════════════════════════════════ */
+const _state = {
+  initialized  : false,
+  bannerShowing: false,
+  inGame       : false,          // نحن داخل مباراة؟
+  interLoaded  : false,
+  interShowing : false,
+  lastInterTime: 0,
+  interCooldown: 3 * 60 * 1000, // 3 دقائق بين كل إعلان بيني
+  rewUsed      : {100:false, 500:false, 1000:false},
+  rewLoading   : {100:false, 500:false, 1000:false},
+};
+
+/* ══════════════════════════════════════════════════════
+   🚀  تهيئة AdMob
+══════════════════════════════════════════════════════ */
+async function _initAdMob(){
+  if(_state.initialized) return;
+  const plugin = _getPlugin();
+  if(!plugin){ _log('AdMob plugin غير متاح — وضع الويب'); return; }
+
+  try{
+    await plugin.initialize({
+      requestTrackingAuthorization: true,  // iOS ATT
+      testingDevices: [],
+      initializeForTesting: false,
+    });
+    _state.initialized = true;
+    _log('✅ AdMob تهيأ بنجاح');
+
+    // بدء البانر بعد ثانية من التهيئة (بعد اكتمال الواجهة)
+    setTimeout(_showBanner, 1200);
+
+    // تحميل الإعلان البيني مسبقاً
+    setTimeout(_loadInterstitial, 3000);
+
+    // الاستماع لأحداث المكافآت
+    _registerRewardedListeners(plugin);
+
+  }catch(e){
+    _log('⚠️ AdMob init error:', e);
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   📌  إعلان البانر
+   يظهر دائماً في الصفحة الرئيسية والقوائم
+   يُخفى تلقائياً عند دخول المباراة
+══════════════════════════════════════════════════════ */
+async function _showBanner(){
+  if(!_state.initialized || _state.inGame) return;
+  const plugin = _getPlugin();
+  if(!plugin || _state.bannerShowing) return;
+
+  try{
+    await plugin.showBanner({
+      adId    : _AM.BANNER,
+      adSize  : 'ADAPTIVE_BANNER',
+      position: 'BOTTOM_CENTER',
+      margin  : 0,
+      isTesting: false,
+    });
+    _state.bannerShowing = true;
+    document.body.classList.add('admob-banner-on');
+    _log('📌 Banner يعرض');
+  }catch(e){
+    _log('⚠️ Banner error:', e);
+  }
+}
+
+async function _hideBanner(){
+  if(!_state.bannerShowing) return;
+  const plugin = _getPlugin();
+  if(!plugin) return;
+  try{
+    await plugin.hideBanner();
+    _state.bannerShowing = false;
+    document.body.classList.remove('admob-banner-on');
+    _log('📌 Banner مخفي');
+  }catch(e){ _log('⚠️ hideBanner:', e); }
+}
+
+async function _resumeBanner(){
+  if(!_state.initialized || _state.inGame) return;
+  const plugin = _getPlugin();
+  if(!plugin || _state.bannerShowing) return;
+  try{
+    await plugin.resumeBanner();
+    _state.bannerShowing = true;
+    document.body.classList.add('admob-banner-on');
+  }catch(e){ await _showBanner(); }
+}
+
+/* ══════════════════════════════════════════════════════
+   🎬  إعلان بيني (Interstitial)
+   يُعرض بين المباريات — ليس أثناءها أبداً
+══════════════════════════════════════════════════════ */
+async function _loadInterstitial(){
+  const plugin = _getPlugin();
+  if(!plugin || !_state.initialized) return;
+  try{
+    await plugin.prepareInterstitial({ adId: _AM.INTERSTITIAL, isTesting: false });
+    _state.interLoaded = true;
+    _log('🎬 Interstitial جاهز');
+  }catch(e){
+    _state.interLoaded = false;
+    _log('⚠️ prepareInterstitial:', e);
+  }
+}
+
+async function _showInterstitial(){
+  // حماية: لا نعرض أثناء المباراة أبداً
+  if(_state.inGame) return;
+  if(!_state.interLoaded) return;
+  const now = Date.now();
+  if(now - _state.lastInterTime < _state.interCooldown) return;
+  const plugin = _getPlugin();
+  if(!plugin) return;
+
+  try{
+    _state.interShowing = true;
+    await plugin.showInterstitial();
+    _state.interLoaded   = false;
+    _state.lastInterTime = Date.now();
+    _log('🎬 Interstitial يعرض');
+    // أعد التحميل للمرة التالية
+    setTimeout(_loadInterstitial, 5000);
+  }catch(e){
+    _state.interShowing = false;
+    _log('⚠️ showInterstitial:', e);
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   🏆  إعلانات المكافأة (Rewarded)
+   100 / 500 / 1000 عملة — يُعرض بطلب المستخدم فقط
+══════════════════════════════════════════════════════ */
+
+// معرّف الوحدة حسب قيمة المكافأة
+function _rewAdId(coins){
+  if(coins === 100)  return _AM.REW_100;
+  if(coins === 500)  return _AM.REW_500;
+  if(coins === 1000) return _AM.REW_1000;
+  return null;
+}
+
+// تسجيل مستمعي أحداث المكافأة
+function _registerRewardedListeners(plugin){
+  // Rewarded — منح المكافأة فوراً عند الحدث
+  plugin.addListener('onRewardedVideoAdReward', (reward)=>{
+    _log('🏆 Reward حدث:', reward);
+    const coins = window._pendingRewardCoins || 0;
+    if(coins > 0){
+      _grantRewardCoins(coins);
+      window._pendingRewardCoins = 0;
+    }
+  });
+
+  // إغلاق الإعلان
+  plugin.addListener('onRewardedVideoAdClosed', ()=>{
+    _log('🏆 Rewarded مغلق');
+    window._pendingRewardCoins = 0;
+  });
+
+  // فشل عرض الإعلان
+  plugin.addListener('onRewardedVideoAdFailedToLoad', (err)=>{
+    _log('⚠️ Rewarded FailedToLoad:', err);
+    const coins = window._pendingRewardCoins || 0;
+    _resetRewBtn(coins);
+    if(typeof toast === 'function') toast('⚠️ لم يُحمَّل الإعلان، حاول مرة أخرى','warn');
+    window._pendingRewardCoins = 0;
+  });
+
+  // Interstitial أُغلق
+  plugin.addListener('onInterstitialAdClosed', ()=>{
+    _state.interShowing = false;
+    _log('🎬 Interstitial انتهى');
+  });
+}
+
+// عرض إعلان مكافأة للمستخدم
+async function _watchRewarded(coins){
+  const plugin = _getPlugin();
+  if(!plugin || !_state.initialized){
+    // fallback للويب — امنح مباشرةً في بيئة الاختبار
+    _log('Rewarded fallback (web)');
+    _grantRewardCoins(coins);
+    return;
+  }
+
+  const adId = _rewAdId(coins);
+  if(!adId) return;
+
+  try{
+    window._pendingRewardCoins = coins;
+    _log(`🏆 تحميل Rewarded ${coins}...`);
+    await plugin.prepareRewardVideoAd({ adId, isTesting: false });
+    await plugin.showRewardVideoAd();
+  }catch(e){
+    _log('⚠️ Rewarded error:', e);
+    window._pendingRewardCoins = 0;
+    _resetRewBtn(coins);
+    if(typeof toast === 'function') toast('⚠️ تعذّر تحميل الإعلان، حاول لاحقاً','warn');
+  }
+}
+
+// منح العملات + تحديث الواجهة
+function _grantRewardCoins(coins){
+  if(typeof P === 'undefined') return;
+  P.gold = (P.gold || 0) + coins;
+  if(typeof updateUI  === 'function') updateUI();
+  if(typeof saveP     === 'function') saveP();
+
+  // تأشير الزر كـ "مستخدم"
+  _state.rewUsed[coins] = true;
+  _markRewBtnDone(coins);
+
+  // إشعار جميل
+  if(typeof toast === 'function'){
+    toast(`🏆 +${coins.toLocaleString('ar')} عملة ذهبية! 🪙`,'ok');
+  }
+  _log(`✅ مُنح ${coins} عملة`);
+
+  // أغلق النافذة بعد ثانية إذا كُسبت مكافأة
+  setTimeout(()=>{
+    const ov = document.getElementById('admobLowGoldOverlay');
+    if(ov) ov.classList.remove('on');
+  }, 1400);
+}
+
+// إعادة الزر لوضعه الطبيعي عند الفشل
+function _resetRewBtn(coins){
+  const btn = document.getElementById(_rewBtnId(coins));
+  if(!btn) return;
+  btn.classList.remove('loading');
+  _state.rewLoading[coins] = false;
+}
+
+function _markRewBtnDone(coins){
+  const btn = document.getElementById(_rewBtnId(coins));
+  if(!btn) return;
+  btn.classList.remove('loading');
+  btn.classList.add('used');
+  // استبدل الزر بعلامة صح
+  const badge = btn.querySelector('.arb-badge');
+  if(badge){ badge.innerHTML='<span class="arb-check">✓</span>'; }
+  _state.rewLoading[coins] = false;
+}
+
+function _rewBtnId(coins){
+  if(coins === 100)  return 'admobRew100';
+  if(coins === 500)  return 'admobRew500';
+  if(coins === 1000) return 'admobRew1000';
+  return '';
+}
+
+/* ══════════════════════════════════════════════════════
+   🎮  إدارة وضع المباراة
+   نخفي البانر ونمنع البيني أثناء اللعب
+══════════════════════════════════════════════════════ */
+function _setInGame(val){
+  _state.inGame = !!val;
+  if(_state.inGame){
+    _hideBanner();
+  } else {
+    // عدنا للقائمة — أظهر البانر مجدداً بعد تأخير قصير
+    setTimeout(_resumeBanner, 1000);
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   💰  نافذة "رصيد نفد"
+   تُفتح بدلاً من رسالة التوست العادية
+══════════════════════════════════════════════════════ */
+function _showLowGoldDialog(){
+  // أعد تعيين أزرار المكافأة للجلسة الجديدة
+  _resetAllRewButtons();
+
+  const ov = document.getElementById('admobLowGoldOverlay');
+  if(ov) ov.classList.add('on');
+}
+
+function _closeLowGold(){
+  const ov = document.getElementById('admobLowGoldOverlay');
+  if(ov) ov.classList.remove('on');
+}
+
+function _resetAllRewButtons(){
+  // استعادة حالة الأزرار إذا أُعيد فتح النافذة في جلسة جديدة
+  [100, 500, 1000].forEach(coins => {
+    _state.rewLoading[coins] = false;
+    const btn = document.getElementById(_rewBtnId(coins));
+    if(!btn) return;
+    btn.classList.remove('loading');
+    // إذا لم يُستخدم من قبل في هذه الجلسة — أبقه فعّالاً
+    if(!_state.rewUsed[coins]) btn.classList.remove('used');
+  });
+}
+
+/* ══════════════════════════════════════════════════════
+   🌐  API عامة — تُستدعى من باقي الكود
+══════════════════════════════════════════════════════ */
+// يُستدعى عند بدء مباراة حقيقية
+window._admobGameStart = function(){
+  _setInGame(true);
+};
+
+// يُستدعى عند انتهاء المباراة / الخروج منها
+window._admobGameEnd = function(){
+  _setInGame(false);
+  // عرض بيني بعد نهاية المباراة (بين الجولات)
+  setTimeout(_showInterstitial, 1500);
+};
+
+// يُستدعى من أزرار المكافأة في الـ HTML
+window._admobWatchRewarded = async function(coins){
+  if(_state.rewUsed[coins] || _state.rewLoading[coins]) return;
+  _state.rewLoading[coins] = true;
+  const btn = document.getElementById(_rewBtnId(coins));
+  if(btn) btn.classList.add('loading');
+  await _watchRewarded(coins);
+};
+
+// يُستدعى من زر الإغلاق
+window._admobCloseLowGold = function(){
+  _closeLowGold();
+};
+
+// يُستدعى من أي مكان يريد فتح نافذة "رصيد نفد"
+window._admobShowLowGold = function(){
+  _showLowGoldDialog();
+};
+
+// عرض بيني يدوي (مثلاً بعد انتهاء مباراة)
+window._admobShowInterstitial = function(){
+  _showInterstitial();
+};
+
+/* ══════════════════════════════════════════════════════
+   🔁  اعتراض نقاط "رصيد لا يكفي"
+   نستبدل الـ toast العادي بنافذة AdMob
+══════════════════════════════════════════════════════ */
+(function _patchGoldChecks(){
+  // ننتظر حتى يكتمل الكود الأصلي
+  setTimeout(()=>{
+
+    // patch دالة startRoom (لعبة مع صديق / عام)
+    if(typeof window.startRoom === 'function'){
+      const _orig_startRoom = window.startRoom;
+      window.startRoom = function(){
+        // نتحقق من الرصيد قبل الاستدعاء الأصلي
+        try{
+          const cardNum = (window.pMode==='2v2') ? 2 : (window.pMode==='4p') ? 3 : 1;
+          const entry = window._betValues && (window._betValues[cardNum] || 500);
+          if(typeof P !== 'undefined' && typeof entry === 'number' && P.gold < entry){
+            _showLowGoldDialog();
+            return;
+          }
+        }catch(e){}
+        _orig_startRoom.apply(this, arguments);
+      };
+    }
+
+    // patch دالة startAI (لعبة مع بوت)
+    if(typeof window.startAI === 'function'){
+      const _orig_startAI = window.startAI;
+      window.startAI = function(){
+        try{
+          const betAmt = window._betValues && window._betValues[1] || 500;
+          if(typeof P !== 'undefined' && P.gold < betAmt){
+            _showLowGoldDialog();
+            return;
+          }
+        }catch(e){}
+        _orig_startAI.apply(this, arguments);
+      };
+    }
+
+    _log('🔗 Gold-check patches مطبّقة');
+
+  }, 2000);
+})();
+
+/* ══════════════════════════════════════════════════════
+   🎮  ربط أحداث بدء/نهاية المباراة
+   نراقب endGame و بدايات الأوضاع المختلفة
+══════════════════════════════════════════════════════ */
+(function _patchGameLifecycle(){
+  setTimeout(()=>{
+    // patch endGame
+    if(typeof window.endGame === 'function'){
+      const _orig_endGame = window.endGame;
+      window.endGame = function(){
+        _orig_endGame.apply(this, arguments);
+        // أُغلق اللعبة — أظهر البانر + بيني
+        setTimeout(()=>{ _admobGameEnd(); }, 800);
+      };
+    }
+
+    // نراقب تغيير الشاشة — نخفي البانر عند دخول اللعبة
+    const _origShowTab = window.showTab;
+    if(typeof _origShowTab === 'function'){
+      window.showTab = function(id){
+        _origShowTab.apply(this, arguments);
+        const gameScreens = ['tGame','tGame2','tGame4','t4'];
+        const isGameScreen = gameScreens.includes(id);
+        if(isGameScreen) _setInGame(true);
+        // عودة للوبي = خروج من اللعبة
+        if(id === 'sLobby' || id === 'sHome') _setInGame(false);
+      };
+    }
+
+    _log('🎮 Game lifecycle patches مطبّقة');
+  }, 2500);
+})();
+
+/* ══════════════════════════════════════════════════════
+   🐛  Log مشروط (في وضع التطوير فقط)
+══════════════════════════════════════════════════════ */
+function _log(...args){
+  if(window._DEV_MODE) console.log('[AdMob]', ...args);
+}
+
+/* ══════════════════════════════════════════════════════
+   ▶️  نقطة الانطلاق — ننتظر Capacitor deviceready
+══════════════════════════════════════════════════════ */
+function _boot(){
+  if(_isNative()){
+    document.addEventListener('deviceready', _initAdMob, { once: true });
+    // fallback في حال لم يُطلق الحدث خلال 5 ثواني
+    setTimeout(()=>{ if(!_state.initialized) _initAdMob(); }, 5000);
+  } else {
+    // بيئة ويب — لا نهيئ AdMob لكن نجهّز واجهة المكافأة
+    _log('بيئة ويب — AdMob غير نشط');
+  }
+}
+
+_boot();
+
+})(); // IIFE
+</script>
+
+<!-- ════════════════════════════════════════════════════
      🤝 نظام الأصدقاء — Friends System HTML
      ════════════════════════════════════════════════════ -->
 
@@ -27865,6 +28460,66 @@ setTimeout(_refreshFriendsUI, 2000); // أولي
     <div class="frnd-list" id="frndInviteBody">
       <div class="frnd-empty">لا يوجد أصدقاء لدعوتهم</div>
     </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     📢 AdMob — نافذة "نفدت عملاتك" + بانر
+     ════════════════════════════════════════════════════ -->
+
+<!-- بانر AdMob السفلي (يتحكم فيه الكود) -->
+<div id="admobBannerSlot"></div>
+
+<!-- نافذة نفاد الرصيد -->
+<div id="admobLowGoldOverlay" role="dialog" aria-modal="true" aria-label="رصيدك نفد">
+  <div class="admob-card">
+    <button class="admob-close" onclick="_admobCloseLowGold()" aria-label="إغلاق">✕</button>
+
+    <div class="admob-icon">💰</div>
+    <div class="admob-title">رصيدك نفد!</div>
+    <div class="admob-sub">لا يكفي رصيدك للمراهنة<br>شاهد إعلاناً قصيراً لكسب عملات مجاناً</div>
+
+    <div class="admob-sep"></div>
+    <div class="admob-sec-title">🎬 اكسب عملات بمشاهدة إعلان</div>
+
+    <!-- زر 100 عملة -->
+    <button class="admob-rew-btn" id="admobRew100" onclick="_admobWatchRewarded(100)" aria-label="شاهد إعلاناً للحصول على 100 عملة">
+      <span class="arb-ico">📺</span>
+      <div class="arb-body">
+        <div class="arb-coins">+ 100 🪙 عملة ذهبية</div>
+        <div class="arb-desc">إعلان قصير • مجاناً تماماً</div>
+      </div>
+      <span class="arb-badge">شاهد</span>
+    </button>
+
+    <!-- زر 500 عملة -->
+    <button class="admob-rew-btn" id="admobRew500" onclick="_admobWatchRewarded(500)" aria-label="شاهد إعلاناً للحصول على 500 عملة">
+      <span class="arb-ico">🎬</span>
+      <div class="arb-body">
+        <div class="arb-coins">+ 500 🪙 عملة ذهبية</div>
+        <div class="arb-desc">إعلان ثانٍ • مكافأة أكبر</div>
+      </div>
+      <span class="arb-badge">شاهد</span>
+    </button>
+
+    <!-- زر 1000 عملة -->
+    <button class="admob-rew-btn" id="admobRew1000" onclick="_admobWatchRewarded(1000)" aria-label="شاهد إعلاناً للحصول على 1000 عملة">
+      <span class="arb-ico">🏆</span>
+      <div class="arb-body">
+        <div class="arb-coins">+ 1,000 🪙 عملة ذهبية</div>
+        <div class="arb-desc">إعلان ثالث • أكبر مكافأة</div>
+      </div>
+      <span class="arb-badge" style="background:linear-gradient(135deg,#f59e0b,#fcd34d)">شاهد</span>
+    </button>
+
+    <div class="admob-sep"></div>
+
+    <!-- زر المتجر -->
+    <button class="admob-shop-btn" onclick="_admobCloseLowGold();openShop();" aria-label="افتح متجر العملات">
+      <span>🏪</span>
+      <span>شراء عملات من المتجر</span>
+    </button>
+
   </div>
 </div>
 
