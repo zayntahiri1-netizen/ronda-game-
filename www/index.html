@@ -1185,18 +1185,21 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
 
 
 /* مؤقت صغير يظهر على أفاتار اللاعب الحالي في وضع 4 لاعبين */
+/* [4-2] مؤقت دائري يحيط بصورة اللاعب */
 .seat-timer-ring{
-  position:absolute;top:-3px;right:-3px;
-  width:18px;height:18px;z-index:12;
-  display:none;
+  position:absolute;inset:-4px;
+  width:calc(100% + 8px);height:calc(100% + 8px);
+  z-index:12;display:none;pointer-events:none;
 }
 .seat-timer-ring svg{transform:rotate(-90deg);width:100%;height:100%;}
-.seat-timer-ring circle{fill:none;stroke-width:3;}
-.seat-timer-ring .str-bg{stroke:rgba(255,255,255,.08);}
-.seat-timer-ring .str-fg{stroke:var(--emer3);stroke-dasharray:44;stroke-dashoffset:0;stroke-linecap:round;transition:stroke-dashoffset 1s linear,stroke .4s;}
+.seat-timer-ring circle{fill:none;}
+.seat-timer-ring .str-bg{stroke:rgba(255,255,255,.08);stroke-width:3;}
+.seat-timer-ring .str-fg{stroke:var(--emer3);stroke-dasharray:100;stroke-dashoffset:0;stroke-linecap:round;transition:stroke-dashoffset 1s linear,stroke .4s;stroke-width:3.5;}
 .seat-timer-ring .str-n{
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  font-size:.36rem;font-weight:900;color:#fff;
+  font-size:.55rem;font-weight:900;color:#fff;
+  text-shadow:0 1px 4px rgba(0,0,0,.9);
+  pointer-events:none;
 }
 /* شارة "تلقائي" — تظهر عندما يتولى البوت دور لاعب حقيقي */
 .auto-badge{
@@ -6117,7 +6120,7 @@ document.addEventListener('deviceready', async () => {
           <div style="position:relative;display:inline-block">
             <div class="opp-side-av" id="oppSideLeftAv" onclick="openPlayerStatsBySeat(1)" title="📊 اضغط لعرض إحصائياته" style="cursor:pointer;overflow:hidden;transition:box-shadow .2s,transform .2s">👤</div>
             <div class="seat-timer-ring" id="strSeat1">
-              <svg viewBox="0 0 20 20"><circle class="str-bg" cx="10" cy="10" r="7"/><circle class="str-fg" id="strFgSeat1" cx="10" cy="10" r="7" stroke-dasharray="44" stroke-dashoffset="0"/></svg>
+              <svg viewBox="0 0 30 30"><circle class="str-bg" cx="15" cy="15" r="13"/><circle class="str-fg" id="strFgSeat1" cx="15" cy="15" r="13" stroke-dasharray="82" stroke-dashoffset="0"/></svg>
               <div class="str-n" id="strNSeat1">15</div>
             </div>
             <div class="auto-badge" id="autoBadgeSeat1" style="display:none">تلقائي</div>
@@ -6136,7 +6139,7 @@ document.addEventListener('deviceready', async () => {
               <div style="position:relative;display:inline-block">
                 <div class="opp-side-av" id="oppAv" style="transition:box-shadow .35s;border-radius:50%;cursor:pointer;overflow:hidden" onclick="openPlayerStatsBySeat(2)" title="📊 اضغط لعرض إحصائياته">🤖</div>
                 <div class="seat-timer-ring" id="strSeat2">
-                  <svg viewBox="0 0 20 20"><circle class="str-bg" cx="10" cy="10" r="7"/><circle class="str-fg" id="strFgSeat2" cx="10" cy="10" r="7" stroke-dasharray="44" stroke-dashoffset="0"/></svg>
+                  <svg viewBox="0 0 30 30"><circle class="str-bg" cx="15" cy="15" r="13"/><circle class="str-fg" id="strFgSeat2" cx="15" cy="15" r="13" stroke-dasharray="82" stroke-dashoffset="0"/></svg>
                   <div class="str-n" id="strNSeat2">15</div>
                 </div>
                 <div class="auto-badge" id="autoBadgeSeat2" style="display:none">تلقائي</div>
@@ -6164,7 +6167,7 @@ document.addEventListener('deviceready', async () => {
           <div style="position:relative;display:inline-block">
             <div class="opp-side-av" id="oppSideRightAv" onclick="openPlayerStatsBySeat(3)" title="📊 اضغط لعرض إحصائياته" style="cursor:pointer;overflow:hidden;transition:box-shadow .2s,transform .2s">👤</div>
             <div class="seat-timer-ring" id="strSeat3">
-              <svg viewBox="0 0 20 20"><circle class="str-bg" cx="10" cy="10" r="7"/><circle class="str-fg" id="strFgSeat3" cx="10" cy="10" r="7" stroke-dasharray="44" stroke-dashoffset="0"/></svg>
+              <svg viewBox="0 0 30 30"><circle class="str-bg" cx="15" cy="15" r="13"/><circle class="str-fg" id="strFgSeat3" cx="15" cy="15" r="13" stroke-dasharray="82" stroke-dashoffset="0"/></svg>
               <div class="str-n" id="strNSeat3">15</div>
             </div>
             <div class="auto-badge" id="autoBadgeSeat3" style="display:none">تلقائي</div>
@@ -6192,6 +6195,11 @@ document.addEventListener('deviceready', async () => {
         <div class="pinfo">
           <div style="position:relative;display:inline-block">
             <div class="pav grn-t" id="myAvG" onclick="openPlayerStatsBySeat(0)" style="cursor:pointer">😎</div>
+            <!-- [4-2] مؤقت دائري يحيط بصورة اللاعب -->
+            <div class="seat-timer-ring" id="strSeat0" style="display:none">
+              <svg viewBox="0 0 30 30"><circle class="str-bg" cx="15" cy="15" r="13"/><circle class="str-fg" id="strFgSeat0" cx="15" cy="15" r="13" stroke-dasharray="82" stroke-dashoffset="0"/></svg>
+              <div class="str-n" id="strNSeat0">15</div>
+            </div>
             <div class="auto-badge" id="autoBadgeSeat0" style="display:none">تلقائي</div>
             <!-- زر تعديل الملف الشخصي أثناء اللعبة -->
             <div onclick="openM('mProf')" title="تعديل الصورة أو الاسم" style="position:absolute;bottom:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,var(--g1),var(--g2));display:flex;align-items:center;justify-content:center;font-size:.55rem;cursor:pointer;box-shadow:0 1px 5px rgba(0,0,0,.5);z-index:2;border:1.5px solid rgba(255,255,255,.15);">✏️</div>
@@ -8250,18 +8258,22 @@ function showRndModal(type, players, footerHtml, cb){
   _rndCb=cb||null;
   modal.classList.add('on');
 
-  // ── شريط العداد التنازلي ──
-  const bar=$('rndCountBar'); if(bar){ bar.style.transition='none'; bar.style.width='100%'; }
+  // ── شريط العداد التنازلي — مقاوم لتجميد التطبيق في الخلفية ──
+  const AUTO_MS = 4200;
+  const bar=$('rndCountBar');
+  if(bar){ bar.style.transition='none'; bar.style.width='100%'; }
   clearTimeout(window._rndAutoTimer);
-  // بدء الانتقال بعد frame واحد
+  window._rndStartTs = Date.now(); // [FIX2] timestamp البدء
+
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    const AUTO_MS = 4200;
     if(bar){ bar.style.transition=`width ${AUTO_MS}ms linear`; bar.style.width='0%'; }
     window._rndAutoTimer = setTimeout(()=>closeRndModal(), AUTO_MS);
   }));
 }
 function closeRndModal(){
   clearTimeout(window._rndAutoTimer);
+  window._rndAutoTimer = null;
+  window._rndStartTs = null;
   const _rm=$('rndModal'); if(_rm) _rm.classList.remove('on');
   if(_rndCb){const fn=_rndCb;_rndCb=null;fn();}
 }
@@ -9553,6 +9565,18 @@ document.addEventListener('visibilitychange', function(){
       _setAutoPlay(false, false);
     }
 
+    // [FIX2] استئناف مودال نتائج المجموعة إذا تجمّد في الخلفية
+    if(window._rndStartTs){
+      const _el = Date.now() - window._rndStartTs;
+      const _rem = Math.max(0, 4200 - _el);
+      clearTimeout(window._rndAutoTimer);
+      if(_rem <= 0){
+        if(typeof closeRndModal==='function') closeRndModal();
+      } else {
+        window._rndAutoTimer = setTimeout(()=>{ if(typeof closeRndModal==='function') closeRndModal(); }, _rem);
+      }
+    }
+
     // [FIX-5] استعادة مؤقت البوت إذا كان دوره عند الخروج
     if(G && G.isBot && !G.myTurn && !G.over){
       const elapsed = Date.now() - (window._botTurnStartTs || Date.now());
@@ -9586,6 +9610,12 @@ document.addEventListener('visibilitychange', function(){
   } else {
     // ══ ذهب للخلفية ══
     window._DEV_MODE && console.log('[Visibility] ذهب للخلفية');
+
+    // [FIX2] تجميد عداد مودال نتائج المجموعة عند الذهاب للخلفية
+    if(window._rndStartTs && window._rndAutoTimer){
+      clearTimeout(window._rndAutoTimer);
+      window._rndAutoTimer = null; // null = متجمد (يُستأنف عند العودة)
+    }
 
     // [5] إذا كان دور اللاعب الحقيقي → جدوِل تلقائي بعد انتهاء الـ15 ثانية
     if(G && !G.over){
@@ -16656,22 +16686,23 @@ function finalizeSet(){
 
 // خريطة: localSeat → عناصر UI (ring صغيرة للخصوم)
 function _seatTimerEls(localSeat){
+  // [4-2] كل المقاعد تستخدم seat-timer-ring على الصورة مباشرة
   const MAP = {
-    0: { ringEl:'myTR',      fgEl:'myTFg',    nEl:'myTN',    avEl:'myAvG',          badgeEl:'autoBadgeSeat0', avClass:'pav grn-t', r:14, da:88, isMe:true  },
-    1: { ringEl:'strSeat1',  fgEl:'strFgSeat1',nEl:'strNSeat1',avEl:'oppSideLeftAv', badgeEl:'autoBadgeSeat1', r:7, da:44, isMe:false },
-    2: { ringEl:'oppTR',     fgEl:'oppTFg',   nEl:'oppTN',   avEl:'oppAv',           badgeEl:'autoBadgeSeat2', r:14, da:88, isMe:false },
-    3: { ringEl:'strSeat3',  fgEl:'strFgSeat3',nEl:'strNSeat3',avEl:'oppSideRightAv',badgeEl:'autoBadgeSeat3', r:7, da:44, isMe:false },
+    0: { ringEl:'strSeat0',  fgEl:'strFgSeat0', nEl:'strNSeat0', avEl:'myAvG',          badgeEl:'autoBadgeSeat0', r:13, da:82, isMe:true  },
+    1: { ringEl:'strSeat1',  fgEl:'strFgSeat1', nEl:'strNSeat1', avEl:'oppSideLeftAv',   badgeEl:'autoBadgeSeat1', r:13, da:82, isMe:false },
+    2: { ringEl:'strSeat2',  fgEl:'strFgSeat2', nEl:'strNSeat2', avEl:'oppAv',           badgeEl:'autoBadgeSeat2', r:13, da:82, isMe:false },
+    3: { ringEl:'strSeat3',  fgEl:'strFgSeat3', nEl:'strNSeat3', avEl:'oppSideRightAv',  badgeEl:'autoBadgeSeat3', r:13, da:82, isMe:false },
   };
   return MAP[localSeat] || null;
 }
 
 /* إخفاء كل عناصر مؤقتات الخصوم */
 function _clearAllSeatTimers(){
-  [1,2,3].forEach(s=>{
+  [0,1,2,3].forEach(s=>{
     const e = _seatTimerEls(s);
     if(!e) return;
     const ring=$(e.ringEl); if(ring) ring.style.display='none';
-    const av=$(e.avEl); if(av) av.classList.remove('opp-thinking');
+    if(!e.isMe){ const av=$(e.avEl); if(av) av.classList.remove('opp-thinking'); }
     const td=$('thinkDots'); if(s===2 && td) td.style.display='none';
   });
 }
@@ -16789,32 +16820,35 @@ function _loadAutoPlayPref(){
 /* ── TIMER ── */
 function startTimer(){
   clearTimer();
-  _loadAutoPlayPref(); // تحميل تفضيل التلقائي
+  _loadAutoPlayPref();
 
-  // ── إذا كانت العلامة موضوعة → العب فوراً بدون انتظار ──
   if(_autoPlayEnabled){
     setTimeout(()=>{ if(!G||G.over) return; _doAutoPlay(); }, 300);
     return;
   }
 
-  // ── وضع عادي: مؤقت 15 ثانية ──
+  // [4-2] أظهر ring دائري على صورة اللاعع (seat0)
   G.timerCount = 15;
   G._timerOffset = 0;
-  const fg=$('myTFg'), tn=$('myTN');
-  const tr=$('myTR'); if(tr) tr.classList.remove('auto-active');
+  const ring0 = $('strSeat0');
+  const fg    = $('strFgSeat0');
+  const tn    = $('strNSeat0');
+  if(ring0){ ring0.style.display='flex'; }
+  if(fg){ fg.style.strokeDashoffset='0'; fg.style.stroke='var(--emer3)'; }
+  if(tn){ tn.textContent='15'; }
+  // أخفِ myTR القديم (ما زال في HTML لكن لن نستخدمه)
+  const oldTR=$('myTR'); if(oldTR) oldTR.style.display='none';
+
   G.timerI=setInterval(()=>{
     if(G.over){clearTimer();return;}
     G.timerCount--;
-    const off=88*(1-G.timerCount/15);
-    fg.style.strokeDashoffset=off;
-    fg.style.stroke=G.timerCount>5?'var(--emer3)':'var(--ruby3)';
-    tn.textContent=G.timerCount;
-    // [Haptic] نبضة في الثواني الأخيرة الثلاث
+    const off = 82*(1 - G.timerCount/15);
+    if(fg){ fg.style.strokeDashoffset=String(off); fg.style.stroke=G.timerCount>5?'var(--emer3)':'var(--ruby3)'; }
+    if(tn){ tn.textContent=G.timerCount; }
+    // نبضة haptic في الثواني الأخيرة
     if(G.timerCount<=3 && G.timerCount>0) HPT.tick();
     if(G.timerCount<=0){
       clearTimer();
-      // ── انتهت الـ 15 ثانية → فعّل التلقائي مؤقتاً (بدون حفظ) ثم العب ──
-      // لا نحفظ في localStorage — فقط التفعيل اليدوي يُحفظ
       if(!_autoPlayEnabled) _setAutoPlay(true, false);
       _doAutoPlay();
     }
@@ -16822,22 +16856,19 @@ function startTimer(){
 }
 let oppTI=null;
 function showOppTimer(){
-  $('oppTR').style.display='block'; clearInterval(oppTI);
-  // [E] أظهر نقاط التفكير
+  // [4-2] استخدم strSeat2 ring على صورة الخصم بدلاً من oppTR المنفصل
+  clearInterval(oppTI);
+  const ring2=$('strSeat2'); if(ring2) ring2.style.display='flex';
   const td=$('thinkDots'); if(td) td.style.display='flex';
-  // [2] الـ avatar يتأرجح أثناء تفكير الخصم
   const av=$('oppAv'); if(av) av.classList.add('opp-thinking');
-  const fg=$('oppTFg'), tn=$('oppTN');
-  // [BUG6-FIX] مهلة اللاعب الحقيقي: 15 ثانية ثابتة
+  const fg=$('strFgSeat2'), tn=$('strNSeat2');
   let t = 15;
-  fg.style.strokeDashoffset = 0;
-  fg.style.stroke = 'var(--emer3)';
+  if(fg){ fg.style.strokeDashoffset='0'; fg.style.stroke='var(--emer3)'; }
   if(tn) tn.textContent = t;
   oppTI=setInterval(()=>{
     t--;
-    const off = 88*(1 - t/15);
-    fg.style.strokeDashoffset = off;
-    fg.style.stroke = t > 5 ? 'var(--emer3)' : 'var(--ruby3)';
+    const off = 82*(1 - t/15);
+    if(fg){ fg.style.strokeDashoffset = String(off); fg.style.stroke = t > 5 ? 'var(--emer3)' : 'var(--ruby3)'; }
     if(tn) tn.textContent = t;
     if(t<=0){
       clearInterval(oppTI);
@@ -16863,20 +16894,19 @@ function showOppTimer(){
 function clearTimer(){
   if(G.timerI){clearInterval(G.timerI);G.timerI=null;}
   clearInterval(_seatTI); _seatTI=null;
-  // أعد مؤقت دوري (seat0)
-  const fg=$('myTFg'), tn=$('myTN');
-  if(fg){fg.style.strokeDashoffset=0;fg.style.stroke='var(--emer3)';}
-  if(tn) tn.textContent='15';
-  // أزل وميض التلقائي عن المؤقت
-  const tr=$('myTR'); if(tr) tr.classList.remove('auto-active');
-  $('oppTR').style.display='none'; clearInterval(oppTI); oppTI=null;
+  // [4-2] أخفِ ring seat0 وأعِد حالتها
+  const ring0=$('strSeat0'); if(ring0) ring0.style.display='none';
+  const fg0=$('strFgSeat0'); if(fg0){fg0.style.strokeDashoffset='0';fg0.style.stroke='var(--emer3)';}
+  const tn0=$('strNSeat0'); if(tn0) tn0.textContent='15';
+  // أخفِ oppTR القديم (2p)
+  const oppTRel=$('oppTR'); if(oppTRel) oppTRel.style.display='none';
+  clearInterval(oppTI); oppTI=null;
   // [E] أخفِ نقاط التفكير
   const td=$('thinkDots'); if(td) td.style.display='none';
   // [2] أوقف تأرجح الـ avatar الخصم
   const av=$('oppAv'); if(av) av.classList.remove('opp-thinking');
-  // أخفِ كل مؤقتات المقاعد الجانبية
+  // أخفِ كل مؤقتات المقاعد
   _clearAllSeatTimers();
-  // [FIX-OPPTIMER] امسح timeout غياب الخصم عند أي حركة
   if(window._oppAbsenceTimeout){ clearTimeout(window._oppAbsenceTimeout); window._oppAbsenceTimeout=null; }
 }
 
