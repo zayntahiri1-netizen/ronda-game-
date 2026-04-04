@@ -152,6 +152,33 @@ else
   warn "iOS يتطلب macOS - تخطي"
 fi
 
+# ── Copy Icons to Android ──────────────────────────────────────
+step "نسخ الأيقونات إلى مشروع Android..."
+
+ANDROID_RES="android/app/src/main/res"
+PATCHES="android-patches"
+
+if [ -d "$ANDROID_RES" ]; then
+  for DENSITY in mipmap-mdpi mipmap-hdpi mipmap-xhdpi mipmap-xxhdpi mipmap-xxxhdpi; do
+    if [ -d "$PATCHES/$DENSITY" ]; then
+      mkdir -p "$ANDROID_RES/$DENSITY"
+      cp -f "$PATCHES/$DENSITY/ic_launcher.png"            "$ANDROID_RES/$DENSITY/ic_launcher.png"            2>/dev/null && ok "✓ $DENSITY/ic_launcher.png"
+      cp -f "$PATCHES/$DENSITY/ic_launcher_foreground.png" "$ANDROID_RES/$DENSITY/ic_launcher_foreground.png" 2>/dev/null && ok "✓ $DENSITY/ic_launcher_foreground.png"
+    fi
+  done
+  # Adaptive icon XML
+  mkdir -p "$ANDROID_RES/mipmap-anydpi-v26"
+  cp -f "$PATCHES/ic_launcher.xml" "$ANDROID_RES/mipmap-anydpi-v26/ic_launcher.xml" 2>/dev/null || true
+  cp -f "$PATCHES/ic_launcher.xml" "$ANDROID_RES/mipmap-anydpi-v26/ic_launcher_round.xml" 2>/dev/null || true
+  # Background color
+  mkdir -p "$ANDROID_RES/values"
+  echo '<?xml version="1.0" encoding="utf-8"?><resources><color name="ic_launcher_background">#030508</color></resources>' \
+    > "$ANDROID_RES/values/ic_launcher_background.xml"
+  ok "تم نسخ الأيقونات بنجاح"
+else
+  warn "مجلد android غير موجود — شغّل: npx cap add android أولاً ثم أعِد تشغيل هذا السكريبت"
+fi
+
 # ── Generate Assets ─────────────────────────────────────────────
 step "توليد الأيقونات وشاشات البداية..."
 
