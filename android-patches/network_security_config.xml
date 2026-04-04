@@ -28,24 +28,6 @@
         <domain includeSubdomains="true">realtime.ably.io</domain>
         <domain includeSubdomains="true">rest.ably.io</domain>
 
-        <!-- PubNub -->
-        <domain includeSubdomains="true">pubnub.com</domain>
-        <domain includeSubdomains="true">pndsn.com</domain>
-
-        <!-- Photon -->
-        <domain includeSubdomains="true">exitgames.com</domain>
-        <domain includeSubdomains="true">photonengine.com</domain>
-
-        <!-- CDN — [FIX2] مطلوب لتحميل مكتبة Supabase وباقي المكتبات -->
-        <domain includeSubdomains="true">jsdelivr.net</domain>
-        <domain includeSubdomains="true">cdn.jsdelivr.net</domain>
-        <domain includeSubdomains="true">cdnjs.cloudflare.com</domain>
-        <domain includeSubdomains="true">unpkg.com</domain>
-
-        <!-- PeerJS / WebRTC -->
-        <domain includeSubdomains="true">peerjs.com</domain>
-        <domain includeSubdomains="true">0.peerjs.com</domain>
-
         <!-- PayPal -->
         <domain includeSubdomains="true">paypal.com</domain>
         <domain includeSubdomains="true">paypalobjects.com</domain>
