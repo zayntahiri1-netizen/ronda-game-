@@ -154,10 +154,15 @@ fi
 
 # ── Generate Assets ─────────────────────────────────────────────
 step "توليد الأيقونات وشاشات البداية..."
-if node scripts/generate-assets.js; then
-  ok "تم توليد جميع الأصول"
+
+# [FIX1] الطريقة الصحيحة: @capacitor/assets يولّد كل الأحجام من icon.svg
+if npm run assets 2>/dev/null; then
+  ok "تم توليد جميع الأصول عبر @capacitor/assets"
+elif node scripts/generate-assets.js 2>/dev/null; then
+  ok "تم توليد الأصول عبر generate-assets.js"
 else
-  warn "sharp قد يحتاج إلى تثبيت: npm install sharp"
+  warn "تعذّر توليد الأصول تلقائياً — جرّب: npm install sharp && node scripts/generate-assets.js"
+  warn "أو: npx @capacitor/assets generate --iconBackgroundColor '#030508' --iconBackgroundColorDark '#030508'"
 fi
 
 # ── Sync ────────────────────────────────────────────────────────

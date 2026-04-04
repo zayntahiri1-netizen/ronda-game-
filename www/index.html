@@ -5448,30 +5448,19 @@ document.addEventListener('deviceready', async () => {
         const ev = new CustomEvent('app:statechange', { detail: { isActive } });
         window.dispatchEvent(ev);
         if (!isActive) {
-          // [FIX-5] ذهب للخلفية — احفظ المباراة
           console.log('[App] Backgrounded — saving game state');
-          if(G && G.isMP && !G.over && window._fbRoomCode){
-            try{
-              const _s = { G, room, isHost, pMode, code: window._fbRoomCode, ts: Date.now() };
-              sessionStorage.setItem('ronda_rc', JSON.stringify(_s));
-            }catch(e){}
-          }
-          // أوقف مؤقت البوت
-          if(G && G.isBot && !G.myTurn && !G.over){
-            if(!window._botTurnStartTs) window._botTurnStartTs = Date.now();
-            if(window._botResumeTimer){ clearTimeout(window._botResumeTimer); window._botResumeTimer=null; }
+          // [FIX5] احفظ اللعبة فوراً عند الانتقال للخلفية
+          try{ if(typeof saveGameState==='function' && G && !G.over) saveGameState(); }catch(e){}
+          // أرسل heartbeat أخير
+          if(window._fbRoomCode && G && G.isMP && !G.over){
+            try{ bcSend({type:'hb', ts:Date.now(), h:(typeof _hashState==='function'?_hashState():0)}); }catch(e){}
           }
         } else {
-          // [FIX-5] عاد للواجهة — استأنف البوت
           console.log('[App] Foregrounded — resuming');
-          if(G && G.isBot && !G.myTurn && !G.over){
-            const elapsed   = Date.now() - (window._botTurnStartTs || Date.now());
-            const remaining = Math.max(500, 12000 - elapsed);
-            if(window._botResumeTimer) clearTimeout(window._botResumeTimer);
-            window._botResumeTimer = setTimeout(()=>{
-              window._botResumeTimer = null;
-              if(G && G.isBot && !G.myTurn && !G.over) botPlay();
-            }, remaining);
+          // [FIX5] عند العودة للواجهة: تحقق من الاتصال إذا كانت مباراة نشطة
+          if(window._fbRoomCode && G && G.isMP && !G.over){
+            const _silence = Date.now() - (_NET.lastMsg || 0);
+            if(_silence > 5000) setTimeout(()=>{ if(typeof _onReconnect==='function') _onReconnect(); }, 500);
           }
         }
       });
@@ -7805,12 +7794,14 @@ function saveGameState(){
       pMode,
       ts: Date.now()
     };
-    sessionStorage.setItem('ronda_game', JSON.stringify(state));
+    // [FIX5] localStorage بدل sessionStorage — يبقى عند إغلاق التطبيق وإعادة فتحه
+    localStorage.setItem('ronda_game', JSON.stringify(state));
+    sessionStorage.setItem('ronda_game', JSON.stringify(state)); // احتياطي
     // 🛡 Bulletproof: حفظ موازٍ في ronda_rc للاسترداد السريع
     if(G.isMP && _fbRoomCode){
-      sessionStorage.setItem('ronda_rc', JSON.stringify({
-        ...state, code:_fbRoomCode
-      }));
+      const rcState = JSON.stringify({...state, code:_fbRoomCode});
+      localStorage.setItem('ronda_rc', rcState);
+      sessionStorage.setItem('ronda_rc', rcState);
     }
   }catch(e){}
   // [Dead Reckoning] حدّث الحالة المعروفة الأخيرة
@@ -7819,18 +7810,22 @@ function saveGameState(){
 
 function clearGameState(){
   try{ sessionStorage.removeItem('ronda_game'); }catch(e){}
+  try{ sessionStorage.removeItem('ronda_rc'); }catch(e){}  // [FIX3] منع استعادة لعبة قديمة بعد الانتهاء
+  try{ localStorage.removeItem('ronda_game'); }catch(e){}  // [FIX5] تنظيف localStorage أيضاً
+  try{ localStorage.removeItem('ronda_rc'); }catch(e){}
 }
 
 function restoreGameState(){
   // 🛡 Bulletproof: جرب ronda_rc أولاً (أحدث من ronda_game)
   try{
-    const rcRaw = sessionStorage.getItem('ronda_rc');
+    // [FIX5] اقرأ من localStorage أولاً (يبقى بعد إغلاق التطبيق) ثم sessionStorage
+    const rcRaw = localStorage.getItem('ronda_rc') || sessionStorage.getItem('ronda_rc');
     if(rcRaw){
       const rcState = JSON.parse(rcRaw);
       const age = Date.now() - (rcState.ts||0);
       // إذا كانت أحدث من 5 دقائق → استخدمها
       if(age < 5*60*1000 && rcState.G && !rcState.G.over){
-        sessionStorage.removeItem('ronda_rc');
+        localStorage.removeItem('ronda_rc'); sessionStorage.removeItem('ronda_rc');
         G = rcState.G; room = rcState.room;
         isHost = rcState.isHost || false;
         pMode  = rcState.pMode  || '2p';
@@ -7845,13 +7840,14 @@ function restoreGameState(){
           return true;
         }
       } else {
-        sessionStorage.removeItem('ronda_rc');
+        localStorage.removeItem('ronda_rc'); sessionStorage.removeItem('ronda_rc');
       }
     }
-  }catch(e2){ sessionStorage.removeItem('ronda_rc'); }
+  }catch(e2){ localStorage.removeItem('ronda_rc'); sessionStorage.removeItem('ronda_rc'); }
 
   try{
-    const raw = sessionStorage.getItem('ronda_game');
+    // [FIX5] اقرأ من localStorage أولاً ثم sessionStorage
+    const raw = localStorage.getItem('ronda_game') || sessionStorage.getItem('ronda_game');
     if(!raw) return false;
     const state = JSON.parse(raw);
     // [FIX-LONG-GAME] رُفع من 30 دقيقة → 3 ساعات — روندا قد تستمر طويلاً
@@ -9487,71 +9483,30 @@ window.addEventListener('offline', ()=>{
    المتصفح يوقف WebSocket/WebRTC عند الانتقال للخلفية             */
 document.addEventListener('visibilitychange', function(){
   if(document.visibilityState === 'visible'){
-    // ══ عاد للواجهة الأمامية ══
+    // عاد للواجهة الأمامية
     window._DEV_MODE && console.log('[Visibility] عاد للواجهة');
-
-    // [FIX-5] استعادة مؤقت البوت إذا كان دوره عند الخروج
-    if(G && G.isBot && !G.myTurn && !G.over){
-      // احسب الوقت المتبقي منذ آخر دور
-      const elapsed = Date.now() - (window._botTurnStartTs || Date.now());
-      const remaining = Math.max(500, 12000 - elapsed);
-      window._DEV_MODE && console.log('[Visibility] استعادة مؤقت البوت — remaining:', remaining);
-      if(window._botResumeTimer) clearTimeout(window._botResumeTimer);
-      window._botResumeTimer = setTimeout(()=>{
-        window._botResumeTimer = null;
-        if(G && G.isBot && !G.myTurn && !G.over) botPlay();
-      }, remaining);
-    }
-
-    // [FIX-5] استعادة اتصال الشبكة إذا كنا في مباراة متعددة
     const _inGame = !!window._fbRoomCode;
     if(!_inGame) return;
+    // إذا كانت آخر رسالة منذ أكثر من 8 ثوانٍ → يُرجَّح أن الاتصال انقطع في الخلفية
     const _silence = Date.now() - (_NET.lastMsg || 0);
     if(_silence > 8000){
       window._DEV_MODE && console.log('[Visibility] صمت', Math.round(_silence/1000)+'ث — إعادة تهيئة');
       window._NET.wasOffline = true;
+      // P2P: أعِد البناء (WebRTC ينهار في الخلفية على iOS)
       if(typeof _p2pDestroy === 'function' && typeof _p2pInit === 'function'){
         _p2pDestroy();
         setTimeout(function(){ _p2pInit(window._fbRoomCode || (room && room.code)); }, 600);
       }
+      // باقي القنوات: استعادة عبر _onReconnect الموجود
       setTimeout(function(){ if(typeof _onReconnect==='function') _onReconnect(); }, 1200);
     }
-
-    // [FIX-5] استعادة مؤقت اللاعب إذا كان دوره
-    if(G && G.isMP && G.myTurn && !G.over && !G.isBot){
-      if(typeof startTimer === 'function') startTimer();
-    }
-
   } else {
-    // ══ ذهب للخلفية ══
-
-    // [FIX-5] أوقف مؤقت البوت مؤقتاً — يُستأنف عند العودة
-    if(G && G.isBot && !G.myTurn && !G.over){
-      window._botTurnStartTs = window._botTurnStartTs || Date.now();
-      if(window._botResumeTimer){ clearTimeout(window._botResumeTimer); window._botResumeTimer=null; }
-    }
-
-    // [FIX-5] احفظ حالة المباراة عند الذهاب للخلفية
-    if(G && G.isMP && !G.over && window._fbRoomCode){
-      try{
-        const _saveState = {
-          G: G, room: room, isHost: isHost, pMode: pMode,
-          code: window._fbRoomCode, ts: Date.now()
-        };
-        sessionStorage.setItem('ronda_rc', JSON.stringify(_saveState));
-        window._DEV_MODE && console.log('[Visibility] حالة المباراة محفوظة في الخلفية');
-      }catch(e){}
-      // أرسل heartbeat أخير
+    // ذهب للخلفية — أرسل heartbeat أخير (أفضل جهد)
+    if(window._fbRoomCode && G && G.isMP && !G.over){
       try{ bcSend({type:'hb', ts:Date.now(), h:(typeof _hashState==='function'?_hashState():0)}); }catch(e){}
-    }
-
-    // [FIX-5] في مباراة البوت — احفظ توقيت بدء دور البوت
-    if(G && G.isBot && !G.myTurn && !G.over){
-      if(!window._botTurnStartTs) window._botTurnStartTs = Date.now();
     }
   }
 });
-
 
 /* ── waitFB: انتظر Firebase SDK مع مهلة موسّعة للإنترنت الضعيف ─── */
 function waitFB(cb, n=0, _onTimeout){
@@ -9638,13 +9593,16 @@ window._rcForceLeave = function(){
 function _rcSaveNow(){
   if(!G || G.over || !G.isMP) return;
   try{
-    sessionStorage.setItem('ronda_rc', JSON.stringify({
+    const rcData = JSON.stringify({
       G    : JSON.parse(JSON.stringify(G)),
       room : room ? JSON.parse(JSON.stringify(room)) : null,
       isHost, pMode,
       code : _fbRoomCode,
       ts   : Date.now()
-    }));
+    });
+    // [FIX5] حفظ في localStorage ليبقى عند إغلاق التطبيق
+    localStorage.setItem('ronda_rc', rcData);
+    sessionStorage.setItem('ronda_rc', rcData);
   }catch(e){}
 }
 
@@ -13585,14 +13543,8 @@ function leaveRoom(){
   // ══ تنظيف شامل للحالة — يمنع تسرب حالة 2v2/4p إلى المباراة التالية ══
   G = newG();   // صفّر G بالكامل
   pMode = '2p'; // أعِد pMode للافتراضي
-  // [FIX-NO-RELOAD] goLobby() تُنظّف كل الـ state وتُحدّث الـ UI بدون reload
-  setTimeout(()=>{
-    try{
-      try{ sessionStorage.removeItem('ronda_game'); }catch(_){}
-      try{ sessionStorage.removeItem('ronda_rc');   }catch(_){}
-      goLobby();
-    }catch(e){ try{ location.reload(); }catch(_){} }
-  }, 300);
+  // [FIX-RELOAD] إعادة تحميل الصفحة لضمان حالة نظيفة تماماً
+  setTimeout(()=>{ try{ location.reload(); }catch(e){ go('sLobby'); } }, 300);
 }
 
 /* ══ GAME ENGINE ══ */
@@ -14268,7 +14220,7 @@ function _advTM(){
   } else if(!G._multi){
     // وضع 2p: السلوك الأصلي
     if(G.myTurn) startTimer();
-    else if(G.isBot) _scheduleBotPlay();
+    else if(G.isBot){ showOppTimer(); setTimeout(()=>{ if(!G.over) botPlay(); }, 3000); } // [FIX4] يلعب في الثانية 12 مع إظهار المؤقت
     else showOppTimer();
   } else if(!G.isMP && !isHost){
     // ضيف في 4p/2v2 أونلاين — ينتظر turn_start من المضيف
@@ -14937,7 +14889,7 @@ function startGame(){
     // الضيف: ينتظر turn_start فقط
   } else {
     updateDealerBadge(); // [FIX-BADGE] شارة الموزع في 2p
-    if(!G.myTurn){ if(G.isBot){ _scheduleBotPlay(); } else showOppTimer(); }
+    if(!G.myTurn){ if(G.isBot){ showOppTimer(); setTimeout(()=>{ if(!G.over) botPlay(); },3000); } else showOppTimer(); } // [FIX4]
     else startTimer();
   }
   // [FIX-MODAL-CLOSE] أغلق كل نوافذ .mov2 المفتوحة (pm1f/pm2f/pm3f...) عند بدء المباراة
@@ -16134,7 +16086,7 @@ function applyPlay(who, card, moveId, ptsOverride){
     }
     startTimer();
   }
-  else { if(G.isBot) { _scheduleBotPlay(); } else showOppTimer(); }
+  else { if(G.isBot) { showOppTimer(); setTimeout(()=>{ if(!G.over) botPlay(); },3000); } else showOppTimer(); } // [FIX4]
 }
 
 /* ── EATABLE CARDS ── */
@@ -16323,7 +16275,7 @@ function nextRound(){
       G.oppHand = [];
       G._declOppHand = []; // أفرِّغ بعد الفحص
     }, 650);
-    if(G.myTurn) startTimer(); else { if(G.isBot){ _scheduleBotPlay(); } else showOppTimer(); }
+    if(G.myTurn) startTimer(); else { if(G.isBot){ showOppTimer(); setTimeout(()=>{ if(!G.over) botPlay(); },3000); } else showOppTimer(); } // [FIX4]
     return;
   }
 
@@ -16372,7 +16324,7 @@ function nextRound(){
   _dealAnimMyHand(()=>{
     setTimeout(()=>checkDeclarations(),650); updateDealerBadge();
     if(G.myTurn) startTimer();
-    else { if(G.isBot){ _scheduleBotPlay(); } else showOppTimer(); }
+    else { if(G.isBot){ showOppTimer(); setTimeout(()=>{ if(!G.over) botPlay(); },3000); } else showOppTimer(); } // [FIX4]
   });
 }
 
@@ -16477,7 +16429,7 @@ function finalizeSet(){
           G.tbl=[]; G.deck=dk;
           clearDeclBadges(); renderAll(); updateDealerBadge();
           setTimeout(()=>checkDeclarations(), 650);
-          if(G.isBot){ _scheduleBotPlay(); } else showOppTimer();
+          if(G.isBot){ showOppTimer(); setTimeout(()=>{ if(!G.over) botPlay(); },3000); } else showOppTimer(); // [FIX4]
         }
         return;
       }
@@ -16570,7 +16522,7 @@ function finalizeSet(){
     G.oppHand=[dk.pop(),dk.pop(),dk.pop(),dk.pop()];
     G.tbl=[]; G.deck=dk;
     clearDeclBadges(); renderAll(); updateDealerBadge(); setTimeout(()=>checkDeclarations(), 650);
-    if(G.isBot){ _scheduleBotPlay(); }
+    if(G.isBot){ showOppTimer(); setTimeout(()=>{ if(!G.over) botPlay(); },3000); } // [FIX4]
     else showOppTimer();
   };
 
@@ -16803,20 +16755,8 @@ function clearTimer(){
 }
 
 /* ── AI BOT ── */
-// [FIX-5] دالة مساعدة تُجدوِل دور البوت وتُصفّر timestamp كل دور جديد
-function _scheduleBotPlay(){
-  window._botTurnStartTs = Date.now(); // timestamp جديد لكل دور
-  if(window._botResumeTimer){ clearTimeout(window._botResumeTimer); window._botResumeTimer=null; }
-  window._botResumeTimer = setTimeout(()=>{
-    window._botResumeTimer = null;
-    if(G && G.isBot && !G.myTurn && !G.over) botPlay();
-  }, 12000);
-}
-
 function botPlay(){
   if(G.myTurn || G.over) return;
-  window._botTurnStartTs = null; // [FIX-5] صفّر عند التنفيذ الفعلي
-  if(window._botResumeTimer){ clearTimeout(window._botResumeTimer); window._botResumeTimer=null; }
   // في وضع isMP مع بوت: أوراق البوت محفوظة في G._mpHands
   const botHand = (G.isMP && G.oppId && G._mpHands && G._mpHands[G.oppId])
     ? G._mpHands[G.oppId]
@@ -17398,16 +17338,7 @@ function doRematch(){
   if(isHost) _rematchCheckAndLaunch();
   // الضيف: ينتظر rematch_start من المضيف
 }
-function doBackLobby(){
-  $('sWin').classList.remove('on');
-  setTimeout(()=>{
-    try{
-      try{ sessionStorage.removeItem('ronda_game'); }catch(_){}
-      try{ sessionStorage.removeItem('ronda_rc');   }catch(_){}
-      goLobby();
-    }catch(e){ try{ location.reload(); }catch(_){} }
-  }, 300);
-}
+function doBackLobby(){ $('sWin').classList.remove('on'); setTimeout(()=>{ try{ location.reload(); }catch(e){ goLobby(); } }, 300); }
 function doQuit(){ 
   clearTimer(); 
   clearGameState();
@@ -17423,14 +17354,8 @@ function doQuit(){
   // تنظيف شامل
   room=null; isHost=false;
   G=newG(); pMode='2p';
-  // [FIX-NO-RELOAD] goLobby() تُنظّف وتُحدّث UI بدون reload
-  setTimeout(()=>{
-    try{
-      try{ sessionStorage.removeItem('ronda_game'); }catch(_){}
-      try{ sessionStorage.removeItem('ronda_rc');   }catch(_){}
-      goLobby();
-    }catch(e){ try{ location.reload(); }catch(_){} }
-  }, 300);
+  // [FIX-RELOAD] إعادة تحميل الصفحة لضمان حالة نظيفة تماماً
+  setTimeout(()=>{ try{ location.reload(); }catch(e){ go('sLobby'); } }, 300);
 }
 
 /* ── MODALS ── */
@@ -22997,6 +22922,17 @@ function loadLeaderboard(sortBy){
   const _update = async ()=>{
     let remote = null;
 
+    // [FIX2] انتظر حتى يُحمَّل Supabase (قد يكون CDN بطيئاً في التطبيق)
+    let _sbWait = 0;
+    while(typeof window.supabase === 'undefined' && _sbWait < 5000){
+      await new Promise(r=>setTimeout(r, 300));
+      _sbWait += 300;
+    }
+    // [FIX2] إعادة تهيئة _SB.client إذا كان null (بعد تحميل المكتبة متأخراً)
+    if(!_SB.client && typeof window.supabase !== 'undefined'){
+      try{ _SB.client = supabase.createClient(_SB.URL, _SB.KEY); }catch(e){}
+    }
+
     // جرّب Supabase أولاً
     remote = await _sbQueryLeaderboard(sortBy, 100);
 
@@ -23516,7 +23452,6 @@ async function _lbmLoad(forceRemote){
   if(local.length && !forceRemote){ _lbmRows=local; _lbmRender(); }
 
   // ② جلب من Supabase
-  let gotRemote = false;
   try{
     const remote = await _sbQueryLeaderboard('wins', 200);
     if(remote && remote.length){
@@ -23524,45 +23459,12 @@ async function _lbmLoad(forceRemote){
         ? _mergeLbSources(local, remote)
         : remote;
       _lbmRender();
-      gotRemote = true;
+    } else if(!local.length){
+      _lbmRenderEmpty();
     }
-  }catch(e){ window._DEV_MODE && console.warn('[LB] Supabase failed:', e); }
-
-  // ③ [FIX-2] إذا فشل Supabase (شائع في WebView) — جرب Firebase مباشرة
-  if(!gotRemote){
-    try{
-      if(window._fb){
-        const {db, ref, get, orderByChild, query, limitToLast} = window._fb;
-        const usersRef = query(ref(db,'users'), orderByChild('wins'), limitToLast(100));
-        const snap = await get(usersRef);
-        if(snap.exists()){
-          const fbRows = [];
-          snap.forEach(child=>{
-            const u = child.val();
-            if(u && u.id && !String(u.id).startsWith('bot_')){
-              fbRows.push({
-                id: u.id, name: u.name||'لاعب', av: u.av||'🎭',
-                wins: u.wins||0, losses: u.losses||0,
-                games: u.games||0, totalPts: u.totalPts||u.total_pts||0,
-                bestPts: u.bestPts||u.best_pts||0, lastSeen: u.lastSeen||0
-              });
-            }
-          });
-          if(fbRows.length){
-            _lbmRows = local.length
-              ? (typeof _mergeLbSources==='function' ? _mergeLbSources(local, fbRows) : fbRows)
-              : fbRows;
-            _lbmRender();
-            gotRemote = true;
-            window._DEV_MODE && console.log('[LB] Firebase fallback — got', fbRows.length, 'rows');
-          }
-        }
-      }
-    }catch(e2){ window._DEV_MODE && console.warn('[LB] Firebase fallback failed:', e2); }
+  }catch(e){
+    if(!local.length) _lbmRenderEmpty();
   }
-
-  // ④ إذا لم تصل أي بيانات
-  if(!gotRemote && !local.length) _lbmRenderEmpty();
 }
 
 function _lbmRenderEmpty(){
