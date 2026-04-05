@@ -5462,11 +5462,11 @@ document.addEventListener('deviceready', async () => {
         const ev = new CustomEvent('app:statechange', { detail: { isActive } });
         window.dispatchEvent(ev);
         if (!isActive) {
-          // [FIX-MODAL-BG] أغلق مودال النتائج فوراً عند الخروج للخلفية
+          // [FIX-MODAL-BG] أغلق مودال النتائج فوراً — بدون setTimeout (يتجمّد في الخلفية)
           if(window._rndStartTs){
             clearTimeout(window._rndAutoTimer);
             window._rndAutoTimer = null;
-            setTimeout(()=>{ if(typeof closeRndModal==='function') closeRndModal(); }, 80);
+            if(typeof closeRndModal==='function') closeRndModal();
           }
           // [5] ذهب للخلفية — جدوِل تلقائي إذا كان دور اللاعب
           console.log('[App] Backgrounded — checking turn state');
@@ -5493,8 +5493,19 @@ document.addEventListener('deviceready', async () => {
           // [5] عاد للواجهة — أوقف التلقائي في الخلفية
           console.log('[App] Foregrounded — resuming');
           _stopBgAutoPlay();
-          if(!localStorage.getItem('ronda_autoplay') || localStorage.getItem('ronda_autoplay') !== '1'){
-            if(typeof _setAutoPlay==='function') _setAutoPlay(false, false);
+          // [FIX-MODAL-RETURN] ضمان: إغلاق المودال فوراً عند العودة إن كان لا يزال مفتوحاً
+          if(window._rndStartTs && typeof closeRndModal==='function') closeRndModal();
+          // [ABSENCE-MODE] إذا كان في وضع الغياب → ألغِه (اللاعع عاد)
+          if(typeof _deactivateAbsenceMode === 'function' && typeof _absenceMode !== 'undefined' && _absenceMode){
+            _deactivateAbsenceMode();
+            if(G && !G.over){
+              const myTurnNow = G._multi ? (G.currentSeat === G.mySeat) : G.myTurn;
+              if(myTurnNow) setTimeout(()=>{ if(typeof startTimer==='function'&&!G.over) startTimer(); }, 400);
+            }
+          } else {
+            if(!localStorage.getItem('ronda_autoplay') || localStorage.getItem('ronda_autoplay') !== '1'){
+              if(typeof _setAutoPlay==='function') _setAutoPlay(false, false);
+            }
           }
           // [4-1] استأنف مؤقت البوت (يلعب في ث12)
           if(G && G.isBot && !G.myTurn && !G.over){
@@ -8264,6 +8275,12 @@ function showRndModal(type, players, footerHtml, cb){
   _rndCb=cb||null;
   modal.classList.add('on');
 
+  // [ABSENCE-MODE] إذا كان اللاعع غائباً → أغلق المودال فوراً بدون setTimeout
+  if(typeof _absenceMode !== 'undefined' && _absenceMode){
+    closeRndModal();
+    return;
+  }
+
   // ── شريط العداد التنازلي — مقاوم لتجميد التطبيق في الخلفية ──
   const AUTO_MS = 4200;
   const bar=$('rndCountBar');
@@ -9545,8 +9562,8 @@ function _startBgAutoPlay(){
     // دور اللاعب الحقيقي في 1v1 bot أو multiplayer
     const myTurnNow = G._multi ? (G.currentSeat === G.mySeat) : G.myTurn;
     if(myTurnNow){
-      // العب تلقائياً بدون حفظ الإعداد
-      _setAutoPlay(true, false);
+      // [ABSENCE-MODE] فعّل وضع الغياب — يلعب كل الأدوار القادمة تلقائياً
+      _activateAbsenceMode();
       _doAutoPlay();
       // أعد جدولة للدور التالي إذا لا يزال في الخلفية
       _bgMyTurnStartTs = null;
@@ -9566,9 +9583,24 @@ document.addEventListener('visibilitychange', function(){
 
     // [5] إيقاف التلقائي في الخلفية — اللاعب يتحكم الآن
     _stopBgAutoPlay();
-    // [5] إلغاء التلقائي المؤقت عند العودة (لم يختره المستخدم)
-    if(!localStorage.getItem('ronda_autoplay') || localStorage.getItem('ronda_autoplay') !== '1'){
-      _setAutoPlay(false, false);
+
+    // [FIX-MODAL-RETURN] ضمان: إذا بقي المودال مفتوحاً رغم كل شيء → أغلقه فوراً عند العودة
+    // (يحدث لو تجمّد الـ JS تماماً ولم تُنفَّذ closeRndModal عند الذهاب للخلفية)
+    if(window._rndStartTs && typeof closeRndModal==='function') closeRndModal();
+
+    // [ABSENCE-MODE] إذا كان في وضع الغياب → ألغِه (اللاعع عاد)
+    if(typeof _deactivateAbsenceMode === 'function' && _absenceMode){
+      _deactivateAbsenceMode();
+      // إذا كان دوره الآن → اعرض له العداد من جديد
+      if(G && !G.over){
+        const myTurnNow = G._multi ? (G.currentSeat === G.mySeat) : G.myTurn;
+        if(myTurnNow) setTimeout(()=>{ if(!G||G.over) startTimer(); }, 400);
+      }
+    } else {
+      // [5] إلغاء التلقائي المؤقت عند العودة (لم يختره المستخدم)
+      if(!localStorage.getItem('ronda_autoplay') || localStorage.getItem('ronda_autoplay') !== '1'){
+        _setAutoPlay(false, false);
+      }
     }
 
     // [FIX-MODAL-BG] المودال أُغلق تلقائياً عند الخروج — لا شيء للاستئناف هنا
@@ -9611,12 +9643,12 @@ document.addEventListener('visibilitychange', function(){
     // ══ ذهب للخلفية ══
     window._DEV_MODE && console.log('[Visibility] ذهب للخلفية');
 
-    // [FIX-MODAL-BG] عند الذهاب للخلفية ومودال النتائج مفتوح → أغلقه فوراً
-    // هذا يضمن استمرار المباراة بدون انتظار عودة اللاعع
+    // [FIX-MODAL-BG] عند الذهاب للخلفية ومودال النتائج مفتوح → أغلقه فوراً بدون setTimeout
+    // (setTimeout يتجمّد في الخلفية على iOS/Android — لا بد من الاستدعاء المباشر)
     if(window._rndStartTs){
       clearTimeout(window._rndAutoTimer);
       window._rndAutoTimer = null;
-      setTimeout(()=>{ if(typeof closeRndModal==='function') closeRndModal(); }, 80);
+      if(typeof closeRndModal==='function') closeRndModal();
     }
 
     // [5] إذا كان دور اللاعب الحقيقي → جدوِل تلقائي بعد انتهاء الـ15 ثانية
@@ -13616,6 +13648,12 @@ const _EV = {
 };
 
 function leaveRoom(){
+  // [ABSENCE-MODE] صفّر وضع الغياب عند مغادرة الغرفة
+  if(typeof _absenceMode !== 'undefined' && _absenceMode){
+    _absenceMode = false;
+    const badge = document.getElementById('autoBadgeSeat0');
+    if(badge) badge.style.display = 'none';
+  }
   if(room && ((window._AB?.ready)||(window._PN?.ready)||(window._SB?.ready)||(_P2P.ready)||_fbRoomCode)) bcSend({type:'leave'});
   _stopHeartbeat();
   // 🔌 KeepAlive: إعادة تردد الـ ping للوضع العادي عند مغادرة الغرفة
@@ -16403,6 +16441,8 @@ function nextRound(){
     // كانت الخطأ: newHands[G.oppId] = أوراق الضيف نفسه → ظهور نتائج روندا خاطئة
     const _oppDeclHand = newHands[P.id] || [];
     // [FIX-BOT] حفظ أوراق البوت في _mpHands بمصدرها الصحيح (G.oppId) — مستقل عن oppDeclHand
+    // [ABSENCE-MODE] حفظ أوراق الخصم دائماً (ليس فقط للبوت) — يُمكّن المضيف من اللعب عنه عند غيابه
+    G._mpHands = { ...G._mpHands, [G.oppId]: newHands[G.oppId]||[] };
     if(G.isBot) G._mpHands = { ...G._mpHands, [G.oppId]: newHands[G.oppId]||[] };
     bcSend({type:'new_round', deck:[...G.deck], hands:newHands,
             tbl:[...G.tbl], // ✅ [FIX-TBL-SYNC] أرسل حالة الطاولة للضيف (مهمة في التوزيعات 2-5)
@@ -16761,19 +16801,27 @@ function showSeatTimer(localSeat, duration, isBotTurn){
 
 /* ── showAutoBadge(localSeat, show): يُظهر/يُخفي شارة "🤖 تلقائي" */
 function showAutoBadge(localSeat, show){
-  // [FIX] لا نعرض شارة "تلقائي" فوق صورة أي لاعب - معطّل كلياً
   const e = _seatTimerEls(localSeat);
   if(!e) return;
   const badge = $(e.badgeEl);
   const av    = $(e.avEl);
-  if(badge) badge.style.display = 'none';
-  if(av) av.classList.remove('auto-playing');
+  // [ABSENCE-MODE] شارة seat0 تُعرض فقط عند وضع الغياب — المقاعد الأخرى تُعرض عند bot takeover
+  if(localSeat === 0){
+    if(badge) badge.style.display = (show && typeof _absenceMode!=='undefined' && _absenceMode) ? 'flex' : 'none';
+    return;
+  }
+  if(badge) badge.style.display = show ? 'flex' : 'none';
+  if(av){ if(show) av.classList.add('auto-playing'); else av.classList.remove('auto-playing'); }
 }
 
 /* ══ startTimer / showOppTimer — الواجهة القديمة تُحوَّل للنظام الجديد ══ */
 
 /* ══ [AUTO-PLAY] منطق زر التلقائي ══════════════════════════════ */
 let _autoPlayEnabled = false; // حالة الزر
+/* [ABSENCE-MODE] وضع الغياب — يتفعل بمجرد انتهاء 15 ثانية دون لعب
+   يبقى مفعّلاً حتى يعود اللاعب ويلمس الشاشة
+   يضمن استمرار المباراة كاملاً حتى النهاية بدون انتظار اللاعب */
+let _absenceMode = false;
 
 /* الدالة الداخلية للعب التلقائي — تختار أفضل ورقة وتلعبها */
 function _doAutoPlay(){
@@ -16786,6 +16834,30 @@ function _doAutoPlay(){
   doPlay();
 }
 
+/* تفعيل وضع الغياب — يُظهر شارة "تلقائي" على seat0 ويفعّل الاستمرار التلقائي */
+function _activateAbsenceMode(){
+  if(_absenceMode) return;
+  _absenceMode = true;
+  _setAutoPlay(true, false);
+  // أظهر شارة "تلقائي" على المقعد 0 (أنا)
+  const badge = $('autoBadgeSeat0');
+  if(badge) badge.style.display = 'flex';
+  console.log('[AbsenceMode] ✅ تفعيل وضع الغياب — اللعب التلقائي مستمر');
+}
+
+/* إلغاء وضع الغياب — اللاعع عاد ويريد التحكم مجدداً */
+function _deactivateAbsenceMode(){
+  if(!_absenceMode) return;
+  _absenceMode = false;
+  // لا نحفظ في localStorage — نُعيد إعداد المستخدم الأصلي
+  const saved = localStorage.getItem('ronda_autoplay');
+  _setAutoPlay(saved === '1', false);
+  // أخفِ شارة "تلقائي" عن seat0
+  const badge = $('autoBadgeSeat0');
+  if(badge) badge.style.display = 'none';
+  console.log('[AbsenceMode] 🔄 اللاعع عاد — إلغاء وضع الغياب');
+}
+
 /* ضبط حالة التلقائي مع تحديث الواجهة — save=true يحفظ في localStorage */
 function _setAutoPlay(val, save=true){
   _autoPlayEnabled = !!val;
@@ -16796,6 +16868,8 @@ function _setAutoPlay(val, save=true){
   if(icon) icon.style.display = _autoPlayEnabled ? 'block' : 'none';
   if(tr)   tr.classList.toggle('auto-active', _autoPlayEnabled);
   if(save){ try{ localStorage.setItem('ronda_autoplay', _autoPlayEnabled?'1':'0'); }catch(e){} }
+  // إذا عطّل المستخدم التلقائي يدوياً → أيضاً ألغِ وضع الغياب
+  if(!val && _absenceMode) _deactivateAbsenceMode();
 }
 
 /* زر المستخدم — تبديل يدوي (يحفظ دائماً) */
@@ -16822,6 +16896,13 @@ function _loadAutoPlayPref(){
 /* ── TIMER ── */
 function startTimer(){
   clearTimer();
+
+  // [ABSENCE-MODE] إذا كان اللاعع غائباً → العب فوراً بدون عداد
+  if(_absenceMode){
+    setTimeout(()=>{ if(!G||G.over) return; _doAutoPlay(); }, 300);
+    return;
+  }
+
   _loadAutoPlayPref();
 
   if(_autoPlayEnabled){
@@ -16851,7 +16932,8 @@ function startTimer(){
     if(G.timerCount<=3 && G.timerCount>0) HPT.tick();
     if(G.timerCount<=0){
       clearTimer();
-      if(!_autoPlayEnabled) _setAutoPlay(true, false);
+      // [ABSENCE-MODE] فعّل وضع الغياب — اللعب التلقائي لكل الأدوار القادمة
+      _activateAbsenceMode();
       _doAutoPlay();
     }
   },1000);
@@ -16875,20 +16957,32 @@ function showOppTimer(){
     if(t<=0){
       clearInterval(oppTI);
       if(G && G.isMP && !G.over){
-        toast('⏳ الخصم تأخر — ننتظر قليلاً...','net',3000);
-        if(window._oppAbsenceTimeout) clearTimeout(window._oppAbsenceTimeout);
-        // مهلة تتكيّف مع جودة الشبكة: 45s جيد / 90s ضعيف / 120s منقطع
-        const absenceMs = _adaptTimeout(45000);
-        window._oppAbsenceTimeout = setTimeout(()=>{
-          if(!G || G.over || !G.isMP) return;
-          // محاولة resync قبل الاستسلام
-          if(!isHost) _requestResync('give-up-resync');
-          setTimeout(()=>{
-            if(!G || G.over || !G.isMP) return;
-            toast('🔌 الخصم غاب طويلاً — نعود للبهو','warn',4000);
-            setTimeout(()=>leaveRoom(), 2500);
-          }, _adaptTimeout(10000));
-        }, absenceMs);
+        // [ABSENCE-MODE] الخصم تأخر — المضيف يلعب عنه في 1v1 أو البوت في 4p
+        if(isHost){
+          if(G._multi){
+            // 4p/2v2: bot takeover يتولّى الأمر تلقائياً
+            const absSeat = G.currentSeat;
+            const absPlayer = room?.players?.[absSeat];
+            if(absPlayer && !G.bots[absSeat]) _botTakeoverStart(absPlayer.id);
+          } else {
+            // 1v1 MP: المضيف يلعب عن الخصم الغائب
+            const oppHnd = (G._mpHands && G.oppId && G._mpHands[G.oppId]) ? G._mpHands[G.oppId] : null;
+            if(oppHnd && oppHnd.length){
+              let best=null, bestEat=0;
+              for(const c of oppHnd){const e=getEatable(c);if(e.length>bestEat){bestEat=e.length;best=c;}}
+              G.selCard = best || oppHnd[0];
+              // نُشعر الخصم أن المضيف يلعب عنه
+              console.log('[AbsenceMode] 🤖 المضيف يلعب عن الخصم الغائب');
+              setTimeout(()=>{ if(G && !G.myTurn && !G.over) doPlay(); }, 500);
+            } else {
+              // لا يوجد يد محفوظة — اطلب resync ثم انتظر
+              if(typeof _requestResync==='function') _requestResync('opp-absent-1v1');
+            }
+          }
+        }
+        // لا نغادر الغرفة أبداً — المباراة تستمر حتى النهاية
+        // (تمت إزالة leaveRoom من هنا)
+        toast('⏳ الخصم غائب — اللعب تلقائي','info',2500);
       }
     }
   },1000);
