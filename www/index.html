@@ -5462,6 +5462,12 @@ document.addEventListener('deviceready', async () => {
         const ev = new CustomEvent('app:statechange', { detail: { isActive } });
         window.dispatchEvent(ev);
         if (!isActive) {
+          // [FIX-MODAL-BG] أغلق مودال النتائج فوراً عند الخروج للخلفية
+          if(window._rndStartTs){
+            clearTimeout(window._rndAutoTimer);
+            window._rndAutoTimer = null;
+            setTimeout(()=>{ if(typeof closeRndModal==='function') closeRndModal(); }, 80);
+          }
           // [5] ذهب للخلفية — جدوِل تلقائي إذا كان دور اللاعب
           console.log('[App] Backgrounded — checking turn state');
           if(G && !G.over){
@@ -9565,17 +9571,7 @@ document.addEventListener('visibilitychange', function(){
       _setAutoPlay(false, false);
     }
 
-    // [FIX2] استئناف مودال نتائج المجموعة إذا تجمّد في الخلفية
-    if(window._rndStartTs){
-      const _el = Date.now() - window._rndStartTs;
-      const _rem = Math.max(0, 4200 - _el);
-      clearTimeout(window._rndAutoTimer);
-      if(_rem <= 0){
-        if(typeof closeRndModal==='function') closeRndModal();
-      } else {
-        window._rndAutoTimer = setTimeout(()=>{ if(typeof closeRndModal==='function') closeRndModal(); }, _rem);
-      }
-    }
+    // [FIX-MODAL-BG] المودال أُغلق تلقائياً عند الخروج — لا شيء للاستئناف هنا
 
     // [FIX-5] استعادة مؤقت البوت إذا كان دوره عند الخروج
     if(G && G.isBot && !G.myTurn && !G.over){
@@ -9592,6 +9588,10 @@ document.addEventListener('visibilitychange', function(){
     const _inGame = !!window._fbRoomCode;
     if(!_inGame) return;
     const _silence = Date.now() - (_NET.lastMsg || 0);
+    // [FIX-RESYNC] إذا غبنا > 3 ثوانٍ → اطلب resync فوراً لاستئناف حالة المباراة
+    if(_silence > 3000 && G && !G.over && G.isMP && !isHost){
+      setTimeout(()=>{ if(typeof _requestResync==='function') _requestResync('bg-return'); }, 500);
+    }
     if(_silence > 8000){
       window._DEV_MODE && console.log('[Visibility] صمت', Math.round(_silence/1000)+'ث — إعادة تهيئة');
       window._NET.wasOffline = true;
@@ -9611,10 +9611,12 @@ document.addEventListener('visibilitychange', function(){
     // ══ ذهب للخلفية ══
     window._DEV_MODE && console.log('[Visibility] ذهب للخلفية');
 
-    // [FIX2] تجميد عداد مودال نتائج المجموعة عند الذهاب للخلفية
-    if(window._rndStartTs && window._rndAutoTimer){
+    // [FIX-MODAL-BG] عند الذهاب للخلفية ومودال النتائج مفتوح → أغلقه فوراً
+    // هذا يضمن استمرار المباراة بدون انتظار عودة اللاعع
+    if(window._rndStartTs){
       clearTimeout(window._rndAutoTimer);
-      window._rndAutoTimer = null; // null = متجمد (يُستأنف عند العودة)
+      window._rndAutoTimer = null;
+      setTimeout(()=>{ if(typeof closeRndModal==='function') closeRndModal(); }, 80);
     }
 
     // [5] إذا كان دور اللاعب الحقيقي → جدوِل تلقائي بعد انتهاء الـ15 ثانية
