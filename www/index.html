@@ -25310,9 +25310,38 @@ function _shopOnSuccess(pkg, orderId){
    ثم تكتب في gold_transactions باستخدام service_role key.
    حتى ذلك الحين: gold_after يُحسب server-side بعد التحقق. ──────── */
 async function _shopLogTransaction(pkg, orderId){
-  // [SEC] لا نكتب مباشرة لـ Supabase — سيُفعَّل لاحقاً عبر Cloud Function
-  // الكتابة الحالية معطّلة بسبب RLS (service_role فقط)
-  window._DEV_MODE && console.log('[Shop] معاملة معلّقة للتحقق server-side:', orderId, pkg.id);
+  try{
+    const goldBefore = (P.gold||0) - (pkg.coins||0);
+    const row = {
+      player_id:     P.id,
+      player_name:   P.name || '',
+      order_id:      orderId,
+      package_id:    pkg.id    || 'unknown',
+      package_label: pkg.label || '',
+      coins_amount:  pkg.coins || 0,
+      price_usd:     pkg.price || 0,
+      gold_before:   Math.max(0, goldBefore),
+      gold_after:    P.gold || 0,
+      status:        'completed'
+    };
+    const res = await fetch(`${_SB.URL}/rest/v1/gold_transactions`,{
+      method:  'POST',
+      headers: {
+        'apikey':        _SB.KEY,
+        'Authorization': 'Bearer ' + _SB.KEY,
+        'Content-Type':  'application/json',
+        'Prefer':        'return=minimal'
+      },
+      body: JSON.stringify(row)
+    });
+    if(!res.ok){
+      console.warn('[Shop] فشل تسجيل المعاملة في Supabase:', res.status);
+    } else {
+      console.log('[Shop] ✅ تم تسجيل المعاملة:', orderId);
+    }
+  }catch(e){
+    console.warn('[Shop] خطأ في _shopLogTransaction:', e);
+  }
 }
 
 /* ── عرض شاشة النجاح ── */
