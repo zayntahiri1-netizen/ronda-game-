@@ -90,7 +90,18 @@ jobs:
           echo "=== Manifest final check ==="
           grep -E "APPLICATION_ID|AD_ID|VIBRATE|networkSecurity" "$MANIFEST" || true
 
-      # ── 9. إعداد Keystore ────────────────────────────────
+      # ── 9. نسخ أيقونات Ronda Tahiro ─────────────────────
+      - name: Apply Ronda Tahiro icons
+        run: |
+          RES="android/app/src/main/res"
+          PATCHES="android-patches/res"
+          for dir in mipmap-mdpi mipmap-hdpi mipmap-xhdpi mipmap-xxhdpi mipmap-xxxhdpi; do
+            mkdir -p "$RES/$dir"
+            cp "$PATCHES/$dir/"*.png "$RES/$dir/"
+            echo "✓ icons copied → $dir"
+          done
+
+      # ── 10. إعداد Keystore ───────────────────────────────
       - name: Setup keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
@@ -109,18 +120,18 @@ jobs:
             echo "⚠ Temporary keystore created"
           fi
 
-      # ── 10. صلاحيات gradlew ──────────────────────────────
+      # ── 11. صلاحيات gradlew ──────────────────────────────
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
-      # ── 11. بناء Debug APK ───────────────────────────────
+      # ── 12. بناء Debug APK ───────────────────────────────
       - name: Build Debug APK
         run: |
           cd android
           ./gradlew assembleDebug --no-daemon
         continue-on-error: true
 
-      # ── 12. بناء Release APK ─────────────────────────────
+      # ── 13. بناء Release APK ─────────────────────────────
       - name: Build Release APK
         env:
           KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
@@ -137,7 +148,7 @@ jobs:
             --no-daemon
         continue-on-error: true
 
-      # ── 13. بناء AAB للـ Play Store ──────────────────────
+      # ── 14. بناء AAB للـ Play Store ──────────────────────
       - name: Build Release AAB
         env:
           KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
@@ -153,7 +164,7 @@ jobs:
             -Pandroid.injected.signing.key.password="$KS_PASS" \
             --no-daemon
 
-      # ── 14. رفع الملفات ──────────────────────────────────
+      # ── 15. رفع الملفات ──────────────────────────────────
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
@@ -175,7 +186,7 @@ jobs:
           path: android/app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: warn
 
-      # ── 15. ملخص ────────────────────────────────────────
+      # ── 16. ملخص ────────────────────────────────────────
       - name: Build Summary
         if: always()
         run: |
