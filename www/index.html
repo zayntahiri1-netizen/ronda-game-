@@ -16832,11 +16832,9 @@ function startTimer(){
   _loadAutoPlayPref();
 
   // [FIX-BG-TIMER] إذا كان التطبيق في الخلفية → setInterval مجمّد في iOS
-  // الحل: شغّل _startBgAutoPlay مباشرة بدلاً من الانتظار لـ visibilitychange
-  // هذا يضمن استمرار اللعب التلقائي طوال المباراة حتى لو التطبيق في الخلفية
+  // الحل: نفس سلوك التلقائي العادي تماماً (300ms) بدلاً من انتظار 15 ثانية
   if(document.hidden && G && !G.over){
-    _bgMyTurnStartTs = _bgMyTurnStartTs || Date.now();
-    _startBgAutoPlay();
+    setTimeout(()=>{ if(!G||G.over) return; _doAutoPlay(); }, 300);
     return;
   }
 
