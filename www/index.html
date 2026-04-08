@@ -8229,6 +8229,13 @@ function _buildStatsHTML(st, compact){
 }
 
 function showRndModal(type, players, footerHtml, cb){
+  // [FIX-BG-MODAL] إذا كان التطبيق في الخلفية → تجاوز المودال فوراً وشغّل الـcallback
+  // setTimeout المجمّد في iOS يمنع closeRndModal من الاستدعاء → المباراة تتجمد
+  // الحل: لا نُظهر المودال أصلاً، ننتقل مباشرة للمجموعة التالية
+  if(document.hidden){
+    setTimeout(()=>{ if(typeof cb==='function') cb(); }, 150);
+    return;
+  }
   const modal=$('rndModal'); if(!modal) return;
   const _rb=$('rndBadge'),_rt=$('rndTitle'),_rs=$('rndSub');
   if(_rb){_rb.textContent=type==='35'?'🎴':'🏆';_rb.className='rnd-badge '+(type==='35'?'b35':'b55');}
@@ -16823,6 +16830,15 @@ function _loadAutoPlayPref(){
 function startTimer(){
   clearTimer();
   _loadAutoPlayPref();
+
+  // [FIX-BG-TIMER] إذا كان التطبيق في الخلفية → setInterval مجمّد في iOS
+  // الحل: شغّل _startBgAutoPlay مباشرة بدلاً من الانتظار لـ visibilitychange
+  // هذا يضمن استمرار اللعب التلقائي طوال المباراة حتى لو التطبيق في الخلفية
+  if(document.hidden && G && !G.over){
+    _bgMyTurnStartTs = _bgMyTurnStartTs || Date.now();
+    _startBgAutoPlay();
+    return;
+  }
 
   if(_autoPlayEnabled){
     setTimeout(()=>{ if(!G||G.over) return; _doAutoPlay(); }, 300);
