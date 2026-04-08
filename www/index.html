@@ -22831,42 +22831,6 @@ function _sbRestHeaders(){
   };
 }
 
-async function _sbUpsertStats(data){
-  if(!data || !data.id) return;
-  try{
-    const row = {
-      id: data.id, name: data.name||'', av: data.av||'👤',
-      wins: data.wins||0, losses: data.losses||0, ties: data.ties||0,
-      games: data.games||0, total_pts: data.totalPts||0,
-      best_pts: data.bestPts||0, last_seen: Date.now()
-    };
-    await fetch(`${_SB.URL}/rest/v1/leaderboard`, {
-      method: 'POST',
-      headers: _sbRestHeaders(),
-      body: JSON.stringify(row)
-    });
-  }catch(e){}
-}
-
-async function _sbQueryLeaderboard(sortCol, limit=50){
-  try{
-    const col = sortCol==='totalPts' ? 'total_pts' : sortCol;
-    const res = await fetch(
-      `${_SB.URL}/rest/v1/leaderboard?select=*&order=${col}.desc&limit=${limit}`,
-      { headers: { 'apikey': _SB.KEY, 'Authorization': 'Bearer '+_SB.KEY } }
-    );
-    if(!res.ok) return null;
-    const rows = await res.json();
-    // نرجع بنفس هيكل localStorage
-    return rows.map(r=>({
-      id: r.id, name: r.name, av: r.av,
-      wins: r.wins||0, losses: r.losses||0, ties: r.ties||0,
-      games: r.games||0, totalPts: r.total_pts||0,
-      bestPts: r.best_pts||0, lastSeen: r.last_seen||0
-    }));
-  }catch(e){ return null; }
-}
-
 /* ── PubNub helpers للمتصدرين ── */
 
 // عميل PubNub مخصص للمتصدرين (منفصل عن عميل الغرف)
