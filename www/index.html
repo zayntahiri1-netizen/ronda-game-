@@ -5954,7 +5954,39 @@ document.addEventListener('deviceready', async () => {
           </div>
         </div>
 
-        <!-- ████ CARD SPECTATE — مشاهدة مباشرة ████ -->\n        <div class=\"gcard2 gc2-spectate\" onclick=\"openSpectate()\">\n          <div class=\"gcsc2\">\n            <canvas class=\"sc-canvas\" id=\"cvSp\" style=\"opacity:.4\"></canvas>\n            <div class=\"spec-scene\">\n              <div class=\"spec-tv\">\n                <div class=\"spec-tv-screen\">\n                  <div class=\"spec-card-anim\" id=\"spAnimCard1\">🂡</div>\n                  <div class=\"spec-card-anim\" id=\"spAnimCard2\" style=\"--d:.4s\">🂮</div>\n                  <div class=\"spec-card-anim\" id=\"spAnimCard3\" style=\"--d:.8s\">🂱</div>\n                </div>\n                <div class=\"spec-live-badge\">🔴 مباشر</div>\n              </div>\n              <div class=\"spec-viewers\" id=\"spViewers\"><span class=\"spec-eye\">👁️</span> <span id=\"spViewCnt\">0</span> مشاهد</div>\n            </div>\n          </div>\n          <div class=\"gcbody2\">\n            <div class=\"gctrow2\"><div class=\"gctitle2\">👁️ مشاهدة مباشرة</div><div class=\"gcbadge2\" style=\"background:linear-gradient(135deg,rgba(239,68,68,.3),rgba(185,28,28,.2));color:#f87171;border:1px solid rgba(239,68,68,.3)\">🔴 لايف</div></div>\n            <div class=\"gcsub2\">شاهد مباريات جارية الآن</div>\n            <div style=\"margin-top:8px;padding:9px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;text-align:center\">\n              <div style=\"font-size:.52rem;color:rgba(255,255,255,.5);margin-bottom:4px\">مباريات نشطة</div>\n              <div id=\"spMatchCount\" style=\"font-size:1.1rem;font-weight:900;color:#f87171;font-family:var(--fd)\">—</div>\n            </div>\n            <div style=\"margin-top:8px;padding:9px 12px;background:rgba(255,255,255,.04);border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.07)\">\n              <span style=\"font-size:1rem\">🎬</span>\n              <div style=\"flex:1\">\n                <div style=\"font-size:.65rem;font-weight:700;color:var(--t1)\">اختر مباراة لمشاهدتها</div>\n                <div style=\"font-size:.52rem;color:var(--t4)\">تعلم من اللاعبين الآخرين</div>\n              </div>\n              <span style=\"font-size:.8rem;color:var(--t4)\">›</span>\n            </div>\n          </div>\n        </div>\n\n        <!-- ████ CARD 4 — AI CYBER MIND ████ -->
+        <!-- ████ CARD SPECTATE — المدرجات ████ -->
+        <div class="gcard2 gc2-spectate" onclick="openSpectatePanel()">
+          <div class="gcsc2">
+            <canvas class="sc-canvas" id="cvSP" style="opacity:.35"></canvas>
+            <div class="spectate-card-scene">
+              <div class="sp-live-dot"></div>
+              <div class="sp-card-matches" id="spCardMatches">
+                <div class="sp-cm-row"><span class="sp-cm-av">🎴</span><span class="sp-cm-vs">—</span><span class="sp-cm-av">🎴</span></div>
+                <div class="sp-cm-row"><span class="sp-cm-av">🎴</span><span class="sp-cm-vs">—</span><span class="sp-cm-av">🎴</span></div>
+                <div class="sp-cm-row"><span class="sp-cm-av">🎴</span><span class="sp-cm-vs">—</span><span class="sp-cm-av">🎴</span></div>
+              </div>
+              <div class="sp-card-label">المدرجات</div>
+            </div>
+          </div>
+          <div class="gcbody2">
+            <div class="gctrow2"><div class="gctitle2">👁 المدرجات</div><div class="gcbadge2 sp-live-badge-card">🔴 مباشر</div></div>
+            <div class="gcsub2">شاهد المباريات الجارية الآن</div>
+            <div style="margin-top:8px;padding:9px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;text-align:center">
+              <div style="font-size:.52rem;color:rgba(255,255,255,.5);margin-bottom:4px">مباريات نشطة</div>
+              <div id="spActiveCount" style="font-size:1.1rem;font-weight:900;color:#f87171;font-family:var(--fd)">—</div>
+            </div>
+            <div style="margin-top:8px;padding:9px 12px;background:rgba(255,255,255,.04);border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.07)">
+              <span style="font-size:1rem">👁</span>
+              <div style="flex:1">
+                <div style="font-size:.65rem;font-weight:700;color:var(--t1)">ادخل وشاهد</div>
+                <div style="font-size:.52rem;color:var(--t4)">بدون تأثير على اللعب</div>
+              </div>
+              <span style="font-size:.8rem;color:var(--t4)">›</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ████ CARD 4 — AI CYBER MIND ████ -->
         <div class="gcard2 gc2-4">
           <div class="gcsc2">
             <canvas class="sc-canvas" id="cv4" style="opacity:.55"></canvas>
@@ -26795,107 +26827,6 @@ window.addEventListener('load',()=>{
 
 /* ── بطاقة الأصدقاء في الكاروسيل ── */
 .gc2-friends { background: linear-gradient(160deg,#0d1f1a 0%,#071510 100%); }
-
-/* ══════════════════════════════════════════
-   👁️ بطاقة المشاهدة المباشرة
-══════════════════════════════════════════ */
-.gc2-spectate { background: linear-gradient(160deg,#1a0d0d 0%,#100507 100%); }
-.gc2-spectate .gcsc2 { background: radial-gradient(ellipse 80% 60% at 50% 110%, rgba(239,68,68,.22) 0%, transparent 65%); }
-.spec-scene { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; }
-.spec-tv { position:relative; width:72px; height:52px; background:linear-gradient(160deg,#1c1c1c,#111); border-radius:8px; border:2px solid rgba(239,68,68,.4); box-shadow:0 0 18px rgba(239,68,68,.25); overflow:visible; }
-.spec-tv-screen { position:absolute; inset:4px; background:linear-gradient(160deg,#0f0f0f,#050505); border-radius:4px; display:flex; align-items:center; justify-content:center; gap:4px; overflow:hidden; }
-.spec-card-anim { font-size:1.3rem; animation:spCardFloat 2s ease-in-out infinite; animation-delay:var(--d,0s); color:#f87171; filter:drop-shadow(0 0 4px rgba(239,68,68,.5)); }
-@keyframes spCardFloat { 0%,100%{ transform:translateY(0) rotate(-5deg); } 50%{ transform:translateY(-4px) rotate(5deg); } }
-.spec-live-badge { position:absolute; top:-8px; right:-6px; background:rgba(239,68,68,.9); color:#fff; font-size:.42rem; font-weight:900; padding:2px 5px; border-radius:8px; letter-spacing:.05em; animation:spBlink 1.4s ease-in-out infinite; }
-@keyframes spBlink { 0%,100%{ opacity:1; } 50%{ opacity:.5; } }
-.spec-viewers { font-size:.6rem; color:rgba(255,255,255,.6); display:flex; align-items:center; gap:4px; }
-.spec-eye { font-size:.8rem; animation:spEyePulse 2s ease-in-out infinite; }
-@keyframes spEyePulse { 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.2); } }
-
-/* ══ مودال المشاهدة ══ */
-.spec-overlay { position:fixed!important; top:0!important; left:0!important; right:0!important; bottom:0!important; width:100vw!important; height:100vh!important; background:rgba(0,0,0,.85)!important; z-index:99999!important; display:flex!important; align-items:flex-end!important; justify-content:center!important; opacity:0; pointer-events:none; transition:opacity .25s; transform:translateZ(0); will-change:opacity; }
-.spec-overlay.open { opacity:1; pointer-events:auto; }
-.spec-sheet { background:linear-gradient(180deg,#130a0a 0%,#0a0404 100%); border-radius:22px 22px 0 0; width:100%; max-width:480px; max-height:88vh; display:flex; flex-direction:column; transform:translateY(40px) scale(.97); transition:transform .28s cubic-bezier(.25,.8,.25,1); }
-.spec-overlay.open .spec-sheet { transform:translateY(0) scale(1); }
-.spec-sheet-hd { display:flex; align-items:center; justify-content:space-between; padding:16px 18px 12px; border-bottom:1px solid rgba(239,68,68,.15); flex-shrink:0; }
-.spec-sheet-title { font-size:.95rem; font-weight:900; color:#f87171; font-family:var(--fd); }
-.spec-sheet-cls { width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:.85rem; color:rgba(255,255,255,.6); }
-.spec-list { flex:1; overflow-y:auto; padding:12px 14px; display:flex; flex-direction:column; gap:10px; -webkit-overflow-scrolling:touch; }
-.spec-list::-webkit-scrollbar { width:2px; }
-.spec-list::-webkit-scrollbar-thumb { background:rgba(239,68,68,.2); border-radius:2px; }
-
-/* بطاقة مباراة واحدة في القائمة */
-.spec-match-card { background:rgba(255,255,255,.04); border:1px solid rgba(239,68,68,.18); border-radius:14px; padding:12px; cursor:pointer; transition:all .2s; display:flex; flex-direction:column; gap:8px; position:relative; overflow:hidden; }
-.spec-match-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,rgba(239,68,68,.5),transparent); }
-.spec-match-card:active { transform:scale(.98); background:rgba(239,68,68,.08); }
-.smc-top { display:flex; align-items:center; gap:10px; }
-.smc-avatars { display:flex; align-items:center; gap:-4px; }
-.smc-av { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.95rem; border:2px solid rgba(239,68,68,.3); background:rgba(0,0,0,.4); margin-right:-4px; }
-.smc-vs { font-size:.6rem; color:rgba(255,255,255,.4); font-weight:700; padding:0 4px; }
-.smc-info { flex:1; }
-.smc-mode { font-size:.68rem; font-weight:900; color:#f87171; margin-bottom:2px; }
-.smc-names { font-size:.58rem; color:rgba(255,255,255,.55); }
-.smc-live { background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.3); color:#f87171; font-size:.48rem; font-weight:900; padding:2px 7px; border-radius:20px; display:flex; align-items:center; gap:3px; }
-.smc-dot { width:5px; height:5px; background:#f87171; border-radius:50%; animation:spBlink 1.2s infinite; }
-.smc-score { display:flex; align-items:center; justify-content:space-between; padding:8px 10px; background:rgba(0,0,0,.25); border-radius:10px; }
-.smc-pts { display:flex; flex-direction:column; align-items:center; gap:2px; }
-.smc-pts-num { font-size:1.1rem; font-weight:900; color:#f1f5f9; font-family:var(--fd); }
-.smc-pts-lbl { font-size:.48rem; color:rgba(255,255,255,.4); }
-.smc-sep { width:1px; height:28px; background:rgba(255,255,255,.1); }
-.smc-progress { flex:1; padding:0 8px; }
-.smc-bar-bg { height:4px; background:rgba(255,255,255,.1); border-radius:2px; overflow:hidden; margin-bottom:4px; }
-.smc-bar-fill { height:100%; background:linear-gradient(90deg,#ef4444,#f97316); border-radius:2px; transition:width .5s; }
-.smc-bar-lbl { font-size:.46rem; color:rgba(255,255,255,.4); text-align:center; }
-.smc-watch-btn { width:100%; padding:9px; background:linear-gradient(135deg,rgba(239,68,68,.25),rgba(185,28,28,.15)); border:1px solid rgba(239,68,68,.35); border-radius:10px; color:#f87171; font-size:.65rem; font-weight:900; font-family:var(--fd); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; transition:all .2s; }
-.smc-watch-btn:active { background:linear-gradient(135deg,rgba(239,68,68,.4),rgba(185,28,28,.3)); transform:scale(.98); }
-
-/* ══ نافذة المشاهدة الفعلية ══ */
-.spec-view-overlay { position:fixed!important; inset:0!important; background:#060203!important; z-index:999999!important; display:flex; flex-direction:column; opacity:0; pointer-events:none; transition:opacity .3s; }
-.spec-view-overlay.open { opacity:1; pointer-events:auto; }
-.sv-header { display:flex; align-items:center; padding:12px 16px; gap:10px; background:rgba(0,0,0,.4); border-bottom:1px solid rgba(239,68,68,.15); flex-shrink:0; }
-.sv-back { width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:.9rem; color:rgba(255,255,255,.7); flex-shrink:0; }
-.sv-title { flex:1; }
-.sv-match-title { font-size:.75rem; font-weight:900; color:#f87171; }
-.sv-match-sub { font-size:.55rem; color:rgba(255,255,255,.4); }
-.sv-live-pill { background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.3); color:#f87171; font-size:.48rem; font-weight:900; padding:3px 8px; border-radius:20px; display:flex; align-items:center; gap:3px; }
-.sv-body { flex:1; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:12px; }
-/* سكور الأعلى */
-.sv-score-band { display:flex; align-items:center; justify-content:space-around; padding:12px 8px; background:rgba(239,68,68,.06); border-radius:14px; border:1px solid rgba(239,68,68,.12); }
-.sv-player { display:flex; flex-direction:column; align-items:center; gap:6px; }
-.sv-pav { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.3rem; border:2px solid rgba(239,68,68,.4); background:rgba(0,0,0,.4); position:relative; }
-.sv-pav.active::after { content:'▶'; position:absolute; bottom:-4px; right:-4px; font-size:.5rem; color:#f87171; background:rgba(0,0,0,.8); border-radius:50%; width:14px; height:14px; display:flex; align-items:center; justify-content:center; }
-.sv-pname { font-size:.58rem; color:rgba(255,255,255,.7); font-weight:700; max-width:60px; text-align:center; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.sv-ppts { font-size:1.3rem; font-weight:900; color:#f1f5f9; font-family:var(--fd); }
-.sv-target { font-size:.5rem; color:rgba(255,255,255,.35); }
-.sv-vs-col { display:flex; flex-direction:column; align-items:center; gap:4px; }
-.sv-vs-txt { font-size:.7rem; color:rgba(255,255,255,.3); font-weight:900; }
-.sv-round-badge { background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.25); color:#f87171; font-size:.52rem; font-weight:900; padding:3px 8px; border-radius:10px; }
-/* الطاولة */
-.sv-table-sec { background:rgba(255,255,255,.03); border-radius:14px; border:1px solid rgba(255,255,255,.07); padding:12px; }
-.sv-sec-title { font-size:.6rem; color:rgba(255,255,255,.4); font-weight:700; margin-bottom:8px; letter-spacing:.05em; }
-.sv-table-cards { display:flex; align-items:center; flex-wrap:wrap; gap:6px; min-height:40px; }
-.sv-card { font-size:1.4rem; animation:svCardPop .3s ease; filter:drop-shadow(0 2px 6px rgba(0,0,0,.5)); }
-@keyframes svCardPop { from{ transform:scale(0) rotate(-20deg); opacity:0; } to{ transform:scale(1) rotate(0); opacity:1; } }
-.sv-empty-table { font-size:.58rem; color:rgba(255,255,255,.2); font-style:italic; }
-/* يد اللاعبين */
-.sv-hands-sec { display:flex; flex-direction:column; gap:8px; }
-.sv-hand-row { display:flex; align-items:center; gap:10px; padding:10px 12px; background:rgba(255,255,255,.03); border-radius:12px; border:1px solid rgba(255,255,255,.06); }
-.sv-hand-av { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.9rem; border:1.5px solid rgba(255,255,255,.2); background:rgba(0,0,0,.3); flex-shrink:0; }
-.sv-hand-info { flex:1; }
-.sv-hand-name { font-size:.58rem; color:rgba(255,255,255,.6); font-weight:700; margin-bottom:3px; }
-.sv-hand-cards { display:flex; gap:3px; }
-.sv-hand-card { font-size:.9rem; }
-.sv-hand-back { font-size:.9rem; opacity:.4; }
-.sv-turn-arrow { color:#f87171; font-size:.8rem; animation:spBlink 1s infinite; }
-/* أحداث المباراة */
-.sv-events-sec { }
-.sv-event-list { display:flex; flex-direction:column; gap:6px; }
-.sv-event { display:flex; align-items:center; gap:8px; padding:7px 10px; background:rgba(255,255,255,.03); border-radius:10px; border-right:3px solid rgba(239,68,68,.3); font-size:.58rem; color:rgba(255,255,255,.6); }
-.sv-event-ico { font-size:.85rem; flex-shrink:0; }
-/* تأخير المشاهدة */
-.sv-delay-note { display:flex; align-items:center; justify-content:center; gap:6px; font-size:.52rem; color:rgba(255,255,255,.3); padding:8px; background:rgba(255,255,255,.02); border-radius:10px; }
-.sv-footer { padding:12px 16px; border-top:1px solid rgba(239,68,68,.1); flex-shrink:0; }
-.sv-leave-btn { width:100%; padding:11px; background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.25); border-radius:12px; color:#f87171; font-size:.7rem; font-weight:900; font-family:var(--fd); cursor:pointer; text-align:center; }
 .gc2-friends .gcsc2 { background: radial-gradient(ellipse 80% 60% at 50% 110%, rgba(34,196,138,.25) 0%, transparent 65%); }
 .friends-card-scene { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; }
 .fcs-avatars { display:flex; align-items:center; gap:8px; }
@@ -26997,6 +26928,80 @@ window.addEventListener('load',()=>{
 .pbtn-friends-invite { background:linear-gradient(135deg,rgba(34,196,138,.15),rgba(34,196,138,.08)) !important;
   border:1.5px solid rgba(34,196,138,.35) !important; }
 .pbtn-friends-invite .pbtn-ico { font-size:1.1rem; }
+
+/* ══════════════════════════════════════════════════════
+   👁 المدرجات — Spectate Card CSS
+   ══════════════════════════════════════════════════════ */
+.gc2-spectate { background: linear-gradient(160deg,#1a0d10 0%,#0f070a 100%); }
+.gc2-spectate .gcsc2 { background: radial-gradient(ellipse 80% 60% at 50% 110%, rgba(239,68,68,.22) 0%, transparent 65%); }
+.spectate-card-scene { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; }
+.sp-live-dot { width:10px; height:10px; border-radius:50%; background:#f87171;
+  box-shadow:0 0 0 4px rgba(239,68,68,.25); animation:spPulse 1.4s ease-in-out infinite; }
+@keyframes spPulse { 0%,100%{ box-shadow:0 0 0 4px rgba(239,68,68,.25); } 50%{ box-shadow:0 0 0 8px rgba(239,68,68,.08); } }
+.sp-card-matches { display:flex; flex-direction:column; gap:5px; width:80%; }
+.sp-cm-row { display:flex; align-items:center; justify-content:center; gap:6px;
+  background:rgba(255,255,255,.05); border-radius:8px; padding:4px 8px;
+  border:1px solid rgba(239,68,68,.12); }
+.sp-cm-av { font-size:.75rem; width:22px; height:22px; border-radius:50%;
+  background:rgba(255,255,255,.07); display:flex; align-items:center; justify-content:center; }
+.sp-cm-vs { font-size:.45rem; color:rgba(255,255,255,.35); font-weight:700; letter-spacing:.05em; flex:1; text-align:center;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sp-card-label { font-size:.48rem; color:rgba(255,255,255,.35); letter-spacing:.1em; }
+.sp-live-badge-card { background:linear-gradient(135deg,rgba(239,68,68,.3),rgba(185,28,28,.2)) !important;
+  color:#f87171 !important; border:1px solid rgba(239,68,68,.3) !important; }
+
+/* ── بانيل المدرجات الكامل ── */
+.sp-overlay { position:fixed !important; top:0 !important; left:0 !important; right:0 !important; bottom:0 !important;
+  width:100vw !important; height:100vh !important; background:rgba(0,0,0,.85) !important;
+  z-index:99999 !important; display:flex !important; align-items:flex-end !important; justify-content:center !important;
+  opacity:0; pointer-events:none; transition:opacity .25s; transform:translateZ(0); }
+.sp-overlay.open { opacity:1; pointer-events:auto; }
+.sp-sheet { width:100%; max-width:480px; max-height:88vh; border-radius:20px 20px 0 0;
+  background:linear-gradient(180deg,#1a0d10 0%,#0a0507 100%);
+  border:1px solid rgba(239,68,68,.25); border-bottom:none;
+  box-shadow:0 0 0 1px rgba(239,68,68,.1), 0 -8px 40px rgba(0,0,0,.9);
+  display:flex; flex-direction:column; overflow:hidden;
+  transform:translateY(40px); transition:transform .3s cubic-bezier(.32,.72,0,1); }
+.sp-overlay.open .sp-sheet { transform:translateY(0); }
+.sp-sheet-hd { padding:14px 16px 10px; border-bottom:1px solid rgba(255,255,255,.06);
+  display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.sp-sheet-title { font-size:.9rem; font-weight:900; color:#f87171; display:flex; align-items:center; gap:7px; }
+.sp-sheet-live { display:flex; align-items:center; gap:5px; font-size:.58rem; color:rgba(255,255,255,.4);
+  background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.2); border-radius:20px; padding:3px 8px; }
+.sp-sheet-live-dot { width:6px; height:6px; border-radius:50%; background:#f87171; animation:spPulse 1.4s ease-in-out infinite; }
+.sp-sheet-cls { width:28px; height:28px; border-radius:50%; border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.07); display:flex; align-items:center; justify-content:center;
+  cursor:pointer; font-size:.65rem; color:var(--t3); flex-shrink:0; }
+.sp-list { flex:1; overflow-y:auto; padding:8px 12px 24px; display:flex; flex-direction:column; gap:8px; }
+.sp-match-card { border-radius:14px; background:rgba(255,255,255,.04);
+  border:1px solid rgba(239,68,68,.12); overflow:hidden; cursor:pointer;
+  transition:background .15s, border-color .15s; }
+.sp-match-card:active { background:rgba(239,68,68,.08); border-color:rgba(239,68,68,.3); }
+.sp-match-card.real { border-color:rgba(239,68,68,.28); background:rgba(239,68,68,.05); }
+.sp-match-top { display:flex; align-items:center; gap:10px; padding:10px 12px 6px; }
+.sp-match-tag { font-size:.48rem; padding:2px 7px; border-radius:10px; font-weight:700; letter-spacing:.04em; flex-shrink:0; }
+.sp-match-tag.real-tag { background:rgba(239,68,68,.2); color:#f87171; border:1px solid rgba(239,68,68,.3); }
+.sp-match-tag.bot-tag { background:rgba(255,255,255,.08); color:rgba(255,255,255,.45); border:1px solid rgba(255,255,255,.12); }
+.sp-match-type { font-size:.55rem; color:var(--t4); flex:1; text-align:left; }
+.sp-match-viewers { font-size:.5rem; color:rgba(255,255,255,.3); display:flex; align-items:center; gap:3px; }
+.sp-match-players { display:flex; align-items:center; justify-content:center; gap:8px; padding:4px 12px 10px; }
+.sp-pl { display:flex; flex-direction:column; align-items:center; gap:3px; flex:1; min-width:0; }
+.sp-pl-av { width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.07);
+  display:flex; align-items:center; justify-content:center; font-size:1rem;
+  border:2px solid rgba(239,68,68,.2); }
+.sp-pl-name { font-size:.52rem; color:var(--t2); font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:70px; text-align:center; }
+.sp-vs-block { display:flex; flex-direction:column; align-items:center; gap:2px; flex-shrink:0; }
+.sp-score { font-size:1rem; font-weight:900; color:#f87171; font-family:var(--fd); letter-spacing:.05em; }
+.sp-vs-lbl { font-size:.42rem; color:rgba(255,255,255,.25); }
+.sp-watch-btn { display:block; width:calc(100% - 24px); margin:0 12px 10px;
+  padding:8px; background:linear-gradient(135deg,rgba(239,68,68,.2),rgba(239,68,68,.1));
+  border:1px solid rgba(239,68,68,.3); border-radius:10px; text-align:center;
+  font-size:.6rem; font-weight:700; color:#f87171; cursor:pointer; }
+.sp-empty { text-align:center; padding:40px 16px; color:rgba(255,255,255,.3); font-size:.72rem; line-height:2; }
+.sp-refresh-row { display:flex; align-items:center; justify-content:center; gap:6px;
+  padding:6px 12px; font-size:.52rem; color:rgba(255,255,255,.25); }
+.sp-spin { animation:spin .8s linear infinite; display:inline-block; }
+@keyframes spin { to{ transform:rotate(360deg); } }
 </style>
 
 <!-- Level Up Overlay -->
@@ -27398,298 +27403,6 @@ function _injectPromoBtn(){
 setTimeout(()=>{ _injectPromoBtn(); _updateVIPBadge(); }, 1500);
 
 /* ════════════════════════════════════════════════════════════════
-   👁️ نظام المشاهدة المباشرة — Spectate System v1.0
-   ════════════════════════════════════════════════════════════════
-   - مباريات بوت وهمية دائماً نشطة (10-14 مباراة)
-   - لقطات كل 3 ثوانٍ محاكاة للحالة الحقيقية
-   - مشاهدة مباشرة مع تأخير 3 ثوانٍ
-   ════════════════════════════════════════════════════════════════ */
-(function(){
-
-/* ── أسماء اللاعبين ── */
-const SP_NAMES = [
-  'محمد بنعلي','فاطمة الزهراء','يوسف الفاسي','خديجة العلوي',
-  'أمين المراكشي','سلمى بنموسى','رشيد التطواني','نوال بنكيران',
-  'كريم الإدريسي','هند الشرقاوي','بلال الناصري','ليلى أوزين',
-  'عبدالله الحسني','نادية المرابط','سعيد القادري','مريم الوزاني',
-  'عمر بنحمو','سناء الرحماني','حمزة الطيبي','زينب الحياني'
-];
-const SP_AVS = ['😎','👩‍🦱','🧔','👩','🕵️','👩‍🦰','👨‍💼','👩‍💼','🧑','👱‍♀️','👦','👧','🧓','👩‍🦳','👨‍🦲','👩‍🦲','🧑‍🦱','👩‍🦱','🧑‍🦰','👱'];
-const SP_MODES = ['classic','classic','classic','escoba','quick'];
-const SP_MODE_AR = { classic:'كلاسيك', escoba:'إسكوبا', quick:'سريع' };
-const SP_TARGET = { classic:41, escoba:21, quick:15 };
-const SP_SUITS = ['🂡','🂱','🃁','🃑'];
-const SP_RANKS = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
-const CARD_EMO = ['🂡','🂢','🂣','🂤','🂥','🂦','🂧','🂨','🂩','🂪','🂫','🂭','🂮','🂱','🂲','🂳','🂴','🂵','🂶','🂷','🂸','🂹','🂺','🂻','🂽','🂾','🃁','🃂','🃃','🃄','🃅','🃆','🃇','🃈','🃉','🃊','🃋','🃍','🃎','🃑','🃒','🃓','🃔','🃕','🃖','🃗','🃘','🃙','🃚','🃛','🃝','🃞'];
-
-function _spRnd(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
-function _spPick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-function _spShuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]; } return a; }
-function _spCards(n){ return _spShuffle(CARD_EMO).slice(0,n); }
-function _spTimeAgo(ms){ const m=Math.floor(ms/60000); return m<=0?'الآن':(m===1?'دقيقة واحدة':(m<11?`${m} دقائق`:`${m} دقيقة`)); }
-
-/* ── توليد مباراة وهمية ── */
-function _mkMatch(id){
-  const mode = _spPick(SP_MODES);
-  const target = SP_TARGET[mode];
-  const n2 = Math.random()<0.7; // 2p vs 4p
-  const nSeats = n2 ? 2 : 4;
-  const usedIdx = [];
-  const players = [];
-  for(let i=0;i<nSeats;i++){
-    let idx;
-    do{ idx=_spRnd(0,SP_NAMES.length-1); }while(usedIdx.includes(idx));
-    usedIdx.push(idx);
-    players.push({ name:SP_NAMES[idx], av:SP_AVS[idx] });
-  }
-  const pts = players.map(()=> _spRnd(0, Math.floor(target*0.7)));
-  return {
-    id, mode, target, nSeats, players, pts,
-    tbl: _spCards(_spRnd(0,4)),
-    round: _spRnd(1,6),
-    startedAt: Date.now() - _spRnd(60000, 900000),
-    viewers: _spRnd(0,8),
-    events: _mkEvents(players, pts),
-    _lastUpdate: Date.now()
-  };
-}
-
-function _mkEvents(players, pts){
-  const ev=[];
-  const evTypes=[
-    {ico:'🃏',fn:(p)=>`${p.name} أخذ الطاولة`},
-    {ico:'🌟',fn:(p)=>`${p.name} أعلن رونده!`},
-    {ico:'⚡',fn:(p)=>`${p.name} لعب بذكاء`},
-    {ico:'🎯',fn:(p)=>`${p.name} سدد ضربة قوية`},
-    {ico:'🏆',fn:(p)=>`${p.name} يتقدم بـ ${_spRnd(3,8)} نقاط`},
-  ];
-  for(let i=0;i<3;i++){
-    const p=_spPick(players);
-    const t=_spPick(evTypes);
-    ev.push({ico:t.ico,txt:t.fn(p)});
-  }
-  return ev;
-}
-
-/* ── قائمة المباريات ── */
-const SP_MATCHES = [];
-const SP_COUNT = _spRnd(10,14);
-for(let i=0;i<SP_COUNT;i++) SP_MATCHES.push(_mkMatch(i));
-
-/* ── تحريك المباريات كل 3 ثوانٍ ── */
-let _spTick;
-function _spStartSim(){
-  if(_spTick) return;
-  _spTick = setInterval(()=>{
-    SP_MATCHES.forEach(m=>{
-      // تحريك النقاط
-      const winner = _spRnd(0,m.nSeats-1);
-      m.pts[winner] = Math.min(m.target, m.pts[winner]+_spRnd(0,3));
-      // تحريك الطاولة
-      if(Math.random()<0.4) m.tbl = _spCards(_spRnd(0,5));
-      // تحريث المشاهدين
-      m.viewers = Math.max(0, m.viewers + _spRnd(-1,2));
-      // إضافة حدث جديد
-      if(Math.random()<0.3){
-        const p=_spPick(m.players);
-        const evTypes=[`${p.name} أخذ الطاولة`,`${p.name} أعلن رونده!`,`${p.name} سدد ضربة`];
-        const icons=['🃏','🌟','🎯'];
-        const i=_spRnd(0,2);
-        m.events.unshift({ico:icons[i],txt:evTypes[i]});
-        if(m.events.length>5) m.events.pop();
-      }
-      // مباراة منتهية → إعادة توليد
-      if(m.pts.some(p=>p>=m.target)){
-        Object.assign(m, _mkMatch(m.id));
-      }
-      m._lastUpdate=Date.now();
-    });
-    // تحديث عداد البطاقة
-    const el=document.getElementById('spMatchCount');
-    if(el) el.textContent=SP_MATCHES.length;
-    // تحديث عداد المشاهدين
-    const tv=document.getElementById('spViewCnt');
-    if(tv) tv.textContent=SP_MATCHES.reduce((s,m)=>s+m.viewers,0);
-    // تحديث المشاهدة الجارية
-    if(window._spActiveMatch!=null) _refreshSpecView();
-  }, 3000);
-}
-
-/* ── فتح قائمة المباريات ── */
-window.openSpectate = function(){
-  _spStartSim();
-  const ov=document.getElementById('specListOverlay');
-  if(!ov) return;
-  _renderMatchList();
-  ov.classList.add('open');
-};
-window.closeSpectate = function(){
-  const ov=document.getElementById('specListOverlay');
-  if(ov) ov.classList.remove('open');
-};
-
-function _renderMatchList(){
-  const list=document.getElementById('specMatchList');
-  if(!list) return;
-  list.innerHTML=SP_MATCHES.map((m,i)=>{
-    const totalViewers=SP_MATCHES.reduce((s,mm)=>s+mm.viewers,0);
-    const p0=m.players[0], p1=m.players[m.nSeats===2?1:2]||m.players[1];
-    const pts0=m.pts[0], pts1=m.pts[m.nSeats===2?1:2]||m.pts[1];
-    const pct0=Math.round((pts0/m.target)*100);
-    const pct1=Math.round((pts1/m.target)*100);
-    const ago=_spTimeAgo(Date.now()-m.startedAt);
-    return `<div class="spec-match-card" onclick="_watchMatch(${i})">
-      <div class="smc-top">
-        <div class="smc-avatars">
-          <div class="smc-av">${p0.av}</div>
-          <div class="smc-vs">VS</div>
-          <div class="smc-av">${p1.av}</div>
-        </div>
-        <div class="smc-info">
-          <div class="smc-mode">🎮 ${SP_MODE_AR[m.mode]} ${m.nSeats===4?'· 4 لاعبين':''}</div>
-          <div class="smc-names">${p0.name} ضد ${p1.name}${m.nSeats===4?' وآخرين':''}</div>
-        </div>
-        <div class="smc-live"><div class="smc-dot"></div>${m.viewers}</div>
-      </div>
-      <div class="smc-score">
-        <div class="smc-pts">
-          <div class="smc-pts-num">${pts0}</div>
-          <div class="smc-pts-lbl">${p0.name.split(' ')[0]}</div>
-        </div>
-        <div class="smc-sep"></div>
-        <div class="smc-progress">
-          <div class="smc-bar-bg"><div class="smc-bar-fill" style="width:${pct0}%"></div></div>
-          <div class="smc-bar-lbl">الهدف ${m.target} نقطة • جولة ${m.round}</div>
-          <div class="smc-bar-bg" style="margin-top:3px"><div class="smc-bar-fill" style="width:${pct1}%;background:linear-gradient(90deg,#6366f1,#8b5cf6)"></div></div>
-        </div>
-        <div class="smc-sep"></div>
-        <div class="smc-pts">
-          <div class="smc-pts-num" style="color:#a5b4fc">${pts1}</div>
-          <div class="smc-pts-lbl">${p1.name.split(' ')[0]}</div>
-        </div>
-      </div>
-      <div class="smc-watch-btn">👁️ شاهد المباراة الآن</div>
-    </div>`;
-  }).join('');
-}
-
-/* ── مشاهدة مباراة ── */
-window._spActiveMatch = null;
-window._watchMatch = function(idx){
-  window._spActiveMatch = idx;
-  closeSpectate();
-  const ov=document.getElementById('specViewOverlay');
-  if(!ov) return;
-  const m=SP_MATCHES[idx];
-  document.getElementById('svMatchTitle').textContent=`🎮 ${SP_MODE_AR[m.mode]}`;
-  _refreshSpecView();
-  ov.classList.add('open');
-};
-
-window.closeSpecView = function(){
-  const ov=document.getElementById('specViewOverlay');
-  if(ov) ov.classList.remove('open');
-  window._spActiveMatch=null;
-};
-
-function _refreshSpecView(){
-  const idx=window._spActiveMatch;
-  if(idx==null) return;
-  const m=SP_MATCHES[idx];
-  if(!m) return;
-  const body=document.getElementById('svBody');
-  if(!body) return;
-
-  const ago=_spTimeAgo(Date.now()-m.startedAt);
-  document.getElementById('svMatchSub').textContent=`جارية منذ ${ago} · ${m.nSeats} لاعبين`;
-
-  // تحديد من دوره (تدور كل 3 ثوانٍ)
-  const turnIdx=Math.floor(Date.now()/3000)%m.nSeats;
-
-  // سكور الأعلى
-  let scoreHtml=`<div class="sv-score-band">`;
-  if(m.nSeats===2){
-    scoreHtml+=`
-      <div class="sv-player">
-        <div class="sv-pav${turnIdx===0?' active':''}"> ${m.players[0].av}</div>
-        <div class="sv-pname">${m.players[0].name}</div>
-        <div class="sv-ppts">${m.pts[0]}</div>
-        <div class="sv-target">من ${m.target}</div>
-      </div>
-      <div class="sv-vs-col">
-        <div class="sv-vs-txt">⚡</div>
-        <div class="sv-round-badge">جولة ${m.round}</div>
-      </div>
-      <div class="sv-player">
-        <div class="sv-pav${turnIdx===1?' active':''}"> ${m.players[1].av}</div>
-        <div class="sv-pname">${m.players[1].name}</div>
-        <div class="sv-ppts" style="color:#a5b4fc">${m.pts[1]}</div>
-        <div class="sv-target">من ${m.target}</div>
-      </div>`;
-  } else {
-    const colors=['#f1f5f9','#a5b4fc','#34d399','#fbbf24'];
-    for(let i=0;i<4;i++){
-      scoreHtml+=`<div class="sv-player">
-        <div class="sv-pav${turnIdx===i?' active':''}">${m.players[i]?.av||'👤'}</div>
-        <div class="sv-pname">${(m.players[i]?.name||'—').split(' ')[0]}</div>
-        <div class="sv-ppts" style="color:${colors[i]}">${m.pts[i]||0}</div>
-      </div>`;
-    }
-  }
-  scoreHtml+=`</div>`;
-
-  // الطاولة
-  const tblHtml=`<div class="sv-table-sec">
-    <div class="sv-sec-title">🃏 الطاولة (${m.tbl.length} ورقة)</div>
-    <div class="sv-table-cards">
-      ${m.tbl.length?m.tbl.map(c=>`<span class="sv-card">${c}</span>`).join(''):'<span class="sv-empty-table">الطاولة فارغة</span>'}
-    </div>
-  </div>`;
-
-  // أيدي اللاعبين (مخفية كما في الواقع)
-  const handsHtml=`<div class="sv-hands-sec">
-    <div class="sv-sec-title">🤚 أوراق اللاعبين</div>
-    ${m.players.map((p,i)=>{
-      const hCount=_spRnd(2,5);
-      return `<div class="sv-hand-row">
-        <div class="sv-hand-av">${p.av}</div>
-        <div class="sv-hand-info">
-          <div class="sv-hand-name">${p.name} ${turnIdx===i?'← دوره':''}</div>
-          <div class="sv-hand-cards">
-            ${Array(hCount).fill('<span class="sv-hand-back">🂠</span>').join('')}
-          </div>
-        </div>
-        ${turnIdx===i?'<div class="sv-turn-arrow">▶</div>':''}
-      </div>`;
-    }).join('')}
-  </div>`;
-
-  // أحداث المباراة
-  const evHtml=`<div class="sv-events-sec">
-    <div class="sv-sec-title">📢 آخر الأحداث</div>
-    <div class="sv-event-list">
-      ${m.events.slice(0,4).map(e=>`<div class="sv-event"><span class="sv-event-ico">${e.ico}</span>${e.txt}</div>`).join('')}
-    </div>
-  </div>`;
-
-  const delayHtml=`<div class="sv-delay-note">⏱️ المشاهدة بتأخير 3 ثوانٍ</div>`;
-
-  body.innerHTML=scoreHtml+tblHtml+handsHtml+evHtml+delayHtml;
-}
-
-/* ── تحديث بطاقة الكاروسيل ── */
-function _spInitCard(){
-  const el=document.getElementById('spMatchCount');
-  if(el) el.textContent=SP_MATCHES.length;
-  const tv=document.getElementById('spViewCnt');
-  if(tv) tv.textContent=SP_MATCHES.reduce((s,m)=>s+m.viewers,0);
-}
-setTimeout(_spInitCard, 500);
-_spStartSim();
-
-})(); // end spectate system
-
-/* ════════════════════════════════════════════════════════════════
    🤝 نظام الأصدقاء الكامل — Friends System v1.0
    ════════════════════════════════════════════════════════════════
    - تخزين الأصدقاء في localStorage
@@ -28022,6 +27735,193 @@ function closeFriendsList(){
   const overlay = document.getElementById('frndListOverlay');
   if(overlay) overlay.classList.remove('open');
 }
+
+/* ══════════════════════════════════════════════════════════════
+   👁  نظام المدرجات — Spectate System v1.0
+   ══════════════════════════════════════════════════════════════ */
+const _SP_NAMES = ['أحمد','محمد','علي','سارة','فاطمة','ليلى','خالد','يوسف','نور','ريم',
+  'عمر','حسن','مريم','زينب','عبدالله','سلمى','راشد','هند','ماجد','دانة',
+  'فهد','منى','طارق','شيماء','ياسر','رنا','وليد','آمنة','سامي','لمياء'];
+const _SP_AVTS = ['😎','🤩','😏','🥷','👑','🎭','🦁','🐯','🦊','🎩','🧠','🔥','⚡','💎','🌙'];
+let _spTimer = null;
+let _spBotMatches = [];
+let _spPanelOpen = false;
+
+function _spGenBotName(){ return _SP_NAMES[Math.floor(Math.random()*_SP_NAMES.length)]; }
+function _spGenAvt(){ return _SP_AVTS[Math.floor(Math.random()*_SP_AVTS.length)]; }
+function _spRandInt(a,b){ return a + Math.floor(Math.random()*(b-a+1)); }
+
+function _spInitBotMatches(){
+  const count = _spRandInt(10,15);
+  const types = ['1v1 كلاسيك','2v2 فرق','4 مستقلين','1v1 سريع'];
+  _spBotMatches = Array.from({length:count}, (_,i) => ({
+    id:'bot_'+i, isBot:true,
+    type: types[Math.floor(Math.random()*types.length)],
+    p1:{ name:_spGenBotName(), av:_spGenAvt(), score:_spRandInt(0,7) },
+    p2:{ name:_spGenBotName(), av:_spGenAvt(), score:_spRandInt(0,7) },
+    round: _spRandInt(1,5),
+    viewers: _spRandInt(0,12),
+    startedMs: Date.now() - _spRandInt(30000,600000)
+  }));
+}
+
+function _spTickBotMatches(){
+  _spBotMatches.forEach(m => {
+    // تقدّم طبيعي عشوائي
+    if(Math.random()<.15){
+      if(Math.random()<.5) m.p1.score = Math.min(m.p1.score+1, 7);
+      else m.p2.score = Math.min(m.p2.score+1, 7);
+    }
+    if(Math.random()<.08) m.round = Math.min(m.round+1, 5);
+    // إعادة مباراة منتهية
+    if(m.p1.score>=7 || m.p2.score>=7){
+      m.p1.score=0; m.p2.score=0; m.round=1;
+      m.p1.name=_spGenBotName(); m.p2.name=_spGenBotName();
+      m.startedMs=Date.now();
+    }
+    // تذبذب المتفرجين
+    m.viewers = Math.max(0, m.viewers + _spRandInt(-1,2));
+  });
+}
+
+async function _spFetchRealMatches(){
+  try {
+    const db = typeof firebase!=='undefined' && firebase.apps && firebase.apps.length
+      ? firebase.database() : null;
+    if(!db) return [];
+    const snap = await db.ref('rooms').orderByChild('state').equalTo('playing').limitToFirst(8).once('value');
+    const rooms = snap.val();
+    if(!rooms) return [];
+    return Object.entries(rooms).map(([id,r])=>{
+      const players = Array.isArray(r.players) ? r.players : Object.values(r.players||{});
+      const p1 = players[0]||{}, p2 = players[1]||{};
+      return {
+        id, isBot:false,
+        type: r.mode==='pm2t'?'2v2 فرق': r.mode==='pm3w'||r.mode==='pm3f'?'4 مستقلين':'1v1 كلاسيك',
+        p1:{ name:(p1.name||'لاعب').substring(0,10), av:(p1.av||'👤'), score:(r.score?.[p1.id]||0) },
+        p2:{ name:(p2.name||'لاعب').substring(0,10), av:(p2.av||'👤'), score:(r.score?.[p2.id]||0) },
+        round:(r.round||1),
+        viewers:(r.viewers||0),
+        startedMs: r.startedAt||Date.now()
+      };
+    });
+  } catch(e){ return []; }
+}
+
+function _spFormatTime(ms){
+  const s = Math.floor((Date.now()-ms)/1000);
+  if(s<60) return s+'ث';
+  if(s<3600) return Math.floor(s/60)+'د';
+  return Math.floor(s/3600)+'س';
+}
+
+function _spRenderList(real){
+  const all = [...real, ..._spBotMatches];
+  const listEl = document.getElementById('spMatchList');
+  const countEl = document.getElementById('spLiveCount');
+  if(!listEl) return;
+  if(countEl) countEl.textContent = all.length;
+
+  // تحديث بطاقة اللوبي
+  const cardCount = document.getElementById('spActiveCount');
+  if(cardCount) cardCount.textContent = all.length;
+  // تحديث mini-matches على البطاقة
+  const cardMatches = document.getElementById('spCardMatches');
+  if(cardMatches){
+    const preview = all.slice(0,3);
+    cardMatches.innerHTML = preview.map(m=>
+      `<div class="sp-cm-row">
+        <span class="sp-cm-av">${m.p1.av}</span>
+        <span class="sp-cm-vs">${m.p1.name} ${m.p1.score}-${m.p2.score} ${m.p2.name}</span>
+        <span class="sp-cm-av">${m.p2.av}</span>
+      </div>`
+    ).join('');
+  }
+
+  if(!all.length){
+    listEl.innerHTML = '<div class="sp-empty">لا توجد مباريات نشطة الآن<br><span style="font-size:.6rem">جرب مرة أخرى بعد قليل</span></div>';
+    return;
+  }
+
+  listEl.innerHTML = all.map(m => {
+    const tag = m.isBot
+      ? '<span class="sp-match-tag bot-tag">بوت</span>'
+      : '<span class="sp-match-tag real-tag">🔴 حقيقي</span>';
+    return `<div class="sp-match-card ${m.isBot?'':'real'}">
+      <div class="sp-match-top">
+        ${tag}
+        <span class="sp-match-type">${m.type} • جولة ${m.round}</span>
+        <span class="sp-match-viewers">👁 ${m.viewers}</span>
+        <span style="font-size:.45rem;color:rgba(255,255,255,.2);margin-right:4px">${_spFormatTime(m.startedMs)}</span>
+      </div>
+      <div class="sp-match-players">
+        <div class="sp-pl">
+          <div class="sp-pl-av">${m.p1.av}</div>
+          <div class="sp-pl-name">${m.p1.name}</div>
+        </div>
+        <div class="sp-vs-block">
+          <div class="sp-score">${m.p1.score} — ${m.p2.score}</div>
+          <div class="sp-vs-lbl">النقاط</div>
+        </div>
+        <div class="sp-pl">
+          <div class="sp-pl-av">${m.p2.av}</div>
+          <div class="sp-pl-name">${m.p2.name}</div>
+        </div>
+      </div>
+      <div class="sp-watch-btn" onclick="event.stopPropagation();_spWatchMatch('${m.id}',${m.isBot})">
+        👁 مشاهدة المباراة
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function _spRefresh(showSpinner){
+  const spinner = document.getElementById('spRefreshSpinner');
+  const txt = document.getElementById('spRefreshTxt');
+  if(showSpinner && spinner) spinner.style.display='inline-block';
+  _spTickBotMatches();
+  const real = await _spFetchRealMatches();
+  _spRenderList(real);
+  if(spinner) spinner.style.display='none';
+  if(txt) txt.textContent = 'آخر تحديث: الآن • يتجدد كل 8 ثوانٍ';
+}
+
+function openSpectatePanel(){
+  const overlay = document.getElementById('spOverlay');
+  if(!overlay) return;
+  if(overlay.parentElement !== document.body) document.body.appendChild(overlay);
+  if(!_spBotMatches.length) _spInitBotMatches();
+  overlay.classList.add('open');
+  _spPanelOpen = true;
+  _spRefresh(true);
+  _spTimer = setInterval(()=>{ if(_spPanelOpen) _spRefresh(false); }, 8000);
+}
+
+function closeSpectatePanel(){
+  const overlay = document.getElementById('spOverlay');
+  if(overlay) overlay.classList.remove('open');
+  _spPanelOpen = false;
+  if(_spTimer){ clearInterval(_spTimer); _spTimer=null; }
+}
+
+function _spWatchMatch(id, isBot){
+  if(isBot){
+    // مباريات البوت — وضع مشاهدة وهمي تفاعلي
+    _showToast('🎮 وضع المشاهدة الكامل قريباً!');
+  } else {
+    _showToast('🔴 جاري الاتصال بالمباراة...');
+    // TODO: اشتراك كـ spectator في Firebase RTDB
+  }
+}
+
+// تحديث بطاقة اللوبي تلقائياً كل 15 ثانية حتى بدون فتح البانيل
+(function _spCardAutoRefresh(){
+  if(!_spBotMatches.length) _spInitBotMatches();
+  const cardCount = document.getElementById('spActiveCount');
+  if(cardCount) cardCount.textContent = _spBotMatches.length;
+  setTimeout(_spCardAutoRefresh, 15000);
+})();
+
 
 function _renderFriendsList(containerId, mode, onInvite){
   const container = document.getElementById(containerId);
@@ -29090,41 +28990,6 @@ _boot();
 </script>
 
 <!-- ════════════════════════════════════════════════════
-<!-- ════════════════════════════════════════════════════
-     👁️ نظام المشاهدة المباشرة — Spectate System HTML
-     ════════════════════════════════════════════════════ -->
-
-<!-- قائمة المباريات -->
-<div class="spec-overlay" id="specListOverlay" onclick="if(event.target===this)closeSpectate()">
-  <div class="spec-sheet">
-    <div class="spec-sheet-hd">
-      <div class="spec-sheet-title">👁️ مشاهدة مباشرة</div>
-      <div class="spec-sheet-cls" onclick="closeSpectate()">✕</div>
-    </div>
-    <div class="spec-list" id="specMatchList">
-      <!-- تملأ بـ JS -->
-    </div>
-  </div>
-</div>
-
-<!-- نافذة المشاهدة الفعلية -->
-<div class="spec-view-overlay" id="specViewOverlay">
-  <div class="sv-header">
-    <div class="sv-back" onclick="closeSpecView()">‹</div>
-    <div class="sv-title">
-      <div class="sv-match-title" id="svMatchTitle">مباراة كلاسيك</div>
-      <div class="sv-match-sub" id="svMatchSub">جارية منذ دقيقتين</div>
-    </div>
-    <div class="sv-live-pill"><div class="smc-dot"></div> مباشر</div>
-  </div>
-  <div class="sv-body" id="svBody">
-    <!-- يملأ بـ JS -->
-  </div>
-  <div class="sv-footer">
-    <div class="sv-leave-btn" onclick="closeSpecView()">🚪 مغادرة المشاهدة</div>
-  </div>
-</div>
-
      🤝 نظام الأصدقاء — Friends System HTML
      ════════════════════════════════════════════════════ -->
 
@@ -29153,6 +29018,31 @@ _boot();
     </div>
     <div class="frnd-list" id="frndInviteBody">
       <div class="frnd-empty">لا يوجد أصدقاء لدعوتهم</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     👁 المدرجات — Spectate Panel
+     ════════════════════════════════════════════════════ -->
+<div class="sp-overlay" id="spOverlay" onclick="if(event.target===this)closeSpectatePanel()">
+  <div class="sp-sheet">
+    <div class="sp-sheet-hd">
+      <div class="sp-sheet-title">
+        👁 المدرجات
+      </div>
+      <div class="sp-sheet-live">
+        <div class="sp-sheet-live-dot"></div>
+        <span id="spLiveCount">—</span> مباراة
+      </div>
+      <div class="sp-sheet-cls" onclick="closeSpectatePanel()">✕</div>
+    </div>
+    <div class="sp-list" id="spMatchList">
+      <div class="sp-empty">⏳ جاري تحميل المباريات...</div>
+    </div>
+    <div class="sp-refresh-row" id="spRefreshRow">
+      <span id="spRefreshSpinner" style="display:none" class="sp-spin">↻</span>
+      <span id="spRefreshTxt">يتجدد تلقائياً كل 8 ثوانٍ</span>
     </div>
   </div>
 </div>
