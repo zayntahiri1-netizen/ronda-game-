@@ -1,6 +1,6 @@
 {
   "appId": "com.ronda.cardgame",
-  "appName": "Ronda روندة",
+  "appName": "Ronda Tahiro",
   "webDir": "www",
   "bundledWebRuntime": false,
   "server": {
@@ -49,6 +49,14 @@
       "resize": "body",
       "style": "dark",
       "resizeOnFullScreen": true
+    },
+    "AdMob": {
+      "appId": "ca-app-pub-1725525147318224~6321541009",
+      "appIdAndroid": "ca-app-pub-1725525147318224~6321541009",
+      "appIdIos": "ca-app-pub-1725525147318224~6321541009",
+      "initializeForTesting": false,
+      "tagForChildDirectedTreatment": false,
+      "tagForUnderAgeOfConsent": false
     }
   }
 }

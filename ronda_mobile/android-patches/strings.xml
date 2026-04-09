@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Ronda روندة</string>
-    <string name="title_activity_main">Ronda روندة</string>
+    <string name="app_name">Ronda Tahiro</string>
+    <string name="title_activity_main">Ronda Tahiro</string>
     <string name="package_name">com.ronda.cardgame</string>
     <string name="custom_url_scheme">com.ronda.cardgame</string>
 </resources>

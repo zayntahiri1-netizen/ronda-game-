@@ -17,6 +17,7 @@
     "release:ios": "echo 'Open Xcode: npx cap open ios, then Archive'"
   },
   "dependencies": {
+    "@capacitor-community/admob": "^6.0.0",
     "@capacitor/android": "^6.0.0",
     "@capacitor/app": "^6.0.0",
     "@capacitor/core": "^6.0.0",
