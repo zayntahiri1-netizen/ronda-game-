@@ -27976,8 +27976,14 @@ function _spwCardHTML(c, faceDown){
    كل الأوراق مقلوبة (buildCardBack) لأن المتفرج لا يعرفها
    ────────────────────────────────────────────────────── */
 function _spWatchMatch(id, isBot){
-  const match = isBot ? _spBotMatches.find(m=>m.id===id) : null;
-  if(!match) return; // لا يوجد مباراة — خروج
+  // ── تشخيص: نتأكد أن الدالة تُستدعى ──
+  toast('👁 جاري فتح المباراة…', '', 1800);
+
+  const match = _spBotMatches.find(m => m.id === id);
+  if(!match){
+    toast('⚠️ المباراة غير موجودة: ' + id, 'warn', 2500);
+    return;
+  }
 
   closeSpectatePanel();
 
@@ -27988,25 +27994,22 @@ function _spWatchMatch(id, isBot){
     p1Collected: _spRandInt(0,18),
     p2Collected: _spRandInt(0,18),
     turn: Math.random()<.5 ? 'p1' : 'p2',
-    commentary: `${match.p1.name} ضد ${match.p2.name} — ابدأ المشاهدة`
+    commentary: `${match.p1.name} ضد ${match.p2.name}`
   };
 
   const ov = document.getElementById('spwOverlay');
-  if(!ov) return;
+  if(!ov){
+    toast('⚠️ لم يُوجد spwOverlay', 'warn', 2500);
+    return;
+  }
 
-  // ضمان أنه في body مباشرة لتجنب أي stacking context
-  if(ov.parentElement !== document.body) document.body.appendChild(ov);
+  // نقله لـ body لكسر أي stacking context
+  document.body.appendChild(ov);
 
-  // إظهار الـ overlay
-  ov.style.display = 'flex';
-  ov.style.flexDirection = 'column';
-
-  // تشغيل transition بعد إظهار العنصر
-  requestAnimationFrame(()=>{
-    ov.style.opacity = '1';
-    ov.style.pointerEvents = 'auto';
-    ov.classList.add('open');
-  });
+  // إظهار فوري بدون CSS conflicts
+  ov.removeAttribute('style');
+  ov.style.cssText = 'display:flex !important; flex-direction:column !important; position:fixed !important; inset:0 !important; z-index:999999 !important; opacity:1 !important; pointer-events:auto !important; background:radial-gradient(ellipse 100% 70% at 50% 50%,#120a04 0%,#0a0603 55%,#040201 100%) !important; overflow:hidden !important;';
+  ov.classList.add('open');
 
   _spwRenderAll();
 
@@ -28191,10 +28194,8 @@ function closeSpwOverlay(){
   _spwMatch = null;
   const ov = document.getElementById('spwOverlay');
   if(ov){
-    ov.style.opacity = '0';
-    ov.style.pointerEvents = 'none';
     ov.classList.remove('open');
-    setTimeout(()=>{ ov.style.display = 'none'; }, 300);
+    ov.style.cssText = 'display:none';
   }
 }
 
