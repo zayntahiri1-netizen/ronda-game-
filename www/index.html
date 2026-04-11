@@ -26956,10 +26956,11 @@ window.addEventListener('load',()=>{
    ══════════════════════════════════════════════════════ */
 .spw-overlay {
   position:fixed; inset:0; z-index:100000;
+  display:none;
+  flex-direction:column;
   overflow:hidden;
   background:radial-gradient(ellipse 100% 70% at 50% 50%,#120a04 0%,#0a0603 55%,#040201 100%);
   opacity:0; pointer-events:none; transition:opacity .28s; transform:translateZ(0);
-  display:block !important;
 }
 .spw-overlay::before {
   content:''; position:absolute; inset:0; pointer-events:none; z-index:0;
@@ -27976,29 +27977,39 @@ function _spwCardHTML(c, faceDown){
    ────────────────────────────────────────────────────── */
 function _spWatchMatch(id, isBot){
   const match = isBot ? _spBotMatches.find(m=>m.id===id) : null;
-  if(!match && isBot) return;
+  if(!match) return; // لا يوجد مباراة — خروج
 
-  closeSpectatePanel(); // أغلق القائمة
+  closeSpectatePanel();
 
-  // بناء حالة المشاهدة
   _spwMatch = {
     ...match,
-    tblCards: _spwMakeFakeTbl(),  // أوراق الطاولة (مقلوبة في المشاهدة)
-    p1Cards: 4, p2Cards: 4,       // عدد الأوراق في اليد
+    tblCards: _spwMakeFakeTbl(),
+    p1Cards: 4, p2Cards: 4,
     p1Collected: _spRandInt(0,18),
     p2Collected: _spRandInt(0,18),
     turn: Math.random()<.5 ? 'p1' : 'p2',
     commentary: `${match.p1.name} ضد ${match.p2.name} — ابدأ المشاهدة`
   };
 
-  _spwRenderAll();
   const ov = document.getElementById('spwOverlay');
-  if(ov){
-    if(ov.parentElement!==document.body) document.body.appendChild(ov);
-    ov.style.display = 'flex';
-    ov.style.flexDirection = 'column';
-    requestAnimationFrame(()=>ov.classList.add('open'));
-  }
+  if(!ov) return;
+
+  // ضمان أنه في body مباشرة لتجنب أي stacking context
+  if(ov.parentElement !== document.body) document.body.appendChild(ov);
+
+  // إظهار الـ overlay
+  ov.style.display = 'flex';
+  ov.style.flexDirection = 'column';
+
+  // تشغيل transition بعد إظهار العنصر
+  requestAnimationFrame(()=>{
+    ov.style.opacity = '1';
+    ov.style.pointerEvents = 'auto';
+    ov.classList.add('open');
+  });
+
+  _spwRenderAll();
+
   if(_spwTimer) clearInterval(_spwTimer);
   _spwTimer = setInterval(_spwSimulateMove, 2400);
 }
@@ -28177,11 +28188,13 @@ function _spwRenderAll(){
 
 function closeSpwOverlay(){
   if(_spwTimer){ clearInterval(_spwTimer); _spwTimer=null; }
-  _spwMatch=null;
+  _spwMatch = null;
   const ov = document.getElementById('spwOverlay');
   if(ov){
+    ov.style.opacity = '0';
+    ov.style.pointerEvents = 'none';
     ov.classList.remove('open');
-    setTimeout(()=>{ ov.style.display='none'; }, 280);
+    setTimeout(()=>{ ov.style.display = 'none'; }, 300);
   }
 }
 
@@ -29321,7 +29334,7 @@ _boot();
 <!-- ════════════════════════════════════════════════════
      👁 شاشة مشاهدة المباراة — Spectate Watch (clone of sGame)
      ════════════════════════════════════════════════════ -->
-<div class="spw-overlay s" id="spwOverlay">
+<div class="spw-overlay" id="spwOverlay" style="display:none">
   <!-- شريط أعلى: أنت متفرج -->
   <div class="spw-spec-banner">
     <span>👁 وضع المشاهدة — أنت متفرج فقط</span>
