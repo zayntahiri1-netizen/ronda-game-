@@ -26950,6 +26950,53 @@ window.addEventListener('load',()=>{
 .sp-live-badge-card { background:linear-gradient(135deg,rgba(239,68,68,.3),rgba(185,28,28,.2)) !important;
   color:#f87171 !important; border:1px solid rgba(239,68,68,.3) !important; }
 
+/* ══════════════════════════════════════════════════════
+   👁 شاشة مشاهدة المباراة — Spectate Watch CSS
+   يعيد استخدام كل CSS من sGame (gtable, tbl, scorebar...)
+   ══════════════════════════════════════════════════════ */
+.spw-overlay {
+  position:fixed; inset:0; z-index:100000;
+  overflow:hidden;
+  background:radial-gradient(ellipse 100% 70% at 50% 50%,#120a04 0%,#0a0603 55%,#040201 100%);
+  opacity:0; pointer-events:none; transition:opacity .28s; transform:translateZ(0);
+  display:block !important;
+}
+.spw-overlay::before {
+  content:''; position:absolute; inset:0; pointer-events:none; z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7 0.02' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+  background-size:160px 160px;
+}
+.spw-overlay::after {
+  content:''; position:absolute; inset:0; pointer-events:none; z-index:1;
+  background:radial-gradient(ellipse 80% 70% at 50% 50%,transparent 15%,rgba(0,0,0,.75) 100%),
+    linear-gradient(180deg,rgba(0,0,0,.4) 0%,transparent 18%,transparent 82%,rgba(0,0,0,.5) 100%);
+}
+.spw-overlay.open { opacity:1; pointer-events:auto; }
+/* شريط المتفرج — يظهر أعلى الشاشة */
+.spw-spec-banner {
+  position:absolute; top:0; left:0; right:0; z-index:200;
+  background:rgba(239,68,68,.15); border-bottom:1px solid rgba(239,68,68,.3);
+  text-align:center; font-size:.6rem; font-weight:800; color:#f87171;
+  padding:5px 12px; letter-spacing:.05em;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.spw-spec-back {
+  position:absolute; right:10px; font-size:.65rem; color:rgba(255,255,255,.6);
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15);
+  border-radius:14px; padding:2px 10px; cursor:pointer;
+}
+/* تعليق المشاهدة بديل qchat */
+.spw-commentary {
+  font-size:.65rem; color:rgba(255,255,255,.55); font-weight:700;
+  background:rgba(0,0,0,.5); border:1px solid rgba(255,255,255,.06);
+  border-radius:20px; padding:5px 16px; text-align:center;
+  min-height:28px; display:flex; align-items:center; justify-content:center;
+  width:100%; box-sizing:border-box;
+}
+@keyframes spwComIn { from{opacity:0;transform:translateY(3px)} to{opacity:1;transform:none} }
+.spw-com-anim { animation:spwComIn .3s ease; }
+
+
 /* ── بانيل المدرجات الكامل ── */
 .sp-overlay { position:fixed !important; top:0 !important; left:0 !important; right:0 !important; bottom:0 !important;
   width:100vw !important; height:100vh !important; background:rgba(0,0,0,.85) !important;
@@ -27904,13 +27951,237 @@ function closeSpectatePanel(){
   if(_spTimer){ clearInterval(_spTimer); _spTimer=null; }
 }
 
+/* ══════════════════════════════════════════════════════
+   👁 شاشة مشاهدة المباراة — Spectate Watch Screen
+   ══════════════════════════════════════════════════════ */
+let _spwTimer = null;
+let _spwMatch = null;
+const _CARD_SUITS = ['♠','♥','♦','♣'];
+const _CARD_VALS  = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+const _SUIT_COLORS = { '♠':'#e2e8f0','♥':'#f87171','♦':'#f87171','♣':'#e2e8f0' };
+
+function _spwRandCard(){
+  const s = _CARD_SUITS[Math.floor(Math.random()*4)];
+  const v = _CARD_VALS[Math.floor(Math.random()*13)];
+  return {s,v};
+}
+function _spwCardHTML(c, faceDown){
+  if(faceDown) return `<div class="spw-card spw-card-back">🂠</div>`;
+  return `<div class="spw-card" style="color:${_SUIT_COLORS[c.s]}">${c.v}<span style="font-size:.55em">${c.s}</span></div>`;
+}
+
+/* ──────────────────────────────────────────────────────
+   _spWatchMatch — يفتح شاشة مشاهدة مطابقة لـ sGame
+   كل الأوراق مقلوبة (buildCardBack) لأن المتفرج لا يعرفها
+   ────────────────────────────────────────────────────── */
 function _spWatchMatch(id, isBot){
-  if(isBot){
-    // مباريات البوت — وضع مشاهدة وهمي تفاعلي
-    _showToast('🎮 وضع المشاهدة الكامل قريباً!');
+  const match = isBot ? _spBotMatches.find(m=>m.id===id) : null;
+  if(!match && isBot) return;
+
+  closeSpectatePanel(); // أغلق القائمة
+
+  // بناء حالة المشاهدة
+  _spwMatch = {
+    ...match,
+    tblCards: _spwMakeFakeTbl(),  // أوراق الطاولة (مقلوبة في المشاهدة)
+    p1Cards: 4, p2Cards: 4,       // عدد الأوراق في اليد
+    p1Collected: _spRandInt(0,18),
+    p2Collected: _spRandInt(0,18),
+    turn: Math.random()<.5 ? 'p1' : 'p2',
+    commentary: `${match.p1.name} ضد ${match.p2.name} — ابدأ المشاهدة`
+  };
+
+  _spwRenderAll();
+  const ov = document.getElementById('spwOverlay');
+  if(ov){
+    if(ov.parentElement!==document.body) document.body.appendChild(ov);
+    ov.style.display = 'flex';
+    ov.style.flexDirection = 'column';
+    requestAnimationFrame(()=>ov.classList.add('open'));
+  }
+  if(_spwTimer) clearInterval(_spwTimer);
+  _spwTimer = setInterval(_spwSimulateMove, 2400);
+}
+
+function _spwMakeFakeTbl(){
+  // 1-5 أوراق مقلوبة على الطاولة
+  return Array.from({length:_spRandInt(1,5)}, ()=>({rank:_spRandInt(1,13), suit:_spRandInt(0,3)}));
+}
+
+function _spwSimulateMove(){
+  if(!_spwMatch) return;
+  const m = _spwMatch;
+  const actorKey = m.turn;
+  const actor = m[actorKey];
+  const otherKey = actorKey==='p1'?'p2':'p1';
+
+  const pool_play = [
+    `${actor.name} يضرب ورقة!`,`${actor.name} يفكر…`,`حركة من ${actor.name}`,
+    `${actor.name} يهاجم الطاولة`,`${actor.name} يلعب بذكاء`
+  ];
+  const pool_eat = [
+    `${actor.name} يأكل الطاولة! 🧹`,`${actor.name} يضرب ويأكل`,`ميسا! 🧹 — ${actor.name}`,
+    `${actor.name} يجمع الأوراق`
+  ];
+  const pool_score = [
+    `🎉 ${actor.name} يسجل نقطة!`,`⚡ بومبا! — ${actor.name}`,`نقطة لـ ${actor.name}!`
+  ];
+
+  // محاكاة حركة
+  const rand = Math.random();
+  if(rand < .15 && m.tblCards.length > 0){
+    // يأكل الطاولة
+    m[actorKey+'Collected'] = (m[actorKey+'Collected']||0) + m.tblCards.length;
+    m.tblCards = [];
+    m.commentary = pool_eat[Math.floor(Math.random()*pool_eat.length)];
+  } else if(rand < .55 && m.tblCards.length < 6){
+    // يضع ورقة على الطاولة
+    m.tblCards.push({rank:_spRandInt(1,13), suit:_spRandInt(0,3)});
+    m.commentary = pool_play[Math.floor(Math.random()*pool_play.length)];
+  } else if(m.tblCards.length > 0){
+    // يأخذ ورقة واحدة
+    m.tblCards.splice(Math.floor(Math.random()*m.tblCards.length), 1);
+    m.commentary = pool_play[Math.floor(Math.random()*pool_play.length)];
   } else {
-    _showToast('🔴 جاري الاتصال بالمباراة...');
-    // TODO: اشتراك كـ spectator في Firebase RTDB
+    m.tblCards = _spwMakeFakeTbl();
+    m.commentary = `🃏 توزيعة جديدة!`;
+  }
+
+  // تقليل أوراق يد اللاعب
+  if(m[actorKey+'Cards'] > 0) m[actorKey+'Cards']--;
+  if(m[actorKey+'Cards'] === 0){
+    m.p1Cards=4; m.p2Cards=4; m.tblCards=_spwMakeFakeTbl();
+    m.commentary = '🃏 توزيعة جديدة!';
+  }
+
+  // احتمال نقطة
+  if(Math.random() < .1){
+    m[actorKey].score = Math.min(m[actorKey].score+1, 41);
+    m.commentary = pool_score[Math.floor(Math.random()*pool_score.length)];
+    if(m[actorKey].score >= 41){
+      m.commentary = `🏆 ${actor.name} فاز بالمباراة!`;
+      clearInterval(_spwTimer);
+      setTimeout(()=>{ m.p1.score=0; m.p2.score=0; if(_spwMatch) _spwTimer=setInterval(_spwSimulateMove,2400); }, 3000);
+    }
+  }
+
+  m.turn = otherKey;
+  _spwRenderAll();
+}
+
+function _spwRenderAll(){
+  const m = _spwMatch;
+  if(!m) return;
+  const $ = id=>document.getElementById(id);
+
+  // ── شريط النقاط العلوي ──
+  $('spwDealNum') && ($('spwDealNum').textContent = `جولة ${m.round}`);
+  $('spwDealInfo') && ($('spwDealInfo').textContent = `${m.type} • 👁 ${m.viewers} متفرج`);
+
+  // tb-scores
+  const sc = $('spwScores');
+  if(sc) sc.innerHTML = `
+    <div class="tb-score">
+      <div class="ts-av">${m.p1.av}</div>
+      <div class="ts-nm">${m.p1.name}</div>
+      <div class="ts-pts">${m.p1.score}</div>
+    </div>
+    <div class="tb-score">
+      <div class="ts-av">${m.p2.av}</div>
+      <div class="ts-nm">${m.p2.name}</div>
+      <div class="ts-pts">${m.p2.score}</div>
+    </div>`;
+
+  // ── scorebar ──
+  $('spwSbMyAv')  && ($('spwSbMyAv').textContent = m.p1.av);
+  $('spwSbMyNm')  && ($('spwSbMyNm').textContent = m.p1.name);
+  $('spwSbMyPts') && ($('spwSbMyPts').textContent = m.p1.score);
+  $('spwSbOppAv') && ($('spwSbOppAv').textContent = m.p2.av);
+  $('spwSbOppNm') && ($('spwSbOppNm').textContent = m.p2.name);
+  $('spwSbOppPts')&& ($('spwSbOppPts').textContent = m.p2.score);
+
+  // ── الخصم العلوي (p2) ──
+  const oppAv = $('spwOppAv');
+  if(oppAv){
+    oppAv.textContent = m.p2.av;
+    oppAv.style.boxShadow = m.turn==='p2' ? '0 0 0 3px #22c48a' : '';
+    oppAv.classList.toggle('opp-thinking', m.turn==='p2');
+  }
+  $('spwOppNm')  && ($('spwOppNm').textContent = m.p2.name);
+  $('spwOppPts') && ($('spwOppPts').textContent = m.p2.score);
+  const oppH = $('spwOppHands');
+  if(oppH){
+    oppH.innerHTML='';
+    for(let i=0;i<m.p2Cards;i++) oppH.appendChild(buildCardBack(22,33));
+  }
+  const td = $('spwThinkDots');
+  if(td) td.style.display = m.turn==='p2' ? 'flex' : 'none';
+
+  // ── الطاولة — كل الأوراق مقلوبة للمتفرج ──
+  const tbl = $('spwTbl');
+  if(tbl){
+    tbl.querySelectorAll('.sc,.sc-back').forEach(e=>e.remove());
+    $('spwTblE').style.display = m.tblCards.length ? 'none' : 'block';
+    m.tblCards.forEach((_,i)=>{
+      const back = buildCardBack(
+        parseInt(getComputedStyle(document.documentElement).getPropertyValue('--card-sm-w'))||38,
+        parseInt(getComputedStyle(document.documentElement).getPropertyValue('--card-sm-h'))||57
+      );
+      // تدوير عشوائي خفيف مثل الطاولة الحقيقية
+      back.style.transform = `rotate(${(Math.random()-.5)*18}deg)`;
+      back.style.transition = 'transform .2s';
+      tbl.appendChild(back);
+    });
+  }
+
+  // ── اللاعب السفلي (p1) ──
+  const myAv = $('spwMyAv');
+  if(myAv){
+    myAv.textContent = m.p1.av;
+    myAv.style.boxShadow = m.turn==='p1' ? '0 0 0 3px #22c48a, 0 0 16px rgba(34,196,138,.5)' : '';
+  }
+  $('spwMyNm')  && ($('spwMyNm').textContent = m.p1.name);
+  $('spwMyCol') && ($('spwMyCol').textContent = m.p1Collected||0);
+
+  // مؤشر الدور السفلي
+  const tb = $('spwTurnBadge');
+  if(tb) tb.style.display = m.turn==='p1' ? 'block' : 'none';
+
+  // أوراق يد اللاعب السفلي — كلها مقلوبة
+  const ph = $('spwPhand');
+  if(ph){
+    ph.innerHTML='';
+    const n = m.p1Cards;
+    const maxAngle = n<=2?8:n<=4?14:20;
+    for(let i=0;i<n;i++){
+      const back = buildCardBack(
+        parseInt(getComputedStyle(document.documentElement).getPropertyValue('--card-md-w'))||52,
+        parseInt(getComputedStyle(document.documentElement).getPropertyValue('--card-md-h'))||78
+      );
+      back.classList.add('hand-card');
+      const angle = n===1?0:((i/(n-1))-.5)*maxAngle*2;
+      const arcLift = n===1?0:-Math.abs((i/(n-1))-.5)*8;
+      back.style.transformOrigin='bottom center';
+      back.style.marginRight = i<n-1 ? '-8px' : '0';
+      back.style.zIndex = String(i+1);
+      back.style.position='relative';
+      back.style.transform=`rotate(${angle}deg) translateY(${arcLift}px)`;
+      ph.appendChild(back);
+    }
+  }
+
+  // ── التعليق ──
+  const com = $('spwCommentary');
+  if(com){ com.textContent=m.commentary; com.classList.remove('spw-com-anim'); void com.offsetWidth; com.classList.add('spw-com-anim'); }
+}
+
+function closeSpwOverlay(){
+  if(_spwTimer){ clearInterval(_spwTimer); _spwTimer=null; }
+  _spwMatch=null;
+  const ov = document.getElementById('spwOverlay');
+  if(ov){
+    ov.classList.remove('open');
+    setTimeout(()=>{ ov.style.display='none'; }, 280);
   }
 }
 
@@ -29043,6 +29314,101 @@ _boot();
     <div class="sp-refresh-row" id="spRefreshRow">
       <span id="spRefreshSpinner" style="display:none" class="sp-spin">↻</span>
       <span id="spRefreshTxt">يتجدد تلقائياً كل 8 ثوانٍ</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     👁 شاشة مشاهدة المباراة — Spectate Watch (clone of sGame)
+     ════════════════════════════════════════════════════ -->
+<div class="spw-overlay s" id="spwOverlay">
+  <!-- شريط أعلى: أنت متفرج -->
+  <div class="spw-spec-banner">
+    <span>👁 وضع المشاهدة — أنت متفرج فقط</span>
+    <span class="spw-spec-back" onclick="closeSpwOverlay()">‹ رجوع</span>
+  </div>
+  <!-- نفس خلفية sGame -->
+  <div class="felt-glow"></div>
+  <!-- نفس grid sGame -->
+  <div class="gtable" style="padding-top:calc(clamp(2.2rem,7vw,5rem) + 26px)">
+    <!-- TOP BAR — نقاط اللاعبين -->
+    <div class="top-bar" id="spwTopBar">
+      <div class="tb-scores" id="spwScores">
+        <!-- تُملأ بـ JS -->
+      </div>
+      <div class="tb-deal-row">
+        <span class="tb-deal-num" id="spwDealNum">جولة 1</span>
+        <span class="tb-deal-sep">·</span>
+        <span class="tb-deal-info" id="spwDealInfo">مباراة جارية</span>
+      </div>
+    </div>
+    <!-- CENTER ZONE -->
+    <div class="cz">
+      <!-- scorebar النقاط الكبيرة -->
+      <div class="scorebar" id="spwScorebar">
+        <div class="sb-tgt">🎯 <span id="spwTgt">41</span></div>
+        <div class="sb-side" id="spwSbMine">
+          <div class="sb-side-av" id="spwSbMyAv">😎</div>
+          <div class="sb-side-nm" id="spwSbMyNm">—</div>
+          <div class="sb-n" id="spwSbMyPts">0</div>
+        </div>
+        <div class="sb-vs">⚔</div>
+        <div class="sb-side" id="spwSbOpp">
+          <div class="sb-side-av" id="spwSbOppAv">🤖</div>
+          <div class="sb-side-nm" id="spwSbOppNm">—</div>
+          <div class="sb-n" id="spwSbOppPts">0</div>
+        </div>
+      </div>
+      <!-- الطاولة + الخصم العلوي -->
+      <div class="tbl-wrap">
+        <div class="tbl-center-col">
+          <!-- الخصم العلوي -->
+          <div class="opp3-row">
+            <div class="oz" id="spwOppZone">
+              <div class="opp-side-av" id="spwOppAv" style="transition:box-shadow .35s;border-radius:50%">🤖</div>
+              <div class="opp-side-nm" id="spwOppNm">خصم</div>
+              <div class="opp-side-pts" id="spwOppPts">0</div>
+              <div id="spwOppHands" style="display:flex;flex-direction:row;flex-wrap:wrap;gap:.06rem;margin-top:.15rem;justify-content:center"></div>
+              <!-- نقاط التفكير -->
+              <div id="spwThinkDots" style="display:none;gap:3px;justify-content:center;align-items:center;height:10px;margin-top:.1rem">
+                <span class="tdot"></span><span class="tdot"></span><span class="tdot"></span>
+              </div>
+            </div>
+          </div>
+          <!-- الطاولة — نفس .tbl تماماً -->
+          <div class="tbl" id="spwTbl">
+            <span class="tbl-lbl">الطاولة</span>
+            <span class="tbl-empty" id="spwTblE">الطاولة فارغة</span>
+          </div>
+          <div class="chips-zone"></div>
+        </div>
+      </div>
+      <!-- تعليق بديل Quick Chat -->
+      <div class="spw-commentary" id="spwCommentary">جاري التحميل…</div>
+    </div>
+    <!-- PLAYER ZONE — اللاعب السفلي بدون أزرار تفاعل -->
+    <div class="pzone">
+      <div class="pbar" id="spwPbar">
+        <div class="pinfo">
+          <div style="position:relative;display:inline-block">
+            <div class="pav grn-t" id="spwMyAv">😎</div>
+          </div>
+          <div>
+            <div class="pnm" id="spwMyNm">—</div>
+            <div class="pcol">🃏 <span id="spwMyCol">0</span> ورقة جُمِعت</div>
+          </div>
+        </div>
+        <!-- مؤشر الدور -->
+        <div id="spwTurnBadge" style="display:none;font-size:.6rem;color:var(--g1);font-weight:800;background:rgba(34,196,138,.12);border:1px solid rgba(34,196,138,.25);border-radius:20px;padding:4px 12px">دوره ▶</div>
+      </div>
+      <!-- أوراق اللاعب السفلي — كلها مقلوبة -->
+      <div class="phand-row">
+        <div class="phand" id="spwPhand"></div>
+      </div>
+      <!-- أزرار المشاهدة فقط -->
+      <div class="acbar">
+        <button class="ac ac-quit" onclick="closeSpwOverlay()" style="width:100%;background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.25);color:#f87171">‹ مغادرة المشاهدة</button>
+      </div>
     </div>
   </div>
 </div>
