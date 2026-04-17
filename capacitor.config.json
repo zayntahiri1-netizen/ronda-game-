@@ -57,28 +57,6 @@
       "initializeForTesting": false,
       "tagForChildDirectedTreatment": false,
       "tagForUnderAgeOfConsent": false
-    },
-    "InAppPurchase2": {
-      "products": [
-        {"id":"ronda_coins_500",    "type":"consumable"},
-        {"id":"ronda_coins_1200",   "type":"consumable"},
-        {"id":"ronda_coins_2000",   "type":"consumable"},
-        {"id":"ronda_coins_3000",   "type":"consumable"},
-        {"id":"ronda_coins_5000",   "type":"consumable"},
-        {"id":"ronda_coins_9000",   "type":"consumable"},
-        {"id":"ronda_coins_13000",  "type":"consumable"},
-        {"id":"ronda_coins_20000",  "type":"consumable"},
-        {"id":"ronda_coins_30000",  "type":"consumable"},
-        {"id":"ronda_coins_50000",  "type":"consumable"},
-        {"id":"ronda_coins_80000",  "type":"consumable"},
-        {"id":"ronda_coins_120000", "type":"consumable"},
-        {"id":"ronda_coins_200000", "type":"consumable"},
-        {"id":"ronda_bundle_rondag","type":"consumable"},
-        {"id":"ronda_bundle_hero",  "type":"consumable"},
-        {"id":"ronda_bundle_vip",   "type":"consumable"},
-        {"id":"ronda_bundle_season","type":"consumable"},
-        {"id":"ronda_deal_daily",   "type":"consumable"}
-      ]
     }
   }
 }

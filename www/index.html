@@ -838,6 +838,28 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
 .code-val{font-family:var(--fd);font-size:1.9rem;color:var(--g1);letter-spacing:.4em;animation:cGlow 2s ease-in-out infinite alternate}
 @keyframes cGlow{from{text-shadow:0 0 8px var(--glow)}to{text-shadow:0 0 32px rgba(212,164,60,.9)}}
 .wbtns{display:flex;gap:.42rem;justify-content:center;flex-wrap:wrap;margin-bottom:.4rem}
+
+/* ── صف مشاركة الشبكات الاجتماعية في غرفة الانتظار ── */
+.wsoc-row{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin:.3rem 0 .15rem}
+.wsoc-btn{
+  display:flex;flex-direction:column;align-items:center;gap:.18rem;
+  width:52px;padding:.38rem .2rem .28rem;border-radius:14px;
+  cursor:pointer;font-size:.48rem;font-weight:800;letter-spacing:.02em;
+  border:1px solid rgba(255,255,255,.08);
+  transition:transform .18s,box-shadow .18s;
+  position:relative;overflow:hidden;
+}
+.wsoc-btn:active{transform:scale(.92)!important}
+.wsoc-btn:hover{transform:translateY(-2px) scale(1.07);box-shadow:0 6px 22px rgba(0,0,0,.35)}
+.wsoc-ico{font-size:1.25rem;line-height:1}
+.wsoc-wa{background:linear-gradient(135deg,rgba(37,211,102,.18),rgba(37,211,102,.06));color:#4ade80;border-color:rgba(37,211,102,.3)}
+.wsoc-tg{background:linear-gradient(135deg,rgba(41,182,246,.18),rgba(41,182,246,.06));color:#7dd3fc;border-color:rgba(41,182,246,.3)}
+.wsoc-tw{background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04));color:#e2e8f0;border-color:rgba(255,255,255,.18)}
+.wsoc-fb{background:linear-gradient(135deg,rgba(24,119,242,.18),rgba(24,119,242,.06));color:#93c5fd;border-color:rgba(24,119,242,.3)}
+.wsoc-ig{background:linear-gradient(135deg,rgba(225,48,108,.18),rgba(253,184,56,.08));color:#f9a8d4;border-color:rgba(225,48,108,.28)}
+.wsoc-cp{background:linear-gradient(135deg,rgba(212,164,60,.18),rgba(212,164,60,.06));color:var(--g1);border-color:rgba(212,164,60,.3)}
+.wsoc-copied{animation:wsocCopied .35s ease}
+@keyframes wsocCopied{0%{transform:scale(1)}50%{transform:scale(1.18)}100%{transform:scale(1)}}
 .wcopy,.wshare{display:inline-flex;align-items:center;gap:.3rem;padding:.34rem .78rem;border-radius:18px;font-size:.74rem;font-weight:600;cursor:pointer;font-family:var(--fa);transition:all var(--ts)}
 .wcopy{background:rgba(33,150,243,.11);color:#90CAF9;border:1px solid rgba(33,150,243,.25)}.wcopy:hover{background:rgba(33,150,243,.2)}
 .wshare{background:rgba(76,175,80,.11);color:#A5D6A7;border:1px solid rgba(76,175,80,.25)}.wshare:hover{background:rgba(76,175,80,.2)}
@@ -4964,17 +4986,6 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
 }
 .shop-pay-none .spn-ico{font-size:1.5rem;opacity:.4}
 
-#paypal-btn-container{min-height:40px}
-#paypal-btn-container .paypal-loading{
-  display:flex;align-items:center;justify-content:center;gap:.5rem;
-  color:var(--t4);font-size:.74rem;padding:.6rem;
-}
-.pp-loading-dot{
-  width:6px;height:6px;border-radius:50%;background:var(--t4);
-  animation:ppDot .9s ease-in-out infinite;
-}
-.pp-loading-dot:nth-child(2){animation-delay:.2s}
-.pp-loading-dot:nth-child(3){animation-delay:.4s}
 @keyframes ppDot{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
 
 /* ── شعار وسائل الدفع ── */
@@ -5602,6 +5613,34 @@ document.addEventListener('deviceready', async () => {
       <div><div class="os-n" id="lg">—</div><div class="os-l">لعبة جارية</div></div>
       <div><div class="os-n" id="liveStatus" style="color:var(--emer3)">⏳</div><div class="os-l">مباشر</div></div>
     </div>
+
+    <!-- ══ روابط قانونية في الصفحة الرئيسية (متطلبات Play Store) ══ -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:.4rem;margin-top:.7rem;padding:.5rem .85rem">
+      <div style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap">
+        <a href="https://ronda-e11cd.web.app/privacy" target="_blank" rel="noopener"
+          style="display:inline-flex;align-items:center;gap:.3rem;
+            padding:.38rem .8rem;border-radius:20px;text-decoration:none;
+            background:rgba(0,0,0,.35);border:1px solid rgba(212,164,60,.2);
+            color:rgba(212,164,60,.75);font-family:'Tajawal',sans-serif;
+            font-size:.55rem;font-weight:700;backdrop-filter:blur(8px);
+            transition:all .22s"
+          onmouseover="this.style.borderColor='rgba(212,164,60,.5)';this.style.color='#d4a43c'"
+          onmouseout="this.style.borderColor='rgba(212,164,60,.2)';this.style.color='rgba(212,164,60,.75)'">
+          🔒 سياسة الخصوصية
+        </a>
+        <a href="https://ronda-e11cd.web.app/delete.html" target="_blank" rel="noopener"
+          style="display:inline-flex;align-items:center;gap:.3rem;
+            padding:.38rem .8rem;border-radius:20px;text-decoration:none;
+            background:rgba(0,0,0,.35);border:1px solid rgba(255,80,80,.2);
+            color:rgba(255,120,120,.7);font-family:'Tajawal',sans-serif;
+            font-size:.55rem;font-weight:700;backdrop-filter:blur(8px);
+            transition:all .22s"
+          onmouseover="this.style.borderColor='rgba(255,80,80,.45)';this.style.color='#ff9090'"
+          onmouseout="this.style.borderColor='rgba(255,80,80,.2)';this.style.color='rgba(255,120,120,.7)'">
+          🗑️ حذف البيانات
+        </a>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -6023,10 +6062,42 @@ document.addEventListener('deviceready', async () => {
       <div class="code-val" id="wCode">ABC123</div>
     </div>
     <div class="wbtns">
-      <button class="wcopy" onclick="copyCode()">📋 نسخ</button>
-      <button class="wshare" onclick="shareCode()">📤 واتساب</button>
+      <button class="wcopy" onclick="copyCode()">📋 نسخ الرمز</button>
     </div>
-    <div class="whint">شارك الرمز مع أصدقائك ليدخلوا مباشرة 👆</div>
+    <!-- صف مشاركة المنصات — كل زر ينسخ+يفتح المنصة تلقائياً -->
+    <div class="wsoc-row">
+      <div class="wsoc-btn wsoc-wa" onclick="shareWaitCode('whatsapp')" title="واتساب">
+        <span class="wsoc-ico">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        </span>
+        واتساب
+      </div>
+      <div class="wsoc-btn wsoc-tg" onclick="shareWaitCode('telegram')" title="تيليغرام">
+        <span class="wsoc-ico">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        </span>
+        تيليغرام
+      </div>
+      <div class="wsoc-btn wsoc-tw" onclick="shareWaitCode('twitter')" title="تويتر / X">
+        <span class="wsoc-ico">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </span>
+        X
+      </div>
+      <div class="wsoc-btn wsoc-fb" onclick="shareWaitCode('facebook')" title="فيسبوك">
+        <span class="wsoc-ico">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </span>
+        فيسبوك
+      </div>
+      <div class="wsoc-btn wsoc-ig" onclick="shareWaitCode('instagram')" title="إنستغرام">
+        <span class="wsoc-ico">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        </span>
+        إنستغرام
+      </div>
+    </div>
+    <div class="whint">اضغط أيقونة المنصة — ينسخ الدعوة وينتقل إليها تلقائياً 🚀</div>
     <div class="seats" id="seatsRow"></div>
     <div class="wactions">
       <button class="bstart" id="btnStart" onclick="startFromWait()">▶ ابدأ اللعبة</button>
@@ -7107,6 +7178,43 @@ document.addEventListener('deviceready', async () => {
       <!-- ══ SETTINGS PANEL ══ -->
       <div class="prof-panel" id="pp-settings">
         <div id="settingsContent"></div>
+      </div>
+
+      <!-- ══ روابط قانونية (متطلبات Play Store) ══ -->
+      <div style="text-align:center;padding:1.1rem .85rem .4rem;border-top:1px solid rgba(255,255,255,.07);margin-top:.5rem">
+        <div style="font-size:.5rem;color:var(--t5);margin-bottom:.65rem;letter-spacing:.04em">⚖️ الشروط والخصوصية</div>
+        <div style="display:flex;flex-direction:column;gap:.45rem;align-items:center">
+          <a href="https://ronda-e11cd.web.app/privacy" target="_blank" rel="noopener"
+            style="display:flex;align-items:center;gap:.45rem;width:100%;max-width:280px;
+              padding:.55rem 1rem;border-radius:14px;text-decoration:none;
+              background:rgba(212,164,60,.08);border:1px solid rgba(212,164,60,.25);
+              color:var(--g1);font-family:'Tajawal',sans-serif;font-size:.65rem;font-weight:900;
+              justify-content:center;transition:all .22s"
+            onmouseover="this.style.background='rgba(212,164,60,.16)'"
+            onmouseout="this.style.background='rgba(212,164,60,.08)'">
+            🔒 سياسة الخصوصية
+          </a>
+          <a href="https://ronda-e11cd.web.app/delete.html" target="_blank" rel="noopener"
+            style="display:flex;align-items:center;gap:.45rem;width:100%;max-width:280px;
+              padding:.55rem 1rem;border-radius:14px;text-decoration:none;
+              background:rgba(255,80,80,.07);border:1px solid rgba(255,80,80,.22);
+              color:#ff9090;font-family:'Tajawal',sans-serif;font-size:.65rem;font-weight:900;
+              justify-content:center;transition:all .22s"
+            onmouseover="this.style.background='rgba(255,80,80,.14)'"
+            onmouseout="this.style.background='rgba(255,80,80,.07)'">
+            🗑️ طلب حذف البيانات
+          </a>
+          <button onclick="if(confirm('هل أنت متأكد من طلب حذف حسابك وبياناتك؟ هذا الإجراء لا يمكن التراجع عنه.')){window.open('https://ronda-e11cd.web.app/delete.html','_blank')}"
+            style="display:flex;align-items:center;gap:.45rem;width:100%;max-width:280px;
+              padding:.55rem 1rem;border-radius:14px;border:1.5px solid rgba(255,50,50,.4);
+              background:rgba(255,30,30,.1);color:#ff7070;
+              font-family:'Tajawal',sans-serif;font-size:.65rem;font-weight:900;
+              cursor:pointer;justify-content:center;transition:all .22s"
+            onmouseover="this.style.background='rgba(255,30,30,.2)'"
+            onmouseout="this.style.background='rgba(255,30,30,.1)'">
+            ⚠️ حذف الحساب والبيانات
+          </button>
+        </div>
       </div>
 
     </div><!-- /prof-content -->
@@ -13465,9 +13573,97 @@ function renderSeats(){
     return `<div class="seat occ">${teamLabel}${avHtml}<div class="seat-nm">${esc(p.name.substring(0,10))}</div><div class="seat-st">✓ جاهز</div></div>`;
   }).join('');
 }
-function copyCode(){ if(room){navigator.clipboard?.writeText(room.code).catch(()=>{}); toast(`📋 تم نسخ الرمز: ${room.code}`,'ok');} }
-function shareCode(){ const t=`🎴 روندة — انضم معي!
-الرمز: ${room?.code}`; window.open(`https://wa.me/?text=${encodeURIComponent(t)}`,'_blank'); }
+function copyCode(){
+  if(!room) return;
+  navigator.clipboard?.writeText(room.code).catch(()=>{});
+  toast(`📋 تم نسخ الرمز: ${room.code}`,'ok');
+}
+
+/* ── بناء رسالة الدعوة بالتفاصيل الكاملة ── */
+function _buildInviteMsg(){
+  if(!room) return '';
+  const code = room.code || '——';
+  const modeLabels = {
+    '2p' :'🥊 1 ضد 1',
+    '1v1':'🥊 1 ضد 1',
+    '2v2':'🤝 2 ضد 2 (فريقين)',
+    '4p' :'🏆 4 لاعبين مستقلين',
+    'pm2t':'🤝 شركاء (2 ضد 2)',
+  };
+  const gameLabels = {
+    classic:'🎴 كلاسيك مغربي',
+    escoba :'🧮 إسباني (إسكوبا)',
+    quick  :'⚡ سريع (ماكلة)',
+  };
+  const modeStr = modeLabels[room.pMode||pMode||'2p'] || '🎴 متعدد اللاعبين';
+  const gameStr = gameLabels[room.mode] || '🎴 روندة';
+  const entry   = room.entry ? `💰 الرهان: ${(room.entry).toLocaleString('ar')} 🪙` : '🆓 دخول مجاني';
+  const players = (room.players||[]).length;
+  const maxP    = (room.pMode==='2v2'||room.pMode==='4p'||room.pMode==='pm2t') ? 4 : 2;
+  const link    = 'https://ronda-e11cd.web.app';
+  return `🎴 روندة — تحدّاني الآن!
+
+👤 ${P.name||'لاعب'} يدعوك للانضمام
+👥 الوضع: ${modeStr}
+🎮 النوع: ${gameStr}
+${entry}
+🏠 اللاعبون: ${players}/${maxP}
+
+🔑 رمز الغرفة:
+${code}
+
+👆 افتح الرابط وأدخل الرمز:
+${link}
+
+أنت الغائب الوحيد! 🃏`;
+}
+
+/* ── مشاركة عبر منصة محددة + نسخ تلقائي ── */
+function shareWaitCode(platform){
+  if(!room || !room.code){ toast('⚠ لا توجد غرفة نشطة','warn'); return; }
+  const msg  = _buildInviteMsg();
+  const code = room.code;
+  const link = 'https://ronda-e11cd.web.app';
+  const enc  = encodeURIComponent(msg);
+  const encLink = encodeURIComponent(link);
+
+  /* نسخ الرسالة تلقائياً أولاً */
+  navigator.clipboard?.writeText(msg).catch(()=>{});
+
+  let url = '';
+  switch(platform){
+    case 'whatsapp':
+      url = `https://wa.me/?text=${enc}`;
+      break;
+    case 'telegram':
+      url = `https://t.me/share/url?url=${encLink}&text=${encodeURIComponent('🔑 رمز الغرفة: ' + code + '\n' + msg)}`;
+      break;
+    case 'twitter':
+      /* Twitter لا يدعم نصاً طويلاً — نرسل ملخصاً مع الرمز والرابط */
+      const shortTw = `🎴 روندة — تحدّاني الآن!\n👥 رمز الغرفة: ${code}\n👆 ${link}`;
+      url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shortTw)}`;
+      break;
+    case 'facebook':
+      /* Facebook Sharer لا يدعم نص مخصص عبر الرابط فقط — نفتح المشاركة مع الرابط */
+      const shortFb = `🎴 روندة — تحدّاني الآن!\nرمز الغرفة: ${code}`;
+      url = `https://www.facebook.com/sharer/sharer.php?u=${encLink}&quote=${encodeURIComponent(shortFb)}`;
+      break;
+    case 'instagram':
+      /* Instagram لا يدعم مشاركة نص مباشرة — ننسخ ونفتح التطبيق */
+      toast('📋 تم نسخ الدعوة — الصق في قصتك أو DM في إنستغرام!','ok',3500);
+      setTimeout(()=>window.open('instagram://','_blank'), 800);
+      return;
+    default:
+      navigator.clipboard?.writeText(msg).catch(()=>{});
+      toast(`📋 تم نسخ الدعوة — الصق وأرسل!`,'ok');
+      return;
+  }
+  toast('📋 تم نسخ الدعوة وفتح المنصة!','ok',2200);
+  setTimeout(()=>window.open(url,'_blank'), 350);
+}
+
+/* الدالة القديمة — تحويل لـ shareWaitCode */
+function shareCode(){ shareWaitCode('whatsapp'); }
 function startFromWait(){
   if(!isHost||!room) return;
   // [FIX-LOTTERY-REPEAT] Guard مزدوج: _startInProgress + _lotteryFired
@@ -25008,47 +25204,27 @@ setInterval(_checkChestsReady, 60000);
           <span class="sps-r"><span id="shopSummaryPrice">—</span></span>
         </div>
 
-        <!-- حاوي زر الدفع — Google Play Billing -->
-        <div id="paypal-btn-container">
-          <div class="shop-pay-none">
-            <div class="spn-ico">👆</div>
-            <div>اختر باقة للمتابعة</div>
-          </div>
-        </div>
-
-        <!-- زر الدفع عبر Google Play -->
-        <div id="shopScrollHint" style="display:none;text-align:center;margin:.5rem 0">
-          <div style="font-size:.58rem;color:var(--t4);margin-bottom:.35rem">👇 اضغط لإتمام الشراء عبر Google Play</div>
-          <button onclick="_shopLaunchGPB()"
-            style="background:linear-gradient(135deg,#34a853,#1e7e34);border:none;border-radius:12px;
-            padding:.68rem 1.5rem;color:#fff;font-family:var(--fa);font-size:.8rem;font-weight:900;
-            cursor:pointer;width:100%;box-shadow:0 4px 20px rgba(52,168,83,.35);
-            display:flex;align-items:center;justify-content:center;gap:.5rem;box-sizing:border-box">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M3.18 23.76c.37.21.8.22 1.19.04l11.5-6.63-2.48-2.49-10.21 9.08zm-1.14-20.2C1.73 3.98 1.5 4.56 1.5 5.23v13.54c0 .67.23 1.25.54 1.67l.09.08 7.58-7.58v-.18L2.13 3.47l-.09.09zm16.1 9.38L15.52 10.7 12.96 13.3l2.62 2.62 3.56-2.05c1.02-.59 1.02-1.54 0-2.13zM4.37.24C3.98.06 3.55.07 3.18.28L13.47 10.7l-2.52 2.53 2.57 2.58L24 9.48C24 8.07 22.68 7.06 20.1 5.55L4.37.24z"/></svg>
-            الدفع عبر Google Play
-          </button>
-        </div>
-
-        <!-- وسائل الدفع المقبولة عبر Google Play -->
+        <!-- وسائل الدفع المقبولة -->
         <div class="shop-pay-methods">
-          <div class="pay-method-icon pp">PayPal</div>
           <div class="pay-method-icon visa">VISA</div>
           <div class="pay-method-icon mc">MC</div>
-          <div class="pay-method-icon guest" style="background:rgba(52,168,83,.12);border-color:rgba(52,168,83,.3);color:#6ee086">✓ Google Play</div>
+          <div class="pay-method-icon amex">AMEX</div>
+          <div class="pay-method-icon guest">✓ بدون حساب</div>
         </div>
 
-        <!-- تعليمات الشراء -->
+        <!-- تعليمات الدفع بالبطاقة -->
         <div class="card-how-to">
-          <div class="cht-title">🛒 كيفية إتمام الشراء:</div>
+          <div class="cht-title">💳 كيفية الدفع بالبطاقة:</div>
           <div class="cht-steps">
             <div class="cht-step"><span class="cht-n">1</span>اختر الباقة المناسبة</div>
-            <div class="cht-step"><span class="cht-n">2</span>اضغط "الدفع عبر Google Play"</div>
-            <div class="cht-step"><span class="cht-n">3</span>أكمل الدفع بطريقتك (بطاقة، PayPal، رصيد Google...)</div>
-            <div class="cht-step"><span class="cht-n">4</span>تُضاف العملات فوراً لحسابك</div>
+            <div class="cht-step"><span class="cht-n">2</span>اضغط زر "ادفع" أدناه</div>
+            <div class="cht-step"><span class="cht-n">3</span>اختر "بطاقة ائتمان أو خصم"</div>
+            <div class="cht-step"><span class="cht-n">4</span>أدخل بيانات البطاقة بأمان</div>
           </div>
         </div>
 
-          🔒 دفع آمن عبر Google Play — يدعم PayPal إذا ربطت حسابك بـ Google
+        <div style="text-align:center;margin-top:.55rem;font-size:.58rem;color:var(--t4)">
+          🔒 دفع آمن ومشفر — لا نحتفظ ببيانات بطاقتك
         </div>
       </div>
 
@@ -25056,9 +25232,6 @@ setInterval(_checkChestsReady, 60000);
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════
-     💳 PayPal SDK — يُحمَّل عند فتح المتجر لأول مرة
-     ══════════════════════════════════════════════ -->
 <script>
 /* ─────────────────────────────────────────────
    SHOP CONFIG — الباقات وإعدادات المتجر
@@ -25096,8 +25269,6 @@ const SHOP_PKGS = {
 };
 
 let _shopSelectedPkg  = null;
-let _shopPaypalLoaded = false;
-let _shopPaypalRendered = false;
 let _shopDealTimerInt = null;
 let _shopCurrentTab   = 'basic';
 
@@ -25110,7 +25281,6 @@ function openShop(){
   _shopStartDealTimer();
   _shopRenderGrid(_shopCurrentTab);
   document.getElementById('mShop').classList.add('on');
-  _shopLoadPayPal();
 }
 
 /* ── تبديل التبويب ── */
@@ -25178,104 +25348,11 @@ function shopSelectPkg(pkgId){
     sumEl.style.display = 'flex';
   }
 
-  // أظهر زر المتابعة
-  const hint = document.getElementById('shopScrollHint');
-  if(hint) hint.style.display='block';
-
   // مرر للدفع بعد لحظة
   const payZone = document.getElementById('shopPayZone');
   if(payZone) setTimeout(()=>payZone.scrollIntoView({behavior:'smooth',block:'nearest'}),150);
-
-  _shopRenderPayPal(pkg);
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   🛒 GOOGLE PLAY BILLING — نظام الشراء عبر Google Play
-   ═══════════════════════════════════════════════════════════════
-   كيف يعمل:
-   1. المستخدم يختار باقة → shopSelectPkg()
-   2. يضغط زر "الدفع عبر Google Play" → _shopLaunchGPB()
-   3. تُفتح نافذة Google Play الرسمية (Capacitor Plugin)
-   4. المستخدم يدفع بطريقته (بطاقة / PayPal مربوط / رصيد Google)
-   5. Google تُرجع purchase token → نتحقق server-side → نضيف العملات
-   ─────────────────────────────────────────────────────────────── */
-
-/* خريطة الباقات إلى Product IDs في Google Play Console */
-const GPB_PRODUCT_IDS = {
-  s1:'ronda_coins_500',   s2:'ronda_coins_1200',  s3:'ronda_coins_2000',
-  s4:'ronda_coins_3000',  s5:'ronda_coins_5000',
-  p1:'ronda_coins_9000',  p2:'ronda_coins_13000', p3:'ronda_coins_20000', p4:'ronda_coins_30000',
-  e1:'ronda_coins_50000', e2:'ronda_coins_80000', e3:'ronda_coins_120000',e4:'ronda_coins_200000',
-  b1:'ronda_bundle_rondag',b2:'ronda_bundle_hero', b3:'ronda_bundle_vip',  b4:'ronda_bundle_season',
-  deal:'ronda_deal_daily',
-};
-
-/* ── تُستدعى عند فتح المتجر (لا تحمّل PayPal SDK) ── */
-function _shopLoadPayPal(){
-  // لا شيء — Google Play Billing يعمل عبر Capacitor Plugin
-}
-
-/* ── تُستدعى عند اختيار باقة لعرض زر GPB ── */
-function _shopRenderPayPal(pkg){
-  const c = document.getElementById('paypal-btn-container');
-  if(!c) return;
-  // أظهر placeholder موضح
-  c.innerHTML = `
-    <div style="text-align:center;padding:1rem .5rem;font-family:var(--fa)">
-      <div style="font-size:1.5rem;margin-bottom:.4rem">🛒</div>
-      <div style="font-size:.78rem;color:var(--t2);font-weight:700;margin-bottom:.25rem">
-        ${pkg.icon} ${pkg.label} — ${pkg.coins.toLocaleString('ar')} عملة
-      </div>
-      <div style="font-size:.68rem;color:var(--g2);font-weight:900">$${pkg.price} USD</div>
-    </div>`;
-  // أظهر زر الدفع
-  const hint = document.getElementById('shopScrollHint');
-  if(hint) hint.style.display = 'block';
-}
-
-/* ── تشغيل نافذة Google Play Billing ── */
-function _shopLaunchGPB(){
-  const pkg = _shopSelectedPkg;
-  if(!pkg){ toast('❗ اختر باقة أولاً','',2000); return; }
-
-  const productId = GPB_PRODUCT_IDS[pkg.id] || ('ronda_coins_' + pkg.coins);
-
-  /* ① محاولة عبر Capacitor Plugin (التطبيق المُحزَّم APK) */
-  if(window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.InAppPurchase2){
-    const IAP = window.Capacitor.Plugins.InAppPurchase2;
-    IAP.purchase({ productId })
-      .then(result => {
-        const token = result && (result.purchaseToken || result.transactionId || result.orderId || 'gpb_' + Date.now());
-        _shopVerifyAndCredit(pkg, token);
-      })
-      .catch(err => {
-        if(err && err.code === 'USER_CANCELLED'){
-          toast('↩️ تم إلغاء عملية الشراء','',2200);
-        } else {
-          console.error('[GPB]', err);
-          toast('❌ فشل الشراء، حاول مرة أخرى','',3500);
-        }
-      });
-    return;
-  }
-
-  /* ② متصفح عادي / PWA — فتح صفحة شراء احتياطية */
-  toast('🔗 جاري فتح صفحة الدفع...','ok',2000);
-  setTimeout(()=>{
-    window.open(
-      `https://ronda-e11cd.web.app/buy?pkg=${pkg.id}&coins=${pkg.coins}&price=${pkg.price}`,
-      '_blank'
-    );
-  }, 300);
-}
-
-/* ── التحقق من الشراء وإضافة العملات ── */
-function _shopVerifyAndCredit(pkg, purchaseToken){
-  /* [SEC] في الإنتاج: أرسل purchaseToken لـ Cloud Function تتحقق منه
-     عبر Google Play Developer API ثم تُضيف العملات server-side.
-     حتى ذلك الحين: نضيف مباشرة مع تسجيل المعاملة. */
-  _shopOnSuccess(pkg, purchaseToken);
-}
 
 
 /* ── بعد نجاح الدفع ── */
@@ -25294,7 +25371,7 @@ function _shopOnSuccess(pkg, orderId){
 
 /* ── تسجيل المعاملة في Supabase ──
    [SEC-TODO] هذا الكود يكتب مباشرة من client وهو غير آمن.
-   الحل الصحيح: Cloud Function تتحقق من orderId عبر PayPal API
+   الحل الصحيح: Cloud Function تتحقق من orderId عبر واجهة الدفع
    ثم تكتب في gold_transactions باستخدام service_role key.
    حتى ذلك الحين: gold_after يُحسب server-side بعد التحقق. ──────── */
 async function _shopLogTransaction(pkg, orderId){
@@ -25373,14 +25450,11 @@ function shopClose(){
   closeM('mShop');
   setTimeout(()=>{
     _shopSelectedPkg = null;
-    _shopPaypalRendered = false;
     document.getElementById('shopSuccess').classList.remove('on');
     document.getElementById('shopContent').style.display = '';
     document.querySelectorAll('.shop-pkg,.shop-deal').forEach(el=>el.classList.remove('selected'));
     const sumEl = document.getElementById('shopPaySummary');
     if(sumEl) sumEl.style.display = 'none';
-    const c = document.getElementById('paypal-btn-container');
-    if(c) c.innerHTML = `<div class="shop-pay-none"><div class="spn-ico">👆</div><div>اختر باقة للمتابعة</div></div>`;
     // إعادة رسم الشبكة
     _shopRenderGrid(_shopCurrentTab);
   }, 400);
@@ -27283,132 +27357,6 @@ function _injectPromoBtn(){
   tbr.insertBefore(btn,tbr.firstChild);
 }
 
-/* ── رندر تبويب الإعدادات (خصوصية + حذف) ── */
-function _renderSettingsPanel(){
-  const el=document.getElementById('settingsContent');
-  if(!el||el.dataset.rendered) return;
-  el.dataset.rendered='1';
-  el.innerHTML=`
-    <div style="padding:.3rem 0">
-      <div style="font-size:.55rem;color:var(--t4);font-weight:800;letter-spacing:.1em;text-align:center;margin:.4rem 0 .55rem">🔊 الصوت والاهتزاز</div>
-      <div class="sound-settings-row">
-        <span class="sound-icon">🎵</span>
-        <span class="sound-label">المؤثرات الصوتية</span>
-        <input type="range" class="sound-vol-slider" min="0" max="1" step="0.1"
-          value="${(_soundSettings||{vol:.7}).vol}"
-          oninput="if(_soundSettings)_soundSettings.vol=+this.value,_saveSoundSettings(_soundSettings)">
-        <button class="sound-toggle ${(_soundSettings||{sfx:true}).sfx?'on':''}" id="sfxToggleS"
-          onclick="if(_soundSettings){_soundSettings.sfx=!_soundSettings.sfx;this.classList.toggle('on');_saveSoundSettings(_soundSettings)}"></button>
-      </div>
-      <div class="sound-settings-row" style="margin-bottom:.9rem">
-        <span class="sound-icon">📳</span>
-        <span class="sound-label">الاهتزاز</span>
-        <button class="sound-toggle ${(_soundSettings||{music:true}).music?'on':''}" id="vibrToggleS"
-          onclick="if(_soundSettings){_soundSettings.music=!_soundSettings.music;this.classList.toggle('on');_saveSoundSettings(_soundSettings)}"></button>
-      </div>
-
-      <div style="font-size:.55rem;color:var(--t4);font-weight:800;letter-spacing:.1em;text-align:center;margin:.8rem 0 .5rem">🔒 الخصوصية والبيانات</div>
-
-      <button onclick="window.open('https://ronda-e11cd.web.app/privacy','_blank')"
-        style="width:100%;display:flex;align-items:center;gap:.6rem;
-          padding:.68rem .9rem;margin-bottom:.42rem;
-          background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
-          border-radius:13px;color:var(--t2);font-family:var(--fa);font-size:.73rem;
-          cursor:pointer;transition:background .18s;box-sizing:border-box"
-        onmouseenter="this.style.background='rgba(255,255,255,.09)'"
-        onmouseleave="this.style.background='rgba(255,255,255,.04)'">
-        <span style="font-size:1.1rem;flex-shrink:0">📄</span>
-        <span style="flex:1;text-align:right">سياسة الخصوصية</span>
-        <span style="font-size:.65rem;color:var(--t5)">›</span>
-      </button>
-
-      <button onclick="window.open('https://ronda-e11cd.web.app/delete.html','_blank')"
-        style="width:100%;display:flex;align-items:center;gap:.6rem;
-          padding:.68rem .9rem;margin-bottom:.42rem;
-          background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
-          border-radius:13px;color:var(--t2);font-family:var(--fa);font-size:.73rem;
-          cursor:pointer;transition:background .18s;box-sizing:border-box"
-        onmouseenter="this.style.background='rgba(255,255,255,.09)'"
-        onmouseleave="this.style.background='rgba(255,255,255,.04)'">
-        <span style="font-size:1.1rem;flex-shrink:0">🗂️</span>
-        <span style="flex:1;text-align:right">إدارة بياناتي</span>
-        <span style="font-size:.65rem;color:var(--t5)">›</span>
-      </button>
-
-      <button onclick="_confirmDeleteAccount()"
-        style="width:100%;display:flex;align-items:center;gap:.6rem;
-          padding:.68rem .9rem;margin-bottom:.42rem;
-          background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.22);
-          border-radius:13px;color:#fca5a5;font-family:var(--fa);font-size:.73rem;
-          cursor:pointer;transition:all .18s;box-sizing:border-box"
-        onmouseenter="this.style.background='rgba(239,68,68,.15)'"
-        onmouseleave="this.style.background='rgba(239,68,68,.07)'">
-        <span style="font-size:1.1rem;flex-shrink:0">🗑️</span>
-        <span style="flex:1;text-align:right">حذف الحساب والبيانات</span>
-        <span style="font-size:.65rem;color:#f87171">›</span>
-      </button>
-
-      <div style="font-size:.52rem;color:var(--t5);text-align:center;margin-top:.4rem;line-height:1.6">
-        روندة v3 · <span onclick="window.open('https://ronda-e11cd.web.app/privacy','_blank')" style="color:var(--g2);cursor:pointer;text-decoration:underline">الخصوصية</span> · <span onclick="window.open('https://ronda-e11cd.web.app/delete.html','_blank')" style="color:var(--g2);cursor:pointer;text-decoration:underline">حذف البيانات</span>
-      </div>
-    </div>
-  `;
-}
-
-function _confirmDeleteAccount(){
-  const ov=document.createElement('div');
-  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:99999;display:flex;align-items:center;justify-content:center;padding:1.5rem';
-  ov.innerHTML=`
-    <div style="background:var(--bg1,#0d1117);border:1px solid rgba(239,68,68,.4);border-radius:20px;
-      padding:1.6rem 1.4rem;max-width:310px;width:100%;text-align:center;font-family:var(--fa,'Tajawal',sans-serif)">
-      <div style="font-size:2.2rem;margin-bottom:.5rem">⚠️</div>
-      <div style="font-size:.9rem;font-weight:900;color:#f8fafc;margin-bottom:.4rem">حذف الحساب نهائياً</div>
-      <div style="font-size:.67rem;color:#94a3b8;margin-bottom:1.3rem;line-height:1.65">
-        سيتم حذف جميع بياناتك (ملفك الشخصي، إحصائياتك، عملاتك) بشكل دائم ولا يمكن التراجع عنه.
-      </div>
-      <div style="display:flex;gap:.55rem">
-        <button onclick="this.closest('div[style*=inset]').remove()"
-          style="flex:1;padding:.65rem;border-radius:12px;border:1px solid rgba(255,255,255,.12);
-          background:rgba(255,255,255,.07);color:#cbd5e1;font-family:var(--fa,'Tajawal',sans-serif);font-size:.73rem;cursor:pointer">
-          إلغاء
-        </button>
-        <button onclick="window.open('https://ronda-e11cd.web.app/delete.html','_blank');this.closest('div[style*=inset]').remove()"
-          style="flex:1;padding:.65rem;border-radius:12px;border:none;
-          background:linear-gradient(135deg,#dc2626,#991b1b);color:#fff;
-          font-family:var(--fa,'Tajawal',sans-serif);font-size:.73rem;font-weight:900;cursor:pointer">
-          🗑️ حذف حسابي
-        </button>
-      </div>
-    </div>`;
-  document.body.appendChild(ov);
-  ov.addEventListener('click',e=>{ if(e.target===ov) ov.remove(); });
-}
-
-/* ── إضافة أزرار الخصوصية في footer الصفحة الرئيسية ── */
-function _injectLobbyPrivacyLinks(){
-  if(document.getElementById('_lobbyPrivacyBar')) return;
-  const bar=document.createElement('div');
-  bar.id='_lobbyPrivacyBar';
-  bar.style.cssText=`
-    display:flex;justify-content:center;align-items:center;gap:1rem;
-    padding:.55rem .5rem .7rem;font-family:var(--fa,'Tajawal',sans-serif);
-    font-size:.53rem;color:var(--t5,#64748b);flex-wrap:wrap`;
-  bar.innerHTML=`
-    <span onclick="window.open('https://ronda-e11cd.web.app/privacy','_blank')"
-      style="cursor:pointer;display:flex;align-items:center;gap:.25rem;color:var(--t4,#94a3b8);transition:color .18s"
-      onmouseenter="this.style.color='var(--g2,#d4a43c)'" onmouseleave="this.style.color='var(--t4,#94a3b8)'">
-      🔒 سياسة الخصوصية
-    </span>
-    <span style="color:var(--t6,#475569)">·</span>
-    <span onclick="window.open('https://ronda-e11cd.web.app/delete.html','_blank')"
-      style="cursor:pointer;display:flex;align-items:center;gap:.25rem;color:var(--t4,#94a3b8);transition:color .18s"
-      onmouseenter="this.style.color='var(--g2,#d4a43c)'" onmouseleave="this.style.color='var(--t4,#94a3b8)'">
-      🗑️ حذف البيانات
-    </span>`;
-  const lobby=document.getElementById('sLobby');
-  if(lobby) lobby.appendChild(bar);
-}
-
 /* ── hook profTab لـ sound settings و VIP ── */
 (function _hookProfTab3(){
   const orig=window.profTab;
@@ -27417,23 +27365,20 @@ function _injectLobbyPrivacyLinks(){
     if(panelId==='pp-stats'){
       setTimeout(()=>{ _injectSoundSettings(); _updateVIPBadge(); },300);
     }
-    if(panelId==='pp-settings'){
-      setTimeout(()=>{ _renderSettingsPanel(); },80);
-    }
   };
 })();
 
-/* ── hook go(sLobby) لإضافة زر الهدية وروابط الخصوصية ── */
+/* ── hook go(sLobby) لإضافة زر الهدية ── */
 (function _hookGo3(){
   const orig=window.go;
   window.go=function(id){
     if(typeof orig==='function') orig(id);
-    if(id==='sLobby') setTimeout(()=>{ _injectPromoBtn(); _updateVIPBadge(); _injectLobbyPrivacyLinks(); },300);
+    if(id==='sLobby') setTimeout(()=>{ _injectPromoBtn(); _updateVIPBadge(); },300);
   };
 })();
 
 /* ── تشغيل أولي ── */
-setTimeout(()=>{ _injectPromoBtn(); _updateVIPBadge(); _injectLobbyPrivacyLinks(); }, 1500);
+setTimeout(()=>{ _injectPromoBtn(); _updateVIPBadge(); }, 1500);
 
 /* ════════════════════════════════════════════════════════════════
    🤝 نظام الأصدقاء الكامل — Friends System v1.0
@@ -28864,6 +28809,34 @@ _boot();
     </div>
     <div class="frnd-list" id="frndInviteBody">
       <div class="frnd-empty">لا يوجد أصدقاء لدعوتهم</div>
+    </div>
+    <!-- ── مشاركة عبر المنصات الاجتماعية ── -->
+    <div style="padding:.65rem .85rem .5rem;border-top:1px solid rgba(255,255,255,.07)">
+      <div style="font-size:.52rem;color:var(--t5);text-align:center;margin-bottom:.5rem;letter-spacing:.04em">
+        📤 أو شارك الرمز مباشرة عبر المنصة
+      </div>
+      <div class="wsoc-row" style="margin:0">
+        <div class="wsoc-btn wsoc-wa" onclick="shareWaitCode('whatsapp')" title="واتساب">
+          <span class="wsoc-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></span>
+          واتساب
+        </div>
+        <div class="wsoc-btn wsoc-tg" onclick="shareWaitCode('telegram')" title="تيليغرام">
+          <span class="wsoc-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></span>
+          تيليغرام
+        </div>
+        <div class="wsoc-btn wsoc-tw" onclick="shareWaitCode('twitter')" title="X">
+          <span class="wsoc-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></span>
+          X
+        </div>
+        <div class="wsoc-btn wsoc-fb" onclick="shareWaitCode('facebook')" title="فيسبوك">
+          <span class="wsoc-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></span>
+          فيسبوك
+        </div>
+        <div class="wsoc-btn wsoc-ig" onclick="shareWaitCode('instagram')" title="إنستغرام">
+          <span class="wsoc-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></span>
+          إنستغرام
+        </div>
+      </div>
     </div>
   </div>
 </div>
