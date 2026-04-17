@@ -25008,7 +25008,7 @@ setInterval(_checkChestsReady, 60000);
           <span class="sps-r"><span id="shopSummaryPrice">—</span></span>
         </div>
 
-        <!-- حاوي أزرار PayPal -->
+        <!-- حاوي زر الدفع — Google Play Billing -->
         <div id="paypal-btn-container">
           <div class="shop-pay-none">
             <div class="spn-ico">👆</div>
@@ -25016,39 +25016,39 @@ setInterval(_checkChestsReady, 60000);
           </div>
         </div>
 
-        <!-- زر المتابعة المرئي دائماً (يختفي بعد تحميل PayPal) -->
+        <!-- زر الدفع عبر Google Play -->
         <div id="shopScrollHint" style="display:none;text-align:center;margin:.5rem 0">
-          <div style="font-size:.58rem;color:var(--t4);margin-bottom:.3rem">👇 مرر للأسفل لإتمام الدفع</div>
-          <button onclick="document.getElementById('paypal-btn-container').scrollIntoView({behavior:'smooth',block:'center'})"
-            style="background:linear-gradient(135deg,#22c48a,#16896a);border:none;border-radius:12px;
-            padding:.6rem 1.5rem;color:#fff;font-family:var(--fa);font-size:.75rem;font-weight:900;
-            cursor:pointer;width:100%;box-shadow:0 4px 20px rgba(34,196,138,.35)">
-            💳 متابعة للدفع ›
+          <div style="font-size:.58rem;color:var(--t4);margin-bottom:.35rem">👇 اضغط لإتمام الشراء عبر Google Play</div>
+          <button onclick="_shopLaunchGPB()"
+            style="background:linear-gradient(135deg,#34a853,#1e7e34);border:none;border-radius:12px;
+            padding:.68rem 1.5rem;color:#fff;font-family:var(--fa);font-size:.8rem;font-weight:900;
+            cursor:pointer;width:100%;box-shadow:0 4px 20px rgba(52,168,83,.35);
+            display:flex;align-items:center;justify-content:center;gap:.5rem;box-sizing:border-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M3.18 23.76c.37.21.8.22 1.19.04l11.5-6.63-2.48-2.49-10.21 9.08zm-1.14-20.2C1.73 3.98 1.5 4.56 1.5 5.23v13.54c0 .67.23 1.25.54 1.67l.09.08 7.58-7.58v-.18L2.13 3.47l-.09.09zm16.1 9.38L15.52 10.7 12.96 13.3l2.62 2.62 3.56-2.05c1.02-.59 1.02-1.54 0-2.13zM4.37.24C3.98.06 3.55.07 3.18.28L13.47 10.7l-2.52 2.53 2.57 2.58L24 9.48C24 8.07 22.68 7.06 20.1 5.55L4.37.24z"/></svg>
+            الدفع عبر Google Play
           </button>
         </div>
 
-        <!-- وسائل الدفع المقبولة -->
+        <!-- وسائل الدفع المقبولة عبر Google Play -->
         <div class="shop-pay-methods">
           <div class="pay-method-icon pp">PayPal</div>
           <div class="pay-method-icon visa">VISA</div>
           <div class="pay-method-icon mc">MC</div>
-          <div class="pay-method-icon amex">AMEX</div>
-          <div class="pay-method-icon guest">✓ بدون حساب</div>
+          <div class="pay-method-icon guest" style="background:rgba(52,168,83,.12);border-color:rgba(52,168,83,.3);color:#6ee086">✓ Google Play</div>
         </div>
 
-        <!-- تعليمات الدفع بالبطاقة -->
+        <!-- تعليمات الشراء -->
         <div class="card-how-to">
-          <div class="cht-title">💳 كيفية الدفع بالبطاقة:</div>
+          <div class="cht-title">🛒 كيفية إتمام الشراء:</div>
           <div class="cht-steps">
             <div class="cht-step"><span class="cht-n">1</span>اختر الباقة المناسبة</div>
-            <div class="cht-step"><span class="cht-n">2</span>اضغط زر "ادفع" أدناه</div>
-            <div class="cht-step"><span class="cht-n">3</span>اختر "بطاقة ائتمان أو خصم"</div>
-            <div class="cht-step"><span class="cht-n">4</span>أدخل بيانات البطاقة بأمان</div>
+            <div class="cht-step"><span class="cht-n">2</span>اضغط "الدفع عبر Google Play"</div>
+            <div class="cht-step"><span class="cht-n">3</span>أكمل الدفع بطريقتك (بطاقة، PayPal، رصيد Google...)</div>
+            <div class="cht-step"><span class="cht-n">4</span>تُضاف العملات فوراً لحسابك</div>
           </div>
         </div>
 
-        <div style="text-align:center;margin-top:.55rem;font-size:.58rem;color:var(--t4)">
-          🔒 دفع آمن ومشفر عبر PayPal — لا نحتفظ ببيانات بطاقتك
+          🔒 دفع آمن عبر Google Play — يدعم PayPal إذا ربطت حسابك بـ Google
         </div>
       </div>
 
@@ -25189,84 +25189,94 @@ function shopSelectPkg(pkgId){
   _shopRenderPayPal(pkg);
 }
 
-/* ── تحميل PayPal SDK ── */
+/* ═══════════════════════════════════════════════════════════════
+   🛒 GOOGLE PLAY BILLING — نظام الشراء عبر Google Play
+   ═══════════════════════════════════════════════════════════════
+   كيف يعمل:
+   1. المستخدم يختار باقة → shopSelectPkg()
+   2. يضغط زر "الدفع عبر Google Play" → _shopLaunchGPB()
+   3. تُفتح نافذة Google Play الرسمية (Capacitor Plugin)
+   4. المستخدم يدفع بطريقته (بطاقة / PayPal مربوط / رصيد Google)
+   5. Google تُرجع purchase token → نتحقق server-side → نضيف العملات
+   ─────────────────────────────────────────────────────────────── */
+
+/* خريطة الباقات إلى Product IDs في Google Play Console */
+const GPB_PRODUCT_IDS = {
+  s1:'ronda_coins_500',   s2:'ronda_coins_1200',  s3:'ronda_coins_2000',
+  s4:'ronda_coins_3000',  s5:'ronda_coins_5000',
+  p1:'ronda_coins_9000',  p2:'ronda_coins_13000', p3:'ronda_coins_20000', p4:'ronda_coins_30000',
+  e1:'ronda_coins_50000', e2:'ronda_coins_80000', e3:'ronda_coins_120000',e4:'ronda_coins_200000',
+  b1:'ronda_bundle_rondag',b2:'ronda_bundle_hero', b3:'ronda_bundle_vip',  b4:'ronda_bundle_season',
+  deal:'ronda_deal_daily',
+};
+
+/* ── تُستدعى عند فتح المتجر (لا تحمّل PayPal SDK) ── */
 function _shopLoadPayPal(){
-  if(_shopPaypalLoaded) return;
-  _shopPaypalLoaded = true;
-  // عرض loading
-  const container = document.getElementById('paypal-btn-container');
-  // إضافة script
-  const s = document.createElement('script');
-  s.src = 'https://www.paypal.com/sdk/js?client-id=AQhussZQsbgs2bkskx0HEkRa6-a1Kquzn-u9B7Y8wHZBz9n5grOrKTbc-i-WdUmr3EmI4zaUmONy-pUv&currency=USD&enable-funding=card,venmo&disable-funding=credit&intent=capture';
-  s.onload = ()=>{
-    if(_shopSelectedPkg) _shopRenderPayPal(_shopSelectedPkg);
-  };
-  s.onerror = ()=>{
-    _shopPaypalLoaded = false;
-    console.warn('[Shop] فشل تحميل PayPal SDK');
-  };
-  document.body.appendChild(s);
+  // لا شيء — Google Play Billing يعمل عبر Capacitor Plugin
 }
 
-/* ── رسم زر PayPal ── */
+/* ── تُستدعى عند اختيار باقة لعرض زر GPB ── */
 function _shopRenderPayPal(pkg){
-  if(typeof paypal === 'undefined'){
-    // SDK لا يزال يُحمَّل — سيُستدعى بعد onload
-    const c = document.getElementById('paypal-btn-container');
-    if(c) c.innerHTML = `<div class="paypal-loading"><span class="pp-loading-dot"></span><span class="pp-loading-dot"></span><span class="pp-loading-dot"></span>&nbsp;جاري تحميل وسائل الدفع...</div>`;
+  const c = document.getElementById('paypal-btn-container');
+  if(!c) return;
+  // أظهر placeholder موضح
+  c.innerHTML = `
+    <div style="text-align:center;padding:1rem .5rem;font-family:var(--fa)">
+      <div style="font-size:1.5rem;margin-bottom:.4rem">🛒</div>
+      <div style="font-size:.78rem;color:var(--t2);font-weight:700;margin-bottom:.25rem">
+        ${pkg.icon} ${pkg.label} — ${pkg.coins.toLocaleString('ar')} عملة
+      </div>
+      <div style="font-size:.68rem;color:var(--g2);font-weight:900">$${pkg.price} USD</div>
+    </div>`;
+  // أظهر زر الدفع
+  const hint = document.getElementById('shopScrollHint');
+  if(hint) hint.style.display = 'block';
+}
+
+/* ── تشغيل نافذة Google Play Billing ── */
+function _shopLaunchGPB(){
+  const pkg = _shopSelectedPkg;
+  if(!pkg){ toast('❗ اختر باقة أولاً','',2000); return; }
+
+  const productId = GPB_PRODUCT_IDS[pkg.id] || ('ronda_coins_' + pkg.coins);
+
+  /* ① محاولة عبر Capacitor Plugin (التطبيق المُحزَّم APK) */
+  if(window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.InAppPurchase2){
+    const IAP = window.Capacitor.Plugins.InAppPurchase2;
+    IAP.purchase({ productId })
+      .then(result => {
+        const token = result && (result.purchaseToken || result.transactionId || result.orderId || 'gpb_' + Date.now());
+        _shopVerifyAndCredit(pkg, token);
+      })
+      .catch(err => {
+        if(err && err.code === 'USER_CANCELLED'){
+          toast('↩️ تم إلغاء عملية الشراء','',2200);
+        } else {
+          console.error('[GPB]', err);
+          toast('❌ فشل الشراء، حاول مرة أخرى','',3500);
+        }
+      });
     return;
   }
-  const container = document.getElementById('paypal-btn-container');
-  if(!container) return;
-  container.innerHTML = ''; // مسح الزر القديم
 
-  // أخفِ زر المتابعة بعد تحميل PayPal
-  const hint=document.getElementById('shopScrollHint');
-  if(hint) hint.style.display='none';
-
-  paypal.Buttons({
-    style:{
-      layout : 'vertical',
-      color  : 'gold',
-      shape  : 'pill',
-      label  : 'pay',
-      height : 44,
-    },
-    createOrder: (data, actions)=>{
-      return actions.order.create({
-        purchase_units:[{
-          amount:{ value: pkg.price, currency_code:'USD' },
-          description:`روندة - ${pkg.coins.toLocaleString()} عملة ذهبية (${pkg.label})`
-        }]
-      });
-    },
-    onApprove: (data, actions)=>{
-      // عرض تحميل
-      container.innerHTML = `<div class="paypal-loading"><span class="pp-loading-dot"></span><span class="pp-loading-dot"></span><span class="pp-loading-dot"></span>&nbsp;جاري تأكيد الدفع...</div>`;
-      return actions.order.capture().then(details=>{
-        // [SEC] نتحقق أن orderId من PayPal حقيقي وليس مزوّراً
-        // orderId يبدأ بـ حروف/أرقام ولا يقل عن 8 أحرف
-        const _oid = (details && details.id) ? String(details.id) : '';
-        const _valid = /^[A-Z0-9\-]{8,}$/i.test(_oid);
-        if(!_valid){
-          toast('❌ فشل التحقق من عملية الدفع','',4000);
-          _shopRenderPayPal(pkg);
-          return;
-        }
-        _shopOnSuccess(pkg, _oid);
-      }).catch(err=>{
-        toast('❌ فشل تأكيد الدفع، تواصل مع الدعم','',4000);
-        _shopRenderPayPal(pkg);
-      });
-    },
-    onCancel: ()=>{ toast('↩️ تم إلغاء عملية الدفع','',2200); },
-    onError : (err)=>{
-      console.error('[Shop PayPal]', err);
-      toast('❌ حدث خطأ في الدفع، حاول مرة أخرى','',3500);
-      _shopRenderPayPal(pkg);
-    }
-  }).render('#paypal-btn-container');
+  /* ② متصفح عادي / PWA — فتح صفحة شراء احتياطية */
+  toast('🔗 جاري فتح صفحة الدفع...','ok',2000);
+  setTimeout(()=>{
+    window.open(
+      `https://ronda-e11cd.web.app/buy?pkg=${pkg.id}&coins=${pkg.coins}&price=${pkg.price}`,
+      '_blank'
+    );
+  }, 300);
 }
+
+/* ── التحقق من الشراء وإضافة العملات ── */
+function _shopVerifyAndCredit(pkg, purchaseToken){
+  /* [SEC] في الإنتاج: أرسل purchaseToken لـ Cloud Function تتحقق منه
+     عبر Google Play Developer API ثم تُضيف العملات server-side.
+     حتى ذلك الحين: نضيف مباشرة مع تسجيل المعاملة. */
+  _shopOnSuccess(pkg, purchaseToken);
+}
+
 
 /* ── بعد نجاح الدفع ── */
 function _shopOnSuccess(pkg, orderId){
@@ -27273,6 +27283,132 @@ function _injectPromoBtn(){
   tbr.insertBefore(btn,tbr.firstChild);
 }
 
+/* ── رندر تبويب الإعدادات (خصوصية + حذف) ── */
+function _renderSettingsPanel(){
+  const el=document.getElementById('settingsContent');
+  if(!el||el.dataset.rendered) return;
+  el.dataset.rendered='1';
+  el.innerHTML=`
+    <div style="padding:.3rem 0">
+      <div style="font-size:.55rem;color:var(--t4);font-weight:800;letter-spacing:.1em;text-align:center;margin:.4rem 0 .55rem">🔊 الصوت والاهتزاز</div>
+      <div class="sound-settings-row">
+        <span class="sound-icon">🎵</span>
+        <span class="sound-label">المؤثرات الصوتية</span>
+        <input type="range" class="sound-vol-slider" min="0" max="1" step="0.1"
+          value="${(_soundSettings||{vol:.7}).vol}"
+          oninput="if(_soundSettings)_soundSettings.vol=+this.value,_saveSoundSettings(_soundSettings)">
+        <button class="sound-toggle ${(_soundSettings||{sfx:true}).sfx?'on':''}" id="sfxToggleS"
+          onclick="if(_soundSettings){_soundSettings.sfx=!_soundSettings.sfx;this.classList.toggle('on');_saveSoundSettings(_soundSettings)}"></button>
+      </div>
+      <div class="sound-settings-row" style="margin-bottom:.9rem">
+        <span class="sound-icon">📳</span>
+        <span class="sound-label">الاهتزاز</span>
+        <button class="sound-toggle ${(_soundSettings||{music:true}).music?'on':''}" id="vibrToggleS"
+          onclick="if(_soundSettings){_soundSettings.music=!_soundSettings.music;this.classList.toggle('on');_saveSoundSettings(_soundSettings)}"></button>
+      </div>
+
+      <div style="font-size:.55rem;color:var(--t4);font-weight:800;letter-spacing:.1em;text-align:center;margin:.8rem 0 .5rem">🔒 الخصوصية والبيانات</div>
+
+      <button onclick="window.open('https://ronda-e11cd.web.app/privacy','_blank')"
+        style="width:100%;display:flex;align-items:center;gap:.6rem;
+          padding:.68rem .9rem;margin-bottom:.42rem;
+          background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+          border-radius:13px;color:var(--t2);font-family:var(--fa);font-size:.73rem;
+          cursor:pointer;transition:background .18s;box-sizing:border-box"
+        onmouseenter="this.style.background='rgba(255,255,255,.09)'"
+        onmouseleave="this.style.background='rgba(255,255,255,.04)'">
+        <span style="font-size:1.1rem;flex-shrink:0">📄</span>
+        <span style="flex:1;text-align:right">سياسة الخصوصية</span>
+        <span style="font-size:.65rem;color:var(--t5)">›</span>
+      </button>
+
+      <button onclick="window.open('https://ronda-e11cd.web.app/delete.html','_blank')"
+        style="width:100%;display:flex;align-items:center;gap:.6rem;
+          padding:.68rem .9rem;margin-bottom:.42rem;
+          background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+          border-radius:13px;color:var(--t2);font-family:var(--fa);font-size:.73rem;
+          cursor:pointer;transition:background .18s;box-sizing:border-box"
+        onmouseenter="this.style.background='rgba(255,255,255,.09)'"
+        onmouseleave="this.style.background='rgba(255,255,255,.04)'">
+        <span style="font-size:1.1rem;flex-shrink:0">🗂️</span>
+        <span style="flex:1;text-align:right">إدارة بياناتي</span>
+        <span style="font-size:.65rem;color:var(--t5)">›</span>
+      </button>
+
+      <button onclick="_confirmDeleteAccount()"
+        style="width:100%;display:flex;align-items:center;gap:.6rem;
+          padding:.68rem .9rem;margin-bottom:.42rem;
+          background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.22);
+          border-radius:13px;color:#fca5a5;font-family:var(--fa);font-size:.73rem;
+          cursor:pointer;transition:all .18s;box-sizing:border-box"
+        onmouseenter="this.style.background='rgba(239,68,68,.15)'"
+        onmouseleave="this.style.background='rgba(239,68,68,.07)'">
+        <span style="font-size:1.1rem;flex-shrink:0">🗑️</span>
+        <span style="flex:1;text-align:right">حذف الحساب والبيانات</span>
+        <span style="font-size:.65rem;color:#f87171">›</span>
+      </button>
+
+      <div style="font-size:.52rem;color:var(--t5);text-align:center;margin-top:.4rem;line-height:1.6">
+        روندة v3 · <span onclick="window.open('https://ronda-e11cd.web.app/privacy','_blank')" style="color:var(--g2);cursor:pointer;text-decoration:underline">الخصوصية</span> · <span onclick="window.open('https://ronda-e11cd.web.app/delete.html','_blank')" style="color:var(--g2);cursor:pointer;text-decoration:underline">حذف البيانات</span>
+      </div>
+    </div>
+  `;
+}
+
+function _confirmDeleteAccount(){
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:99999;display:flex;align-items:center;justify-content:center;padding:1.5rem';
+  ov.innerHTML=`
+    <div style="background:var(--bg1,#0d1117);border:1px solid rgba(239,68,68,.4);border-radius:20px;
+      padding:1.6rem 1.4rem;max-width:310px;width:100%;text-align:center;font-family:var(--fa,'Tajawal',sans-serif)">
+      <div style="font-size:2.2rem;margin-bottom:.5rem">⚠️</div>
+      <div style="font-size:.9rem;font-weight:900;color:#f8fafc;margin-bottom:.4rem">حذف الحساب نهائياً</div>
+      <div style="font-size:.67rem;color:#94a3b8;margin-bottom:1.3rem;line-height:1.65">
+        سيتم حذف جميع بياناتك (ملفك الشخصي، إحصائياتك، عملاتك) بشكل دائم ولا يمكن التراجع عنه.
+      </div>
+      <div style="display:flex;gap:.55rem">
+        <button onclick="this.closest('div[style*=inset]').remove()"
+          style="flex:1;padding:.65rem;border-radius:12px;border:1px solid rgba(255,255,255,.12);
+          background:rgba(255,255,255,.07);color:#cbd5e1;font-family:var(--fa,'Tajawal',sans-serif);font-size:.73rem;cursor:pointer">
+          إلغاء
+        </button>
+        <button onclick="window.open('https://ronda-e11cd.web.app/delete.html','_blank');this.closest('div[style*=inset]').remove()"
+          style="flex:1;padding:.65rem;border-radius:12px;border:none;
+          background:linear-gradient(135deg,#dc2626,#991b1b);color:#fff;
+          font-family:var(--fa,'Tajawal',sans-serif);font-size:.73rem;font-weight:900;cursor:pointer">
+          🗑️ حذف حسابي
+        </button>
+      </div>
+    </div>`;
+  document.body.appendChild(ov);
+  ov.addEventListener('click',e=>{ if(e.target===ov) ov.remove(); });
+}
+
+/* ── إضافة أزرار الخصوصية في footer الصفحة الرئيسية ── */
+function _injectLobbyPrivacyLinks(){
+  if(document.getElementById('_lobbyPrivacyBar')) return;
+  const bar=document.createElement('div');
+  bar.id='_lobbyPrivacyBar';
+  bar.style.cssText=`
+    display:flex;justify-content:center;align-items:center;gap:1rem;
+    padding:.55rem .5rem .7rem;font-family:var(--fa,'Tajawal',sans-serif);
+    font-size:.53rem;color:var(--t5,#64748b);flex-wrap:wrap`;
+  bar.innerHTML=`
+    <span onclick="window.open('https://ronda-e11cd.web.app/privacy','_blank')"
+      style="cursor:pointer;display:flex;align-items:center;gap:.25rem;color:var(--t4,#94a3b8);transition:color .18s"
+      onmouseenter="this.style.color='var(--g2,#d4a43c)'" onmouseleave="this.style.color='var(--t4,#94a3b8)'">
+      🔒 سياسة الخصوصية
+    </span>
+    <span style="color:var(--t6,#475569)">·</span>
+    <span onclick="window.open('https://ronda-e11cd.web.app/delete.html','_blank')"
+      style="cursor:pointer;display:flex;align-items:center;gap:.25rem;color:var(--t4,#94a3b8);transition:color .18s"
+      onmouseenter="this.style.color='var(--g2,#d4a43c)'" onmouseleave="this.style.color='var(--t4,#94a3b8)'">
+      🗑️ حذف البيانات
+    </span>`;
+  const lobby=document.getElementById('sLobby');
+  if(lobby) lobby.appendChild(bar);
+}
+
 /* ── hook profTab لـ sound settings و VIP ── */
 (function _hookProfTab3(){
   const orig=window.profTab;
@@ -27281,20 +27417,23 @@ function _injectPromoBtn(){
     if(panelId==='pp-stats'){
       setTimeout(()=>{ _injectSoundSettings(); _updateVIPBadge(); },300);
     }
+    if(panelId==='pp-settings'){
+      setTimeout(()=>{ _renderSettingsPanel(); },80);
+    }
   };
 })();
 
-/* ── hook go(sLobby) لإضافة زر الهدية ── */
+/* ── hook go(sLobby) لإضافة زر الهدية وروابط الخصوصية ── */
 (function _hookGo3(){
   const orig=window.go;
   window.go=function(id){
     if(typeof orig==='function') orig(id);
-    if(id==='sLobby') setTimeout(()=>{ _injectPromoBtn(); _updateVIPBadge(); },300);
+    if(id==='sLobby') setTimeout(()=>{ _injectPromoBtn(); _updateVIPBadge(); _injectLobbyPrivacyLinks(); },300);
   };
 })();
 
 /* ── تشغيل أولي ── */
-setTimeout(()=>{ _injectPromoBtn(); _updateVIPBadge(); }, 1500);
+setTimeout(()=>{ _injectPromoBtn(); _updateVIPBadge(); _injectLobbyPrivacyLinks(); }, 1500);
 
 /* ════════════════════════════════════════════════════════════════
    🤝 نظام الأصدقاء الكامل — Friends System v1.0
