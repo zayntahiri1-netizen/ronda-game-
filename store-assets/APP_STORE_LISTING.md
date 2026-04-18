@@ -14,7 +14,7 @@ Ronda روندة
 
 **Bundle ID:**
 ```
-com.ronda.cardgame
+com.rondatahiro.myapp
 ```
 
 ---
@@ -93,7 +93,7 @@ ronda,روندة,card game,moroccan,escoba,ورق,لعبة,مغربية,arabic,m
 ## معلومات تقنية
 
 ```
-Bundle ID:            com.ronda.cardgame  
+Bundle ID:            com.rondatahiro.myapp  
 Version:              1.0.0
 Build:                1
 Minimum iOS:          14.0

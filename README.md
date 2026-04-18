@@ -83,7 +83,7 @@ chmod +x scripts/*.sh
 #### المعلومات الأساسية
 ```
 اسم التطبيق:         Ronda روندة
-معرف التطبيق:        com.ronda.cardgame
+معرف التطبيق:        com.rondatahiro.myapp
 الفئة:               ألعاب / ورق
 التصنيف العمري:     +7 (مناسب للعائلة)
 ```
@@ -132,7 +132,7 @@ npx cap open ios
 
 ### الخطوة 2: ضبط إعدادات Xcode
 
-1. **Bundle Identifier:** `com.ronda.cardgame`
+1. **Bundle Identifier:** `com.rondatahiro.myapp`
 2. **Version:** `1.0.0`
 3. **Build:** `1`
 4. **Deployment Target:** iOS 14.0+
@@ -150,7 +150,7 @@ npx cap open ios
 1. اذهب إلى: https://appstoreconnect.apple.com
 2. "تطبيقاتي" → "+"
 3. Platform: iOS
-4. Bundle ID: `com.ronda.cardgame`
+4. Bundle ID: `com.rondatahiro.myapp`
 5. أضف لقطات الشاشة (6.5 بوصة + 5.5 بوصة)
 6. أكمل المعلومات وأرسل للمراجعة
 
@@ -220,7 +220,7 @@ ronda_mobile/
 ## معلومات النشر
 
 ```
-App ID:      com.ronda.cardgame
+App ID:      com.rondatahiro.myapp
 Version:     1.0.0
 Min Android: 5.1 (API 22)
 Min iOS:     14.0
