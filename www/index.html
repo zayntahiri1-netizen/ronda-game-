@@ -5457,22 +5457,10 @@ document.addEventListener('deviceready', async () => {
       });
     } catch(e) {}
 
-    // Back button (Android)
-    if (window._isAndroid()) {
-      const { App } = await import('@capacitor/app');
-      App.addListener('backButton', ({ canGoBack }) => {
-        if (!canGoBack) {
-          // Show exit confirmation instead of closing immediately
-          if (window._showExitConfirm) {
-            window._showExitConfirm();
-          }
-        }
-      });
-
-      // App state change (background/foreground)
-
-      // OAuth Deep Link handler (Facebook / Twitter) - Android + iOS
-      App.addListener('appUrlOpen', async (data) => {
+    // ── OAuth Deep Link handler — Android + iOS ──────────────────────
+    // ⚠️ خارج if(_isAndroid()) لكي يعمل على iOS أيضاً
+    const { App } = await import('@capacitor/app');
+    App.addListener('appUrlOpen', async (data) => {
         try {
           console.log('[AppUrlOpen] URL:', data.url);
           const url = data.url;
@@ -5487,6 +5475,9 @@ document.addEventListener('deviceready', async () => {
           const accessToken  = params.get('access_token');
           const refreshToken = params.get('refresh_token');
           const code         = params.get('code');
+
+          // أغلق Custom Tab فور استلام deep link
+          try { const { Browser } = await import('@capacitor/browser'); await Browser.close(); } catch(_){}
 
           if (accessToken && refreshToken) {
             // PKCE implicit flow — set session directly
@@ -5567,6 +5558,16 @@ document.addEventListener('deviceready', async () => {
               window._botResumeTimer = null;
               if(G && G.isBot && !G.myTurn && !G.over) botPlay();
             }, remaining);
+          }
+        }
+      });
+
+    // ── Back button (Android only) ─────────────────────────────────
+    if (window._isAndroid()) {
+      App.addListener('backButton', ({ canGoBack }) => {
+        if (!canGoBack) {
+          if (window._showExitConfirm) {
+            window._showExitConfirm();
           }
         }
       });
@@ -21715,9 +21716,15 @@ async function loginFacebook(){
       toast('❌ خطأ في تسجيل الدخول: ' + error.message, 'err');
       if(btn){ btn.disabled=false; btn.style.opacity='1'; btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> فايسبوك'; }
     }
-    // في التطبيق المحمول: افتح في متصفح خارجي مع الحفاظ على الـ WebView
+    // في التطبيق المحمول: افتح OAuth في متصفح خارجي عبر @capacitor/browser
     if(isNative && oauthData?.url){
-      window.open(oauthData.url, '_system');
+      try {
+        const { Browser } = await import('@capacitor/browser');
+        await Browser.open({ url: oauthData.url });
+      } catch(e) {
+        console.warn('[FB-Login] Browser plugin unavailable, fallback:', e);
+        window.open(oauthData.url, '_blank');
+      }
     }
   }catch(e){
     console.error('[FB-Login]', e);
@@ -21838,9 +21845,15 @@ async function loginTwitter(){
         btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> تويتر / X';
       }
     }
-    // في التطبيق المحمول: افتح في متصفح خارجي
+    // في التطبيق المحمول: افتح OAuth في متصفح خارجي عبر @capacitor/browser
     if(isNative && oauthData?.url){
-      window.open(oauthData.url, '_system');
+      try {
+        const { Browser } = await import('@capacitor/browser');
+        await Browser.open({ url: oauthData.url });
+      } catch(e) {
+        console.warn('[TW-Login] Browser plugin unavailable, fallback:', e);
+        window.open(oauthData.url, '_blank');
+      }
     }
   }catch(e){
     console.error('[TW-Login]', e);
