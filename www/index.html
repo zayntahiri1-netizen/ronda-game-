@@ -3746,8 +3746,8 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
    🪟 PREMIUM MODALS v7
 ═══════════════════════════════════════════════════════ */
 @keyframes modalSlideUp {
-  from { transform: translateY(30px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
+  from { transform: translateY(40px) scale(.95); opacity: 0; }
+  to   { transform: translateY(0) scale(1);      opacity: 1; }
 }
 .mov2.open .msh2 { animation: modalSlideUp .35s cubic-bezier(.22,1,.36,1) both; }
 
@@ -3919,9 +3919,10 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
 ══════════════════════════════════════════════════════ */
 .mov2 {
   position: fixed; inset: 0; z-index: 9000;
-  display: flex; align-items: flex-end; justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   background: rgba(0,0,0,0);
   pointer-events: none; transition: background .3s;
+  padding: 16px;
 }
 .mov2.open {
   background: rgba(0,0,0,.75); backdrop-filter: blur(8px);
@@ -3930,11 +3931,12 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
 .msh2 {
   width: 100%; max-width: 480px;
   background: linear-gradient(165deg, #0e1a14, #080f0b, #060408);
-  border: 1px solid rgba(212,164,60,.12);
-  border-bottom: none; border-radius: 28px 28px 0 0;
-  transform: translateY(100%); transition: transform .38s cubic-bezier(.22,1,.36,1);
-  max-height: 92vh; overflow-y: auto; overflow-x: hidden;
-  box-shadow: 0 -8px 60px rgba(0,0,0,.9), 0 0 0 1px rgba(255,255,255,.03);
+  border: 1px solid rgba(212,164,60,.25);
+  border-radius: 24px;
+  transform: translateY(60px) scale(.96); opacity: 0;
+  transition: transform .38s cubic-bezier(.22,1,.36,1), opacity .3s ease;
+  max-height: 88vh; overflow-y: auto; overflow-x: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,.95), 0 0 0 1px rgba(255,255,255,.04);
   scrollbar-width: none;
   position: relative;
 }
@@ -3943,11 +3945,10 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
   content: ''; position: sticky; top: 0; left: 0; right: 0; height: 1px; display: block;
   background: linear-gradient(90deg, transparent, rgba(212,164,60,.35), rgba(245,216,122,.55), rgba(212,164,60,.35), transparent);
 }
-.mov2.open .msh2 { transform: translateY(0); }
+.mov2.open .msh2 { transform: translateY(0) scale(1); opacity: 1; }
 
 .mhdl2 {
-  width: 44px; height: 5px; border-radius: 3px;
-  background: rgba(255,255,255,.1); margin: 14px auto 0;
+  display: none;
 }
 .mhd2 {
   display: flex; align-items: center; justify-content: space-between;
@@ -5469,6 +5470,33 @@ document.addEventListener('deviceready', async () => {
       });
 
       // App state change (background/foreground)
+
+      // OAuth Deep Link handler (Facebook / Twitter callback)
+      App.addListener('appUrlOpen', async (data) => {
+        try {
+          console.log('[AppUrlOpen] URL:', data.url);
+          if (data.url.includes('access_token') || data.url.includes('code=') || data.url.includes('callback')) {
+            if (!_SB.client) {
+              _SB.client = supabase.createClient(_SB.URL, _SB.KEY);
+            }
+            // Supabase يعالج الـ token من الـ URL تلقائياً
+            const { data: sessionData, error } = await _SB.client.auth.getSession();
+            if (sessionData?.session) {
+              const user = sessionData.session.user;
+              const provider = user.app_metadata?.provider;
+              console.log('[AppUrlOpen] Provider:', provider);
+              if (provider === 'facebook') {
+                await _handleFBAuthCallback();
+              } else if (provider === 'twitter') {
+                await _handleTwitterAuthCallback(sessionData.session);
+              }
+            }
+          }
+        } catch(e) {
+          console.error('[AppUrlOpen] Error:', e);
+        }
+      });
+
       App.addListener('appStateChange', ({ isActive }) => {
         const ev = new CustomEvent('app:statechange', { detail: { isActive } });
         window.dispatchEvent(ev);
@@ -21525,7 +21553,7 @@ async function loginFacebook(){
       _SB.client = supabase.createClient(_SB.URL, _SB.KEY);
     }
 
-    const redirectTo = window.location.origin + window.location.pathname;
+    const redirectTo = window.Capacitor ? 'com.rondatahiro.myapp://callback' : (window.location.origin + window.location.pathname);
     const { error } = await _SB.client.auth.signInWithOAuth({
       provider: 'facebook',
       options: {
@@ -21641,7 +21669,7 @@ async function loginTwitter(){
       _SB.client = supabase.createClient(_SB.URL, _SB.KEY);
     }
 
-    const redirectTo = window.location.origin + window.location.pathname;
+    const redirectTo = window.Capacitor ? 'com.rondatahiro.myapp://callback' : (window.location.origin + window.location.pathname);
     const { error } = await _SB.client.auth.signInWithOAuth({
       provider: 'twitter',
       options: { 
