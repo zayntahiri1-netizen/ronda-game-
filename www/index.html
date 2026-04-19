@@ -13635,104 +13635,159 @@ function _buildInviteMsg(){
   if(!room) return '';
   const code = room.code || '——';
   const modeLabels = {
-    '2p' :'🥊 1 ضد 1',
-    '1v1':'🥊 1 ضد 1',
-    '2v2':'🤝 2 ضد 2 (فريقين)',
-    '4p' :'🏆 4 لاعبين مستقلين',
-    'pm2t':'🤝 شركاء (2 ضد 2)',
+    '2p' :'⚔️ 1 ضد 1 — المعركة الحقيقية',
+    '1v1':'⚔️ 1 ضد 1 — المعركة الحقيقية',
+    '2v2':'🏆 2 ضد 2 — حرب الفرق',
+    '4p' :'🎖 4 مستقلين — الأقوى يبقى',
+    'pm2t':'🤝 فريق 2 ضد 2 — شريك + خصوم',
   };
   const gameLabels = {
-    classic:'🎴 كلاسيك مغربي',
+    classic:'🎴 كلاسيك مغربي الأصيل',
     escoba :'🧮 إسباني (إسكوبا)',
     quick  :'⚡ سريع (ماكلة)',
   };
-  const modeStr = modeLabels[room.pMode||pMode||'2p'] || '🎴 متعدد اللاعبين';
-  const gameStr = gameLabels[room.mode] || '🎴 روندة';
-  const entry   = room.entry ? `💰 الرهان: ${(room.entry).toLocaleString('ar')} 🪙` : '🆓 دخول مجاني';
-  const players = (room.players||[]).length;
-  const maxP    = (room.pMode==='2v2'||room.pMode==='4p'||room.pMode==='pm2t') ? 4 : 2;
-  const link    = 'https://ronda-e11cd.web.app';
-  return `🎴 روندة — تحدّاني الآن!
+  const modeStr  = modeLabels[room.pMode||pMode||'2p'] || '🎴 متعدد اللاعبين';
+  const gameStr  = gameLabels[room.mode] || '🎴 روندة';
+  const entry    = room.entry ? `💰 الرهان: ${(room.entry).toLocaleString('ar')} 🪙 — الرابح يأخذ كل شيء!` : '🆓 دخول مجاني';
+  const players  = (room.players||[]).length;
+  const maxP     = (room.pMode==='2v2'||room.pMode==='4p'||room.pMode==='pm2t') ? 4 : 2;
+  const storeLink = '';  // ← رابط Play Store يُضاف لاحقاً
+  const webLink   = 'https://ronda-e11cd.web.app';
+  const smartLink = storeLink || webLink;
+  const hooks = [
+    `😤 ${P.name||'لاعب'} يتحداك ويقول أنت لن تستطيع!`,
+    `🔥 ${P.name||'لاعب'} يلعب الآن ويبحث عن خصم جريء!`,
+    `💪 ${P.name||'لاعب'} يدعوك — هل عندك الجرأة تقبل؟`,
+    `🃏 ${P.name||'لاعب'} جاهز يهزمك — أثبت العكس!`,
+    `👑 ${P.name||'لاعب'} يتحداك في روندة — من الأقوى؟`,
+  ];
+  const hook = hooks[Math.floor(Math.random() * hooks.length)];
+  return `🎴 روندة الملكية — لعبة الورق المغربية الأصيلة!
 
-👤 ${P.name||'لاعب'} يدعوك للانضمام
-👥 الوضع: ${modeStr}
+${hook}
+
+${modeStr}
 🎮 النوع: ${gameStr}
 ${entry}
 🏠 اللاعبون: ${players}/${maxP}
 
-🔑 رمز الغرفة:
-${code}
+━━━━━━━━━━━━━━━
+🔑 رمز الغرفة الخاص:
+✨ ${code} ✨
+━━━━━━━━━━━━━━━
 
-👆 افتح الرابط وأدخل الرمز:
-${link}
+📲 كيف تنضم؟
+1️⃣ حمّل روندة: ${smartLink}
+2️⃣ افتح اللعبة وادخل الرمز
+3️⃣ استعد للمعركة! 🃏🔥
 
-أنت الغائب الوحيد! 🃏`;
+لا تتأخر — الغرفة لن تنتظر! ⏳`;
 }
 
 
 /* ── بناء رسالة المشاركة من المودال (pm1f, pm2f, pm2t, pm3f) ── */
 function _buildModalMsg(code, modalId){
   const modeMap = {
-    'pm1f': { icon:'🥊', label:'1 ضد 1', players:'2' },
-    'pm2f': { icon:'🏆', label:'2 ضد 2', players:'4' },
-    'pm2t': { icon:'🤝', label:'فريق 2 ضد 2', players:'4' },
-    'pm3f': { icon:'🎖', label:'4 مستقلين', players:'4' },
+    'pm1f': { icon:'⚔️',  label:'1 ضد 1 — المعركة الحقيقية', players:'2' },
+    'pm2f': { icon:'🏆', label:'2 ضد 2 — حرب الفرق',         players:'4' },
+    'pm2t': { icon:'🤝', label:'فريق 2 ضد 2 — شريك + خصوم', players:'4' },
+    'pm3f': { icon:'🎖', label:'4 مستقلين — الأقوى يبقى',    players:'4' },
   };
-  const info  = modeMap[modalId] || { icon:'🎴', label:'متعدد', players:'?' };
-  const name  = P.name || 'لاعب';
-  const link  = 'https://ronda-e11cd.web.app';
-  return `🎴 روندة الملكية — تحدٍّ حقيقي!
+  const info = modeMap[modalId] || { icon:'🎴', label:'متعدد اللاعبين', players:'?' };
+  const name = P.name || 'لاعب';
+  // رابط ذكي: يفتح التطبيق إن كان مثبتاً، وإلا يوجه للمتجر
+  const appLink    = 'com.rondatahiro.myapp://';  // deep link للتطبيق
+  const storeLink  = '';  // ← رابط Play Store يُضاف لاحقاً
+  const webLink    = 'https://ronda-e11cd.web.app';
+  const smartLink  = storeLink || webLink;  // استخدم المتجر إن توفر
+
+  const hooks = [
+    `😤 ${name} يتحداك ويقول أنت لن تستطيع!`,
+    `🔥 ${name} يلعب الآن ويبحث عن خصم جريء!`,
+    `💪 ${name} يدعوك — هل عندك الجرأة تقبل؟`,
+    `🃏 ${name} جاهز يهزمك — أثبت العكس!`,
+    `👑 ${name} يتحداك في روندة — من الأقوى؟`,
+  ];
+  const hook = hooks[Math.floor(Math.random() * hooks.length)];
+
+  return `🎴 روندة الملكية — لعبة الورق المغربية الأصيلة!
+
+${hook}
 
 ${info.icon} الوضع: ${info.label}
-👥 اللاعبون: ${info.players}
-👤 ${name} يدعوك الآن
+👥 عدد اللاعبين: ${info.players}
 
-🔑 رمز الغرفة:
-${code}
+━━━━━━━━━━━━━━━
+🔑 رمز الغرفة الخاص:
+✨ ${code} ✨
+━━━━━━━━━━━━━━━
 
-👆 افتح الرابط وأدخل الرمز:
-${link}
+📲 كيف تنضم؟
+1️⃣ حمّل روندة: ${smartLink}
+2️⃣ افتح اللعبة وادخل الرمز
+3️⃣ استعد للمعركة! 🃏🔥
 
-هل تقبل التحدي؟ 🃏🔥`;
+لا تتأخر — الغرفة لن تنتظر! ⏳`;
 }
 
-/* ── مشاركة مع نسخ تلقائي ── */
+/* ── مشاركة مع نسخ تلقائي + فتح مباشر ── */
 function doShare7(platform, code, modalId){
   if(!code || code==='——'){ toast('⚠ لا يوجد رمز بعد','warn'); return; }
-  const msg  = _buildModalMsg(code, modalId||'pm1f');
-  const link = 'https://ronda-e11cd.web.app';
-  const enc  = encodeURIComponent(msg);
-  const encLink = encodeURIComponent(link);
 
-  // نسخ تلقائي دائماً
+  const msg      = _buildModalMsg(code, modalId||'pm1f');
+  const storeLink = '';  // ← رابط Play Store يُضاف لاحقاً
+  const webLink   = 'https://ronda-e11cd.web.app';
+  const smartLink = storeLink || webLink;
+  const enc       = encodeURIComponent(msg);
+  const encLink   = encodeURIComponent(smartLink);
+
+  // نسخ تلقائي دائماً أولاً
   try{ navigator.clipboard.writeText(msg); }catch(e){}
 
   let url = '';
   switch(platform){
     case 'whatsapp':
+      // واتساب يدعم اللصق التلقائي عبر text param
       url = `https://wa.me/?text=${enc}`;
       break;
     case 'telegram':
-      url = `https://t.me/share/url?url=${encLink}&text=${encodeURIComponent('🔑 رمز الغرفة: '+code+'\n'+msg)}`;
+      // تيليغرام يدعم اللصق التلقائي عبر text param
+      url = `https://t.me/share/url?url=${encLink}&text=${encodeURIComponent(msg)}`;
       break;
     case 'twitter':
-      const shortTw = `🎴 روندة — تحدّاني الآن!\n🔑 رمز الغرفة: ${code}\n👆 ${link}`;
+      // X/Twitter: نص قصير + رابط
+      const shortTw = `🎴 روندة — تحدّاني الآن! 🔥
+🔑 رمز الغرفة: ${code}
+👆 ${smartLink}
+#روندة #لعبة_الورق`;
       url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shortTw)}`;
       break;
     case 'facebook':
-      const shortFb = `🎴 روندة — تحدّاني الآن!\nرمز الغرفة: ${code}\n${link}`;
+      // فيسبوك: نص + رابط
+      const shortFb = `🎴 روندة الملكية — تحدّاني الآن!
+🔑 رمز الغرفة: ${code}
+هل تقبل التحدي؟ 🃏🔥`;
       url = `https://www.facebook.com/sharer/sharer.php?u=${encLink}&quote=${encodeURIComponent(shortFb)}`;
       break;
     case 'instagram':
-      toast('📋 تم نسخ الدعوة — الصق في قصتك أو DM!','ok',3500);
-      setTimeout(()=>window.open('instagram://','_system')||window.open('https://www.instagram.com','_system'), 800);
+      // إنستغرام لا يدعم مشاركة نص مباشرة — ننسخ ونفتح
+      toast('📋 تم نسخ الدعوة — الصق في قصتك أو رسالة مباشرة! 📸','ok',4000);
+      setTimeout(()=>{
+        // محاولة فتح إنستغرام الأصلي أولاً
+        const igApp = window.open('instagram://','_system');
+        if(!igApp) window.open('https://www.instagram.com','_system');
+      }, 600);
       return;
     default:
-      toast('📋 تم نسخ الدعوة!','ok');
+      toast('📋 تم نسخ الدعوة — الصق وأرسل!','ok');
       return;
   }
-  toast('📋 تم نسخ الرمز وفتح المنصة!','ok',2200);
-  setTimeout(()=>window.open(url,'_system')||window.open(url,'_blank'), 350);
+
+  toast('📋 تم نسخ الدعوة وفتح المنصة! 🚀','ok',2500);
+  setTimeout(()=>{
+    const w = window.open(url,'_system');
+    if(!w) window.open(url,'_blank');
+  }, 350);
 }
 
 /* ── مشاركة عبر منصة محددة + نسخ تلقائي ── */
