@@ -5471,25 +5471,48 @@ document.addEventListener('deviceready', async () => {
 
       // App state change (background/foreground)
 
-      // OAuth Deep Link handler (Facebook / Twitter callback)
+      // OAuth Deep Link handler (Facebook / Twitter) - Android + iOS
       App.addListener('appUrlOpen', async (data) => {
         try {
           console.log('[AppUrlOpen] URL:', data.url);
-          if (data.url.includes('access_token') || data.url.includes('code=') || data.url.includes('callback')) {
-            if (!_SB.client) {
-              _SB.client = supabase.createClient(_SB.URL, _SB.KEY);
-            }
-            // Supabase يعالج الـ token من الـ URL تلقائياً
-            const { data: sessionData, error } = await _SB.client.auth.getSession();
-            if (sessionData?.session) {
-              const user = sessionData.session.user;
-              const provider = user.app_metadata?.provider;
-              console.log('[AppUrlOpen] Provider:', provider);
-              if (provider === 'facebook') {
-                await _handleFBAuthCallback();
-              } else if (provider === 'twitter') {
-                await _handleTwitterAuthCallback(sessionData.session);
-              }
+          const url = data.url;
+          if (!url.includes('callback') && !url.includes('access_token') && !url.includes('code=')) return;
+
+          if (!_SB.client) _SB.client = supabase.createClient(_SB.URL, _SB.KEY);
+
+          // استخراج الـ token من الـ URL fragment أو query
+          const hashStr = url.includes('#') ? url.split('#')[1] : '';
+          const queryStr = url.includes('?') ? url.split('?')[1].split('#')[0] : '';
+          const params = new URLSearchParams(hashStr || queryStr);
+          const accessToken  = params.get('access_token');
+          const refreshToken = params.get('refresh_token');
+          const code         = params.get('code');
+
+          if (accessToken && refreshToken) {
+            // PKCE implicit flow — set session directly
+            const { data: sd, error: se } = await _SB.client.auth.setSession({
+              access_token: accessToken,
+              refresh_token: refreshToken,
+            });
+            if (se) { console.error('[AppUrlOpen] setSession error:', se); return; }
+            const provider = sd?.session?.user?.app_metadata?.provider;
+            console.log('[AppUrlOpen] Session set, provider:', provider);
+            if (provider === 'facebook') await _handleFBAuthCallback();
+            else if (provider === 'twitter') await _handleTwitterAuthCallback(sd.session);
+          } else if (code) {
+            // PKCE auth code flow
+            const { data: sd, error: se } = await _SB.client.auth.exchangeCodeForSession(url);
+            if (se) { console.error('[AppUrlOpen] exchangeCode error:', se); return; }
+            const provider = sd?.session?.user?.app_metadata?.provider;
+            if (provider === 'facebook') await _handleFBAuthCallback();
+            else if (provider === 'twitter') await _handleTwitterAuthCallback(sd.session);
+          } else {
+            // fallback — getSession
+            const { data: sd } = await _SB.client.auth.getSession();
+            if (sd?.session) {
+              const provider = sd.session.user?.app_metadata?.provider;
+              if (provider === 'facebook') await _handleFBAuthCallback();
+              else if (provider === 'twitter') await _handleTwitterAuthCallback(sd.session);
             }
           }
         } catch(e) {
@@ -13646,6 +13669,72 @@ ${link}
 أنت الغائب الوحيد! 🃏`;
 }
 
+
+/* ── بناء رسالة المشاركة من المودال (pm1f, pm2f, pm2t, pm3f) ── */
+function _buildModalMsg(code, modalId){
+  const modeMap = {
+    'pm1f': { icon:'🥊', label:'1 ضد 1', players:'2' },
+    'pm2f': { icon:'🏆', label:'2 ضد 2', players:'4' },
+    'pm2t': { icon:'🤝', label:'فريق 2 ضد 2', players:'4' },
+    'pm3f': { icon:'🎖', label:'4 مستقلين', players:'4' },
+  };
+  const info  = modeMap[modalId] || { icon:'🎴', label:'متعدد', players:'?' };
+  const name  = P.name || 'لاعب';
+  const link  = 'https://ronda-e11cd.web.app';
+  return `🎴 روندة الملكية — تحدٍّ حقيقي!
+
+${info.icon} الوضع: ${info.label}
+👥 اللاعبون: ${info.players}
+👤 ${name} يدعوك الآن
+
+🔑 رمز الغرفة:
+${code}
+
+👆 افتح الرابط وأدخل الرمز:
+${link}
+
+هل تقبل التحدي؟ 🃏🔥`;
+}
+
+/* ── مشاركة مع نسخ تلقائي ── */
+function doShare7(platform, code, modalId){
+  if(!code || code==='——'){ toast('⚠ لا يوجد رمز بعد','warn'); return; }
+  const msg  = _buildModalMsg(code, modalId||'pm1f');
+  const link = 'https://ronda-e11cd.web.app';
+  const enc  = encodeURIComponent(msg);
+  const encLink = encodeURIComponent(link);
+
+  // نسخ تلقائي دائماً
+  try{ navigator.clipboard.writeText(msg); }catch(e){}
+
+  let url = '';
+  switch(platform){
+    case 'whatsapp':
+      url = `https://wa.me/?text=${enc}`;
+      break;
+    case 'telegram':
+      url = `https://t.me/share/url?url=${encLink}&text=${encodeURIComponent('🔑 رمز الغرفة: '+code+'\n'+msg)}`;
+      break;
+    case 'twitter':
+      const shortTw = `🎴 روندة — تحدّاني الآن!\n🔑 رمز الغرفة: ${code}\n👆 ${link}`;
+      url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shortTw)}`;
+      break;
+    case 'facebook':
+      const shortFb = `🎴 روندة — تحدّاني الآن!\nرمز الغرفة: ${code}\n${link}`;
+      url = `https://www.facebook.com/sharer/sharer.php?u=${encLink}&quote=${encodeURIComponent(shortFb)}`;
+      break;
+    case 'instagram':
+      toast('📋 تم نسخ الدعوة — الصق في قصتك أو DM!','ok',3500);
+      setTimeout(()=>window.open('instagram://','_system')||window.open('https://www.instagram.com','_system'), 800);
+      return;
+    default:
+      toast('📋 تم نسخ الدعوة!','ok');
+      return;
+  }
+  toast('📋 تم نسخ الرمز وفتح المنصة!','ok',2200);
+  setTimeout(()=>window.open(url,'_system')||window.open(url,'_blank'), 350);
+}
+
 /* ── مشاركة عبر منصة محددة + نسخ تلقائي ── */
 function shareWaitCode(platform){
   if(!room || !room.code){ toast('⚠ لا توجد غرفة نشطة','warn'); return; }
@@ -13687,7 +13776,7 @@ function shareWaitCode(platform){
       return;
   }
   toast('📋 تم نسخ الدعوة وفتح المنصة!','ok',2200);
-  setTimeout(()=>window.open(url,'_blank'), 350);
+  setTimeout(()=>window.open(url,'_system')||window.open(url,'_blank'), 350);
 }
 
 /* الدالة القديمة — تحويل لـ shareWaitCode */
@@ -18211,9 +18300,11 @@ function copyModalCode(elId, btn){
 
 /* مشاركة رمز المودال */
 function shareModalCode(platform, elId){
-  const code = document.getElementById(elId)?.textContent||'';
+  const code = document.getElementById(elId)?.textContent?.trim()||'';
   if(!code || code==='——') return;
-  doShare7(platform, code);
+  // استخراج modalId من elId (مثال: pm1f-code → pm1f)
+  const modalId = elId ? elId.replace('-code','') : '';
+  doShare7(platform, code, modalId);
 }
 
 /* ── Bet grid selector ── */
@@ -21554,21 +21645,25 @@ async function loginFacebook(){
     }
 
     const redirectTo = window.Capacitor ? 'com.rondatahiro.myapp://callback' : (window.location.origin + window.location.pathname);
-    const { error } = await _SB.client.auth.signInWithOAuth({
+    const isNative = !!window.Capacitor;
+    const { data: oauthData, error } = await _SB.client.auth.signInWithOAuth({
       provider: 'facebook',
       options: {
         redirectTo: redirectTo,
         scopes: 'public_profile',
+        skipBrowserRedirect: isNative,
       }
     });
 
     if(error){
       console.error('[FB-Login] OAuth error:', error);
       toast('❌ خطأ في تسجيل الدخول: ' + error.message, 'err');
-      // أعد الزر
       if(btn){ btn.disabled=false; btn.style.opacity='1'; btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> فايسبوك'; }
     }
-    // إذا نجح: سيُعاد التوجيه تلقائياً لفيسبوك
+    // في التطبيق المحمول: افتح في متصفح خارجي مع الحفاظ على الـ WebView
+    if(isNative && oauthData?.url){
+      window.open(oauthData.url, '_system');
+    }
   }catch(e){
     console.error('[FB-Login]', e);
     toast('❌ تعذّر الاتصال بالخادم', 'err');
@@ -21670,10 +21765,12 @@ async function loginTwitter(){
     }
 
     const redirectTo = window.Capacitor ? 'com.rondatahiro.myapp://callback' : (window.location.origin + window.location.pathname);
-    const { error } = await _SB.client.auth.signInWithOAuth({
+    const isNative = !!window.Capacitor;
+    const { data: oauthData, error } = await _SB.client.auth.signInWithOAuth({
       provider: 'twitter',
       options: { 
         redirectTo,
+        skipBrowserRedirect: isNative,
         queryParams: { force_oauth2: 'true' }
       }
     });
@@ -21685,6 +21782,10 @@ async function loginTwitter(){
         btn.disabled=false; btn.style.opacity='1';
         btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> تويتر / X';
       }
+    }
+    // في التطبيق المحمول: افتح في متصفح خارجي
+    if(isNative && oauthData?.url){
+      window.open(oauthData.url, '_system');
     }
   }catch(e){
     console.error('[TW-Login]', e);
