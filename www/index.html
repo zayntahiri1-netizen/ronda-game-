@@ -9271,7 +9271,9 @@ function _updateSocialLinkButtons(){
 async function linkSocialAccount(provider){
   try{
     if(!_SB.client) _SB.client=supabase.createClient(_SB.URL,_SB.KEY);
-    const redirectTo=window.location.origin+window.location.pathname+'?link='+provider;
+    const redirectTo=window.Capacitor
+      ? 'com.rondatahiro.myapp://callback?link='+provider
+      : window.location.origin+window.location.pathname+'?link='+provider;
     await _SB.client.auth.signInWithOAuth({provider, options:{redirectTo}});
   }catch(e){ toast('❌ تعذّر الاتصال','err'); }
 }
