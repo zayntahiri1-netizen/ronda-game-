@@ -9271,10 +9271,19 @@ function _updateSocialLinkButtons(){
 async function linkSocialAccount(provider){
   try{
     if(!_SB.client) _SB.client=supabase.createClient(_SB.URL,_SB.KEY);
-    const redirectTo=window.Capacitor
+    const isNative = !!window.Capacitor;
+    const redirectTo = isNative
       ? 'com.rondatahiro.myapp://callback?link='+provider
       : window.location.origin+window.location.pathname+'?link='+provider;
-    await _SB.client.auth.signInWithOAuth({provider, options:{redirectTo}});
+    const { data: oauthData, error } = await _SB.client.auth.signInWithOAuth({
+      provider,
+      options:{ redirectTo, skipBrowserRedirect: isNative }
+    });
+    if(error) throw error;
+    if(isNative && oauthData?.url){
+      try{ await Browser.open({ url: oauthData.url }); }
+      catch{ window.open(oauthData.url, '_blank'); }
+    }
   }catch(e){ toast('❌ تعذّر الاتصال','err'); }
 }
 
