@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">Ronda Tahiro</string>
     <string name="title_activity_main">Ronda Tahiro</string>
-    <string name="package_name">com.ronda.cardgame</string>
-    <string name="custom_url_scheme">com.ronda.cardgame</string>
+    <string name="package_name">com.rondatahiro.myapp</string>
+    <string name="custom_url_scheme">com.rondatahiro.myapp</string>
 </resources>

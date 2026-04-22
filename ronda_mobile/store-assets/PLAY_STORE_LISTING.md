@@ -116,7 +116,7 @@ https://ronda-e11cd.web.app/privacy.html
 ## معلومات تقنية للإدخال
 
 ```
-Package Name:     com.ronda.cardgame
+Package Name:     com.rondatahiro.myapp
 Version Code:     1
 Version Name:     1.0.0
 Min SDK:          22 (Android 5.1)

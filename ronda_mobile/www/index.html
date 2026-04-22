@@ -113,6 +113,8 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
   display:flex;align-items:center;gap:.5rem}
 .auth-title::before,.auth-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(212,164,60,.22),transparent)}
 .auth-row{display:flex;gap:.6rem;width:100%;margin-bottom:.9rem}
+.ab-gg{background:#fff;color:#3c4043;border:1.5px solid #dadce0;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.ab-gg:hover{background:#f8f9fa;box-shadow:0 4px 16px rgba(0,0,0,.2)}
 .auth-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:.5rem;
   padding:.72rem .75rem;border-radius:14px;border:none;
   font-family:var(--fa);font-size:.85rem;font-weight:800;cursor:pointer;
@@ -121,9 +123,9 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
 .auth-btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:background .2s}
 .auth-btn:hover::after{background:rgba(255,255,255,.1)}
 .auth-btn:active{transform:scale(.95)}
-.ab-fb{background:linear-gradient(135deg,#1877F2 0%,#0D5FD0 100%);color:#fff;
+.ab-fb-unused{
   box-shadow:0 4px 18px rgba(24,119,242,.35)}
-.ab-tw{background:linear-gradient(135deg,#212327 0%,#000 100%);color:#fff;
+.ab-tw-unused{
   border:1px solid rgba(255,255,255,.12);box-shadow:0 4px 18px rgba(0,0,0,.4)}
 .auth-divider{display:flex;align-items:center;gap:.6rem;margin-bottom:.9rem}
 .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.07)}
@@ -192,6 +194,8 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
   cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
 .soc-link-btn::before{content:'';position:absolute;inset:0;opacity:0;transition:.2s}
 .soc-link-btn:hover::before{opacity:1}
+.soc-link-gg{color:#4285F4}
+.soc-link-gg::before{background:rgba(66,133,244,.08)}
 .soc-link-fb{
   background:rgba(24,119,242,.12);border-color:rgba(24,119,242,.35);color:#6aabff}
 .soc-link-fb::before{background:rgba(24,119,242,.08)}
@@ -838,6 +842,28 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
 .code-val{font-family:var(--fd);font-size:1.9rem;color:var(--g1);letter-spacing:.4em;animation:cGlow 2s ease-in-out infinite alternate}
 @keyframes cGlow{from{text-shadow:0 0 8px var(--glow)}to{text-shadow:0 0 32px rgba(212,164,60,.9)}}
 .wbtns{display:flex;gap:.42rem;justify-content:center;flex-wrap:wrap;margin-bottom:.4rem}
+
+/* ── صف مشاركة الشبكات الاجتماعية في غرفة الانتظار ── */
+.wsoc-row{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin:.3rem 0 .15rem}
+.wsoc-btn{
+  display:flex;flex-direction:column;align-items:center;gap:.18rem;
+  width:52px;padding:.38rem .2rem .28rem;border-radius:14px;
+  cursor:pointer;font-size:.48rem;font-weight:800;letter-spacing:.02em;
+  border:1px solid rgba(255,255,255,.08);
+  transition:transform .18s,box-shadow .18s;
+  position:relative;overflow:hidden;
+}
+.wsoc-btn:active{transform:scale(.92)!important}
+.wsoc-btn:hover{transform:translateY(-2px) scale(1.07);box-shadow:0 6px 22px rgba(0,0,0,.35)}
+.wsoc-ico{font-size:1.25rem;line-height:1}
+.wsoc-wa{background:linear-gradient(135deg,rgba(37,211,102,.18),rgba(37,211,102,.06));color:#4ade80;border-color:rgba(37,211,102,.3)}
+.wsoc-tg{background:linear-gradient(135deg,rgba(41,182,246,.18),rgba(41,182,246,.06));color:#7dd3fc;border-color:rgba(41,182,246,.3)}
+.wsoc-tw{background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.04));color:#e2e8f0;border-color:rgba(255,255,255,.18)}
+.wsoc-fb{background:linear-gradient(135deg,rgba(24,119,242,.18),rgba(24,119,242,.06));color:#93c5fd;border-color:rgba(24,119,242,.3)}
+.wsoc-ig{background:linear-gradient(135deg,rgba(225,48,108,.18),rgba(253,184,56,.08));color:#f9a8d4;border-color:rgba(225,48,108,.28)}
+.wsoc-cp{background:linear-gradient(135deg,rgba(212,164,60,.18),rgba(212,164,60,.06));color:var(--g1);border-color:rgba(212,164,60,.3)}
+.wsoc-copied{animation:wsocCopied .35s ease}
+@keyframes wsocCopied{0%{transform:scale(1)}50%{transform:scale(1.18)}100%{transform:scale(1)}}
 .wcopy,.wshare{display:inline-flex;align-items:center;gap:.3rem;padding:.34rem .78rem;border-radius:18px;font-size:.74rem;font-weight:600;cursor:pointer;font-family:var(--fa);transition:all var(--ts)}
 .wcopy{background:rgba(33,150,243,.11);color:#90CAF9;border:1px solid rgba(33,150,243,.25)}.wcopy:hover{background:rgba(33,150,243,.2)}
 .wshare{background:rgba(76,175,80,.11);color:#A5D6A7;border:1px solid rgba(76,175,80,.25)}.wshare:hover{background:rgba(76,175,80,.2)}
@@ -3724,8 +3750,8 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
    🪟 PREMIUM MODALS v7
 ═══════════════════════════════════════════════════════ */
 @keyframes modalSlideUp {
-  from { transform: translateY(30px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
+  from { transform: translateY(40px) scale(.95); opacity: 0; }
+  to   { transform: translateY(0) scale(1);      opacity: 1; }
 }
 .mov2.open .msh2 { animation: modalSlideUp .35s cubic-bezier(.22,1,.36,1) both; }
 
@@ -3897,9 +3923,10 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
 ══════════════════════════════════════════════════════ */
 .mov2 {
   position: fixed; inset: 0; z-index: 9000;
-  display: flex; align-items: flex-end; justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   background: rgba(0,0,0,0);
   pointer-events: none; transition: background .3s;
+  padding: 16px;
 }
 .mov2.open {
   background: rgba(0,0,0,.75); backdrop-filter: blur(8px);
@@ -3908,11 +3935,12 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
 .msh2 {
   width: 100%; max-width: 480px;
   background: linear-gradient(165deg, #0e1a14, #080f0b, #060408);
-  border: 1px solid rgba(212,164,60,.12);
-  border-bottom: none; border-radius: 28px 28px 0 0;
-  transform: translateY(100%); transition: transform .38s cubic-bezier(.22,1,.36,1);
-  max-height: 92vh; overflow-y: auto; overflow-x: hidden;
-  box-shadow: 0 -8px 60px rgba(0,0,0,.9), 0 0 0 1px rgba(255,255,255,.03);
+  border: 1px solid rgba(212,164,60,.25);
+  border-radius: 24px;
+  transform: translateY(60px) scale(.96); opacity: 0;
+  transition: transform .38s cubic-bezier(.22,1,.36,1), opacity .3s ease;
+  max-height: 88vh; overflow-y: auto; overflow-x: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,.95), 0 0 0 1px rgba(255,255,255,.04);
   scrollbar-width: none;
   position: relative;
 }
@@ -3921,11 +3949,10 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
   content: ''; position: sticky; top: 0; left: 0; right: 0; height: 1px; display: block;
   background: linear-gradient(90deg, transparent, rgba(212,164,60,.35), rgba(245,216,122,.55), rgba(212,164,60,.35), transparent);
 }
-.mov2.open .msh2 { transform: translateY(0); }
+.mov2.open .msh2 { transform: translateY(0) scale(1); opacity: 1; }
 
 .mhdl2 {
-  width: 44px; height: 5px; border-radius: 3px;
-  background: rgba(255,255,255,.1); margin: 14px auto 0;
+  display: none;
 }
 .mhd2 {
   display: flex; align-items: center; justify-content: space-between;
@@ -4964,17 +4991,6 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
 }
 .shop-pay-none .spn-ico{font-size:1.5rem;opacity:.4}
 
-#paypal-btn-container{min-height:40px}
-#paypal-btn-container .paypal-loading{
-  display:flex;align-items:center;justify-content:center;gap:.5rem;
-  color:var(--t4);font-size:.74rem;padding:.6rem;
-}
-.pp-loading-dot{
-  width:6px;height:6px;border-radius:50%;background:var(--t4);
-  animation:ppDot .9s ease-in-out infinite;
-}
-.pp-loading-dot:nth-child(2){animation-delay:.2s}
-.pp-loading-dot:nth-child(3){animation-delay:.4s}
 @keyframes ppDot{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
 
 /* ── شعار وسائل الدفع ── */
@@ -5445,19 +5461,80 @@ document.addEventListener('deviceready', async () => {
       });
     } catch(e) {}
 
-    // Back button (Android)
-    if (window._isAndroid()) {
-      const { App } = await import('@capacitor/app');
-      App.addListener('backButton', ({ canGoBack }) => {
-        if (!canGoBack) {
-          // Show exit confirmation instead of closing immediately
-          if (window._showExitConfirm) {
-            window._showExitConfirm();
+    // ── OAuth Deep Link handler — Android + iOS ──────────────────────
+    // ⚠️ خارج if(_isAndroid()) لكي يعمل على iOS أيضاً
+    const { App } = await import('@capacitor/app');
+    App.addListener('appUrlOpen', async (data) => {
+        try {
+          console.log('[AppUrlOpen] URL:', data.url);
+          const url = data.url;
+
+          // أغلق Custom Tab فوراً
+          try { const { Browser } = await import('@capacitor/browser'); await Browser.close(); } catch(_){}
+          window._oauthHandled = true;
+          window._sessionHandled = false;
+
+          if (!_SB.client) _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
+            auth: { flowType: 'implicit', detectSessionInUrl: true, persistSession: true }
+          });
+
+          // استخراج الـ token من الـ URL (fragment أو query)
+          const fullStr = url.includes('#') ? url.split('#')[1] : (url.includes('?') ? url.split('?')[1] : '');
+          const params = new URLSearchParams(fullStr);
+          const accessToken  = params.get('access_token');
+          const refreshToken = params.get('refresh_token');
+          const code         = params.get('code');
+          const errorParam   = params.get('error');
+
+          if (errorParam) {
+            console.error('[AppUrlOpen] OAuth error:', errorParam, params.get('error_description'));
+            toast('❌ فشل تسجيل الدخول: ' + (params.get('error_description') || errorParam), 'err');
+            return;
           }
+
+          const _isLinkFlowNative = url.includes('link=google');
+
+          const _finishLogin = async (session) => {
+            if (!session || window._sessionHandled) return;
+            window._sessionHandled = true;
+            const provider = session.user?.app_metadata?.provider;
+            console.log('[AppUrlOpen] provider:', provider, 'linkFlow:', _isLinkFlowNative);
+            if (provider === 'google'){
+              if(_isLinkFlowNative){
+                // ربط الحساب — لا تغيّر loginMethod
+                P.linkedGg = true;
+                P.googleId  = P.googleId || session.user.id;
+                P.email     = P.email || session.user.email || '';
+                saveP();
+                toast('✅ تم ربط حساب Google بنجاح','ok');
+                goLobby();
+              } else {
+                await _handleGoogleAuthCallback(session);
+              }
+            }
+          };
+
+          if (accessToken && refreshToken) {
+            // Implicit flow — set session directly
+            const { data: sd, error: se } = await _SB.client.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
+            if (se) { console.error('[AppUrlOpen] setSession error:', se); return; }
+            await _finishLogin(sd?.session);
+          } else if (code) {
+            // Authorization code flow
+            const { data: sd, error: se } = await _SB.client.auth.exchangeCodeForSession(url);
+            if (se) { console.error('[AppUrlOpen] exchangeCode error:', se); return; }
+            await _finishLogin(sd?.session);
+          } else {
+            // Fallback: انتظر قليلاً ثم اسحب الـ session
+            await new Promise(r => setTimeout(r, 500));
+            const { data: sd } = await _SB.client.auth.getSession();
+            await _finishLogin(sd?.session);
+          }
+        } catch(e) {
+          console.error('[AppUrlOpen] Error:', e);
         }
       });
 
-      // App state change (background/foreground)
       App.addListener('appStateChange', ({ isActive }) => {
         const ev = new CustomEvent('app:statechange', { detail: { isActive } });
         window.dispatchEvent(ev);
@@ -5496,6 +5573,22 @@ document.addEventListener('deviceready', async () => {
           if(!localStorage.getItem('ronda_autoplay') || localStorage.getItem('ronda_autoplay') !== '1'){
             if(typeof _setAutoPlay==='function') _setAutoPlay(false, false);
           }
+          // [OAUTH-FALLBACK] إذا appUrlOpen لم يُطلق — تحقق من الجلسة عند العودة
+          setTimeout(async () => {
+            try {
+              if (!_SB.client) return;
+              if (window._oauthHandled) return;
+              if (window._sessionHandled) return;
+              const { data: sd } = await _SB.client.auth.getSession();
+              if (sd?.session) {
+                window._sessionHandled = true;
+                const provider = sd.session.user?.app_metadata?.provider;
+                console.log('[Foreground-Fallback] provider:', provider);
+                try { const { Browser } = await import('@capacitor/browser'); await Browser.close(); } catch(_){}
+                if (provider === 'google') await _handleGoogleAuthCallback(sd.session);
+              }
+            } catch(e) { console.warn('[Foreground-Fallback] error:', e); }
+          }, 1200);
           // [4-1] استأنف مؤقت البوت (يلعب في ث12)
           if(G && G.isBot && !G.myTurn && !G.over){
             const elapsed = Date.now() - (window._botTurnStartTs || Date.now());
@@ -5505,6 +5598,16 @@ document.addEventListener('deviceready', async () => {
               window._botResumeTimer = null;
               if(G && G.isBot && !G.myTurn && !G.over) botPlay();
             }, remaining);
+          }
+        }
+      });
+
+    // ── Back button (Android only) ─────────────────────────────────
+    if (window._isAndroid()) {
+      App.addListener('backButton', ({ canGoBack }) => {
+        if (!canGoBack) {
+          if (window._showExitConfirm) {
+            window._showExitConfirm();
           }
         }
       });
@@ -5534,14 +5637,10 @@ document.addEventListener('deviceready', async () => {
     <div class="logo-lat">Royal Moroccan Card Game</div>
     <div class="auth-container">
       <div class="auth-title">اختر طريقة الدخول</div>
-      <div class="auth-row">
-        <button class="auth-btn ab-fb" onclick="loginFacebook()">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-          فايسبوك
-        </button>
-        <button class="auth-btn ab-tw" id="btnTw" onclick="loginTwitter()">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          تويتر / X
+      <div class="auth-row" style="justify-content:center">
+        <button class="auth-btn ab-gg" id="btnGg" onclick="loginGoogle()" style="max-width:260px;font-weight:600;font-size:.85rem;gap:.6rem;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.15)">
+          <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          تسجيل الدخول بـ Google
         </button>
       </div>
       <div class="auth-divider"><span>أو</span></div>
@@ -5601,6 +5700,34 @@ document.addEventListener('deviceready', async () => {
       <div><div class="os-n" id="lp">—</div><div class="os-l">لاعب متصل</div></div>
       <div><div class="os-n" id="lg">—</div><div class="os-l">لعبة جارية</div></div>
       <div><div class="os-n" id="liveStatus" style="color:var(--emer3)">⏳</div><div class="os-l">مباشر</div></div>
+    </div>
+
+    <!-- ══ روابط قانونية في الصفحة الرئيسية (متطلبات Play Store) ══ -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:.4rem;margin-top:.7rem;padding:.5rem .85rem">
+      <div style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap">
+        <a href="https://ronda-e11cd.web.app/privacy" target="_blank" rel="noopener"
+          style="display:inline-flex;align-items:center;gap:.3rem;
+            padding:.38rem .8rem;border-radius:20px;text-decoration:none;
+            background:rgba(0,0,0,.35);border:1px solid rgba(212,164,60,.2);
+            color:rgba(212,164,60,.75);font-family:'Tajawal',sans-serif;
+            font-size:.55rem;font-weight:700;backdrop-filter:blur(8px);
+            transition:all .22s"
+          onmouseover="this.style.borderColor='rgba(212,164,60,.5)';this.style.color='#d4a43c'"
+          onmouseout="this.style.borderColor='rgba(212,164,60,.2)';this.style.color='rgba(212,164,60,.75)'">
+          🔒 سياسة الخصوصية
+        </a>
+        <a href="https://ronda-e11cd.web.app/delete.html" target="_blank" rel="noopener"
+          style="display:inline-flex;align-items:center;gap:.3rem;
+            padding:.38rem .8rem;border-radius:20px;text-decoration:none;
+            background:rgba(0,0,0,.35);border:1px solid rgba(255,80,80,.2);
+            color:rgba(255,120,120,.7);font-family:'Tajawal',sans-serif;
+            font-size:.55rem;font-weight:700;backdrop-filter:blur(8px);
+            transition:all .22s"
+          onmouseover="this.style.borderColor='rgba(255,80,80,.45)';this.style.color='#ff9090'"
+          onmouseout="this.style.borderColor='rgba(255,80,80,.2)';this.style.color='rgba(255,120,120,.7)'">
+          🗑️ حذف البيانات
+        </a>
+      </div>
     </div>
   </div>
 </div>
@@ -5954,38 +6081,6 @@ document.addEventListener('deviceready', async () => {
           </div>
         </div>
 
-        <!-- ████ CARD SPECTATE — المدرجات ████ -->
-        <div class="gcard2 gc2-spectate" onclick="openSpectatePanel()">
-          <div class="gcsc2">
-            <canvas class="sc-canvas" id="cvSP" style="opacity:.35"></canvas>
-            <div class="spectate-card-scene">
-              <div class="sp-live-dot"></div>
-              <div class="sp-card-matches" id="spCardMatches">
-                <div class="sp-cm-row"><span class="sp-cm-av">🎴</span><span class="sp-cm-vs">—</span><span class="sp-cm-av">🎴</span></div>
-                <div class="sp-cm-row"><span class="sp-cm-av">🎴</span><span class="sp-cm-vs">—</span><span class="sp-cm-av">🎴</span></div>
-                <div class="sp-cm-row"><span class="sp-cm-av">🎴</span><span class="sp-cm-vs">—</span><span class="sp-cm-av">🎴</span></div>
-              </div>
-              <div class="sp-card-label">المدرجات</div>
-            </div>
-          </div>
-          <div class="gcbody2">
-            <div class="gctrow2"><div class="gctitle2">👁 المدرجات</div><div class="gcbadge2 sp-live-badge-card">🔴 مباشر</div></div>
-            <div class="gcsub2">شاهد المباريات الجارية الآن</div>
-            <div style="margin-top:8px;padding:9px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:10px;text-align:center">
-              <div style="font-size:.52rem;color:rgba(255,255,255,.5);margin-bottom:4px">مباريات نشطة</div>
-              <div id="spActiveCount" style="font-size:1.1rem;font-weight:900;color:#f87171;font-family:var(--fd)">—</div>
-            </div>
-            <div style="margin-top:8px;padding:9px 12px;background:rgba(255,255,255,.04);border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.07)">
-              <span style="font-size:1rem">👁</span>
-              <div style="flex:1">
-                <div style="font-size:.65rem;font-weight:700;color:var(--t1)">ادخل وشاهد</div>
-                <div style="font-size:.52rem;color:var(--t4)">بدون تأثير على اللعب</div>
-              </div>
-              <span style="font-size:.8rem;color:var(--t4)">›</span>
-            </div>
-          </div>
-        </div>
-
         <!-- ████ CARD 4 — AI CYBER MIND ████ -->
         <div class="gcard2 gc2-4">
           <div class="gcsc2">
@@ -6055,10 +6150,42 @@ document.addEventListener('deviceready', async () => {
       <div class="code-val" id="wCode">ABC123</div>
     </div>
     <div class="wbtns">
-      <button class="wcopy" onclick="copyCode()">📋 نسخ</button>
-      <button class="wshare" onclick="shareCode()">📤 واتساب</button>
+      <button class="wcopy" onclick="copyCode()">📋 نسخ الرمز</button>
     </div>
-    <div class="whint">شارك الرمز مع أصدقائك ليدخلوا مباشرة 👆</div>
+    <!-- صف مشاركة المنصات — كل زر ينسخ+يفتح المنصة تلقائياً -->
+    <div class="wsoc-row">
+      <div class="wsoc-btn wsoc-wa" onclick="shareWaitCode('whatsapp')" title="واتساب">
+        <span class="wsoc-ico">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        </span>
+        واتساب
+      </div>
+      <div class="wsoc-btn wsoc-tg" onclick="shareWaitCode('telegram')" title="تيليغرام">
+        <span class="wsoc-ico">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        </span>
+        تيليغرام
+      </div>
+      <div class="wsoc-btn wsoc-tw" onclick="shareWaitCode('twitter')" title="تويتر / X">
+        <span class="wsoc-ico">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </span>
+        X
+      </div>
+      <div class="wsoc-btn wsoc-fb" onclick="shareWaitCode('facebook')" title="فيسبوك">
+        <span class="wsoc-ico">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </span>
+        فيسبوك
+      </div>
+      <div class="wsoc-btn wsoc-ig" onclick="shareWaitCode('instagram')" title="إنستغرام">
+        <span class="wsoc-ico">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        </span>
+        إنستغرام
+      </div>
+    </div>
+    <div class="whint">اضغط أيقونة المنصة — ينسخ الدعوة وينتقل إليها تلقائياً 🚀</div>
     <div class="seats" id="seatsRow"></div>
     <div class="wactions">
       <button class="bstart" id="btnStart" onclick="startFromWait()">▶ ابدأ اللعبة</button>
@@ -6819,24 +6946,7 @@ document.addEventListener('deviceready', async () => {
           🔗 اربط حسابك لحفظ بياناتك وصورتك على كل أجهزتك
         </div>
         <div style="display:flex;gap:.5rem;justify-content:center">
-          <button id="linkFbBtn" onclick="linkSocialAccount('facebook')" style="
-            display:flex;align-items:center;gap:.4rem;
-            padding:.45rem 1rem;border-radius:22px;border:1px solid rgba(24,119,242,.45);
-            background:rgba(24,119,242,.14);color:#90c5ff;
-            font-family:'Tajawal',sans-serif;font-size:.65rem;font-weight:900;
-            cursor:pointer;transition:all .22s">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-            ربط فيسبوك
-          </button>
-          <button id="linkTwBtn" onclick="linkSocialAccount('twitter')" style="
-            display:flex;align-items:center;gap:.4rem;
-            padding:.45rem 1rem;border-radius:22px;border:1px solid rgba(255,255,255,.2);
-            background:rgba(255,255,255,.07);color:#e0e0e0;
-            font-family:'Tajawal',sans-serif;font-size:.65rem;font-weight:900;
-            cursor:pointer;transition:all .22s">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            ربط X
-          </button>
+          <button id="linkGgBtn" onclick="linkSocialAccount('google')" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;padding:.45rem .9rem;border-radius:10px;font-size:.6rem;cursor:pointer;display:flex;align-items:center;gap:.4rem"><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> ربط Google</button>
         </div>
       </div>
     </div>
@@ -7139,6 +7249,43 @@ document.addEventListener('deviceready', async () => {
       <!-- ══ SETTINGS PANEL ══ -->
       <div class="prof-panel" id="pp-settings">
         <div id="settingsContent"></div>
+      </div>
+
+      <!-- ══ روابط قانونية (متطلبات Play Store) ══ -->
+      <div style="text-align:center;padding:1.1rem .85rem .4rem;border-top:1px solid rgba(255,255,255,.07);margin-top:.5rem">
+        <div style="font-size:.5rem;color:var(--t5);margin-bottom:.65rem;letter-spacing:.04em">⚖️ الشروط والخصوصية</div>
+        <div style="display:flex;flex-direction:column;gap:.45rem;align-items:center">
+          <a href="https://ronda-e11cd.web.app/privacy" target="_blank" rel="noopener"
+            style="display:flex;align-items:center;gap:.45rem;width:100%;max-width:280px;
+              padding:.55rem 1rem;border-radius:14px;text-decoration:none;
+              background:rgba(212,164,60,.08);border:1px solid rgba(212,164,60,.25);
+              color:var(--g1);font-family:'Tajawal',sans-serif;font-size:.65rem;font-weight:900;
+              justify-content:center;transition:all .22s"
+            onmouseover="this.style.background='rgba(212,164,60,.16)'"
+            onmouseout="this.style.background='rgba(212,164,60,.08)'">
+            🔒 سياسة الخصوصية
+          </a>
+          <a href="https://ronda-e11cd.web.app/delete.html" target="_blank" rel="noopener"
+            style="display:flex;align-items:center;gap:.45rem;width:100%;max-width:280px;
+              padding:.55rem 1rem;border-radius:14px;text-decoration:none;
+              background:rgba(255,80,80,.07);border:1px solid rgba(255,80,80,.22);
+              color:#ff9090;font-family:'Tajawal',sans-serif;font-size:.65rem;font-weight:900;
+              justify-content:center;transition:all .22s"
+            onmouseover="this.style.background='rgba(255,80,80,.14)'"
+            onmouseout="this.style.background='rgba(255,80,80,.07)'">
+            🗑️ طلب حذف البيانات
+          </a>
+          <button onclick="if(confirm('هل أنت متأكد من طلب حذف حسابك وبياناتك؟ هذا الإجراء لا يمكن التراجع عنه.')){window.open('https://ronda-e11cd.web.app/delete.html','_blank')}"
+            style="display:flex;align-items:center;gap:.45rem;width:100%;max-width:280px;
+              padding:.55rem 1rem;border-radius:14px;border:1.5px solid rgba(255,50,50,.4);
+              background:rgba(255,30,30,.1);color:#ff7070;
+              font-family:'Tajawal',sans-serif;font-size:.65rem;font-weight:900;
+              cursor:pointer;justify-content:center;transition:all .22s"
+            onmouseover="this.style.background='rgba(255,30,30,.2)'"
+            onmouseout="this.style.background='rgba(255,30,30,.1)'">
+            ⚠️ حذف الحساب والبيانات
+          </button>
+        </div>
       </div>
 
     </div><!-- /prof-content -->
@@ -8913,8 +9060,7 @@ function updateUI(){
   const pavNmEl=$('pavNm');
   if(pavNmEl){
     let badge='';
-    if(P.loginMethod==='facebook') badge='<span style="background:#1877F2;color:#fff;font-size:.45rem;padding:1px 6px;border-radius:10px;vertical-align:middle;font-weight:900;margin-right:4px">FB ✓</span>';
-    else if(P.loginMethod==='twitter') badge='<span style="background:#000;color:#fff;font-size:.45rem;padding:1px 6px;border-radius:10px;vertical-align:middle;font-weight:900;margin-right:4px">𝕏 ✓</span>';
+    if(P.loginMethod==='google') badge='<span style="background:#4285F4;color:#fff;font-size:.45rem;padding:1px 6px;border-radius:10px;vertical-align:middle;font-weight:900;margin-right:4px">G ✓</span>';
     pavNmEl.innerHTML=badge+esc(P.name);
   }
   f('pavId',`ID: #${(P.id||'').substr(0,6).toUpperCase()}`);
@@ -9078,14 +9224,13 @@ function _showGift10000Banner(){
 
 function _updateSocialLinkButtons(){
   const sec=$('socialLinkSection');
-  const hasFb = P.loginMethod==='facebook' || P.linkedFb;
-  const hasTw = P.loginMethod==='twitter'  || P.linkedTw;
+  const hasGg = P.loginMethod==='google' || P.linkedGg;
 
   // ━━ عرض الحسابات المربوطة تحت الاسم ━━
   const linkedRow = $('linkedAccountsRow');
   if(linkedRow){
     let chips='';
-    if(hasFb){
+    if(hasGg){
       const fbPhoto = P.fbPhoto
         ? `<img src="${P.fbPhoto}" style="width:18px;height:18px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(24,119,242,.5);flex-shrink:0" onerror="this.style.display='none'">`
         : '<span style="font-size:.8rem">📘</span>';
@@ -9096,7 +9241,7 @@ function _updateSocialLinkButtons(){
         border-radius:14px;padding:.22rem .6rem;font-size:.6rem;font-weight:800;color:#90caff"
       >${fbPhoto}<span style="max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${fbNm}</span><span style="color:rgba(34,196,138,.8);font-size:.55rem">✓</span></div>`;
     }
-    if(hasTw){
+    if(false){
       const twPhoto = P.twPhoto
         ? `<img src="${P.twPhoto}" style="width:18px;height:18px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(255,255,255,.2);flex-shrink:0" onerror="this.style.display='none'">`
         : '<span style="font-size:.8rem">𝕏</span>';
@@ -9119,7 +9264,7 @@ function _updateSocialLinkButtons(){
   if(!sec) return;
   const fbBtn=$('linkFbBtn'), twBtn=$('linkTwBtn');
   if(fbBtn){
-    if(hasFb){
+    if(hasGg){
       fbBtn.innerHTML='<span style="color:#4ade80;font-size:.85rem">✓</span><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> فيسبوك مربوط';
       fbBtn.style.background='rgba(34,196,138,.12)';
       fbBtn.style.borderColor='rgba(34,196,138,.4)';
@@ -9128,7 +9273,7 @@ function _updateSocialLinkButtons(){
     }
   }
   if(twBtn){
-    if(hasTw){
+    if(false){
       twBtn.innerHTML='<span style="color:#4ade80;font-size:.85rem">✓</span><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> X مربوط';
       twBtn.style.background='rgba(34,196,138,.12)';
       twBtn.style.borderColor='rgba(34,196,138,.4)';
@@ -9136,16 +9281,71 @@ function _updateSocialLinkButtons(){
       twBtn.onclick=null; twBtn.style.cursor='default';
     }
   }
-  if(hasFb && hasTw) sec.style.display='none';
+  if(hasGg) sec.style.display='none';
   else sec.style.display='block';
 }
 
 async function linkSocialAccount(provider){
+  if(provider !== 'google') return; // فقط Google مدعوم
   try{
-    if(!_SB.client) _SB.client=supabase.createClient(_SB.URL,_SB.KEY);
-    const redirectTo=window.location.origin+window.location.pathname+'?link='+provider;
-    await _SB.client.auth.signInWithOAuth({provider, options:{redirectTo}});
-  }catch(e){ toast('❌ تعذّر الاتصال','err'); }
+    if(!_SB.client) _SB.client=supabase.createClient(_SB.URL,_SB.KEY, {
+        auth: {
+          flowType: 'implicit',
+          detectSessionInUrl: true,
+          persistSession: true
+        }
+      });
+    const isNative = !!window.Capacitor;
+    window._oauthHandled = false; window._sessionHandled = false; // reset OAuth flags
+
+    // [FIX] استخدم linkIdentity إذا كان المستخدم مسجلاً بالفعل (alias login)
+    // وإلا استخدم signInWithOAuth مع ?link=google في الـ redirect
+    const { data: sessionData } = await _SB.client.auth.getSession();
+    const hasActiveSession = !!sessionData?.session;
+
+    if(hasActiveSession){
+      // المستخدم عنده session نشطة — ارتبط مباشرة
+      const redirectTo = isNative
+        ? 'com.rondatahiro.myapp://callback?link='+provider
+        : window.location.origin+window.location.pathname+'?link='+provider;
+      const { error } = await _SB.client.auth.linkIdentity({
+        provider,
+        options:{ redirectTo, skipBrowserRedirect: isNative }
+      });
+      if(error){
+        // linkIdentity غير مدعوم أو فشل — نرجع لـ signInWithOAuth
+        console.warn('[linkSocial] linkIdentity failed, fallback:', error.message);
+        const { data: oauthData, error: err2 } = await _SB.client.auth.signInWithOAuth({
+          provider,
+          options:{ redirectTo, skipBrowserRedirect: isNative }
+        });
+        if(err2) throw err2;
+        if(isNative && oauthData?.url){
+          try{ await Browser.open({ url: oauthData.url }); }
+          catch{ window.open(oauthData.url, '_blank'); }
+        }
+      } else {
+        toast('✅ جارٍ الربط بـ Google...','ok');
+        if(isNative){
+          // appUrlOpen سيتولى الباقي
+        }
+      }
+    } else {
+      // لا session — استخدم signInWithOAuth مع علامة link
+      const redirectTo = isNative
+        ? 'com.rondatahiro.myapp://callback?link='+provider
+        : window.location.origin+window.location.pathname+'?link='+provider;
+      const { data: oauthData, error } = await _SB.client.auth.signInWithOAuth({
+        provider,
+        options:{ redirectTo, skipBrowserRedirect: isNative }
+      });
+      if(error) throw error;
+      if(isNative && oauthData?.url){
+        try{ await Browser.open({ url: oauthData.url }); }
+        catch{ window.open(oauthData.url, '_blank'); }
+      }
+    }
+  }catch(e){ console.error('[linkSocial]', e); toast('❌ تعذّر الاتصال','err'); }
 }
 
 /* ══ FEATURE 4: رفع صورة شخصية ══ */
@@ -9194,7 +9394,7 @@ function saveNewName(){
 /* ══ FEATURE 2: نظام الإحالة 2000 عملة ══ */
 function _processReferral(refCode){
   if(!refCode || P.refBy || P.id===refCode) return;
-  const validLogin = P.loginMethod==='facebook'||P.loginMethod==='twitter'||P.name.trim().length>=3;
+  const validLogin = P.loginMethod==='google'||P.name.trim().length>=3;
   if(!validLogin) return;
   P.refBy=refCode;
   P.gold=(P.gold||0)+2000;
@@ -13497,9 +13697,218 @@ function renderSeats(){
     return `<div class="seat occ">${teamLabel}${avHtml}<div class="seat-nm">${esc(p.name.substring(0,10))}</div><div class="seat-st">✓ جاهز</div></div>`;
   }).join('');
 }
-function copyCode(){ if(room){navigator.clipboard?.writeText(room.code).catch(()=>{}); toast(`📋 تم نسخ الرمز: ${room.code}`,'ok');} }
-function shareCode(){ const t=`🎴 روندة — انضم معي!
-الرمز: ${room?.code}`; window.open(`https://wa.me/?text=${encodeURIComponent(t)}`,'_blank'); }
+function copyCode(){
+  if(!room) return;
+  navigator.clipboard?.writeText(room.code).catch(()=>{});
+  toast(`📋 تم نسخ الرمز: ${room.code}`,'ok');
+}
+
+/* ── بناء رسالة الدعوة بالتفاصيل الكاملة ── */
+function _buildInviteMsg(){
+  if(!room) return '';
+  const code = room.code || '——';
+  const modeLabels = {
+    '2p' :'⚔️ 1 ضد 1 — المعركة الحقيقية',
+    '1v1':'⚔️ 1 ضد 1 — المعركة الحقيقية',
+    '2v2':'🏆 2 ضد 2 — حرب الفرق',
+    '4p' :'🎖 4 مستقلين — الأقوى يبقى',
+    'pm2t':'🤝 فريق 2 ضد 2 — شريك + خصوم',
+  };
+  const gameLabels = {
+    classic:'🎴 كلاسيك مغربي الأصيل',
+    escoba :'🧮 إسباني (إسكوبا)',
+    quick  :'⚡ سريع (ماكلة)',
+  };
+  const modeStr  = modeLabels[room.pMode||pMode||'2p'] || '🎴 متعدد اللاعبين';
+  const gameStr  = gameLabels[room.mode] || '🎴 روندة';
+  const entry    = room.entry ? `💰 الرهان: ${(room.entry).toLocaleString('ar')} 🪙 — الرابح يأخذ كل شيء!` : '🆓 دخول مجاني';
+  const players  = (room.players||[]).length;
+  const maxP     = (room.pMode==='2v2'||room.pMode==='4p'||room.pMode==='pm2t') ? 4 : 2;
+  const storeLink = '';  // ← رابط Play Store يُضاف لاحقاً
+  const webLink   = 'https://ronda-e11cd.web.app';
+  const smartLink = storeLink || webLink;
+  const hooks = [
+    `😤 ${P.name||'لاعب'} يتحداك ويقول أنت لن تستطيع!`,
+    `🔥 ${P.name||'لاعب'} يلعب الآن ويبحث عن خصم جريء!`,
+    `💪 ${P.name||'لاعب'} يدعوك — هل عندك الجرأة تقبل؟`,
+    `🃏 ${P.name||'لاعب'} جاهز يهزمك — أثبت العكس!`,
+    `👑 ${P.name||'لاعب'} يتحداك في روندة — من الأقوى؟`,
+  ];
+  const hook = hooks[Math.floor(Math.random() * hooks.length)];
+  return `🎴 روندة الملكية — لعبة الورق المغربية الأصيلة!
+
+${hook}
+
+${modeStr}
+🎮 النوع: ${gameStr}
+${entry}
+🏠 اللاعبون: ${players}/${maxP}
+
+━━━━━━━━━━━━━━━
+🔑 رمز الغرفة الخاص:
+✨ ${code} ✨
+━━━━━━━━━━━━━━━
+
+📲 كيف تنضم؟
+1️⃣ حمّل روندة: ${smartLink}
+2️⃣ افتح اللعبة وادخل الرمز
+3️⃣ استعد للمعركة! 🃏🔥
+
+لا تتأخر — الغرفة لن تنتظر! ⏳`;
+}
+
+
+/* ── بناء رسالة المشاركة من المودال (pm1f, pm2f, pm2t, pm3f) ── */
+function _buildModalMsg(code, modalId){
+  const modeMap = {
+    'pm1f': { icon:'⚔️',  label:'1 ضد 1 — المعركة الحقيقية', players:'2' },
+    'pm2f': { icon:'🏆', label:'2 ضد 2 — حرب الفرق',         players:'4' },
+    'pm2t': { icon:'🤝', label:'فريق 2 ضد 2 — شريك + خصوم', players:'4' },
+    'pm3f': { icon:'🎖', label:'4 مستقلين — الأقوى يبقى',    players:'4' },
+  };
+  const info = modeMap[modalId] || { icon:'🎴', label:'متعدد اللاعبين', players:'?' };
+  const name = P.name || 'لاعب';
+  // رابط ذكي: يفتح التطبيق إن كان مثبتاً، وإلا يوجه للمتجر
+  const appLink    = 'com.rondatahiro.myapp://';  // deep link للتطبيق
+  const storeLink  = '';  // ← رابط Play Store يُضاف لاحقاً
+  const webLink    = 'https://ronda-e11cd.web.app';
+  const smartLink  = storeLink || webLink;  // استخدم المتجر إن توفر
+
+  const hooks = [
+    `😤 ${name} يتحداك ويقول أنت لن تستطيع!`,
+    `🔥 ${name} يلعب الآن ويبحث عن خصم جريء!`,
+    `💪 ${name} يدعوك — هل عندك الجرأة تقبل؟`,
+    `🃏 ${name} جاهز يهزمك — أثبت العكس!`,
+    `👑 ${name} يتحداك في روندة — من الأقوى؟`,
+  ];
+  const hook = hooks[Math.floor(Math.random() * hooks.length)];
+
+  return `🎴 روندة الملكية — لعبة الورق المغربية الأصيلة!
+
+${hook}
+
+${info.icon} الوضع: ${info.label}
+👥 عدد اللاعبين: ${info.players}
+
+━━━━━━━━━━━━━━━
+🔑 رمز الغرفة الخاص:
+✨ ${code} ✨
+━━━━━━━━━━━━━━━
+
+📲 كيف تنضم؟
+1️⃣ حمّل روندة: ${smartLink}
+2️⃣ افتح اللعبة وادخل الرمز
+3️⃣ استعد للمعركة! 🃏🔥
+
+لا تتأخر — الغرفة لن تنتظر! ⏳`;
+}
+
+/* ── مشاركة مع نسخ تلقائي + فتح مباشر ── */
+function doShare7(platform, code, modalId){
+  if(!code || code==='——'){ toast('⚠ لا يوجد رمز بعد','warn'); return; }
+
+  const msg      = _buildModalMsg(code, modalId||'pm1f');
+  const storeLink = '';  // ← رابط Play Store يُضاف لاحقاً
+  const webLink   = 'https://ronda-e11cd.web.app';
+  const smartLink = storeLink || webLink;
+  const enc       = encodeURIComponent(msg);
+  const encLink   = encodeURIComponent(smartLink);
+
+  // نسخ تلقائي دائماً أولاً
+  try{ navigator.clipboard.writeText(msg); }catch(e){}
+
+  let url = '';
+  switch(platform){
+    case 'whatsapp':
+      // واتساب يدعم اللصق التلقائي عبر text param
+      url = `https://wa.me/?text=${enc}`;
+      break;
+    case 'telegram':
+      // تيليغرام يدعم اللصق التلقائي عبر text param
+      url = `https://t.me/share/url?url=${encLink}&text=${encodeURIComponent(msg)}`;
+      break;
+    case 'twitter':
+      // X/Twitter: نص قصير + رابط
+      const shortTw = `🎴 روندة — تحدّاني الآن! 🔥
+🔑 رمز الغرفة: ${code}
+👆 ${smartLink}
+#روندة #لعبة_الورق`;
+      url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shortTw)}`;
+      break;
+    case 'facebook':
+      // فيسبوك: نص + رابط
+      const shortFb = `🎴 روندة الملكية — تحدّاني الآن!
+🔑 رمز الغرفة: ${code}
+هل تقبل التحدي؟ 🃏🔥`;
+      url = `https://www.facebook.com/sharer/sharer.php?u=${encLink}&quote=${encodeURIComponent(shortFb)}`;
+      break;
+    case 'instagram':
+      // إنستغرام لا يدعم مشاركة نص مباشرة — ننسخ ونفتح
+      toast('📋 تم نسخ الدعوة — الصق في قصتك أو رسالة مباشرة! 📸','ok',4000);
+      setTimeout(()=>{
+        // محاولة فتح إنستغرام الأصلي أولاً
+        const igApp = window.open('instagram://','_system');
+        if(!igApp) window.open('https://www.instagram.com','_system');
+      }, 600);
+      return;
+    default:
+      toast('📋 تم نسخ الدعوة — الصق وأرسل!','ok');
+      return;
+  }
+
+  toast('📋 تم نسخ الدعوة وفتح المنصة! 🚀','ok',2500);
+  setTimeout(()=>{
+    const w = window.open(url,'_system');
+    if(!w) window.open(url,'_blank');
+  }, 350);
+}
+
+/* ── مشاركة عبر منصة محددة + نسخ تلقائي ── */
+function shareWaitCode(platform){
+  if(!room || !room.code){ toast('⚠ لا توجد غرفة نشطة','warn'); return; }
+  const msg  = _buildInviteMsg();
+  const code = room.code;
+  const link = 'https://ronda-e11cd.web.app';
+  const enc  = encodeURIComponent(msg);
+  const encLink = encodeURIComponent(link);
+
+  /* نسخ الرسالة تلقائياً أولاً */
+  navigator.clipboard?.writeText(msg).catch(()=>{});
+
+  let url = '';
+  switch(platform){
+    case 'whatsapp':
+      url = `https://wa.me/?text=${enc}`;
+      break;
+    case 'telegram':
+      url = `https://t.me/share/url?url=${encLink}&text=${encodeURIComponent('🔑 رمز الغرفة: ' + code + '\n' + msg)}`;
+      break;
+    case 'twitter':
+      /* Twitter لا يدعم نصاً طويلاً — نرسل ملخصاً مع الرمز والرابط */
+      const shortTw = `🎴 روندة — تحدّاني الآن!\n👥 رمز الغرفة: ${code}\n👆 ${link}`;
+      url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shortTw)}`;
+      break;
+    case 'facebook':
+      /* Facebook Sharer لا يدعم نص مخصص عبر الرابط فقط — نفتح المشاركة مع الرابط */
+      const shortFb = `🎴 روندة — تحدّاني الآن!\nرمز الغرفة: ${code}`;
+      url = `https://www.facebook.com/sharer/sharer.php?u=${encLink}&quote=${encodeURIComponent(shortFb)}`;
+      break;
+    case 'instagram':
+      /* Instagram لا يدعم مشاركة نص مباشرة — ننسخ ونفتح التطبيق */
+      toast('📋 تم نسخ الدعوة — الصق في قصتك أو DM في إنستغرام!','ok',3500);
+      setTimeout(()=>window.open('instagram://','_blank'), 800);
+      return;
+    default:
+      navigator.clipboard?.writeText(msg).catch(()=>{});
+      toast(`📋 تم نسخ الدعوة — الصق وأرسل!`,'ok');
+      return;
+  }
+  toast('📋 تم نسخ الدعوة وفتح المنصة!','ok',2200);
+  setTimeout(()=>window.open(url,'_system')||window.open(url,'_blank'), 350);
+}
+
+/* الدالة القديمة — تحويل لـ shareWaitCode */
+function shareCode(){ shareWaitCode('whatsapp'); }
 function startFromWait(){
   if(!isHost||!room) return;
   // [FIX-LOTTERY-REPEAT] Guard مزدوج: _startInProgress + _lotteryFired
@@ -17826,6 +18235,84 @@ function init(){
   liveStats();
   window.addEventListener('resize', drawGeoBg);
 
+  // [FIX-WEB-OAUTH] اكتشاف redirect من Google في بيئة الويب
+  // الـ URL يحتوي على #access_token أو ?code= بعد العودة من Google
+  const _rawHash = window.location.hash || '';
+  const _rawSearch = window.location.search || '';
+  const _hasOAuthTokens = _rawHash.includes('access_token') || _rawSearch.includes('code=');
+  const _isLinkFlow    = _rawSearch.includes('link=google');
+
+  if(_hasOAuthTokens && !window._isCapacitor()){
+    // إنشاء Supabase client فوراً مع detectSessionInUrl قبل أي تنقل
+    if(!_SB.client){
+      _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
+        auth:{ flowType:'implicit', detectSessionInUrl:true, persistSession:true }
+      });
+    }
+    // أظهر شاشة الانتظار ريثما يتم معالجة الـ session
+    go('sHome');
+    const _oBtn = document.getElementById('btnGg');
+    if(_oBtn){ _oBtn.disabled=true; _oBtn.style.opacity='0.7'; _oBtn.innerHTML='<span style="font-size:1.1rem">⏳</span> جاري التوجيه...'; }
+
+    (async ()=>{
+      try{
+        let _session = null;
+        // محاولة 1: implicit flow — tokens في الـ hash
+        const _hp = new URLSearchParams(_rawHash.replace(/^#/,''));
+        const _at = _hp.get('access_token'), _rt = _hp.get('refresh_token');
+        if(_at && _rt){
+          const { data:sd, error:se } = await _SB.client.auth.setSession({ access_token:_at, refresh_token:_rt });
+          if(!se) _session = sd?.session;
+        }
+        // محاولة 2: PKCE code flow
+        if(!_session){
+          const _qp = new URLSearchParams(_rawSearch);
+          const _code = _qp.get('code');
+          if(_code){
+            const _fullUrl = window.location.href;
+            const { data:sd, error:se } = await _SB.client.auth.exchangeCodeForSession(_fullUrl);
+            if(!se) _session = sd?.session;
+          }
+        }
+        // محاولة 3: getSession (detectSessionInUrl فعّال)
+        if(!_session){
+          await new Promise(r=>setTimeout(r,400));
+          const { data:sd } = await _SB.client.auth.getSession();
+          _session = sd?.session;
+        }
+        // نظّف الـ URL من الـ tokens
+        if(window.history && window.history.replaceState){
+          try{ window.history.replaceState({}, document.title, window.location.pathname); }catch(e){}
+        }
+        if(_session){
+          const _provider = _session.user?.app_metadata?.provider;
+          if(_provider === 'google'){
+            if(_isLinkFlow){
+              // ربط الحساب — حدّث بيانات الربط فقط
+              P.linkedGg = true;
+              P.googleId  = _session.user.id;
+              P.email     = P.email || _session.user.email || '';
+              saveP();
+              toast('✅ تم ربط حساب Google بنجاح','ok');
+              goLobby();
+            } else {
+              await _handleGoogleAuthCallback(_session);
+            }
+          }
+        } else {
+          toast('❌ فشل استكمال تسجيل الدخول بـ Google','err');
+          go('sHome');
+          if(_oBtn){ _oBtn.disabled=false; _oBtn.style.opacity='1'; _oBtn.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> تسجيل الدخول بـ Google'; }
+        }
+      }catch(e){
+        console.error('[Web-OAuth-Init]', e);
+        toast('❌ خطأ في تسجيل الدخول','err');
+        go('sHome');
+      }
+    })();
+    return; // لا تكمل init العادية — الـ async سيتولى التنقل
+  }
+
   // 1) مباراة محفوظة → استعدها
   if(restoreGameState()) return;
 
@@ -18019,9 +18506,11 @@ function copyModalCode(elId, btn){
 
 /* مشاركة رمز المودال */
 function shareModalCode(platform, elId){
-  const code = document.getElementById(elId)?.textContent||'';
+  const code = document.getElementById(elId)?.textContent?.trim()||'';
   if(!code || code==='——') return;
-  doShare7(platform, code);
+  // استخراج modalId من elId (مثال: pm1f-code → pm1f)
+  const modalId = elId ? elId.replace('-code','') : '';
+  doShare7(platform, code, modalId);
 }
 
 /* ── Bet grid selector ── */
@@ -19985,7 +20474,13 @@ function joinByCodePlay(id){
 
       if(!window._SB?.client){
         if(!window._SB) return false;
-        try{ window._SB.client = supabase.createClient(window._SB.URL, window._SB.KEY); }catch(e){ return false; }
+        try{ window._SB.client = supabase.createClient(window._SB.URL, window._SB.KEY, {
+        auth: {
+          flowType: 'implicit',
+          detectSessionInUrl: true,
+          persistSession: true
+        }
+      }); }catch(e){ return false; }
       }
 
       // ── مسار 1: تحقق من الـ channel الموجود للمضيف مباشرة ──
@@ -21178,7 +21673,13 @@ function _sbInit(roomCode){
   _SB.ready = false; _SB.roomCode = roomCode;
   try{
     if(!_SB.client){
-      _SB.client = supabase.createClient(_SB.URL, _SB.KEY);
+      _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
+        auth: {
+          flowType: 'implicit',
+          detectSessionInUrl: true,
+          persistSession: true
+        }
+      });
     }
     if(_SB.channel){ try{ _SB.client.removeChannel(_SB.channel); }catch(e){} }
 
@@ -21351,192 +21852,115 @@ window._spUpdateSB = (state) => {
 };
 
 
-async function loginFacebook(){
+async function loginGoogle(){
   try{
-    // أظهر حالة التحميل على الزر
-    const btn = document.querySelector('.ab-fb');
+    const btn = document.getElementById('btnGg');
     if(btn){ btn.disabled=true; btn.style.opacity='0.7'; btn.innerHTML='<span style="font-size:1.1rem">⏳</span> جاري التوجيه...'; }
 
-    if(!_SB.client){
-      _SB.client = supabase.createClient(_SB.URL, _SB.KEY);
-    }
+    if(!_SB.client) _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
+      auth:{ flowType:'implicit', detectSessionInUrl:true, persistSession:true }
+    });
 
-    const redirectTo = window.location.origin + window.location.pathname;
-    const { error } = await _SB.client.auth.signInWithOAuth({
-      provider: 'facebook',
+    const isNative = !!window.Capacitor;
+    const redirectTo = isNative
+      ? 'com.rondatahiro.myapp://callback'
+      : (window.location.origin + window.location.pathname);
+    window._oauthHandled = false; window._sessionHandled = false;
+
+    const { data: oauthData, error } = await _SB.client.auth.signInWithOAuth({
+      provider: 'google',
       options: {
-        redirectTo: redirectTo,
-        scopes: 'public_profile',
+        redirectTo,
+        skipBrowserRedirect: isNative,
+        queryParams: { access_type: 'offline', prompt: 'select_account' }
       }
     });
 
     if(error){
-      console.error('[FB-Login] OAuth error:', error);
+      console.error('[GG-Login] OAuth error:', error);
       toast('❌ خطأ في تسجيل الدخول: ' + error.message, 'err');
-      // أعد الزر
-      if(btn){ btn.disabled=false; btn.style.opacity='1'; btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> فايسبوك'; }
+      if(btn){ btn.disabled=false; btn.style.opacity='1'; btn.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> تسجيل الدخول بـ Google'; }
+      return;
     }
-    // إذا نجح: سيُعاد التوجيه تلقائياً لفيسبوك
+
+    if(isNative && oauthData?.url){
+      try{
+        const { Browser } = await import('@capacitor/browser');
+        await Browser.open({ url: oauthData.url });
+      }catch(e){
+        window.open(oauthData.url, '_blank');
+      }
+    }
   }catch(e){
-    console.error('[FB-Login]', e);
+    console.error('[GG-Login]', e);
     toast('❌ تعذّر الاتصال بالخادم', 'err');
+    const btn = document.getElementById('btnGg');
+    if(btn){ btn.disabled=false; btn.style.opacity='1'; }
   }
 }
 
-async function _handleFBAuthCallback(){
+async function _handleGoogleAuthCallback(session){
   try{
-    if(!_SB.client){
-      _SB.client = supabase.createClient(_SB.URL, _SB.KEY);
-    }
+    if(!session) return false;
+    if(window._ggCallbackRunning) return false; // منع الاستدعاء المزدوج
+    window._ggCallbackRunning = true;
+    window._webOAuthHandled = true;
+    const u = session.user;
+    const meta = u?.user_metadata || {};
 
-    // اقرأ الجلسة من الـ URL hash بعد redirect فيسبوك
-    const { data: { session }, error } = await _SB.client.auth.getSession();
-    if(error || !session) return false;
+    // اسم المستخدم
+    const displayName = meta.full_name || meta.name || meta.email?.split('@')[0] || 'لاعب';
+    const avatar = meta.avatar_url || meta.picture || '';
 
-    const user = session.user;
-    const meta = user.user_metadata || {};
-
-    // استخرج بيانات اللاعب من حساب فيسبوك
-    const fbName  = meta.full_name || meta.name || meta.email?.split('@')[0] || 'لاعب';
-    const fbAvURL = meta.avatar_url || meta.picture || null;
-
-    // عيّن P من بيانات فيسبوك الحقيقية
-    P.id         = 'fb_' + user.id.slice(0,12);
-    P.name       = fbName;
-    P.fbName     = fbName;   // حفظ اسم فيسبوك الحقيقي
-    P.supaId     = user.id;
-    P.fbEmail    = user.email || '';
-    P.loginMethod = 'facebook';
-
-    // إذا كان لديه صورة فيسبوك، احفظها كـ avatar URL
-    if(fbAvURL){
-      P.fbPhoto = fbAvURL;
-      // استخدم أول إيموجي كـ fallback في الشاشات الداخلية
-      P.av = AVS[0];
-    } else {
-      P.av = AVS[~~(Math.random()*AVS.length)];
-    }
-
-    const isFirst = !P.loggedBefore;
+    P.name        = P.name && P.name.trim().length >= 3 ? P.name : displayName;
+    P.loginMethod = 'google';
+    P.googleId    = u.id;
+    P.email       = u.email || '';
+    if(avatar) P.av = avatar;
+    P.id          = P.id || u.id;
     P.loggedBefore = true;
 
-    toast(`🎊 أهلاً بك ${P.name}!`, 'ok');
-    saveP(); updateUI();
+    saveP();
+    updateUI();
+    await _sbSaveProfile();
+    _renderProfile();
+    toast('✅ تم تسجيل الدخول بـ Google', 'ok');
 
-    // احفظ في Firebase بدون انتظار
-    if(window._fb){ try{ const {db,ref,set}=window._fb; set(ref(db,'online/'+P.id),{name:P.name,ts:Date.now(),v:1}).catch(()=>{}); }catch(e){} }
+    // انتقل للـ lobby مثل loginAlias
     setTimeout(()=>{ savePlayerStats(P.id, P.name, P.av, false, null, 0); _lbOnLogin(); }, 2000);
-
-    if(isFirst){ showGiftOverlay(); } else { goLobby(); }
     setTimeout(_applyPendingRef, 2500);
+    goLobby();
     return true;
   }catch(e){
-    console.error('[FB-Callback]', e);
+    console.error('[GG-Callback]', e);
+    window._ggCallbackRunning = false; // أعد التعيين عند الفشل
     return false;
   }
 }
 
-// تشغيل معالج OAuth callback عند تحميل الصفحة
-(async function _initFBAuth(){
-  // انتظر حتى يكون الـ SDK جاهزاً (حد أقصى 5 ثواني)
-  let tries = 0;
-  while(typeof supabase === 'undefined' && tries++ < 50){
-    await new Promise(r => setTimeout(r, 100));
-  }
-  if(typeof supabase === 'undefined'){
-    console.warn('[Auth-Init] Supabase SDK لم يُحمّل');
-    return;
-  }
+(async function _initGoogleAuth(){
   try{
-    if(!_SB.client){
-      _SB.client = supabase.createClient(_SB.URL, _SB.KEY);
+    // [FIX] أنشئ client دائماً مع detectSessionInUrl:true
+    // حتى لو كان _SB.client موجوداً بدونها (من _sbInit مثلاً)
+    if(!_SB.client || !_SB.client._detectSessionInUrlDone){
+      _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
+        auth:{ flowType:'implicit', detectSessionInUrl:true, persistSession:true }
+      });
+      if(_SB.client) _SB.client._detectSessionInUrlDone = true;
     }
-    // الاستماع لتغييرات الجلسة (redirect callback)
-    _SB.client.auth.onAuthStateChange(async (event, session)=>{
+    _SB.client.auth.onAuthStateChange(async (event, session) => {
       if((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session){
-        const user = session.user;
-        const provider = user.app_metadata?.provider;
-        // لا نشترط !P.loggedBefore — نتحقق من Provider مباشرة
-        if(provider === 'facebook' && P.loginMethod !== 'facebook'){
-          await _handleFBAuthCallback();
-        } else if(provider === 'twitter' && P.loginMethod !== 'twitter'){
-          await _handleTwitterAuthCallback(session);
+        const provider = session.user?.app_metadata?.provider;
+        // [FIX] استقبل الـ session حتى لو loginMethod فارغ (بعد إعادة تحميل الصفحة)
+        if(provider === 'google' && P.loginMethod !== 'google' && !window._webOAuthHandled){
+          window._webOAuthHandled = true;
+          await _handleGoogleAuthCallback(session);
         }
       }
     });
-  }catch(e){ console.warn('[Auth-Init]', e); }
+  }catch(e){ console.warn('[GG-Init]', e); }
 })();
 
-// ── TWITTER / X LOGIN VIA SUPABASE OAUTH ─────────────────────────
-async function loginTwitter(){
-  try{
-    const btn = document.getElementById('btnTw');
-    if(btn){ btn.disabled=true; btn.style.opacity='0.7'; btn.innerHTML='<span style="font-size:1.1rem">⏳</span> جاري التوجيه...'; }
-
-    if(!_SB.client){
-      _SB.client = supabase.createClient(_SB.URL, _SB.KEY);
-    }
-
-    const redirectTo = window.location.origin + window.location.pathname;
-    const { error } = await _SB.client.auth.signInWithOAuth({
-      provider: 'twitter',
-      options: { 
-        redirectTo,
-        queryParams: { force_oauth2: 'true' }
-      }
-    });
-
-    if(error){
-      console.error('[TW-Login] OAuth error:', error);
-      toast('❌ خطأ في تسجيل الدخول: ' + error.message, 'err');
-      if(btn){
-        btn.disabled=false; btn.style.opacity='1';
-        btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> تويتر / X';
-      }
-    }
-  }catch(e){
-    console.error('[TW-Login]', e);
-    toast('❌ تعذّر الاتصال بالخادم', 'err');
-    const btn = document.getElementById('btnTw');
-    if(btn){ btn.disabled=false; btn.style.opacity='1'; btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> تويتر / X'; }
-  }
-}
-
-async function _handleTwitterAuthCallback(session){
-  try{
-    const user = session.user;
-    const meta = user.user_metadata || {};
-
-    const twName  = meta.name || meta.full_name || meta.user_name || meta.email?.split('@')[0] || 'لاعب';
-    const twAvURL = meta.avatar_url || meta.picture || null;
-
-    P.id           = 'tw_' + user.id.slice(0,12);
-    P.name         = twName;
-    P.twName       = twName;   // حفظ اسم X الحقيقي
-    P.supaId       = user.id;
-    P.twEmail      = user.email || '';
-    P.loginMethod  = 'twitter';
-
-    if(twAvURL){ P.twPhoto = twAvURL; P.av = AVS[0]; }
-    else { P.av = AVS[~~(Math.random()*AVS.length)]; }
-
-    const isFirst = !P.loggedBefore;
-    P.loggedBefore = true;
-
-    toast(`🎊 أهلاً بك ${P.name}!`, 'ok');
-    saveP(); updateUI();
-
-    if(window._fb){ try{ const {db,ref,set}=window._fb; set(ref(db,'online/'+P.id),{name:P.name,ts:Date.now(),v:1}).catch(()=>{}); }catch(e){} }
-    setTimeout(()=>{ savePlayerStats(P.id, P.name, P.av, false, null, 0); _lbOnLogin(); }, 2000);
-
-    if(isFirst){ showGiftOverlay(); } else { goLobby(); }
-    setTimeout(_applyPendingRef, 2500);
-    return true;
-  }catch(e){
-    console.error('[TW-Callback]', e);
-    return false;
-  }
-}
 
 // ── MULTI-CHANNEL STATUS DISPLAY ─────────────────────────────────
 function _updateNetStatus(){
@@ -25040,28 +25464,8 @@ setInterval(_checkChestsReady, 60000);
           <span class="sps-r"><span id="shopSummaryPrice">—</span></span>
         </div>
 
-        <!-- حاوي أزرار PayPal -->
-        <div id="paypal-btn-container">
-          <div class="shop-pay-none">
-            <div class="spn-ico">👆</div>
-            <div>اختر باقة للمتابعة</div>
-          </div>
-        </div>
-
-        <!-- زر المتابعة المرئي دائماً (يختفي بعد تحميل PayPal) -->
-        <div id="shopScrollHint" style="display:none;text-align:center;margin:.5rem 0">
-          <div style="font-size:.58rem;color:var(--t4);margin-bottom:.3rem">👇 مرر للأسفل لإتمام الدفع</div>
-          <button onclick="document.getElementById('paypal-btn-container').scrollIntoView({behavior:'smooth',block:'center'})"
-            style="background:linear-gradient(135deg,#22c48a,#16896a);border:none;border-radius:12px;
-            padding:.6rem 1.5rem;color:#fff;font-family:var(--fa);font-size:.75rem;font-weight:900;
-            cursor:pointer;width:100%;box-shadow:0 4px 20px rgba(34,196,138,.35)">
-            💳 متابعة للدفع ›
-          </button>
-        </div>
-
         <!-- وسائل الدفع المقبولة -->
         <div class="shop-pay-methods">
-          <div class="pay-method-icon pp">PayPal</div>
           <div class="pay-method-icon visa">VISA</div>
           <div class="pay-method-icon mc">MC</div>
           <div class="pay-method-icon amex">AMEX</div>
@@ -25080,7 +25484,7 @@ setInterval(_checkChestsReady, 60000);
         </div>
 
         <div style="text-align:center;margin-top:.55rem;font-size:.58rem;color:var(--t4)">
-          🔒 دفع آمن ومشفر عبر PayPal — لا نحتفظ ببيانات بطاقتك
+          🔒 دفع آمن ومشفر — لا نحتفظ ببيانات بطاقتك
         </div>
       </div>
 
@@ -25088,9 +25492,6 @@ setInterval(_checkChestsReady, 60000);
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════
-     💳 PayPal SDK — يُحمَّل عند فتح المتجر لأول مرة
-     ══════════════════════════════════════════════ -->
 <script>
 /* ─────────────────────────────────────────────
    SHOP CONFIG — الباقات وإعدادات المتجر
@@ -25128,8 +25529,6 @@ const SHOP_PKGS = {
 };
 
 let _shopSelectedPkg  = null;
-let _shopPaypalLoaded = false;
-let _shopPaypalRendered = false;
 let _shopDealTimerInt = null;
 let _shopCurrentTab   = 'basic';
 
@@ -25142,7 +25541,6 @@ function openShop(){
   _shopStartDealTimer();
   _shopRenderGrid(_shopCurrentTab);
   document.getElementById('mShop').classList.add('on');
-  _shopLoadPayPal();
 }
 
 /* ── تبديل التبويب ── */
@@ -25210,95 +25608,12 @@ function shopSelectPkg(pkgId){
     sumEl.style.display = 'flex';
   }
 
-  // أظهر زر المتابعة
-  const hint = document.getElementById('shopScrollHint');
-  if(hint) hint.style.display='block';
-
   // مرر للدفع بعد لحظة
   const payZone = document.getElementById('shopPayZone');
   if(payZone) setTimeout(()=>payZone.scrollIntoView({behavior:'smooth',block:'nearest'}),150);
-
-  _shopRenderPayPal(pkg);
 }
 
-/* ── تحميل PayPal SDK ── */
-function _shopLoadPayPal(){
-  if(_shopPaypalLoaded) return;
-  _shopPaypalLoaded = true;
-  // عرض loading
-  const container = document.getElementById('paypal-btn-container');
-  // إضافة script
-  const s = document.createElement('script');
-  s.src = 'https://www.paypal.com/sdk/js?client-id=AQhussZQsbgs2bkskx0HEkRa6-a1Kquzn-u9B7Y8wHZBz9n5grOrKTbc-i-WdUmr3EmI4zaUmONy-pUv&currency=USD&enable-funding=card,venmo&disable-funding=credit&intent=capture';
-  s.onload = ()=>{
-    if(_shopSelectedPkg) _shopRenderPayPal(_shopSelectedPkg);
-  };
-  s.onerror = ()=>{
-    _shopPaypalLoaded = false;
-    console.warn('[Shop] فشل تحميل PayPal SDK');
-  };
-  document.body.appendChild(s);
-}
 
-/* ── رسم زر PayPal ── */
-function _shopRenderPayPal(pkg){
-  if(typeof paypal === 'undefined'){
-    // SDK لا يزال يُحمَّل — سيُستدعى بعد onload
-    const c = document.getElementById('paypal-btn-container');
-    if(c) c.innerHTML = `<div class="paypal-loading"><span class="pp-loading-dot"></span><span class="pp-loading-dot"></span><span class="pp-loading-dot"></span>&nbsp;جاري تحميل وسائل الدفع...</div>`;
-    return;
-  }
-  const container = document.getElementById('paypal-btn-container');
-  if(!container) return;
-  container.innerHTML = ''; // مسح الزر القديم
-
-  // أخفِ زر المتابعة بعد تحميل PayPal
-  const hint=document.getElementById('shopScrollHint');
-  if(hint) hint.style.display='none';
-
-  paypal.Buttons({
-    style:{
-      layout : 'vertical',
-      color  : 'gold',
-      shape  : 'pill',
-      label  : 'pay',
-      height : 44,
-    },
-    createOrder: (data, actions)=>{
-      return actions.order.create({
-        purchase_units:[{
-          amount:{ value: pkg.price, currency_code:'USD' },
-          description:`روندة - ${pkg.coins.toLocaleString()} عملة ذهبية (${pkg.label})`
-        }]
-      });
-    },
-    onApprove: (data, actions)=>{
-      // عرض تحميل
-      container.innerHTML = `<div class="paypal-loading"><span class="pp-loading-dot"></span><span class="pp-loading-dot"></span><span class="pp-loading-dot"></span>&nbsp;جاري تأكيد الدفع...</div>`;
-      return actions.order.capture().then(details=>{
-        // [SEC] نتحقق أن orderId من PayPal حقيقي وليس مزوّراً
-        // orderId يبدأ بـ حروف/أرقام ولا يقل عن 8 أحرف
-        const _oid = (details && details.id) ? String(details.id) : '';
-        const _valid = /^[A-Z0-9\-]{8,}$/i.test(_oid);
-        if(!_valid){
-          toast('❌ فشل التحقق من عملية الدفع','',4000);
-          _shopRenderPayPal(pkg);
-          return;
-        }
-        _shopOnSuccess(pkg, _oid);
-      }).catch(err=>{
-        toast('❌ فشل تأكيد الدفع، تواصل مع الدعم','',4000);
-        _shopRenderPayPal(pkg);
-      });
-    },
-    onCancel: ()=>{ toast('↩️ تم إلغاء عملية الدفع','',2200); },
-    onError : (err)=>{
-      console.error('[Shop PayPal]', err);
-      toast('❌ حدث خطأ في الدفع، حاول مرة أخرى','',3500);
-      _shopRenderPayPal(pkg);
-    }
-  }).render('#paypal-btn-container');
-}
 
 /* ── بعد نجاح الدفع ── */
 function _shopOnSuccess(pkg, orderId){
@@ -25316,7 +25631,7 @@ function _shopOnSuccess(pkg, orderId){
 
 /* ── تسجيل المعاملة في Supabase ──
    [SEC-TODO] هذا الكود يكتب مباشرة من client وهو غير آمن.
-   الحل الصحيح: Cloud Function تتحقق من orderId عبر PayPal API
+   الحل الصحيح: Cloud Function تتحقق من orderId عبر واجهة الدفع
    ثم تكتب في gold_transactions باستخدام service_role key.
    حتى ذلك الحين: gold_after يُحسب server-side بعد التحقق. ──────── */
 async function _shopLogTransaction(pkg, orderId){
@@ -25395,14 +25710,11 @@ function shopClose(){
   closeM('mShop');
   setTimeout(()=>{
     _shopSelectedPkg = null;
-    _shopPaypalRendered = false;
     document.getElementById('shopSuccess').classList.remove('on');
     document.getElementById('shopContent').style.display = '';
     document.querySelectorAll('.shop-pkg,.shop-deal').forEach(el=>el.classList.remove('selected'));
     const sumEl = document.getElementById('shopPaySummary');
     if(sumEl) sumEl.style.display = 'none';
-    const c = document.getElementById('paypal-btn-container');
-    if(c) c.innerHTML = `<div class="shop-pay-none"><div class="spn-ico">👆</div><div>اختر باقة للمتابعة</div></div>`;
     // إعادة رسم الشبكة
     _shopRenderGrid(_shopCurrentTab);
   }, 400);
@@ -26928,145 +27240,6 @@ window.addEventListener('load',()=>{
 .pbtn-friends-invite { background:linear-gradient(135deg,rgba(34,196,138,.15),rgba(34,196,138,.08)) !important;
   border:1.5px solid rgba(34,196,138,.35) !important; }
 .pbtn-friends-invite .pbtn-ico { font-size:1.1rem; }
-
-/* ══════════════════════════════════════════════════════
-   👁 المدرجات — Spectate Card CSS
-   ══════════════════════════════════════════════════════ */
-.gc2-spectate { background: linear-gradient(160deg,#1a0d10 0%,#0f070a 100%); }
-.gc2-spectate .gcsc2 { background: radial-gradient(ellipse 80% 60% at 50% 110%, rgba(239,68,68,.22) 0%, transparent 65%); }
-.spectate-card-scene { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; }
-.sp-live-dot { width:10px; height:10px; border-radius:50%; background:#f87171;
-  box-shadow:0 0 0 4px rgba(239,68,68,.25); animation:spPulse 1.4s ease-in-out infinite; }
-@keyframes spPulse { 0%,100%{ box-shadow:0 0 0 4px rgba(239,68,68,.25); } 50%{ box-shadow:0 0 0 8px rgba(239,68,68,.08); } }
-.sp-card-matches { display:flex; flex-direction:column; gap:5px; width:80%; }
-.sp-cm-row { display:flex; align-items:center; justify-content:center; gap:6px;
-  background:rgba(255,255,255,.05); border-radius:8px; padding:4px 8px;
-  border:1px solid rgba(239,68,68,.12); }
-.sp-cm-av { font-size:.75rem; width:22px; height:22px; border-radius:50%;
-  background:rgba(255,255,255,.07); display:flex; align-items:center; justify-content:center; }
-.sp-cm-vs { font-size:.45rem; color:rgba(255,255,255,.35); font-weight:700; letter-spacing:.05em; flex:1; text-align:center;
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.sp-card-label { font-size:.48rem; color:rgba(255,255,255,.35); letter-spacing:.1em; }
-.sp-live-badge-card { background:linear-gradient(135deg,rgba(239,68,68,.3),rgba(185,28,28,.2)) !important;
-  color:#f87171 !important; border:1px solid rgba(239,68,68,.3) !important; }
-
-/* ══════════════════════════════════════════════════════
-   👁 شاشة مشاهدة المباراة — Spectate Watch CSS
-   ══════════════════════════════════════════════════════ */
-.spw-overlay { position:fixed; inset:0; background:#0a0608; z-index:100000;
-  display:flex; flex-direction:column;
-  opacity:0; pointer-events:none; transition:opacity .25s; transform:translateZ(0); }
-.spw-overlay.open { opacity:1; pointer-events:auto; }
-
-.spw-header { display:flex; align-items:center; justify-content:space-between;
-  padding:10px 14px; background:rgba(0,0,0,.5);
-  border-bottom:1px solid rgba(239,68,68,.2); flex-shrink:0; min-height:48px; }
-.spw-hd-back { font-size:.75rem; color:#f87171; font-weight:700; padding:6px 10px;
-  background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.25); border-radius:20px; cursor:pointer; }
-.spw-hd-info { display:flex; flex-direction:column; align-items:center; gap:3px; }
-.spw-hd-type { font-size:.6rem; color:rgba(255,255,255,.6); font-weight:700; }
-.spw-hd-live { display:flex; align-items:center; gap:4px; font-size:.52rem; color:#f87171; }
-.spw-hd-viewers { font-size:.6rem; color:rgba(255,255,255,.35); }
-
-.spw-arena { flex:1; display:flex; flex-direction:column; justify-content:space-between;
-  padding:12px; gap:8px; overflow:hidden; }
-
-.spw-side { display:flex; flex-direction:column; gap:6px; }
-.spw-side-top { align-items:flex-end; }
-.spw-side-bot { align-items:flex-start; }
-
-.spw-player-row { display:flex; align-items:center; gap:8px; padding:7px 10px;
-  background:rgba(255,255,255,.04); border-radius:12px;
-  border:1px solid rgba(255,255,255,.07); transition:border-color .3s, background .3s; }
-.spw-player-row.spw-active { background:rgba(239,68,68,.1); border-color:rgba(239,68,68,.4);
-  box-shadow:0 0 12px rgba(239,68,68,.15); }
-.spw-pl-av { width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,.08);
-  display:flex; align-items:center; justify-content:center; font-size:1.1rem;
-  border:2px solid rgba(255,255,255,.12); flex-shrink:0; }
-.spw-player-row.spw-active .spw-pl-av { border-color:rgba(239,68,68,.5); }
-.spw-pl-info { flex:1; }
-.spw-pl-name { font-size:.7rem; font-weight:800; color:var(--t1); }
-.spw-pl-score { font-size:.55rem; color:var(--t4); }
-.spw-pl-score b { color:#f87171; }
-.spw-turn-arrow { font-size:.5rem; color:#f87171; font-weight:700;
-  background:rgba(239,68,68,.15); padding:3px 7px; border-radius:10px; white-space:nowrap; }
-
-.spw-hand { display:flex; gap:4px; padding:2px 4px; }
-.spw-card { width:28px; height:38px; border-radius:6px; background:#1e1520;
-  border:1.5px solid rgba(255,255,255,.15); display:flex; align-items:center; justify-content:center;
-  font-size:.65rem; font-weight:800; flex-shrink:0;
-  box-shadow:0 2px 6px rgba(0,0,0,.5); }
-.spw-card-back { background:linear-gradient(135deg,#2d1a2e,#1a0d1e);
-  border-color:rgba(239,68,68,.25); color:rgba(239,68,68,.4); font-size:.9rem; }
-
-.spw-table-zone { flex:1; display:flex; align-items:center; justify-content:center; }
-.spw-table-inner { background:radial-gradient(ellipse 90% 80% at 50% 50%,#1a0d10 0%,#0a0608 100%);
-  border:2px solid rgba(239,68,68,.2); border-radius:20px;
-  width:100%; padding:12px; display:flex; flex-direction:column; align-items:center; gap:8px;
-  box-shadow:inset 0 0 30px rgba(0,0,0,.5), 0 0 20px rgba(239,68,68,.05); }
-.spw-table-label { font-size:.48rem; color:rgba(255,255,255,.25); letter-spacing:.1em; }
-.spw-table-cards { display:flex; gap:6px; flex-wrap:wrap; justify-content:center; min-height:42px; align-items:center; }
-.spw-last-play { display:flex; align-items:center; gap:5px; font-size:.5rem; color:rgba(255,255,255,.3); }
-
-.spw-commentary-bar { padding:10px 16px 14px; background:rgba(0,0,0,.5);
-  border-top:1px solid rgba(255,255,255,.06); text-align:center; flex-shrink:0; }
-.spw-com-text { font-size:.68rem; color:rgba(255,255,255,.6); font-weight:600; display:inline-block; }
-@keyframes spwComIn { from{ opacity:0; transform:translateY(4px); } to{ opacity:1; transform:none; } }
-.spw-com-anim { animation:spwComIn .3s ease; }
-
-
-/* ── بانيل المدرجات الكامل ── */
-.sp-overlay { position:fixed !important; top:0 !important; left:0 !important; right:0 !important; bottom:0 !important;
-  width:100vw !important; height:100vh !important; background:rgba(0,0,0,.85) !important;
-  z-index:99999 !important; display:flex !important; align-items:flex-end !important; justify-content:center !important;
-  opacity:0; pointer-events:none; transition:opacity .25s; transform:translateZ(0); }
-.sp-overlay.open { opacity:1; pointer-events:auto; }
-.sp-sheet { width:100%; max-width:480px; max-height:88vh; border-radius:20px 20px 0 0;
-  background:linear-gradient(180deg,#1a0d10 0%,#0a0507 100%);
-  border:1px solid rgba(239,68,68,.25); border-bottom:none;
-  box-shadow:0 0 0 1px rgba(239,68,68,.1), 0 -8px 40px rgba(0,0,0,.9);
-  display:flex; flex-direction:column; overflow:hidden;
-  transform:translateY(40px); transition:transform .3s cubic-bezier(.32,.72,0,1); }
-.sp-overlay.open .sp-sheet { transform:translateY(0); }
-.sp-sheet-hd { padding:14px 16px 10px; border-bottom:1px solid rgba(255,255,255,.06);
-  display:flex; align-items:center; justify-content:space-between; gap:10px; }
-.sp-sheet-title { font-size:.9rem; font-weight:900; color:#f87171; display:flex; align-items:center; gap:7px; }
-.sp-sheet-live { display:flex; align-items:center; gap:5px; font-size:.58rem; color:rgba(255,255,255,.4);
-  background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.2); border-radius:20px; padding:3px 8px; }
-.sp-sheet-live-dot { width:6px; height:6px; border-radius:50%; background:#f87171; animation:spPulse 1.4s ease-in-out infinite; }
-.sp-sheet-cls { width:28px; height:28px; border-radius:50%; border:1px solid rgba(255,255,255,.15);
-  background:rgba(255,255,255,.07); display:flex; align-items:center; justify-content:center;
-  cursor:pointer; font-size:.65rem; color:var(--t3); flex-shrink:0; }
-.sp-list { flex:1; overflow-y:auto; padding:8px 12px 24px; display:flex; flex-direction:column; gap:8px; }
-.sp-match-card { border-radius:14px; background:rgba(255,255,255,.04);
-  border:1px solid rgba(239,68,68,.12); overflow:hidden; cursor:pointer;
-  transition:background .15s, border-color .15s; }
-.sp-match-card:active { background:rgba(239,68,68,.08); border-color:rgba(239,68,68,.3); }
-.sp-match-card.real { border-color:rgba(239,68,68,.28); background:rgba(239,68,68,.05); }
-.sp-match-top { display:flex; align-items:center; gap:10px; padding:10px 12px 6px; }
-.sp-match-tag { font-size:.48rem; padding:2px 7px; border-radius:10px; font-weight:700; letter-spacing:.04em; flex-shrink:0; }
-.sp-match-tag.real-tag { background:rgba(239,68,68,.2); color:#f87171; border:1px solid rgba(239,68,68,.3); }
-.sp-match-tag.bot-tag { background:rgba(255,255,255,.08); color:rgba(255,255,255,.45); border:1px solid rgba(255,255,255,.12); }
-.sp-match-type { font-size:.55rem; color:var(--t4); flex:1; text-align:left; }
-.sp-match-viewers { font-size:.5rem; color:rgba(255,255,255,.3); display:flex; align-items:center; gap:3px; }
-.sp-match-players { display:flex; align-items:center; justify-content:center; gap:8px; padding:4px 12px 10px; }
-.sp-pl { display:flex; flex-direction:column; align-items:center; gap:3px; flex:1; min-width:0; }
-.sp-pl-av { width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.07);
-  display:flex; align-items:center; justify-content:center; font-size:1rem;
-  border:2px solid rgba(239,68,68,.2); }
-.sp-pl-name { font-size:.52rem; color:var(--t2); font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:70px; text-align:center; }
-.sp-vs-block { display:flex; flex-direction:column; align-items:center; gap:2px; flex-shrink:0; }
-.sp-score { font-size:1rem; font-weight:900; color:#f87171; font-family:var(--fd); letter-spacing:.05em; }
-.sp-vs-lbl { font-size:.42rem; color:rgba(255,255,255,.25); }
-.sp-watch-btn { display:block; width:calc(100% - 24px); margin:0 12px 10px;
-  padding:8px; background:linear-gradient(135deg,rgba(239,68,68,.2),rgba(239,68,68,.1));
-  border:1px solid rgba(239,68,68,.3); border-radius:10px; text-align:center;
-  font-size:.6rem; font-weight:700; color:#f87171; cursor:pointer; }
-.sp-empty { text-align:center; padding:40px 16px; color:rgba(255,255,255,.3); font-size:.72rem; line-height:2; }
-.sp-refresh-row { display:flex; align-items:center; justify-content:center; gap:6px;
-  padding:6px 12px; font-size:.52rem; color:rgba(255,255,255,.25); }
-.sp-spin { animation:spin .8s linear infinite; display:inline-block; }
-@keyframes spin { to{ transform:rotate(360deg); } }
 </style>
 
 <!-- Level Up Overlay -->
@@ -27800,313 +27973,6 @@ function closeFriendsList(){
   const overlay = document.getElementById('frndListOverlay');
   if(overlay) overlay.classList.remove('open');
 }
-
-/* ══════════════════════════════════════════════════════════════
-   👁  نظام المدرجات — Spectate System v1.0
-   ══════════════════════════════════════════════════════════════ */
-const _SP_NAMES = ['أحمد','محمد','علي','سارة','فاطمة','ليلى','خالد','يوسف','نور','ريم',
-  'عمر','حسن','مريم','زينب','عبدالله','سلمى','راشد','هند','ماجد','دانة',
-  'فهد','منى','طارق','شيماء','ياسر','رنا','وليد','آمنة','سامي','لمياء'];
-const _SP_AVTS = ['😎','🤩','😏','🥷','👑','🎭','🦁','🐯','🦊','🎩','🧠','🔥','⚡','💎','🌙'];
-let _spTimer = null;
-let _spBotMatches = [];
-let _spPanelOpen = false;
-
-function _spGenBotName(){ return _SP_NAMES[Math.floor(Math.random()*_SP_NAMES.length)]; }
-function _spGenAvt(){ return _SP_AVTS[Math.floor(Math.random()*_SP_AVTS.length)]; }
-function _spRandInt(a,b){ return a + Math.floor(Math.random()*(b-a+1)); }
-
-function _spInitBotMatches(){
-  const count = _spRandInt(10,15);
-  const types = ['1v1 كلاسيك','2v2 فرق','4 مستقلين','1v1 سريع'];
-  _spBotMatches = Array.from({length:count}, (_,i) => ({
-    id:'bot_'+i, isBot:true,
-    type: types[Math.floor(Math.random()*types.length)],
-    p1:{ name:_spGenBotName(), av:_spGenAvt(), score:_spRandInt(0,7) },
-    p2:{ name:_spGenBotName(), av:_spGenAvt(), score:_spRandInt(0,7) },
-    round: _spRandInt(1,5),
-    viewers: _spRandInt(0,12),
-    startedMs: Date.now() - _spRandInt(30000,600000)
-  }));
-}
-
-function _spTickBotMatches(){
-  _spBotMatches.forEach(m => {
-    // تقدّم طبيعي عشوائي
-    if(Math.random()<.15){
-      if(Math.random()<.5) m.p1.score = Math.min(m.p1.score+1, 7);
-      else m.p2.score = Math.min(m.p2.score+1, 7);
-    }
-    if(Math.random()<.08) m.round = Math.min(m.round+1, 5);
-    // إعادة مباراة منتهية
-    if(m.p1.score>=7 || m.p2.score>=7){
-      m.p1.score=0; m.p2.score=0; m.round=1;
-      m.p1.name=_spGenBotName(); m.p2.name=_spGenBotName();
-      m.startedMs=Date.now();
-    }
-    // تذبذب المتفرجين
-    m.viewers = Math.max(0, m.viewers + _spRandInt(-1,2));
-  });
-}
-
-async function _spFetchRealMatches(){
-  try {
-    const db = typeof firebase!=='undefined' && firebase.apps && firebase.apps.length
-      ? firebase.database() : null;
-    if(!db) return [];
-    const snap = await db.ref('rooms').orderByChild('state').equalTo('playing').limitToFirst(8).once('value');
-    const rooms = snap.val();
-    if(!rooms) return [];
-    return Object.entries(rooms).map(([id,r])=>{
-      const players = Array.isArray(r.players) ? r.players : Object.values(r.players||{});
-      const p1 = players[0]||{}, p2 = players[1]||{};
-      return {
-        id, isBot:false,
-        type: r.mode==='pm2t'?'2v2 فرق': r.mode==='pm3w'||r.mode==='pm3f'?'4 مستقلين':'1v1 كلاسيك',
-        p1:{ name:(p1.name||'لاعب').substring(0,10), av:(p1.av||'👤'), score:(r.score?.[p1.id]||0) },
-        p2:{ name:(p2.name||'لاعب').substring(0,10), av:(p2.av||'👤'), score:(r.score?.[p2.id]||0) },
-        round:(r.round||1),
-        viewers:(r.viewers||0),
-        startedMs: r.startedAt||Date.now()
-      };
-    });
-  } catch(e){ return []; }
-}
-
-function _spFormatTime(ms){
-  const s = Math.floor((Date.now()-ms)/1000);
-  if(s<60) return s+'ث';
-  if(s<3600) return Math.floor(s/60)+'د';
-  return Math.floor(s/3600)+'س';
-}
-
-function _spRenderList(real){
-  const all = [...real, ..._spBotMatches];
-  const listEl = document.getElementById('spMatchList');
-  const countEl = document.getElementById('spLiveCount');
-  if(!listEl) return;
-  if(countEl) countEl.textContent = all.length;
-
-  // تحديث بطاقة اللوبي
-  const cardCount = document.getElementById('spActiveCount');
-  if(cardCount) cardCount.textContent = all.length;
-  // تحديث mini-matches على البطاقة
-  const cardMatches = document.getElementById('spCardMatches');
-  if(cardMatches){
-    const preview = all.slice(0,3);
-    cardMatches.innerHTML = preview.map(m=>
-      `<div class="sp-cm-row">
-        <span class="sp-cm-av">${m.p1.av}</span>
-        <span class="sp-cm-vs">${m.p1.name} ${m.p1.score}-${m.p2.score} ${m.p2.name}</span>
-        <span class="sp-cm-av">${m.p2.av}</span>
-      </div>`
-    ).join('');
-  }
-
-  if(!all.length){
-    listEl.innerHTML = '<div class="sp-empty">لا توجد مباريات نشطة الآن<br><span style="font-size:.6rem">جرب مرة أخرى بعد قليل</span></div>';
-    return;
-  }
-
-  listEl.innerHTML = all.map(m => {
-    const tag = m.isBot
-      ? '<span class="sp-match-tag bot-tag">بوت</span>'
-      : '<span class="sp-match-tag real-tag">🔴 حقيقي</span>';
-    return `<div class="sp-match-card ${m.isBot?'':'real'}">
-      <div class="sp-match-top">
-        ${tag}
-        <span class="sp-match-type">${m.type} • جولة ${m.round}</span>
-        <span class="sp-match-viewers">👁 ${m.viewers}</span>
-        <span style="font-size:.45rem;color:rgba(255,255,255,.2);margin-right:4px">${_spFormatTime(m.startedMs)}</span>
-      </div>
-      <div class="sp-match-players">
-        <div class="sp-pl">
-          <div class="sp-pl-av">${m.p1.av}</div>
-          <div class="sp-pl-name">${m.p1.name}</div>
-        </div>
-        <div class="sp-vs-block">
-          <div class="sp-score">${m.p1.score} — ${m.p2.score}</div>
-          <div class="sp-vs-lbl">النقاط</div>
-        </div>
-        <div class="sp-pl">
-          <div class="sp-pl-av">${m.p2.av}</div>
-          <div class="sp-pl-name">${m.p2.name}</div>
-        </div>
-      </div>
-      <div class="sp-watch-btn" onclick="event.stopPropagation();_spWatchMatch('${m.id}',${m.isBot})">
-        👁 مشاهدة المباراة
-      </div>
-    </div>`;
-  }).join('');
-}
-
-async function _spRefresh(showSpinner){
-  const spinner = document.getElementById('spRefreshSpinner');
-  const txt = document.getElementById('spRefreshTxt');
-  if(showSpinner && spinner) spinner.style.display='inline-block';
-  _spTickBotMatches();
-  const real = await _spFetchRealMatches();
-  _spRenderList(real);
-  if(spinner) spinner.style.display='none';
-  if(txt) txt.textContent = 'آخر تحديث: الآن • يتجدد كل 8 ثوانٍ';
-}
-
-function openSpectatePanel(){
-  const overlay = document.getElementById('spOverlay');
-  if(!overlay) return;
-  if(overlay.parentElement !== document.body) document.body.appendChild(overlay);
-  if(!_spBotMatches.length) _spInitBotMatches();
-  overlay.classList.add('open');
-  _spPanelOpen = true;
-  _spRefresh(true);
-  _spTimer = setInterval(()=>{ if(_spPanelOpen) _spRefresh(false); }, 8000);
-}
-
-function closeSpectatePanel(){
-  const overlay = document.getElementById('spOverlay');
-  if(overlay) overlay.classList.remove('open');
-  _spPanelOpen = false;
-  if(_spTimer){ clearInterval(_spTimer); _spTimer=null; }
-}
-
-/* ══════════════════════════════════════════════════════
-   👁 شاشة مشاهدة المباراة — Spectate Watch Screen
-   ══════════════════════════════════════════════════════ */
-let _spwTimer = null;
-let _spwMatch = null;
-const _CARD_SUITS = ['♠','♥','♦','♣'];
-const _CARD_VALS  = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
-const _SUIT_COLORS = { '♠':'#e2e8f0','♥':'#f87171','♦':'#f87171','♣':'#e2e8f0' };
-
-function _spwRandCard(){
-  const s = _CARD_SUITS[Math.floor(Math.random()*4)];
-  const v = _CARD_VALS[Math.floor(Math.random()*13)];
-  return {s,v};
-}
-function _spwCardHTML(c, faceDown){
-  if(faceDown) return `<div class="spw-card spw-card-back">🂠</div>`;
-  return `<div class="spw-card" style="color:${_SUIT_COLORS[c.s]}">${c.v}<span style="font-size:.55em">${c.s}</span></div>`;
-}
-
-function _spWatchMatch(id, isBot){
-  const match = isBot
-    ? _spBotMatches.find(m=>m.id===id)
-    : null;
-  if(!match && isBot) return;
-
-  // إغلاق بانيل القائمة مؤقتاً
-  closeSpectatePanel();
-
-  // إعداد حالة المشاهدة
-  _spwMatch = {
-    ...match,
-    tableCards: [_spwRandCard(), _spwRandCard()],
-    p1Hand: [true,true,true,true],   // مخفية
-    p2Hand: [true,true,true,true],
-    lastPlay: null,
-    turn: Math.random()<.5 ? 'p1' : 'p2',
-    commentary: 'بدأت المباراة…'
-  };
-
-  _spwRender();
-  const ov = document.getElementById('spwOverlay');
-  if(ov){ if(ov.parentElement!==document.body) document.body.appendChild(ov); ov.classList.add('open'); }
-
-  // محاكاة تلقائية للحركات
-  if(_spwTimer) clearInterval(_spwTimer);
-  _spwTimer = setInterval(_spwSimulateMove, 2200);
-}
-
-function _spwSimulateMove(){
-  if(!_spwMatch) return;
-  const m = _spwMatch;
-  const actor = m.turn;
-  const other = actor==='p1'?'p2':'p1';
-  const comments_p1 = [`${m.p1.name} يفكر…`,`${m.p1.name} يضرب!`,`${m.p1.name} يلتقط الورقة`,`حركة ذكية من ${m.p1.name}`,`${m.p1.name} يهاجم`];
-  const comments_p2 = [`${m.p2.name} يرد!`,`${m.p2.name} يفكر…`,`${m.p2.name} يضرب!`,`دفاع من ${m.p2.name}`,`${m.p2.name} يلتقط`];
-  const pool = actor==='p1'?comments_p1:comments_p2;
-  m.commentary = pool[Math.floor(Math.random()*pool.length)];
-
-  // ورقة جديدة على الطاولة
-  if(Math.random()<.5 && m.tableCards.length<6) m.tableCards.push(_spwRandCard());
-  else if(m.tableCards.length>1 && Math.random()<.4) m.tableCards.splice(Math.floor(Math.random()*m.tableCards.length),1);
-
-  // تبديل الدور
-  m.turn = other;
-  m.lastPlay = _spwRandCard();
-
-  // احتمال تغيير النتيجة
-  if(Math.random()<.12){
-    m[actor].score = Math.min(m[actor].score+1, 7);
-    m.commentary = `🎉 ${m[actor==='p1'?'p1':'p2'].name} يسجل نقطة!`;
-    if(m[actor].score>=7){ m.commentary=`🏆 ${m[actor==='p1'?'p1':'p2'].name} فاز بالمباراة!`; clearInterval(_spwTimer); }
-  }
-  _spwRender();
-}
-
-function _spwRender(){
-  const m = _spwMatch;
-  if(!m) return;
-  const el = id=>document.getElementById(id);
-
-  // رأس الشاشة
-  const h = el('spwHeader');
-  if(h) h.innerHTML = `
-    <div class="spw-hd-back" onclick="closeSpwOverlay()">‹ رجوع</div>
-    <div class="spw-hd-info">
-      <div class="spw-hd-type">${m.type} • جولة ${m.round}</div>
-      <div class="spw-hd-live"><div class="sp-sheet-live-dot"></div> مباشر</div>
-    </div>
-    <div class="spw-hd-viewers">👁 ${m.viewers}</div>`;
-
-  // اللاعب العلوي (p2)
-  const p2el = el('spwP2');
-  if(p2el) p2el.innerHTML = `
-    <div class="spw-player-row ${m.turn==='p2'?'spw-active':''}">
-      <div class="spw-pl-av">${m.p2.av}</div>
-      <div class="spw-pl-info"><div class="spw-pl-name">${m.p2.name}</div><div class="spw-pl-score">نقاط: <b>${m.p2.score}</b></div></div>
-      ${m.turn==='p2'?'<div class="spw-turn-arrow">◀ دوره</div>':''}
-    </div>
-    <div class="spw-hand">${[0,1,2,3].map(()=>_spwCardHTML(null,true)).join('')}</div>`;
-
-  // الطاولة
-  const tbl = el('spwTable');
-  if(tbl) tbl.innerHTML = `
-    <div class="spw-table-inner">
-      <div class="spw-table-label">الطاولة</div>
-      <div class="spw-table-cards">${m.tableCards.map(c=>_spwCardHTML(c,false)).join('')}</div>
-      ${m.lastPlay?`<div class="spw-last-play">آخر ورقة: ${_spwCardHTML(m.lastPlay,false)}</div>`:''}
-    </div>`;
-
-  // اللاعب السفلي (p1)
-  const p1el = el('spwP1');
-  if(p1el) p1el.innerHTML = `
-    <div class="spw-hand">${[0,1,2,3].map(()=>_spwCardHTML(null,true)).join('')}</div>
-    <div class="spw-player-row ${m.turn==='p1'?'spw-active':''}">
-      <div class="spw-pl-av">${m.p1.av}</div>
-      <div class="spw-pl-info"><div class="spw-pl-name">${m.p1.name}</div><div class="spw-pl-score">نقاط: <b>${m.p1.score}</b></div></div>
-      ${m.turn==='p1'?'<div class="spw-turn-arrow">◀ دوره</div>':''}
-    </div>`;
-
-  // التعليق
-  const com = el('spwCommentary');
-  if(com){ com.textContent = m.commentary; com.classList.remove('spw-com-anim'); void com.offsetWidth; com.classList.add('spw-com-anim'); }
-}
-
-function closeSpwOverlay(){
-  clearInterval(_spwTimer); _spwTimer=null; _spwMatch=null;
-  const ov = document.getElementById('spwOverlay');
-  if(ov) ov.classList.remove('open');
-}
-
-// تحديث بطاقة اللوبي تلقائياً كل 15 ثانية حتى بدون فتح البانيل
-(function _spCardAutoRefresh(){
-  if(!_spBotMatches.length) _spInitBotMatches();
-  const cardCount = document.getElementById('spActiveCount');
-  if(cardCount) cardCount.textContent = _spBotMatches.length;
-  setTimeout(_spCardAutoRefresh, 15000);
-})();
-
 
 function _renderFriendsList(containerId, mode, onInvite){
   const container = document.getElementById(containerId);
@@ -29204,46 +29070,34 @@ _boot();
     <div class="frnd-list" id="frndInviteBody">
       <div class="frnd-empty">لا يوجد أصدقاء لدعوتهم</div>
     </div>
-  </div>
-</div>
-
-<!-- ════════════════════════════════════════════════════
-     👁 المدرجات — Spectate Panel
-     ════════════════════════════════════════════════════ -->
-<div class="sp-overlay" id="spOverlay" onclick="if(event.target===this)closeSpectatePanel()">
-  <div class="sp-sheet">
-    <div class="sp-sheet-hd">
-      <div class="sp-sheet-title">
-        👁 المدرجات
+    <!-- ── مشاركة عبر المنصات الاجتماعية ── -->
+    <div style="padding:.65rem .85rem .5rem;border-top:1px solid rgba(255,255,255,.07)">
+      <div style="font-size:.52rem;color:var(--t5);text-align:center;margin-bottom:.5rem;letter-spacing:.04em">
+        📤 أو شارك الرمز مباشرة عبر المنصة
       </div>
-      <div class="sp-sheet-live">
-        <div class="sp-sheet-live-dot"></div>
-        <span id="spLiveCount">—</span> مباراة
+      <div class="wsoc-row" style="margin:0">
+        <div class="wsoc-btn wsoc-wa" onclick="shareWaitCode('whatsapp')" title="واتساب">
+          <span class="wsoc-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></span>
+          واتساب
+        </div>
+        <div class="wsoc-btn wsoc-tg" onclick="shareWaitCode('telegram')" title="تيليغرام">
+          <span class="wsoc-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></span>
+          تيليغرام
+        </div>
+        <div class="wsoc-btn wsoc-tw" onclick="shareWaitCode('twitter')" title="X">
+          <span class="wsoc-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></span>
+          X
+        </div>
+        <div class="wsoc-btn wsoc-fb" onclick="shareWaitCode('facebook')" title="فيسبوك">
+          <span class="wsoc-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></span>
+          فيسبوك
+        </div>
+        <div class="wsoc-btn wsoc-ig" onclick="shareWaitCode('instagram')" title="إنستغرام">
+          <span class="wsoc-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></span>
+          إنستغرام
+        </div>
       </div>
-      <div class="sp-sheet-cls" onclick="closeSpectatePanel()">✕</div>
     </div>
-    <div class="sp-list" id="spMatchList">
-      <div class="sp-empty">⏳ جاري تحميل المباريات...</div>
-    </div>
-    <div class="sp-refresh-row" id="spRefreshRow">
-      <span id="spRefreshSpinner" style="display:none" class="sp-spin">↻</span>
-      <span id="spRefreshTxt">يتجدد تلقائياً كل 8 ثوانٍ</span>
-    </div>
-  </div>
-</div>
-
-<!-- ════════════════════════════════════════════════════
-     👁 شاشة مشاهدة المباراة — Spectate Watch
-     ════════════════════════════════════════════════════ -->
-<div class="spw-overlay" id="spwOverlay">
-  <div id="spwHeader" class="spw-header"></div>
-  <div class="spw-arena">
-    <div id="spwP2" class="spw-side spw-side-top"></div>
-    <div id="spwTable" class="spw-table-zone"></div>
-    <div id="spwP1" class="spw-side spw-side-bot"></div>
-  </div>
-  <div class="spw-commentary-bar">
-    <span id="spwCommentary" class="spw-com-text">…</span>
   </div>
 </div>
 
