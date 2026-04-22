@@ -113,6 +113,8 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
   display:flex;align-items:center;gap:.5rem}
 .auth-title::before,.auth-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(212,164,60,.22),transparent)}
 .auth-row{display:flex;gap:.6rem;width:100%;margin-bottom:.9rem}
+.ab-gg{background:#fff;color:#3c4043;border:1.5px solid #dadce0;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.ab-gg:hover{background:#f8f9fa;box-shadow:0 4px 16px rgba(0,0,0,.2)}
 .auth-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:.5rem;
   padding:.72rem .75rem;border-radius:14px;border:none;
   font-family:var(--fa);font-size:.85rem;font-weight:800;cursor:pointer;
@@ -121,9 +123,9 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
 .auth-btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:background .2s}
 .auth-btn:hover::after{background:rgba(255,255,255,.1)}
 .auth-btn:active{transform:scale(.95)}
-.ab-fb{background:linear-gradient(135deg,#1877F2 0%,#0D5FD0 100%);color:#fff;
+.ab-fb-unused{
   box-shadow:0 4px 18px rgba(24,119,242,.35)}
-.ab-tw{background:linear-gradient(135deg,#212327 0%,#000 100%);color:#fff;
+.ab-tw-unused{
   border:1px solid rgba(255,255,255,.12);box-shadow:0 4px 18px rgba(0,0,0,.4)}
 .auth-divider{display:flex;align-items:center;gap:.6rem;margin-bottom:.9rem}
 .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.07)}
@@ -192,6 +194,8 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
   cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
 .soc-link-btn::before{content:'';position:absolute;inset:0;opacity:0;transition:.2s}
 .soc-link-btn:hover::before{opacity:1}
+.soc-link-gg{color:#4285F4}
+.soc-link-gg::before{background:rgba(66,133,244,.08)}
 .soc-link-fb{
   background:rgba(24,119,242,.12);border-color:rgba(24,119,242,.35);color:#6aabff}
 .soc-link-fb::before{background:rgba(24,119,242,.08)}
@@ -5463,7 +5467,7 @@ document.addEventListener('deviceready', async () => {
     App.addListener('appUrlOpen', async (data) => {
         try {
           console.log('[AppUrlOpen] URL:', data.url);
-          alert('[DEBUG] appUrlOpen: ' + data.url.substring(0, 200));
+          
           const url = data.url;
           if (!url.includes('callback') && !url.includes('access_token') && !url.includes('code=')) return;
 
@@ -5496,22 +5500,19 @@ document.addEventListener('deviceready', async () => {
             if (se) { console.error('[AppUrlOpen] setSession error:', se); return; }
             const provider = sd?.session?.user?.app_metadata?.provider;
             console.log('[AppUrlOpen] Session set, provider:', provider);
-            if (provider === 'facebook') await _handleFBAuthCallback();
-            else if (provider === 'twitter') await _handleTwitterAuthCallback(sd.session);
+            if (provider === 'google') await _handleGoogleAuthCallback(sd.session);
           } else if (code) {
             // PKCE auth code flow
             const { data: sd, error: se } = await _SB.client.auth.exchangeCodeForSession(url);
             if (se) { console.error('[AppUrlOpen] exchangeCode error:', se); return; }
             const provider = sd?.session?.user?.app_metadata?.provider;
-            if (provider === 'facebook') await _handleFBAuthCallback();
-            else if (provider === 'twitter') await _handleTwitterAuthCallback(sd.session);
+            if (provider === 'google') await _handleGoogleAuthCallback(sd.session);
           } else {
             // fallback — getSession
             const { data: sd } = await _SB.client.auth.getSession();
             if (sd?.session) {
               const provider = sd.session.user?.app_metadata?.provider;
-              if (provider === 'facebook') await _handleFBAuthCallback();
-              else if (provider === 'twitter') await _handleTwitterAuthCallback(sd.session);
+              if (provider === 'google') await _handleGoogleAuthCallback(sd.session);
             }
           }
         } catch(e) {
@@ -5568,8 +5569,7 @@ document.addEventListener('deviceready', async () => {
                 const provider = sd.session.user?.app_metadata?.provider;
                 console.log('[Foreground-OAuth-Fallback] provider:', provider);
                 try { const { Browser } = await import('@capacitor/browser'); await Browser.close(); } catch(_){}
-                if (provider === 'facebook') await _handleFBAuthCallback();
-                else if (provider === 'twitter') await _handleTwitterAuthCallback(sd.session);
+                if (provider === 'google') await _handleGoogleAuthCallback(sd.session);
               }
             } catch(e) { console.warn('[Foreground-OAuth-Fallback] error:', e); }
           }, 800);
@@ -5621,14 +5621,10 @@ document.addEventListener('deviceready', async () => {
     <div class="logo-lat">Royal Moroccan Card Game</div>
     <div class="auth-container">
       <div class="auth-title">اختر طريقة الدخول</div>
-      <div class="auth-row">
-        <button class="auth-btn ab-fb" onclick="loginFacebook()">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-          فايسبوك
-        </button>
-        <button class="auth-btn ab-tw" id="btnTw" onclick="loginTwitter()">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          تويتر / X
+      <div class="auth-row" style="justify-content:center">
+        <button class="auth-btn ab-gg" id="btnGg" onclick="loginGoogle()" style="max-width:260px;font-weight:600;font-size:.85rem;gap:.6rem;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.15)">
+          <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          تسجيل الدخول بـ Google
         </button>
       </div>
       <div class="auth-divider"><span>أو</span></div>
@@ -6934,24 +6930,7 @@ document.addEventListener('deviceready', async () => {
           🔗 اربط حسابك لحفظ بياناتك وصورتك على كل أجهزتك
         </div>
         <div style="display:flex;gap:.5rem;justify-content:center">
-          <button id="linkFbBtn" onclick="linkSocialAccount('facebook')" style="
-            display:flex;align-items:center;gap:.4rem;
-            padding:.45rem 1rem;border-radius:22px;border:1px solid rgba(24,119,242,.45);
-            background:rgba(24,119,242,.14);color:#90c5ff;
-            font-family:'Tajawal',sans-serif;font-size:.65rem;font-weight:900;
-            cursor:pointer;transition:all .22s">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-            ربط فيسبوك
-          </button>
-          <button id="linkTwBtn" onclick="linkSocialAccount('twitter')" style="
-            display:flex;align-items:center;gap:.4rem;
-            padding:.45rem 1rem;border-radius:22px;border:1px solid rgba(255,255,255,.2);
-            background:rgba(255,255,255,.07);color:#e0e0e0;
-            font-family:'Tajawal',sans-serif;font-size:.65rem;font-weight:900;
-            cursor:pointer;transition:all .22s">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            ربط X
-          </button>
+          <button id="linkGgBtn" onclick="linkSocialAccount('google')" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;padding:.45rem .9rem;border-radius:10px;font-size:.6rem;cursor:pointer;display:flex;align-items:center;gap:.4rem"><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> ربط Google</button>
         </div>
       </div>
     </div>
@@ -9065,8 +9044,7 @@ function updateUI(){
   const pavNmEl=$('pavNm');
   if(pavNmEl){
     let badge='';
-    if(P.loginMethod==='facebook') badge='<span style="background:#1877F2;color:#fff;font-size:.45rem;padding:1px 6px;border-radius:10px;vertical-align:middle;font-weight:900;margin-right:4px">FB ✓</span>';
-    else if(P.loginMethod==='twitter') badge='<span style="background:#000;color:#fff;font-size:.45rem;padding:1px 6px;border-radius:10px;vertical-align:middle;font-weight:900;margin-right:4px">𝕏 ✓</span>';
+    if(P.loginMethod==='google') badge='<span style="background:#4285F4;color:#fff;font-size:.45rem;padding:1px 6px;border-radius:10px;vertical-align:middle;font-weight:900;margin-right:4px">G ✓</span>';
     pavNmEl.innerHTML=badge+esc(P.name);
   }
   f('pavId',`ID: #${(P.id||'').substr(0,6).toUpperCase()}`);
@@ -9230,14 +9208,13 @@ function _showGift10000Banner(){
 
 function _updateSocialLinkButtons(){
   const sec=$('socialLinkSection');
-  const hasFb = P.loginMethod==='facebook' || P.linkedFb;
-  const hasTw = P.loginMethod==='twitter'  || P.linkedTw;
+  const hasGg = P.loginMethod==='google' || P.linkedGg;
 
   // ━━ عرض الحسابات المربوطة تحت الاسم ━━
   const linkedRow = $('linkedAccountsRow');
   if(linkedRow){
     let chips='';
-    if(hasFb){
+    if(hasGg){
       const fbPhoto = P.fbPhoto
         ? `<img src="${P.fbPhoto}" style="width:18px;height:18px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(24,119,242,.5);flex-shrink:0" onerror="this.style.display='none'">`
         : '<span style="font-size:.8rem">📘</span>';
@@ -9248,7 +9225,7 @@ function _updateSocialLinkButtons(){
         border-radius:14px;padding:.22rem .6rem;font-size:.6rem;font-weight:800;color:#90caff"
       >${fbPhoto}<span style="max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${fbNm}</span><span style="color:rgba(34,196,138,.8);font-size:.55rem">✓</span></div>`;
     }
-    if(hasTw){
+    if(false){
       const twPhoto = P.twPhoto
         ? `<img src="${P.twPhoto}" style="width:18px;height:18px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(255,255,255,.2);flex-shrink:0" onerror="this.style.display='none'">`
         : '<span style="font-size:.8rem">𝕏</span>';
@@ -9271,7 +9248,7 @@ function _updateSocialLinkButtons(){
   if(!sec) return;
   const fbBtn=$('linkFbBtn'), twBtn=$('linkTwBtn');
   if(fbBtn){
-    if(hasFb){
+    if(hasGg){
       fbBtn.innerHTML='<span style="color:#4ade80;font-size:.85rem">✓</span><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> فيسبوك مربوط';
       fbBtn.style.background='rgba(34,196,138,.12)';
       fbBtn.style.borderColor='rgba(34,196,138,.4)';
@@ -9280,7 +9257,7 @@ function _updateSocialLinkButtons(){
     }
   }
   if(twBtn){
-    if(hasTw){
+    if(false){
       twBtn.innerHTML='<span style="color:#4ade80;font-size:.85rem">✓</span><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> X مربوط';
       twBtn.style.background='rgba(34,196,138,.12)';
       twBtn.style.borderColor='rgba(34,196,138,.4)';
@@ -9288,11 +9265,12 @@ function _updateSocialLinkButtons(){
       twBtn.onclick=null; twBtn.style.cursor='default';
     }
   }
-  if(hasFb && hasTw) sec.style.display='none';
+  if(hasGg) sec.style.display='none';
   else sec.style.display='block';
 }
 
 async function linkSocialAccount(provider){
+  if(provider !== 'google') return; // فقط Google مدعوم
   try{
     if(!_SB.client) _SB.client=supabase.createClient(_SB.URL,_SB.KEY, {
         auth: {
@@ -9364,7 +9342,7 @@ function saveNewName(){
 /* ══ FEATURE 2: نظام الإحالة 2000 عملة ══ */
 function _processReferral(refCode){
   if(!refCode || P.refBy || P.id===refCode) return;
-  const validLogin = P.loginMethod==='facebook'||P.loginMethod==='twitter'||P.name.trim().length>=3;
+  const validLogin = P.loginMethod==='google'||P.name.trim().length>=3;
   if(!validLogin) return;
   P.refBy=refCode;
   P.gold=(P.gold||0)+2000;
@@ -21744,239 +21722,95 @@ window._spUpdateSB = (state) => {
 };
 
 
-async function loginFacebook(){
+async function loginGoogle(){
   try{
-    // أظهر حالة التحميل على الزر
-    const btn = document.querySelector('.ab-fb');
+    const btn = document.getElementById('btnGg');
     if(btn){ btn.disabled=true; btn.style.opacity='0.7'; btn.innerHTML='<span style="font-size:1.1rem">⏳</span> جاري التوجيه...'; }
 
-    if(!_SB.client){
-      _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
-        auth: {
-          flowType: 'implicit',
-          detectSessionInUrl: true,
-          persistSession: true
-        }
-      });
-    }
+    if(!_SB.client) _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
+      auth:{ flowType:'implicit', detectSessionInUrl:true, persistSession:true }
+    });
 
-    const redirectTo = window.Capacitor ? 'com.rondatahiro.myapp://callback' : (window.location.origin + window.location.pathname);
     const isNative = !!window.Capacitor;
-    window._oauthHandled = false; window._sessionHandled = false; // reset OAuth flags
+    const redirectTo = isNative
+      ? 'com.rondatahiro.myapp://callback'
+      : (window.location.origin + window.location.pathname);
+    window._oauthHandled = false; window._sessionHandled = false;
+
     const { data: oauthData, error } = await _SB.client.auth.signInWithOAuth({
-      provider: 'facebook',
+      provider: 'google',
       options: {
-        redirectTo: redirectTo,
-        scopes: 'public_profile',
+        redirectTo,
         skipBrowserRedirect: isNative,
+        queryParams: { access_type: 'offline', prompt: 'select_account' }
       }
     });
 
     if(error){
-      console.error('[FB-Login] OAuth error:', error);
+      console.error('[GG-Login] OAuth error:', error);
       toast('❌ خطأ في تسجيل الدخول: ' + error.message, 'err');
-      if(btn){ btn.disabled=false; btn.style.opacity='1'; btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> فايسبوك'; }
+      if(btn){ btn.disabled=false; btn.style.opacity='1'; btn.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> تسجيل الدخول بـ Google'; }
+      return;
     }
-    // في التطبيق المحمول: افتح OAuth في متصفح خارجي عبر @capacitor/browser
+
     if(isNative && oauthData?.url){
-      try {
+      try{
         const { Browser } = await import('@capacitor/browser');
         await Browser.open({ url: oauthData.url });
-      } catch(e) {
-        console.warn('[FB-Login] Browser plugin unavailable, fallback:', e);
+      }catch(e){
         window.open(oauthData.url, '_blank');
       }
     }
   }catch(e){
-    console.error('[FB-Login]', e);
+    console.error('[GG-Login]', e);
     toast('❌ تعذّر الاتصال بالخادم', 'err');
+    const btn = document.getElementById('btnGg');
+    if(btn){ btn.disabled=false; btn.style.opacity='1'; }
   }
 }
 
-async function _handleFBAuthCallback(){
+async function _handleGoogleAuthCallback(session){
   try{
-    if(!_SB.client){
-      _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
-        auth: {
-          flowType: 'implicit',
-          detectSessionInUrl: true,
-          persistSession: true
-        }
-      });
-    }
+    if(!session) return false;
+    const u = session.user;
+    const meta = u?.user_metadata || {};
 
-    // اقرأ الجلسة من الـ URL hash بعد redirect فيسبوك
-    const { data: { session }, error } = await _SB.client.auth.getSession();
-    if(error || !session) return false;
+    // اسم المستخدم
+    const displayName = meta.full_name || meta.name || meta.email?.split('@')[0] || 'لاعب';
+    const avatar = meta.avatar_url || meta.picture || '';
 
-    const user = session.user;
-    const meta = user.user_metadata || {};
+    P.name        = P.name && P.name.trim().length >= 3 ? P.name : displayName;
+    P.loginMethod = 'google';
+    P.googleId    = u.id;
+    P.email       = u.email || '';
+    if(avatar) P.av = avatar;
 
-    // استخرج بيانات اللاعب من حساب فيسبوك
-    const fbName  = meta.full_name || meta.name || meta.email?.split('@')[0] || 'لاعب';
-    const fbAvURL = meta.avatar_url || meta.picture || null;
-
-    // عيّن P من بيانات فيسبوك الحقيقية
-    P.id         = 'fb_' + user.id.slice(0,12);
-    P.name       = fbName;
-    P.fbName     = fbName;   // حفظ اسم فيسبوك الحقيقي
-    P.supaId     = user.id;
-    P.fbEmail    = user.email || '';
-    P.loginMethod = 'facebook';
-
-    // إذا كان لديه صورة فيسبوك، احفظها كـ avatar URL
-    if(fbAvURL){
-      P.fbPhoto = fbAvURL;
-      // استخدم أول إيموجي كـ fallback في الشاشات الداخلية
-      P.av = AVS[0];
-    } else {
-      P.av = AVS[~~(Math.random()*AVS.length)];
-    }
-
-    const isFirst = !P.loggedBefore;
-    P.loggedBefore = true;
-
-    toast(`🎊 أهلاً بك ${P.name}!`, 'ok');
-    saveP(); updateUI();
-
-    // احفظ في Firebase بدون انتظار
-    if(window._fb){ try{ const {db,ref,set}=window._fb; set(ref(db,'online/'+P.id),{name:P.name,ts:Date.now(),v:1}).catch(()=>{}); }catch(e){} }
-    setTimeout(()=>{ savePlayerStats(P.id, P.name, P.av, false, null, 0); _lbOnLogin(); }, 2000);
-
-    if(isFirst){ showGiftOverlay(); } else { goLobby(); }
-    setTimeout(_applyPendingRef, 2500);
+    await _sbSaveProfile();
+    _renderProfile();
+    toast('✅ تم تسجيل الدخول بـ Google', 'ok');
     return true;
   }catch(e){
-    console.error('[FB-Callback]', e);
+    console.error('[GG-Callback]', e);
     return false;
   }
 }
 
-// تشغيل معالج OAuth callback عند تحميل الصفحة
-(async function _initFBAuth(){
-  // انتظر حتى يكون الـ SDK جاهزاً (حد أقصى 5 ثواني)
-  let tries = 0;
-  while(typeof supabase === 'undefined' && tries++ < 50){
-    await new Promise(r => setTimeout(r, 100));
-  }
-  if(typeof supabase === 'undefined'){
-    console.warn('[Auth-Init] Supabase SDK لم يُحمّل');
-    return;
-  }
+(async function _initGoogleAuth(){
   try{
-    if(!_SB.client){
-      _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
-        auth: {
-          flowType: 'implicit',
-          detectSessionInUrl: true,
-          persistSession: true
-        }
-      });
-    }
-    // الاستماع لتغييرات الجلسة (redirect callback)
-    _SB.client.auth.onAuthStateChange(async (event, session)=>{
+    if(!_SB.client) _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
+      auth:{ flowType:'implicit', detectSessionInUrl:true, persistSession:true }
+    });
+    _SB.client.auth.onAuthStateChange(async (event, session) => {
       if((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session){
-        const user = session.user;
-        const provider = user.app_metadata?.provider;
-        // لا نشترط !P.loggedBefore — نتحقق من Provider مباشرة
-        if(provider === 'facebook' && P.loginMethod !== 'facebook'){
-          await _handleFBAuthCallback();
-        } else if(provider === 'twitter' && P.loginMethod !== 'twitter'){
-          await _handleTwitterAuthCallback(session);
+        const provider = session.user?.app_metadata?.provider;
+        if(provider === 'google' && P.loginMethod !== 'google'){
+          await _handleGoogleAuthCallback(session);
         }
       }
     });
-  }catch(e){ console.warn('[Auth-Init]', e); }
+  }catch(e){ console.warn('[GG-Init]', e); }
 })();
 
-// ── TWITTER / X LOGIN VIA SUPABASE OAUTH ─────────────────────────
-async function loginTwitter(){
-  try{
-    const btn = document.getElementById('btnTw');
-    if(btn){ btn.disabled=true; btn.style.opacity='0.7'; btn.innerHTML='<span style="font-size:1.1rem">⏳</span> جاري التوجيه...'; }
-
-    if(!_SB.client){
-      _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
-        auth: {
-          flowType: 'implicit',
-          detectSessionInUrl: true,
-          persistSession: true
-        }
-      });
-    }
-
-    const redirectTo = window.Capacitor ? 'com.rondatahiro.myapp://callback' : (window.location.origin + window.location.pathname);
-    const isNative = !!window.Capacitor;
-    window._oauthHandled = false; window._sessionHandled = false; // reset OAuth flags
-    const { data: oauthData, error } = await _SB.client.auth.signInWithOAuth({
-      provider: 'twitter',
-      options: { 
-        redirectTo,
-        skipBrowserRedirect: isNative
-      }
-    });
-
-    if(error){
-      console.error('[TW-Login] OAuth error:', error);
-      toast('❌ خطأ في تسجيل الدخول: ' + error.message, 'err');
-      if(btn){
-        btn.disabled=false; btn.style.opacity='1';
-        btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> تويتر / X';
-      }
-    }
-    // في التطبيق المحمول: افتح OAuth في متصفح خارجي عبر @capacitor/browser
-    if(isNative && oauthData?.url){
-      try {
-        const { Browser } = await import('@capacitor/browser');
-        await Browser.open({ url: oauthData.url });
-      } catch(e) {
-        console.warn('[TW-Login] Browser plugin unavailable, fallback:', e);
-        window.open(oauthData.url, '_blank');
-      }
-    }
-  }catch(e){
-    console.error('[TW-Login]', e);
-    toast('❌ تعذّر الاتصال بالخادم', 'err');
-    const btn = document.getElementById('btnTw');
-    if(btn){ btn.disabled=false; btn.style.opacity='1'; btn.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> تويتر / X'; }
-  }
-}
-
-async function _handleTwitterAuthCallback(session){
-  try{
-    const user = session.user;
-    const meta = user.user_metadata || {};
-
-    const twName  = meta.name || meta.full_name || meta.user_name || meta.email?.split('@')[0] || 'لاعب';
-    const twAvURL = meta.avatar_url || meta.picture || null;
-
-    P.id           = 'tw_' + user.id.slice(0,12);
-    P.name         = twName;
-    P.twName       = twName;   // حفظ اسم X الحقيقي
-    P.supaId       = user.id;
-    P.twEmail      = user.email || '';
-    P.loginMethod  = 'twitter';
-
-    if(twAvURL){ P.twPhoto = twAvURL; P.av = AVS[0]; }
-    else { P.av = AVS[~~(Math.random()*AVS.length)]; }
-
-    const isFirst = !P.loggedBefore;
-    P.loggedBefore = true;
-
-    toast(`🎊 أهلاً بك ${P.name}!`, 'ok');
-    saveP(); updateUI();
-
-    if(window._fb){ try{ const {db,ref,set}=window._fb; set(ref(db,'online/'+P.id),{name:P.name,ts:Date.now(),v:1}).catch(()=>{}); }catch(e){} }
-    setTimeout(()=>{ savePlayerStats(P.id, P.name, P.av, false, null, 0); _lbOnLogin(); }, 2000);
-
-    if(isFirst){ showGiftOverlay(); } else { goLobby(); }
-    setTimeout(_applyPendingRef, 2500);
-    return true;
-  }catch(e){
-    console.error('[TW-Callback]', e);
-    return false;
-  }
-}
 
 // ── MULTI-CHANNEL STATUS DISPLAY ─────────────────────────────────
 function _updateNetStatus(){
