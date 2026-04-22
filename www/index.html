@@ -5467,53 +5467,54 @@ document.addEventListener('deviceready', async () => {
     App.addListener('appUrlOpen', async (data) => {
         try {
           console.log('[AppUrlOpen] URL:', data.url);
-          
           const url = data.url;
-          if (!url.includes('callback') && !url.includes('access_token') && !url.includes('code=')) return;
+
+          // أغلق Custom Tab فوراً
+          try { const { Browser } = await import('@capacitor/browser'); await Browser.close(); } catch(_){}
+          window._oauthHandled = true;
+          window._sessionHandled = false;
 
           if (!_SB.client) _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
-        auth: {
-          flowType: 'implicit',
-          detectSessionInUrl: true,
-          persistSession: true
-        }
-      });
+            auth: { flowType: 'implicit', detectSessionInUrl: true, persistSession: true }
+          });
 
-          // استخراج الـ token من الـ URL fragment أو query
-          const hashStr = url.includes('#') ? url.split('#')[1] : '';
-          const queryStr = url.includes('?') ? url.split('?')[1].split('#')[0] : '';
-          const params = new URLSearchParams(hashStr || queryStr);
+          // استخراج الـ token من الـ URL (fragment أو query)
+          const fullStr = url.includes('#') ? url.split('#')[1] : (url.includes('?') ? url.split('?')[1] : '');
+          const params = new URLSearchParams(fullStr);
           const accessToken  = params.get('access_token');
           const refreshToken = params.get('refresh_token');
           const code         = params.get('code');
+          const errorParam   = params.get('error');
 
-          // أغلق Custom Tab فور استلام deep link
-          try { const { Browser } = await import('@capacitor/browser'); await Browser.close(); } catch(_){}
-          window._oauthHandled = true; // منع fallback من التدخل
+          if (errorParam) {
+            console.error('[AppUrlOpen] OAuth error:', errorParam, params.get('error_description'));
+            toast('❌ فشل تسجيل الدخول: ' + (params.get('error_description') || errorParam), 'err');
+            return;
+          }
+
+          const _finishLogin = async (session) => {
+            if (!session || window._sessionHandled) return;
+            window._sessionHandled = true;
+            const provider = session.user?.app_metadata?.provider;
+            console.log('[AppUrlOpen] provider:', provider);
+            if (provider === 'google') await _handleGoogleAuthCallback(session);
+          };
 
           if (accessToken && refreshToken) {
-            // PKCE implicit flow — set session directly
-            const { data: sd, error: se } = await _SB.client.auth.setSession({
-              access_token: accessToken,
-              refresh_token: refreshToken,
-            });
+            // Implicit flow — set session directly
+            const { data: sd, error: se } = await _SB.client.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
             if (se) { console.error('[AppUrlOpen] setSession error:', se); return; }
-            const provider = sd?.session?.user?.app_metadata?.provider;
-            console.log('[AppUrlOpen] Session set, provider:', provider);
-            if (provider === 'google') await _handleGoogleAuthCallback(sd.session);
+            await _finishLogin(sd?.session);
           } else if (code) {
-            // PKCE auth code flow
+            // Authorization code flow
             const { data: sd, error: se } = await _SB.client.auth.exchangeCodeForSession(url);
             if (se) { console.error('[AppUrlOpen] exchangeCode error:', se); return; }
-            const provider = sd?.session?.user?.app_metadata?.provider;
-            if (provider === 'google') await _handleGoogleAuthCallback(sd.session);
+            await _finishLogin(sd?.session);
           } else {
-            // fallback — getSession
+            // Fallback: انتظر قليلاً ثم اسحب الـ session
+            await new Promise(r => setTimeout(r, 500));
             const { data: sd } = await _SB.client.auth.getSession();
-            if (sd?.session) {
-              const provider = sd.session.user?.app_metadata?.provider;
-              if (provider === 'google') await _handleGoogleAuthCallback(sd.session);
-            }
+            await _finishLogin(sd?.session);
           }
         } catch(e) {
           console.error('[AppUrlOpen] Error:', e);
@@ -5558,21 +5559,22 @@ document.addEventListener('deviceready', async () => {
           if(!localStorage.getItem('ronda_autoplay') || localStorage.getItem('ronda_autoplay') !== '1'){
             if(typeof _setAutoPlay==='function') _setAutoPlay(false, false);
           }
-          // [OAUTH-FALLBACK] إذا appUrlOpen لم يُطلق (بعض المتصفحات) — تحقق من الجلسة عند العودة
+          // [OAUTH-FALLBACK] إذا appUrlOpen لم يُطلق — تحقق من الجلسة عند العودة
           setTimeout(async () => {
             try {
               if (!_SB.client) return;
-              if (window._oauthHandled) return; // تمت المعالجة عبر appUrlOpen
+              if (window._oauthHandled) return;
+              if (window._sessionHandled) return;
               const { data: sd } = await _SB.client.auth.getSession();
-              if (sd?.session && !window._sessionHandled) {
+              if (sd?.session) {
                 window._sessionHandled = true;
                 const provider = sd.session.user?.app_metadata?.provider;
-                console.log('[Foreground-OAuth-Fallback] provider:', provider);
+                console.log('[Foreground-Fallback] provider:', provider);
                 try { const { Browser } = await import('@capacitor/browser'); await Browser.close(); } catch(_){}
                 if (provider === 'google') await _handleGoogleAuthCallback(sd.session);
               }
-            } catch(e) { console.warn('[Foreground-OAuth-Fallback] error:', e); }
-          }, 800);
+            } catch(e) { console.warn('[Foreground-Fallback] error:', e); }
+          }, 1200);
           // [4-1] استأنف مؤقت البوت (يلعب في ث12)
           if(G && G.isBot && !G.myTurn && !G.over){
             const elapsed = Date.now() - (window._botTurnStartTs || Date.now());
@@ -21784,10 +21786,19 @@ async function _handleGoogleAuthCallback(session){
     P.googleId    = u.id;
     P.email       = u.email || '';
     if(avatar) P.av = avatar;
+    P.id          = P.id || u.id;
+    P.loggedBefore = true;
 
+    saveP();
+    updateUI();
     await _sbSaveProfile();
     _renderProfile();
     toast('✅ تم تسجيل الدخول بـ Google', 'ok');
+
+    // انتقل للـ lobby مثل loginAlias
+    setTimeout(()=>{ savePlayerStats(P.id, P.name, P.av, false, null, 0); _lbOnLogin(); }, 2000);
+    setTimeout(_applyPendingRef, 2500);
+    goLobby();
     return true;
   }catch(e){
     console.error('[GG-Callback]', e);
