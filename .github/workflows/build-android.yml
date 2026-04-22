@@ -86,9 +86,17 @@ jobs:
             echo "✓ networkSecurityConfig added"
           fi
 
+          # ⚠️ الأهم: أضف Deep Link intent-filter لـ OAuth callback
+          if ! grep -q "com.rondatahiro.myapp" "$MANIFEST"; then
+            sed -i 's|</activity>|        <intent-filter>\n                <action android:name="android.intent.action.VIEW" />\n                <category android:name="android.intent.category.DEFAULT" />\n                <category android:name="android.intent.category.BROWSABLE" />\n                <data android:scheme="com.rondatahiro.myapp" android:host="callback" />\n            </intent-filter>\n        </activity>|' "$MANIFEST"
+            echo "✓ Deep Link intent-filter added"
+          else
+            echo "✓ Deep Link already present"
+          fi
+
           echo "✓ AndroidManifest patched"
           echo "=== Manifest final check ==="
-          grep -E "APPLICATION_ID|AD_ID|VIBRATE|networkSecurity" "$MANIFEST" || true
+          grep -E "APPLICATION_ID|AD_ID|VIBRATE|networkSecurity|rondatahiro" "$MANIFEST" || true
 
       # ── 9. نسخ أيقونات Ronda Tahiro ─────────────────────
       - name: Apply Ronda Tahiro icons

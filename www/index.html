@@ -5468,8 +5468,8 @@ document.addEventListener('deviceready', async () => {
 
           if (!_SB.client) _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
         auth: {
-          flowType: 'implicit',
-          detectSessionInUrl: true,
+          flowType: window.Capacitor ? 'pkce' : 'implicit',
+          detectSessionInUrl: !window.Capacitor,
           persistSession: true
         }
       });
@@ -9295,8 +9295,8 @@ async function linkSocialAccount(provider){
   try{
     if(!_SB.client) _SB.client=supabase.createClient(_SB.URL,_SB.KEY, {
         auth: {
-          flowType: 'implicit',
-          detectSessionInUrl: true,
+          flowType: window.Capacitor ? 'pkce' : 'implicit',
+          detectSessionInUrl: !window.Capacitor,
           persistSession: true
         }
       });
@@ -20367,8 +20367,8 @@ function joinByCodePlay(id){
         if(!window._SB) return false;
         try{ window._SB.client = supabase.createClient(window._SB.URL, window._SB.KEY, {
         auth: {
-          flowType: 'implicit',
-          detectSessionInUrl: true,
+          flowType: window.Capacitor ? 'pkce' : 'implicit',
+          detectSessionInUrl: !window.Capacitor,
           persistSession: true
         }
       }); }catch(e){ return false; }
@@ -21566,8 +21566,8 @@ function _sbInit(roomCode){
     if(!_SB.client){
       _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
         auth: {
-          flowType: 'implicit',
-          detectSessionInUrl: true,
+          flowType: window.Capacitor ? 'pkce' : 'implicit',
+          detectSessionInUrl: !window.Capacitor,
           persistSession: true
         }
       });
@@ -21752,8 +21752,8 @@ async function loginFacebook(){
     if(!_SB.client){
       _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
         auth: {
-          flowType: 'implicit',
-          detectSessionInUrl: true,
+          flowType: window.Capacitor ? 'pkce' : 'implicit',
+          detectSessionInUrl: !window.Capacitor,
           persistSession: true
         }
       });
@@ -21797,8 +21797,8 @@ async function _handleFBAuthCallback(){
     if(!_SB.client){
       _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
         auth: {
-          flowType: 'implicit',
-          detectSessionInUrl: true,
+          flowType: window.Capacitor ? 'pkce' : 'implicit',
+          detectSessionInUrl: !window.Capacitor,
           persistSession: true
         }
       });
@@ -21866,8 +21866,8 @@ async function _handleFBAuthCallback(){
     if(!_SB.client){
       _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
         auth: {
-          flowType: 'implicit',
-          detectSessionInUrl: true,
+          flowType: window.Capacitor ? 'pkce' : 'implicit',
+          detectSessionInUrl: !window.Capacitor,
           persistSession: true
         }
       });
@@ -21897,8 +21897,8 @@ async function loginTwitter(){
     if(!_SB.client){
       _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
         auth: {
-          flowType: 'implicit',
-          detectSessionInUrl: true,
+          flowType: window.Capacitor ? 'pkce' : 'implicit',
+          detectSessionInUrl: !window.Capacitor,
           persistSession: true
         }
       });
