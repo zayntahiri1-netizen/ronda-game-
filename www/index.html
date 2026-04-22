@@ -5466,7 +5466,13 @@ document.addEventListener('deviceready', async () => {
           const url = data.url;
           if (!url.includes('callback') && !url.includes('access_token') && !url.includes('code=')) return;
 
-          if (!_SB.client) _SB.client = supabase.createClient(_SB.URL, _SB.KEY);
+          if (!_SB.client) _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
+        auth: {
+          flowType: window.Capacitor ? 'pkce' : 'implicit',
+          detectSessionInUrl: !window.Capacitor,
+          persistSession: true
+        }
+      });
 
           // استخراج الـ token من الـ URL fragment أو query
           const hashStr = url.includes('#') ? url.split('#')[1] : '';
@@ -9287,7 +9293,13 @@ function _updateSocialLinkButtons(){
 
 async function linkSocialAccount(provider){
   try{
-    if(!_SB.client) _SB.client=supabase.createClient(_SB.URL,_SB.KEY);
+    if(!_SB.client) _SB.client=supabase.createClient(_SB.URL,_SB.KEY, {
+        auth: {
+          flowType: window.Capacitor ? 'pkce' : 'implicit',
+          detectSessionInUrl: !window.Capacitor,
+          persistSession: true
+        }
+      });
     const isNative = !!window.Capacitor;
     window._oauthHandled = false; window._sessionHandled = false; // reset OAuth flags
     const redirectTo = isNative
@@ -20353,7 +20365,13 @@ function joinByCodePlay(id){
 
       if(!window._SB?.client){
         if(!window._SB) return false;
-        try{ window._SB.client = supabase.createClient(window._SB.URL, window._SB.KEY); }catch(e){ return false; }
+        try{ window._SB.client = supabase.createClient(window._SB.URL, window._SB.KEY, {
+        auth: {
+          flowType: window.Capacitor ? 'pkce' : 'implicit',
+          detectSessionInUrl: !window.Capacitor,
+          persistSession: true
+        }
+      }); }catch(e){ return false; }
       }
 
       // ── مسار 1: تحقق من الـ channel الموجود للمضيف مباشرة ──
@@ -21546,7 +21564,13 @@ function _sbInit(roomCode){
   _SB.ready = false; _SB.roomCode = roomCode;
   try{
     if(!_SB.client){
-      _SB.client = supabase.createClient(_SB.URL, _SB.KEY);
+      _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
+        auth: {
+          flowType: window.Capacitor ? 'pkce' : 'implicit',
+          detectSessionInUrl: !window.Capacitor,
+          persistSession: true
+        }
+      });
     }
     if(_SB.channel){ try{ _SB.client.removeChannel(_SB.channel); }catch(e){} }
 
@@ -21726,7 +21750,13 @@ async function loginFacebook(){
     if(btn){ btn.disabled=true; btn.style.opacity='0.7'; btn.innerHTML='<span style="font-size:1.1rem">⏳</span> جاري التوجيه...'; }
 
     if(!_SB.client){
-      _SB.client = supabase.createClient(_SB.URL, _SB.KEY);
+      _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
+        auth: {
+          flowType: window.Capacitor ? 'pkce' : 'implicit',
+          detectSessionInUrl: !window.Capacitor,
+          persistSession: true
+        }
+      });
     }
 
     const redirectTo = window.Capacitor ? 'com.rondatahiro.myapp://callback' : (window.location.origin + window.location.pathname);
@@ -21765,7 +21795,13 @@ async function loginFacebook(){
 async function _handleFBAuthCallback(){
   try{
     if(!_SB.client){
-      _SB.client = supabase.createClient(_SB.URL, _SB.KEY);
+      _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
+        auth: {
+          flowType: window.Capacitor ? 'pkce' : 'implicit',
+          detectSessionInUrl: !window.Capacitor,
+          persistSession: true
+        }
+      });
     }
 
     // اقرأ الجلسة من الـ URL hash بعد redirect فيسبوك
@@ -21828,7 +21864,13 @@ async function _handleFBAuthCallback(){
   }
   try{
     if(!_SB.client){
-      _SB.client = supabase.createClient(_SB.URL, _SB.KEY);
+      _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
+        auth: {
+          flowType: window.Capacitor ? 'pkce' : 'implicit',
+          detectSessionInUrl: !window.Capacitor,
+          persistSession: true
+        }
+      });
     }
     // الاستماع لتغييرات الجلسة (redirect callback)
     _SB.client.auth.onAuthStateChange(async (event, session)=>{
@@ -21853,7 +21895,13 @@ async function loginTwitter(){
     if(btn){ btn.disabled=true; btn.style.opacity='0.7'; btn.innerHTML='<span style="font-size:1.1rem">⏳</span> جاري التوجيه...'; }
 
     if(!_SB.client){
-      _SB.client = supabase.createClient(_SB.URL, _SB.KEY);
+      _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
+        auth: {
+          flowType: window.Capacitor ? 'pkce' : 'implicit',
+          detectSessionInUrl: !window.Capacitor,
+          persistSession: true
+        }
+      });
     }
 
     const redirectTo = window.Capacitor ? 'com.rondatahiro.myapp://callback' : (window.location.origin + window.location.pathname);
@@ -21863,8 +21911,7 @@ async function loginTwitter(){
       provider: 'twitter',
       options: { 
         redirectTo,
-        skipBrowserRedirect: isNative,
-        queryParams: { force_oauth2: 'true' }
+        skipBrowserRedirect: isNative
       }
     });
 
