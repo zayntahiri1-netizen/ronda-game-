@@ -5492,12 +5492,26 @@ document.addEventListener('deviceready', async () => {
             return;
           }
 
+          const _isLinkFlowNative = url.includes('link=google');
+
           const _finishLogin = async (session) => {
             if (!session || window._sessionHandled) return;
             window._sessionHandled = true;
             const provider = session.user?.app_metadata?.provider;
-            console.log('[AppUrlOpen] provider:', provider);
-            if (provider === 'google') await _handleGoogleAuthCallback(session);
+            console.log('[AppUrlOpen] provider:', provider, 'linkFlow:', _isLinkFlowNative);
+            if (provider === 'google'){
+              if(_isLinkFlowNative){
+                // ربط الحساب — لا تغيّر loginMethod
+                P.linkedGg = true;
+                P.googleId  = P.googleId || session.user.id;
+                P.email     = P.email || session.user.email || '';
+                saveP();
+                toast('✅ تم ربط حساب Google بنجاح','ok');
+                goLobby();
+              } else {
+                await _handleGoogleAuthCallback(session);
+              }
+            }
           };
 
           if (accessToken && refreshToken) {
@@ -9283,19 +9297,55 @@ async function linkSocialAccount(provider){
       });
     const isNative = !!window.Capacitor;
     window._oauthHandled = false; window._sessionHandled = false; // reset OAuth flags
-    const redirectTo = isNative
-      ? 'com.rondatahiro.myapp://callback?link='+provider
-      : window.location.origin+window.location.pathname+'?link='+provider;
-    const { data: oauthData, error } = await _SB.client.auth.signInWithOAuth({
-      provider,
-      options:{ redirectTo, skipBrowserRedirect: isNative }
-    });
-    if(error) throw error;
-    if(isNative && oauthData?.url){
-      try{ await Browser.open({ url: oauthData.url }); }
-      catch{ window.open(oauthData.url, '_blank'); }
+
+    // [FIX] استخدم linkIdentity إذا كان المستخدم مسجلاً بالفعل (alias login)
+    // وإلا استخدم signInWithOAuth مع ?link=google في الـ redirect
+    const { data: sessionData } = await _SB.client.auth.getSession();
+    const hasActiveSession = !!sessionData?.session;
+
+    if(hasActiveSession){
+      // المستخدم عنده session نشطة — ارتبط مباشرة
+      const redirectTo = isNative
+        ? 'com.rondatahiro.myapp://callback?link='+provider
+        : window.location.origin+window.location.pathname+'?link='+provider;
+      const { error } = await _SB.client.auth.linkIdentity({
+        provider,
+        options:{ redirectTo, skipBrowserRedirect: isNative }
+      });
+      if(error){
+        // linkIdentity غير مدعوم أو فشل — نرجع لـ signInWithOAuth
+        console.warn('[linkSocial] linkIdentity failed, fallback:', error.message);
+        const { data: oauthData, error: err2 } = await _SB.client.auth.signInWithOAuth({
+          provider,
+          options:{ redirectTo, skipBrowserRedirect: isNative }
+        });
+        if(err2) throw err2;
+        if(isNative && oauthData?.url){
+          try{ await Browser.open({ url: oauthData.url }); }
+          catch{ window.open(oauthData.url, '_blank'); }
+        }
+      } else {
+        toast('✅ جارٍ الربط بـ Google...','ok');
+        if(isNative){
+          // appUrlOpen سيتولى الباقي
+        }
+      }
+    } else {
+      // لا session — استخدم signInWithOAuth مع علامة link
+      const redirectTo = isNative
+        ? 'com.rondatahiro.myapp://callback?link='+provider
+        : window.location.origin+window.location.pathname+'?link='+provider;
+      const { data: oauthData, error } = await _SB.client.auth.signInWithOAuth({
+        provider,
+        options:{ redirectTo, skipBrowserRedirect: isNative }
+      });
+      if(error) throw error;
+      if(isNative && oauthData?.url){
+        try{ await Browser.open({ url: oauthData.url }); }
+        catch{ window.open(oauthData.url, '_blank'); }
+      }
     }
-  }catch(e){ toast('❌ تعذّر الاتصال','err'); }
+  }catch(e){ console.error('[linkSocial]', e); toast('❌ تعذّر الاتصال','err'); }
 }
 
 /* ══ FEATURE 4: رفع صورة شخصية ══ */
@@ -18185,6 +18235,84 @@ function init(){
   liveStats();
   window.addEventListener('resize', drawGeoBg);
 
+  // [FIX-WEB-OAUTH] اكتشاف redirect من Google في بيئة الويب
+  // الـ URL يحتوي على #access_token أو ?code= بعد العودة من Google
+  const _rawHash = window.location.hash || '';
+  const _rawSearch = window.location.search || '';
+  const _hasOAuthTokens = _rawHash.includes('access_token') || _rawSearch.includes('code=');
+  const _isLinkFlow    = _rawSearch.includes('link=google');
+
+  if(_hasOAuthTokens && !window._isCapacitor()){
+    // إنشاء Supabase client فوراً مع detectSessionInUrl قبل أي تنقل
+    if(!_SB.client){
+      _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
+        auth:{ flowType:'implicit', detectSessionInUrl:true, persistSession:true }
+      });
+    }
+    // أظهر شاشة الانتظار ريثما يتم معالجة الـ session
+    go('sHome');
+    const _oBtn = document.getElementById('btnGg');
+    if(_oBtn){ _oBtn.disabled=true; _oBtn.style.opacity='0.7'; _oBtn.innerHTML='<span style="font-size:1.1rem">⏳</span> جاري التوجيه...'; }
+
+    (async ()=>{
+      try{
+        let _session = null;
+        // محاولة 1: implicit flow — tokens في الـ hash
+        const _hp = new URLSearchParams(_rawHash.replace(/^#/,''));
+        const _at = _hp.get('access_token'), _rt = _hp.get('refresh_token');
+        if(_at && _rt){
+          const { data:sd, error:se } = await _SB.client.auth.setSession({ access_token:_at, refresh_token:_rt });
+          if(!se) _session = sd?.session;
+        }
+        // محاولة 2: PKCE code flow
+        if(!_session){
+          const _qp = new URLSearchParams(_rawSearch);
+          const _code = _qp.get('code');
+          if(_code){
+            const _fullUrl = window.location.href;
+            const { data:sd, error:se } = await _SB.client.auth.exchangeCodeForSession(_fullUrl);
+            if(!se) _session = sd?.session;
+          }
+        }
+        // محاولة 3: getSession (detectSessionInUrl فعّال)
+        if(!_session){
+          await new Promise(r=>setTimeout(r,400));
+          const { data:sd } = await _SB.client.auth.getSession();
+          _session = sd?.session;
+        }
+        // نظّف الـ URL من الـ tokens
+        if(window.history && window.history.replaceState){
+          try{ window.history.replaceState({}, document.title, window.location.pathname); }catch(e){}
+        }
+        if(_session){
+          const _provider = _session.user?.app_metadata?.provider;
+          if(_provider === 'google'){
+            if(_isLinkFlow){
+              // ربط الحساب — حدّث بيانات الربط فقط
+              P.linkedGg = true;
+              P.googleId  = _session.user.id;
+              P.email     = P.email || _session.user.email || '';
+              saveP();
+              toast('✅ تم ربط حساب Google بنجاح','ok');
+              goLobby();
+            } else {
+              await _handleGoogleAuthCallback(_session);
+            }
+          }
+        } else {
+          toast('❌ فشل استكمال تسجيل الدخول بـ Google','err');
+          go('sHome');
+          if(_oBtn){ _oBtn.disabled=false; _oBtn.style.opacity='1'; _oBtn.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> تسجيل الدخول بـ Google'; }
+        }
+      }catch(e){
+        console.error('[Web-OAuth-Init]', e);
+        toast('❌ خطأ في تسجيل الدخول','err');
+        go('sHome');
+      }
+    })();
+    return; // لا تكمل init العادية — الـ async سيتولى التنقل
+  }
+
   // 1) مباراة محفوظة → استعدها
   if(restoreGameState()) return;
 
@@ -21774,6 +21902,9 @@ async function loginGoogle(){
 async function _handleGoogleAuthCallback(session){
   try{
     if(!session) return false;
+    if(window._ggCallbackRunning) return false; // منع الاستدعاء المزدوج
+    window._ggCallbackRunning = true;
+    window._webOAuthHandled = true;
     const u = session.user;
     const meta = u?.user_metadata || {};
 
@@ -21802,19 +21933,27 @@ async function _handleGoogleAuthCallback(session){
     return true;
   }catch(e){
     console.error('[GG-Callback]', e);
+    window._ggCallbackRunning = false; // أعد التعيين عند الفشل
     return false;
   }
 }
 
 (async function _initGoogleAuth(){
   try{
-    if(!_SB.client) _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
-      auth:{ flowType:'implicit', detectSessionInUrl:true, persistSession:true }
-    });
+    // [FIX] أنشئ client دائماً مع detectSessionInUrl:true
+    // حتى لو كان _SB.client موجوداً بدونها (من _sbInit مثلاً)
+    if(!_SB.client || !_SB.client._detectSessionInUrlDone){
+      _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
+        auth:{ flowType:'implicit', detectSessionInUrl:true, persistSession:true }
+      });
+      if(_SB.client) _SB.client._detectSessionInUrlDone = true;
+    }
     _SB.client.auth.onAuthStateChange(async (event, session) => {
       if((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session){
         const provider = session.user?.app_metadata?.provider;
-        if(provider === 'google' && P.loginMethod !== 'google'){
+        // [FIX] استقبل الـ session حتى لو loginMethod فارغ (بعد إعادة تحميل الصفحة)
+        if(provider === 'google' && P.loginMethod !== 'google' && !window._webOAuthHandled){
+          window._webOAuthHandled = true;
           await _handleGoogleAuthCallback(session);
         }
       }
