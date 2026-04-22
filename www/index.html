@@ -5478,6 +5478,7 @@ document.addEventListener('deviceready', async () => {
 
           // أغلق Custom Tab فور استلام deep link
           try { const { Browser } = await import('@capacitor/browser'); await Browser.close(); } catch(_){}
+          window._oauthHandled = true; // منع fallback من التدخل
 
           if (accessToken && refreshToken) {
             // PKCE implicit flow — set session directly
@@ -5549,6 +5550,22 @@ document.addEventListener('deviceready', async () => {
           if(!localStorage.getItem('ronda_autoplay') || localStorage.getItem('ronda_autoplay') !== '1'){
             if(typeof _setAutoPlay==='function') _setAutoPlay(false, false);
           }
+          // [OAUTH-FALLBACK] إذا appUrlOpen لم يُطلق (بعض المتصفحات) — تحقق من الجلسة عند العودة
+          setTimeout(async () => {
+            try {
+              if (!_SB.client) return;
+              if (window._oauthHandled) return; // تمت المعالجة عبر appUrlOpen
+              const { data: sd } = await _SB.client.auth.getSession();
+              if (sd?.session && !window._sessionHandled) {
+                window._sessionHandled = true;
+                const provider = sd.session.user?.app_metadata?.provider;
+                console.log('[Foreground-OAuth-Fallback] provider:', provider);
+                try { const { Browser } = await import('@capacitor/browser'); await Browser.close(); } catch(_){}
+                if (provider === 'facebook') await _handleFBAuthCallback();
+                else if (provider === 'twitter') await _handleTwitterAuthCallback(sd.session);
+              }
+            } catch(e) { console.warn('[Foreground-OAuth-Fallback] error:', e); }
+          }, 800);
           // [4-1] استأنف مؤقت البوت (يلعب في ث12)
           if(G && G.isBot && !G.myTurn && !G.over){
             const elapsed = Date.now() - (window._botTurnStartTs || Date.now());
@@ -9272,6 +9289,7 @@ async function linkSocialAccount(provider){
   try{
     if(!_SB.client) _SB.client=supabase.createClient(_SB.URL,_SB.KEY);
     const isNative = !!window.Capacitor;
+    window._oauthHandled = false; window._sessionHandled = false; // reset OAuth flags
     const redirectTo = isNative
       ? 'com.rondatahiro.myapp://callback?link='+provider
       : window.location.origin+window.location.pathname+'?link='+provider;
@@ -21713,6 +21731,7 @@ async function loginFacebook(){
 
     const redirectTo = window.Capacitor ? 'com.rondatahiro.myapp://callback' : (window.location.origin + window.location.pathname);
     const isNative = !!window.Capacitor;
+    window._oauthHandled = false; window._sessionHandled = false; // reset OAuth flags
     const { data: oauthData, error } = await _SB.client.auth.signInWithOAuth({
       provider: 'facebook',
       options: {
@@ -21839,6 +21858,7 @@ async function loginTwitter(){
 
     const redirectTo = window.Capacitor ? 'com.rondatahiro.myapp://callback' : (window.location.origin + window.location.pathname);
     const isNative = !!window.Capacitor;
+    window._oauthHandled = false; window._sessionHandled = false; // reset OAuth flags
     const { data: oauthData, error } = await _SB.client.auth.signInWithOAuth({
       provider: 'twitter',
       options: { 
