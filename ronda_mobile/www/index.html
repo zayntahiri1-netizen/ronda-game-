@@ -689,7 +689,7 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
   content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;
   background:linear-gradient(90deg,transparent,rgba(212,164,60,.4),rgba(245,216,122,.7),rgba(212,164,60,.4),transparent);
 }
-.tb-l{display:flex;align-items:center;gap:.65rem}
+.tb-l{display:flex;align-items:center;gap:.65rem;flex-shrink:0}
 .av{
   width:44px;height:44px;border-radius:50%;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;font-size:1.2rem;
@@ -714,7 +714,7 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
   background:linear-gradient(90deg,#8a6208,#f0c84a,#d4a43c);
   background-size:300% 100%;animation:lbGoldFlow 2.5s linear infinite;
 }
-.tb-r{display:flex;gap:.38rem;align-items:center}
+.tb-r{display:flex;gap:.38rem;align-items:center;flex-shrink:0}
 .cbadge{
   display:flex;align-items:center;gap:.28rem;padding:.3rem .68rem;
   border-radius:20px;font-weight:800;font-size:.76rem;cursor:pointer;transition:all .28s;
@@ -5173,6 +5173,122 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;background:var(--
 #admobBannerSlot.visible{pointer-events:auto}
 body.admob-banner-on{padding-bottom:60px}
 
+/* ══════════════════════════════════════
+   🌐 i18n — Language Picker System
+   ══════════════════════════════════════ */
+/* ── Lobby Lang Button ── */
+.lang-btn{
+  display:flex;align-items:center;gap:.35rem;
+  padding:.38rem .72rem;border-radius:20px;border:1.5px solid rgba(212,164,60,.3);
+  background:rgba(0,0,0,.45);color:var(--t2);
+  font-family:var(--fa);font-size:.6rem;font-weight:800;
+  cursor:pointer;backdrop-filter:blur(10px);
+  transition:all .25s;position:relative;
+  letter-spacing:.03em;
+}
+.lang-btn:hover{border-color:rgba(212,164,60,.65);color:var(--g1);box-shadow:0 0 14px rgba(212,164,60,.18)}
+.lang-btn .lang-flag{font-size:.85rem;line-height:1}
+/* ── Dropdown ── */
+.lang-dropdown{
+  position:fixed;top:60px;right:12px;
+  background:linear-gradient(160deg,#0c1a0e,#050d07);
+  border:1px solid rgba(212,164,60,.25);border-radius:14px;
+  padding:.45rem;min-width:180px;z-index:99999;
+  max-height:calc(100vh - 80px);overflow-y:auto;
+  box-shadow:0 8px 40px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.04);
+  opacity:0;transform:translateY(-8px) scale(.97);pointer-events:none;
+  transition:all .22s cubic-bezier(.175,.885,.32,1.275);
+  scrollbar-width:thin;scrollbar-color:rgba(212,164,60,.3) transparent;
+}
+.lang-dropdown.open{opacity:1;transform:translateY(0) scale(1);pointer-events:all}
+.lang-dropdown-title{
+  font-size:.48rem;color:var(--t5);font-weight:800;letter-spacing:.12em;
+  text-transform:uppercase;text-align:center;padding:.2rem .5rem .45rem;
+  border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:.3rem;
+}
+.lang-option{
+  display:flex;align-items:center;gap:.55rem;
+  padding:.46rem .65rem;border-radius:9px;cursor:pointer;
+  transition:background .18s;font-family:var(--fa);
+  font-size:.7rem;font-weight:700;color:var(--t2);
+}
+.lang-option:hover{background:rgba(212,164,60,.1);color:var(--g1)}
+.lang-option.active{background:rgba(212,164,60,.15);color:var(--g1);
+  border:1px solid rgba(212,164,60,.2)}
+.lang-option .lo-flag{font-size:1rem;flex-shrink:0}
+.lang-option .lo-name{flex:1}
+.lang-option .lo-check{font-size:.7rem;color:var(--g2);opacity:0}
+.lang-option.active .lo-check{opacity:1}
+/* ── Language change notification (Home screen) ── */
+.lang-notif{
+  position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(30px);
+  z-index:99999;opacity:0;pointer-events:none;
+  background:linear-gradient(135deg,rgba(10,25,12,.97),rgba(5,12,8,.97));
+  border:1.5px solid rgba(212,164,60,.4);border-radius:18px;
+  padding:.75rem 1.1rem .75rem 1rem;
+  box-shadow:0 8px 42px rgba(0,0,0,.75),0 0 0 1px rgba(255,255,255,.04),
+             0 0 30px rgba(212,164,60,.1);
+  display:flex;align-items:center;gap:.65rem;
+  max-width:88vw;min-width:230px;
+  transition:all .45s cubic-bezier(.175,.885,.32,1.275);
+}
+.lang-notif.show{
+  opacity:1;transform:translateX(-50%) translateY(0);pointer-events:all;
+}
+.lang-notif-icon{font-size:1.4rem;flex-shrink:0;animation:notifPulse 2s ease-in-out infinite}
+@keyframes notifPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+.lang-notif-text{font-family:var(--fa);font-size:.62rem;color:var(--t2);line-height:1.5;flex:1}
+.lang-notif-close{
+  width:22px;height:22px;border-radius:50%;border:none;flex-shrink:0;
+  background:rgba(255,255,255,.08);color:rgba(255,255,255,.4);
+  font-size:.65rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.lang-notif-close:hover{background:rgba(255,80,80,.2);color:#ff9090}
+/* ── Profile language section ── */
+.prof-lang-section{
+  background:linear-gradient(145deg,rgba(212,164,60,.07),rgba(0,0,0,.5));
+  border:1px solid rgba(212,164,60,.2);border-radius:14px;
+  padding:.85rem .9rem;margin-bottom:.65rem;
+}
+.prof-lang-title{font-size:.58rem;font-weight:800;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--t3);margin-bottom:.12rem}
+.prof-lang-sub{font-size:.52rem;color:var(--t5);margin-bottom:.7rem}
+.prof-lang-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:.4rem;
+}
+.prof-lang-opt{
+  display:flex;align-items:center;gap:.4rem;
+  padding:.48rem .6rem;border-radius:10px;border:1px solid rgba(255,255,255,.08);
+  background:rgba(0,0,0,.3);cursor:pointer;
+  font-family:var(--fa);font-size:.62rem;font-weight:700;color:var(--t3);
+  transition:all .22s;
+}
+.prof-lang-opt:hover{border-color:rgba(212,164,60,.3);color:var(--t2);background:rgba(212,164,60,.06)}
+.prof-lang-opt.active{
+  border-color:rgba(212,164,60,.55);color:var(--g1);
+  background:rgba(212,164,60,.12);
+  box-shadow:0 0 10px rgba(212,164,60,.08);
+}
+.prof-lang-opt .plo-flag{font-size:.95rem}
+.prof-lang-opt .plo-name{flex:1;font-size:.6rem}
+.prof-lang-opt .plo-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--g2);opacity:0;flex-shrink:0;
+}
+.prof-lang-opt.active .plo-dot{opacity:1}
+/* ── Toast ── */
+.lang-toast{
+  position:fixed;top:60px;left:50%;transform:translateX(-50%) translateY(-20px);
+  z-index:999999;opacity:0;pointer-events:none;
+  background:rgba(30,80,40,.95);border:1px solid rgba(34,196,138,.4);
+  border-radius:12px;padding:.52rem 1.1rem;
+  font-family:var(--fa);font-size:.7rem;font-weight:800;color:#4ade80;
+  backdrop-filter:blur(12px);transition:all .35s;
+  box-shadow:0 4px 24px rgba(0,0,0,.6);
+}
+.lang-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
 </style>
 
 <style>
@@ -5631,26 +5747,26 @@ document.addEventListener('deviceready', async () => {
       <div class="fan-slot"><div class="sc sm blk" id="fc3"></div></div>
       <div class="fan-slot"><div class="sc sm red" id="fc4"></div></div>
     </div>
-    <div class="logo-super">اللعبة الأندلسية المغربية الأصيلة</div>
+    <div class="logo-super" data-i18n="logoSuper">اللعبة الأندلسية المغربية الأصيلة</div>
     <div class="logo-main">روندة</div>
-    <div class="logo-ar">Ronda — لعبة الملوك</div>
-    <div class="logo-lat">Royal Moroccan Card Game</div>
+    <div class="logo-ar" data-i18n="logoAr">Ronda — لعبة الملوك</div>
+    <div class="logo-lat" data-i18n="logoLat">Royal Moroccan Card Game</div>
     <div class="auth-container">
-      <div class="auth-title">اختر طريقة الدخول</div>
+      <div class="auth-title" data-i18n="authTitle">اختر طريقة الدخول</div>
       <div class="auth-row" style="justify-content:center">
         <button class="auth-btn ab-gg" id="btnGg" onclick="loginGoogle()" style="max-width:260px;font-weight:600;font-size:.85rem;gap:.6rem;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.15)">
           <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-          تسجيل الدخول بـ Google
+          <span data-i18n="loginGoogle">تسجيل الدخول بـ Google</span>
         </button>
       </div>
-      <div class="auth-divider"><span>أو</span></div>
+      <div class="auth-divider"><span data-i18n="orDivider">أو</span></div>
       <div class="alias-form" id="aliasForm">
-        <div class="alias-label">👤 ادخل باسم مستعار</div>
+        <div class="alias-label" data-i18n="aliasLabel">👤 ادخل باسم مستعار</div>
         <div class="alias-input-wrap">
-          <input class="alias-input" id="aliasInp" type="text" maxlength="20" placeholder="اسمك في اللعبة..." dir="rtl" oninput="checkAlias()" onkeydown="if(event.key==='Enter'&&!document.getElementById('aliasGo').disabled)loginAlias()">
+          <input class="alias-input" id="aliasInp" type="text" maxlength="20" placeholder="اسمك في اللعبة..." dir="rtl" oninput="checkAlias()" onkeydown="if(event.key==='Enter'&&!document.getElementById('aliasGo').disabled)loginAlias()" data-i18n-ph="aliasPlaceholder">
           <button class="alias-go" id="aliasGo" onclick="loginAlias()" disabled>›</button>
         </div>
-        <div class="alias-hint" id="aliasHint">3-20 حرف، بدون مسافة في البداية</div>
+        <div class="alias-hint" id="aliasHint" data-i18n="aliasHint">3-20 حرف، بدون مسافة في البداية</div>
       </div>
 
       <!-- ══ حقل رمز الدعوة ══ -->
@@ -5662,8 +5778,8 @@ document.addEventListener('deviceready', async () => {
         animation:refWrapPulse 2.8s ease-in-out infinite">
         <div style="display:flex;align-items:center;gap:.38rem;margin-bottom:.45rem">
           <span style="font-size:1rem">🎁</span>
-          <span style="font-size:.65rem;font-weight:900;color:#4ade80;letter-spacing:.04em">عندك رمز دعوة؟</span>
-          <span style="font-size:.52rem;color:rgba(255,255,255,.35);margin-right:auto">الطرفان يحصلان على</span>
+          <span style="font-size:.65rem;font-weight:900;color:#4ade80;letter-spacing:.04em" data-i18n="refQuestion">عندك رمز دعوة؟</span>
+          <span style="font-size:.52rem;color:rgba(255,255,255,.35);margin-right:auto" data-i18n="refBothGet">الطرفان يحصلان على</span>
           <span style="font-size:.65rem;font-weight:900;color:var(--g1)">+2,000 🪙</span>
         </div>
         <div style="display:flex;gap:.4rem">
@@ -5687,6 +5803,7 @@ document.addEventListener('deviceready', async () => {
               color:#fff;font-family:'Tajawal',sans-serif;
               font-size:.75rem;font-weight:900;cursor:pointer;
               transition:all .22s;white-space:nowrap;flex-shrink:0"
+            data-i18n="refApply"
             onmouseover="this.style.transform='scale(1.06)'"
             onmouseout="this.style.transform='scale(1)'">
             ✓ تطبيق
@@ -5695,11 +5812,11 @@ document.addEventListener('deviceready', async () => {
         <div id="refInputFeedback" style="font-size:.52rem;color:rgba(255,255,255,.3);margin-top:.3rem;text-align:center;min-height:.8rem"></div>
       </div>
     </div>
-    <button class="btn-sec" onclick="openM('mRules')">📖 تعلم القواعد</button>
+    <button class="btn-sec" onclick="openM('mRules')" data-i18n="learnRules">📖 تعلم القواعد</button>
     <div class="online-strip">
-      <div><div class="os-n" id="lp">—</div><div class="os-l">لاعب متصل</div></div>
-      <div><div class="os-n" id="lg">—</div><div class="os-l">لعبة جارية</div></div>
-      <div><div class="os-n" id="liveStatus" style="color:var(--emer3)">⏳</div><div class="os-l">مباشر</div></div>
+      <div><div class="os-n" id="lp">—</div><div class="os-l" data-i18n="playerOnline">لاعب متصل</div></div>
+      <div><div class="os-n" id="lg">—</div><div class="os-l" data-i18n="gameRunning">لعبة جارية</div></div>
+      <div><div class="os-n" id="liveStatus" style="color:var(--emer3)">⏳</div><div class="os-l" data-i18n="liveLbl">مباشر</div></div>
     </div>
 
     <!-- ══ روابط قانونية في الصفحة الرئيسية (متطلبات Play Store) ══ -->
@@ -5746,6 +5863,19 @@ document.addEventListener('deviceready', async () => {
             <div><div class="xpbar"><div class="xpfill" id="xpf" style="width:0%"></div></div></div>
           </div>
         </div>
+      </div>
+      <!-- 🌐 Language Picker Button -->
+      <div style="display:flex;align-items:center;flex:1;justify-content:center">
+        <button class="lang-btn" id="lobbyLangBtn" onclick="toggleLangDropdown(event)" aria-label="Change language">
+          <span class="lang-flag" id="lobbyLangFlag">🌐</span>
+          <span id="lobbyLangName" data-i18n="langBtnLabel">اللغة</span>
+          <span style="font-size:.5rem;opacity:.6">▾</span>
+          <!-- Dropdown -->
+          <div class="lang-dropdown" id="langDropdown" onclick="event.stopPropagation()">
+            <div class="lang-dropdown-title" data-i18n="langDropdownTitle">🌐 اختر لغتك</div>
+            <div id="langOptionsList"></div>
+          </div>
+        </button>
       </div>
       <div class="tb-r">
         <div class="cbadge gold" onclick="openM('mShop')">🪙 <span id="myGo">5,000</span></div>
@@ -17491,11 +17621,14 @@ function endGame(won, sub=''){
   // ── Header ──
   $('we').textContent = isTie ? '🤝' : (won ? '🏆' : '😔');
   const wtEl = $('wt');
-  wtEl.textContent = isTie ? 'تعادل! 🤝' : (won ? 'فزت! 🎉' : 'خسرت!');
+  const _tFn = window.t || (k=>k);
+  wtEl.textContent = isTie ? _tFn('wTie') : (won ? _tFn('wt') : _tFn('wl'));
+  wtEl.dataset.result = isTie ? 'tie' : (won ? 'win' : 'lose');
   wtEl.className = won ? 'wt' : (isTie ? 'wt' : 'wt lose');
+  const _wsWin = _tFn('wsWin'); const _wsLose = _tFn('wsLose');
   $('ws').textContent = sub || (won
-    ? `لعبة رائعة — ${G.myPts} نقطة 🌟`
-    : `أكمل التدريب وحاول مرة أخرى`);
+    ? (typeof _wsWin === 'function' ? _wsWin(G.myPts) : _wsWin.replace('{pts}', G.myPts))
+    : _wsLose);
 
   // ── Build scoreboard for ALL players ──
   const rows = $('endSbRows');
@@ -17739,7 +17872,7 @@ function _showGoldNotif(type, amount, before, after){
   const color = isWin ? '#F5D87A' : isTie ? '#60a5fa' : '#f87171';
   const bgCol = isWin ? 'rgba(212,164,60,.12)' : isTie ? 'rgba(33,150,243,.1)' : 'rgba(239,68,68,.1)';
   const bdCol = isWin ? 'rgba(212,164,60,.35)' : isTie ? 'rgba(33,150,243,.3)' : 'rgba(239,68,68,.3)';
-  const label = isWin ? 'ربحت' : isTie ? 'تعادل' : 'خسرت';
+  const label = (function(){ const _t=window.t||((k)=>k); return isWin?_t('histLabelWin'):isTie?_t('histLabelTie'):_t('histLabelLose'); })();
 
   const el = document.createElement('div');
   el.id = 'goldNotif';
@@ -23927,6 +24060,20 @@ function _mlbRender(){
   const pill = document.getElementById('mlbMyRank');
   if(!el) return;
 
+  // Language-aware labels
+  const _lang = (typeof _currentLang!=='undefined'?_currentLang:null) || localStorage.getItem('ronda_lang') || 'ar';
+  const _mlbI18n = {
+    ar:{myRank:'ترتيبك',noRank:'ترتيبك: —',playMsg:'🎮 العب مباريات لتظهر في المتصدرين!',me:'أنت',
+      wins:'انتصارات',wins1v1:'انتصارات 1ض1',wins2v2:'انتصارات 2ض2',wins4p:'انتصارات 4مست',player:'لاعب'},
+    en:{myRank:'Your Rank',noRank:'Your Rank: —',playMsg:'🎮 Play matches to appear on the leaderboard!',me:'You',
+      wins:'Wins',wins1v1:'1v1 Wins',wins2v2:'2v2 Wins',wins4p:'4P Wins',player:'Player'},
+    fr:{myRank:'Votre rang',noRank:'Votre rang: —',playMsg:'🎮 Jouez des parties pour apparaître sur le classement!',me:'Vous',
+      wins:'Victoires',wins1v1:'Victoires 1c1',wins2v2:'Victoires 2c2',wins4p:'Victoires 4J',player:'Joueur'},
+    es:{myRank:'Tu rango',noRank:'Tu rango: —',playMsg:'🎮 ¡Juega partidas para aparecer en el ranking!',me:'Tú',
+      wins:'Victorias',wins1v1:'Victorias 1v1',wins2v2:'Victorias 2v2',wins4p:'Victorias 4J',player:'Jugador'},
+  };
+  const _t = _mlbI18n[_lang] || _mlbI18n['en'];
+
   let rows = (_mlbRows||[]).filter(r=>r&&r.id);
 
   /* فلتر وطني — يصفي حسب حقل country إذا توفر، وإلا يبقي كل السجلات */
@@ -23941,21 +24088,21 @@ function _mlbRender(){
 
   const myId   = (typeof P!=='undefined'&&P&&P.id)||'';
   const myRank = rows.findIndex(r=>r.id===myId)+1;
-  if(pill) pill.textContent = myRank>0?`ترتيبك: #${myRank}`:'ترتيبك: —';
+  if(pill) pill.textContent = myRank>0?`${_t.myRank}: #${myRank}`:_t.noRank;
 
   if(!rows.length){
-    el.innerHTML='<div style="text-align:center;padding:.7rem;font-size:.6rem;color:var(--t4)">🎮 العب مباريات لتظهر في المتصدرين!</div>';
+    el.innerHTML=`<div style="text-align:center;padding:.7rem;font-size:.6rem;color:var(--t4)">${_t.playMsg}</div>`;
     return;
   }
 
   const icons=['🥇','🥈','🥉'];
-  const modeTitles={wins:'انتصارات',wins1v1:'انتصارات 1ض1',wins2v2:'انتصارات 2ض2',wins4p:'انتصارات 4مست'};
+  const modeTitles={wins:_t.wins,wins1v1:_t.wins1v1,wins2v2:_t.wins2v2,wins4p:_t.wins4p};
   let html='';
 
   rows.slice(0,10).forEach((r,i)=>{
     const isMe = r.id===myId;
-    const val  = (r[_mlbMode]||0).toLocaleString('ar');
-    const nm   = (r.name||'لاعب').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const val  = (r[_mlbMode]||0).toLocaleString(_lang==='ar'?'ar':'en');
+    const nm   = (r.name||_t.player).replace(/</g,'&lt;').replace(/>/g,'&gt;');
     const safeId  = (r.id||'').replace(/'/g,"\\'");
     const safeNm  = nm.replace(/'/g,"\\'");
     const safeAv  = (r.av||'👤').replace(/'/g,"\\'");
@@ -23963,7 +24110,7 @@ function _mlbRender(){
       onclick="openPlayerStatsById('${safeId}','${safeNm}','${safeAv}')">
       <div class="mlb-rk ${i<3?'r'+(i+1):'rn'}">${icons[i]||(i+1)}</div>
       <div class="mlb-av">${r.av||'👤'}</div>
-      <div class="mlb-nm">${nm}${isMe?'<span style="font-size:.42rem;color:var(--g2);margin-right:.2rem">(أنت)</span>':''}</div>
+      <div class="mlb-nm">${nm}${isMe?`<span style="font-size:.42rem;color:var(--g2);margin-right:.2rem">(${_t.me})</span>`:''}</div>
       <div class="mlb-val">${val}</div>
     </div>`;
   });
@@ -23976,8 +24123,8 @@ function _mlbRender(){
       <div class="mlb-row me">
         <div class="mlb-rk rn">#${myRank}</div>
         <div class="mlb-av">${me.av||'🎭'}</div>
-        <div class="mlb-nm">${(me.name||'أنت').replace(/</g,'&lt;')}<span style="font-size:.42rem;color:var(--g2);margin-right:.2rem">(أنت)</span></div>
-        <div class="mlb-val">${(me[_mlbMode]||0).toLocaleString('ar')}</div>
+        <div class="mlb-nm">${(me.name||_t.me).replace(/</g,'&lt;')}<span style="font-size:.42rem;color:var(--g2);margin-right:.2rem">(${_t.me})</span></div>
+        <div class="mlb-val">${(me[_mlbMode]||0).toLocaleString(_lang==='ar'?'ar':'en')}</div>
       </div>`;
     }
   }
@@ -26791,9 +26938,10 @@ let _lastEndShown=0;
 function _onEndScreenShown(){
   if(Date.now()-_lastEndShown<2000) return;
   _lastEndShown=Date.now();
-  const wt=document.getElementById('wt')?.textContent||'';
-  const won=wt.includes('فزت');
-  const isTie=wt.includes('تعادل');
+  const wtEl2=document.getElementById('wt');
+  const _result=wtEl2?.dataset?.result||'';
+  const won=_result==='win';
+  const isTie=_result==='tie';
   const myPts=parseInt(document.getElementById('wsn1')?.textContent||'0');
   const myMissas=parseInt(document.getElementById('wsn3')?.textContent||'0');
   const myBumbas=parseInt(document.getElementById('wsn4')?.textContent||'0');
@@ -26817,9 +26965,10 @@ function _onEndScreenShown(){
   if(awards.length) _showMatchAwards(awards);
   _addShareResultBtn(won,myPts,oppPts);
   _saveMatchToHistory(won,isTie,myPts,oppPts,gameMode,oppName,prize);
-  if(won&&!isTie) addNotif('🏆','فزت بالمباراة!',`${myPts} نقطة · +${prize.toLocaleString('ar')} 🪙`,'win');
-  else if(isTie) addNotif('🤝','تعادل!',`${myPts} نقطة`,'tie');
-  else addNotif('😔','خسرت المباراة',`${myPts} نقطة · واصل التدريب!`,'loss');
+  const _tn=window.t||(k=>k);
+  if(won&&!isTie) addNotif('🏆',_tn('notifWin'),`${myPts} · +${prize.toLocaleString()} 🪙`,'win');
+  else if(isTie) addNotif('🤝',_tn('notifTie'),`${myPts}`,'tie');
+  else addNotif('😔',_tn('notifLose'),`${myPts} · ${_tn('notifKeepTrying')}`,'loss');
 }
 
 // hook profTab لتحديث الرادار والرتبة والسجل
@@ -29160,6 +29309,1828 @@ _boot();
 
   </div>
 </div>
+
+<!-- ═══════════════════════════════════════════════════════
+     🌐 LANGUAGE NOTIFICATION (Home screen)
+     ═══════════════════════════════════════════════════════ -->
+<div class="lang-notif" id="langNotif">
+  <span class="lang-notif-icon">🌐</span>
+  <span class="lang-notif-text" id="langNotifText" data-i18n="langNotifMsg">يمكنك تغيير لغة التطبيق من الإعدادات أو أعلى الصفحة</span>
+  <button class="lang-notif-close" id="langNotifClose" onclick="dismissLangNotif()">✕</button>
+</div>
+
+<!-- Language Changed Toast -->
+<div class="lang-toast" id="langToast"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     🌐 i18n — FULL MULTILINGUAL SYSTEM
+     ═══════════════════════════════════════════════════════ -->
+<script>
+(function(){
+'use strict';
+// ─── Translation Dictionary ───────────────────────────────────────────────
+const I18N = {
+  ar:{dir:'rtl',name:'العربية 🇲🇦',flag:'🇲🇦',
+    logoSuper:'اللعبة الأندلسية المغربية الأصيلة',logoAr:'Ronda — لعبة الملوك',logoLat:'Royal Moroccan Card Game',
+    authTitle:'اختر طريقة الدخول',loginGoogle:'تسجيل الدخول بـ Google',orDivider:'أو',
+    aliasLabel:'👤 ادخل باسم مستعار',aliasPlaceholder:'اسمك في اللعبة...',aliasHint:'3-20 حرف، بدون مسافة في البداية',
+    refQuestion:'عندك رمز دعوة؟',refBothGet:'الطرفان يحصلان على',refApply:'✓ تطبيق',
+    learnRules:'📖 تعلم القواعد',playerOnline:'لاعب متصل',gameRunning:'لعبة جارية',liveLbl:'مباشر',
+    langBtnLabel:'اللغة',langDropdownTitle:'🌐 اختر لغتك',
+    profileLangTitle:'🌐 لغة التطبيق',profileLangSubtitle:'اختر لغتك المفضلة',
+    langNotifMsg:'🌐 يمكنك تغيير لغة التطبيق من الإعدادات أو زر اللغة أعلى الصفحة',
+    langChangedToast:'✅ تم تغيير اللغة',
+    hintTooLong:'❌ الاسم طويل جداً (الحد 20 حرف)',
+    hintAvail:(n)=>`✅ الاسم "${n}" متاح`,
+    hintDefault:'3-20 حرف، بدون مسافة في البداية',
+    wl:'خسرت!',wTie:'تعادل! 🤝',
+    wsWin:(pts)=>`لعبة رائعة — ${pts} نقطة 🌟`,wsLose:'أكمل التدريب وحاول مرة أخرى',
+    histLabelWin:'ربحت',histLabelTie:'تعادل',histLabelLose:'خسرت',
+    notifWin:'فزت بالمباراة!',notifTie:'تعادل!',notifLose:'خسرت المباراة',notifKeepTrying:'واصل التدريب!'},
+  en:{dir:'ltr',name:'English',flag:'🇺🇸',
+    logoSuper:'The Authentic Andalusian-Moroccan Game',logoAr:'Ronda — Game of Kings',logoLat:'Royal Moroccan Card Game',
+    authTitle:'Choose Your Sign-In Method',loginGoogle:'Sign in with Google',orDivider:'or',
+    aliasLabel:'👤 Enter a Nickname',aliasPlaceholder:'Your game name...',aliasHint:'3-20 characters, no leading spaces',
+    refQuestion:'Have a referral code?',refBothGet:'Both players receive',refApply:'✓ Apply',
+    learnRules:'📖 Learn the Rules',playerOnline:'Online Players',gameRunning:'Running Games',liveLbl:'Live',
+    langBtnLabel:'Language',langDropdownTitle:'🌐 Choose Your Language',
+    profileLangTitle:'🌐 App Language',profileLangSubtitle:'Choose your preferred language',
+    langNotifMsg:'🌐 You can change the app language from Settings or the Language button at the top',
+    langChangedToast:'✅ Language changed',
+    hintTooLong:'❌ Name too long (max 20 chars)',
+    hintAvail:(n)=>`✅ Name "${n}" available`,
+    hintDefault:'3-20 characters, no leading spaces',
+    wl:'You Lost!',wTie:"It's a Tie! 🤝",
+    wsWin:(pts)=>`Amazing game — ${pts} points 🌟`,wsLose:'Keep training and try again',
+    histLabelWin:'Won',histLabelTie:'Tie',histLabelLose:'Lost',
+    notifWin:'You Won the Match!',notifTie:"It's a Tie!",notifLose:'You Lost the Match',notifKeepTrying:'Keep training!'},
+  es:{dir:'ltr',name:'Español',flag:'🇪🇸',
+    logoSuper:'El Auténtico Juego Andaluz-Marroquí',logoAr:'Ronda — Juego de Reyes',logoLat:'Royal Moroccan Card Game',
+    authTitle:'Elige tu Método de Acceso',loginGoogle:'Iniciar sesión con Google',orDivider:'o',
+    aliasLabel:'👤 Ingresa un Apodo',aliasPlaceholder:'Tu nombre en el juego...',aliasHint:'3-20 caracteres, sin espacios al inicio',
+    refQuestion:'¿Tienes un código de referido?',refBothGet:'Ambos jugadores reciben',refApply:'✓ Aplicar',
+    learnRules:'📖 Aprender las Reglas',playerOnline:'Jugadores en línea',gameRunning:'Partidas activas',liveLbl:'En vivo',
+    langBtnLabel:'Idioma',langDropdownTitle:'🌐 Elige Tu Idioma',
+    profileLangTitle:'🌐 Idioma de la App',profileLangSubtitle:'Elige tu idioma preferido',
+    langNotifMsg:'🌐 Puedes cambiar el idioma desde Configuración o el botón de idioma arriba',
+    langChangedToast:'✅ Idioma cambiado',
+    hintTooLong:'❌ Nombre demasiado largo (máx 20)',
+    hintAvail:(n)=>`✅ Nombre "${n}" disponible`,
+    hintDefault:'3-20 caracteres, sin espacios al inicio',
+    wl:'¡Perdiste!',wTie:'¡Empate! 🤝',
+    wsWin:(pts)=>`¡Partida increíble — ${pts} puntos 🌟`,wsLose:'Sigue entrenando e inténtalo de nuevo',
+    histLabelWin:'Ganaste',histLabelTie:'Empate',histLabelLose:'Perdiste',
+    notifWin:'¡Ganaste la partida!',notifTie:'¡Empate!',notifLose:'Perdiste la partida',notifKeepTrying:'¡Sigue entrenando!'},
+  fr:{dir:'ltr',name:'Français',flag:'🇫🇷',
+    logoSuper:'Le Jeu Andalou-Marocain Authentique',logoAr:'Ronda — Jeu des Rois',logoLat:'Royal Moroccan Card Game',
+    authTitle:'Choisissez votre méthode de connexion',loginGoogle:'Se connecter avec Google',orDivider:'ou',
+    aliasLabel:'👤 Entrez un pseudonyme',aliasPlaceholder:'Votre nom dans le jeu...',aliasHint:'3-20 caractères, sans espace au début',
+    refQuestion:'Avez-vous un code de parrainage?',refBothGet:'Les deux joueurs reçoivent',refApply:'✓ Appliquer',
+    learnRules:'📖 Apprendre les règles',playerOnline:'Joueurs en ligne',gameRunning:'Parties en cours',liveLbl:'En direct',
+    langBtnLabel:'Langue',langDropdownTitle:'🌐 Choisissez Votre Langue',
+    profileLangTitle:'🌐 Langue de l\'App',profileLangSubtitle:'Choisissez votre langue préférée',
+    langNotifMsg:'🌐 Vous pouvez changer la langue depuis Paramètres ou le bouton langue en haut',
+    langChangedToast:'✅ Langue modifiée',
+    hintTooLong:'❌ Nom trop long (max 20 car.)',
+    hintAvail:(n)=>`✅ Nom "${n}" disponible`,
+    hintDefault:'3-20 caractères, sans espace au début',
+    wl:'Vous avez perdu !',wTie:'Égalité ! 🤝',
+    wsWin:(pts)=>`Partie incroyable — ${pts} points 🌟`,wsLose:'Continuez à vous entraîner et réessayez',
+    histLabelWin:'Gagné',histLabelTie:'Égalité',histLabelLose:'Perdu',
+    notifWin:'Vous avez gagné la partie !',notifTie:'Égalité !',notifLose:'Vous avez perdu la partie',notifKeepTrying:'Continuez à vous entraîner !'},
+  zh:{dir:'ltr',name:'中文',flag:'🇨🇳',
+    logoSuper:'正宗安达卢西亚-摩洛哥游戏',logoAr:'Ronda — 国王之游',logoLat:'Royal Moroccan Card Game',
+    authTitle:'选择登录方式',loginGoogle:'使用Google登录',orDivider:'或',
+    aliasLabel:'👤 输入昵称',aliasPlaceholder:'您的游戏名...',aliasHint:'3-20个字符，开头不能有空格',
+    refQuestion:'有推荐码吗？',refBothGet:'双方均可获得',refApply:'✓ 应用',
+    learnRules:'📖 学习规则',playerOnline:'在线玩家',gameRunning:'进行中的游戏',liveLbl:'直播',
+    langBtnLabel:'语言',langDropdownTitle:'🌐 选择您的语言',
+    profileLangTitle:'🌐 应用语言',profileLangSubtitle:'选择您的首选语言',
+    langNotifMsg:'🌐 您可以从设置或顶部的语言按钮更改应用语言',
+    langChangedToast:'✅ 语言已更改',
+    hintTooLong:'❌ 名称太长（最多20个字符）',
+    hintAvail:(n)=>`✅ 名称 "${n}" 可用`,
+    hintDefault:'3-20个字符，开头不能有空格',
+    wl:'你输了！',wTie:'平局！🤝',
+    wsWin:(pts)=>`精彩对局 — ${pts} 分 🌟`,wsLose:'继续练习，再接再厉',
+    histLabelWin:'赢了',histLabelTie:'平局',histLabelLose:'输了',
+    notifWin:'你赢得了比赛！',notifTie:'平局！',notifLose:'你输掉了比赛',notifKeepTrying:'继续努力！'},
+  ja:{dir:'ltr',name:'日本語',flag:'🇯🇵',
+    logoSuper:'本格的なアンダルシア・モロッコゲーム',logoAr:'Ronda — 王者のゲーム',logoLat:'Royal Moroccan Card Game',
+    authTitle:'ログイン方法を選択',loginGoogle:'Googleでログイン',orDivider:'または',
+    aliasLabel:'👤 ニックネームを入力',aliasPlaceholder:'ゲーム内の名前...',aliasHint:'3〜20文字、先頭にスペースなし',
+    refQuestion:'招待コードはありますか？',refBothGet:'両プレイヤーが受け取る',refApply:'✓ 適用',
+    learnRules:'📖 ルールを学ぶ',playerOnline:'オンラインプレイヤー',gameRunning:'進行中のゲーム',liveLbl:'ライブ',
+    langBtnLabel:'言語',langDropdownTitle:'🌐 言語を選択',
+    profileLangTitle:'🌐 アプリの言語',profileLangSubtitle:'お好みの言語を選択してください',
+    langNotifMsg:'🌐 設定または上部の言語ボタンからアプリの言語を変更できます',
+    langChangedToast:'✅ 言語が変更されました',
+    hintTooLong:'❌ 名前が長すぎます（最大20文字）',
+    hintAvail:(n)=>`✅ 名前 "${n}" は使用可能`,
+    hintDefault:'3〜20文字、先頭にスペースなし',
+    wl:'負けました！',wTie:'引き分け！🤝',
+    wsWin:(pts)=>`素晴らしい対局 — ${pts} ポイント 🌟`,wsLose:'練習を続けてまた挑戦しましょう',
+    histLabelWin:'勝利',histLabelTie:'引き分け',histLabelLose:'敗北',
+    notifWin:'試合に勝ちました！',notifTie:'引き分け！',notifLose:'試合に負けました',notifKeepTrying:'練習を続けましょう！'},
+  tr:{dir:'ltr',name:'Türkçe',flag:'🇹🇷',
+    logoSuper:'Otantik Endülüs-Fas Oyunu',logoAr:'Ronda — Krallar Oyunu',logoLat:'Royal Moroccan Card Game',
+    authTitle:'Giriş Yöntemini Seçin',loginGoogle:'Google ile giriş yap',orDivider:'veya',
+    aliasLabel:'👤 Takma Ad Girin',aliasPlaceholder:'Oyundaki adınız...',aliasHint:'3-20 karakter, başında boşluk olmamalı',
+    refQuestion:'Davet kodunuz var mı?',refBothGet:'Her iki oyuncu da alır',refApply:'✓ Uygula',
+    learnRules:'📖 Kuralları Öğren',playerOnline:'Çevrimiçi Oyuncular',gameRunning:'Devam Eden Oyunlar',liveLbl:'Canlı',
+    langBtnLabel:'Dil',langDropdownTitle:'🌐 Dilinizi Seçin',
+    profileLangTitle:'🌐 Uygulama Dili',profileLangSubtitle:'Tercih ettiğiniz dili seçin',
+    langNotifMsg:'🌐 Dili ayarlardan veya üstteki dil butonundan değiştirebilirsiniz',
+    langChangedToast:'✅ Dil değiştirildi',
+    hintTooLong:'❌ İsim çok uzun (maks 20 karakter)',
+    hintAvail:(n)=>`✅ "${n}" adı kullanılabilir`,
+    hintDefault:'3-20 karakter, başında boşluk olmamalı',
+    wl:'Kaybettiniz!',wTie:'Beraberlik! 🤝',
+    wsWin:(pts)=>`Muhteşem oyun — ${pts} puan 🌟`,wsLose:'Antrenman yapmaya devam edin ve tekrar deneyin',
+    histLabelWin:'Kazandı',histLabelTie:'Beraberlik',histLabelLose:'Kaybetti',
+    notifWin:'Maçı Kazandınız!',notifTie:'Beraberlik!',notifLose:'Maçı Kaybettiniz',notifKeepTrying:'Antrenman yapmaya devam!'},
+  de:{dir:'ltr',name:'Deutsch',flag:'🇩🇪',
+    logoSuper:'Das authentische andalusisch-marokkanische Spiel',logoAr:'Ronda — Spiel der Könige',logoLat:'Royal Moroccan Card Game',
+    authTitle:'Wählen Sie Ihre Anmeldemethode',loginGoogle:'Mit Google anmelden',orDivider:'oder',
+    aliasLabel:'👤 Spitznamen eingeben',aliasPlaceholder:'Ihr Spielername...',aliasHint:'3-20 Zeichen, kein Leerzeichen am Anfang',
+    refQuestion:'Haben Sie einen Empfehlungscode?',refBothGet:'Beide Spieler erhalten',refApply:'✓ Anwenden',
+    learnRules:'📖 Regeln lernen',playerOnline:'Online-Spieler',gameRunning:'Laufende Spiele',liveLbl:'Live',
+    langBtnLabel:'Sprache',langDropdownTitle:'🌐 Sprache wählen',
+    profileLangTitle:'🌐 App-Sprache',profileLangSubtitle:'Wählen Sie Ihre bevorzugte Sprache',
+    langNotifMsg:'🌐 Sie können die Sprache in den Einstellungen oder über den Sprach-Button oben ändern',
+    langChangedToast:'✅ Sprache geändert',
+    hintTooLong:'❌ Name zu lang (max 20 Zeichen)',
+    hintAvail:(n)=>`✅ Name "${n}" verfügbar`,
+    hintDefault:'3-20 Zeichen, kein Leerzeichen am Anfang',
+    wl:'Verloren!',wTie:'Unentschieden! 🤝',
+    wsWin:(pts)=>`Fantastisches Spiel — ${pts} Punkte 🌟`,wsLose:'Weiter üben und nochmal versuchen',
+    histLabelWin:'Gewonnen',histLabelTie:'Unentschieden',histLabelLose:'Verloren',
+    notifWin:'Spiel gewonnen!',notifTie:'Unentschieden!',notifLose:'Spiel verloren',notifKeepTrying:'Weiter üben!'},
+  pt:{dir:'ltr',name:'Português',flag:'🇧🇷',
+    logoSuper:'O Autêntico Jogo Andaluz-Marroquino',logoAr:'Ronda — Jogo dos Reis',logoLat:'Royal Moroccan Card Game',
+    authTitle:'Escolha seu Método de Acesso',loginGoogle:'Entrar com Google',orDivider:'ou',
+    aliasLabel:'👤 Digite um Apelido',aliasPlaceholder:'Seu nome no jogo...',aliasHint:'3-20 caracteres, sem espaços no início',
+    refQuestion:'Tem um código de indicação?',refBothGet:'Ambos os jogadores recebem',refApply:'✓ Aplicar',
+    learnRules:'📖 Aprender as Regras',playerOnline:'Jogadores Online',gameRunning:'Jogos em Andamento',liveLbl:'Ao vivo',
+    langBtnLabel:'Idioma',langDropdownTitle:'🌐 Escolha Seu Idioma',
+    profileLangTitle:'🌐 Idioma do App',profileLangSubtitle:'Escolha seu idioma preferido',
+    langNotifMsg:'🌐 Você pode alterar o idioma nas Configurações ou no botão de idioma acima',
+    langChangedToast:'✅ Idioma alterado',
+    hintTooLong:'❌ Nome muito longo (máx 20 chars)',
+    hintAvail:(n)=>`✅ Nome "${n}" disponível`,
+    hintDefault:'3-20 caracteres, sem espaços no início',
+    wl:'Você perdeu!',wTie:'Empate! 🤝',
+    wsWin:(pts)=>`Jogo incrível — ${pts} pontos 🌟`,wsLose:'Continue treinando e tente novamente',
+    histLabelWin:'Ganhou',histLabelTie:'Empate',histLabelLose:'Perdeu',
+    notifWin:'Você ganhou a partida!',notifTie:'Empate!',notifLose:'Você perdeu a partida',notifKeepTrying:'Continue treinando!'},
+  ko:{dir:'ltr',name:'한국어',flag:'🇰🇷',
+    logoSuper:'정통 안달루시아-모로코 게임',logoAr:'Ronda — 왕들의 게임',logoLat:'Royal Moroccan Card Game',
+    authTitle:'로그인 방법 선택',loginGoogle:'Google로 로그인',orDivider:'또는',
+    aliasLabel:'👤 닉네임 입력',aliasPlaceholder:'게임 내 이름...',aliasHint:'3-20자, 앞에 공백 없음',
+    refQuestion:'추천 코드가 있으신가요?',refBothGet:'두 플레이어 모두 받습니다',refApply:'✓ 적용',
+    learnRules:'📖 규칙 배우기',playerOnline:'온라인 플레이어',gameRunning:'진행 중인 게임',liveLbl:'라이브',
+    langBtnLabel:'언어',langDropdownTitle:'🌐 언어 선택',
+    profileLangTitle:'🌐 앱 언어',profileLangSubtitle:'선호하는 언어를 선택하세요',
+    langNotifMsg:'🌐 설정 또는 상단의 언어 버튼에서 앱 언어를 변경할 수 있습니다',
+    langChangedToast:'✅ 언어가 변경되었습니다',
+    hintTooLong:'❌ 이름이 너무 깁니다 (최대 20자)',
+    hintAvail:(n)=>`✅ "${n}" 사용 가능`,
+    hintDefault:'3-20자, 앞에 공백 없음',
+    wl:'졌습니다!',wTie:'무승부! 🤝',
+    wsWin:(pts)=>`멋진 게임 — ${pts} 점 🌟`,wsLose:'계속 연습하고 다시 도전하세요',
+    histLabelWin:'승리',histLabelTie:'무승부',histLabelLose:'패배',
+    notifWin:'경기에서 이겼습니다!',notifTie:'무승부!',notifLose:'경기에서 졌습니다',notifKeepTrying:'계속 노력하세요!'},
+};
+
+// ─── Language Detection & State ───────────────────────────────────────────
+const LANG_KEY = 'ronda_lang';
+function detectDeviceLang(){
+  const nav = (navigator.language || 'ar').toLowerCase();
+  const code = nav.split('-')[0];
+  return I18N[code] ? code : 'ar';
+}
+let _currentLang = localStorage.getItem(LANG_KEY) || detectDeviceLang();
+
+// expose globally
+window.getCurrentLang = ()=>_currentLang;
+window.I18N = I18N;
+window.t = (key)=>{
+  const d = I18N[_currentLang] || I18N['ar'];
+  return d[key] || I18N['ar'][key] || key;
+};
+
+// ─── Apply Language to DOM ─────────────────────────────────────────────────
+function applyLang(lang){
+  const data = I18N[lang];
+  if(!data) return;
+  _currentLang = lang;
+  localStorage.setItem(LANG_KEY, lang);
+
+  // Update html dir & lang
+  document.documentElement.lang = lang;
+  document.documentElement.dir = data.dir;
+  document.body.dir = data.dir;
+
+  // Update aliasInp direction
+  const aliasInp = document.getElementById('aliasInp');
+  if(aliasInp) aliasInp.dir = data.dir;
+
+  // Update all data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(data[key] !== undefined) el.textContent = data[key];
+  });
+
+  // Update placeholders (data-i18n-ph)
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const key = el.getAttribute('data-i18n-ph');
+    if(data[key] !== undefined) el.placeholder = data[key];
+  });
+
+  // Update lobby lang button
+  const flag = document.getElementById('lobbyLangFlag');
+  const name = document.getElementById('lobbyLangName');
+  if(flag) flag.textContent = data.flag;
+  if(name) name.textContent = data.langBtnLabel;
+
+  // Refresh profile lang grid if visible
+  _renderProfLangGrid();
+
+  // Refresh dropdown options
+  _renderLangOptions();
+}
+
+// ─── Dropdown ─────────────────────────────────────────────────────────────
+function _renderLangOptions(){
+  const list = document.getElementById('langOptionsList');
+  if(!list) return;
+  list.innerHTML = Object.entries(I18N).map(([code,d])=>`
+    <div class="lang-option ${code===_currentLang?'active':''}" onclick="setLanguage('${code}')">
+      <span class="lo-flag">${d.flag}</span>
+      <span class="lo-name">${d.name}</span>
+      <span class="lo-check">✓</span>
+    </div>`).join('');
+}
+
+window.toggleLangDropdown = function(e){
+  e.stopPropagation();
+  const btn = document.getElementById('lobbyLangBtn');
+  const dd = document.getElementById('langDropdown');
+  if(!dd || !btn) return;
+  const isOpen = dd.classList.contains('open');
+  // Close all first
+  document.querySelectorAll('.lang-dropdown.open').forEach(d=>d.classList.remove('open'));
+  if(!isOpen){
+    _renderLangOptions();
+    // Position below the button using fixed coords
+    const rect = btn.getBoundingClientRect();
+    dd.style.top = (rect.bottom + 6) + 'px';
+    // RTL: open from left side; LTR: open from right side
+    const isRTL = document.documentElement.dir === 'rtl';
+    if(isRTL){
+      dd.style.left = rect.left + 'px';
+      dd.style.right = 'auto';
+    } else {
+      dd.style.right = (window.innerWidth - rect.right) + 'px';
+      dd.style.left = 'auto';
+    }
+    dd.classList.add('open');
+  }
+};
+
+// Close dropdown when clicking outside
+document.addEventListener('click', ()=>{
+  document.querySelectorAll('.lang-dropdown.open').forEach(d=>d.classList.remove('open'));
+});
+
+// ─── Set Language ─────────────────────────────────────────────────────────
+window.setLanguage = function(code){
+  if(!I18N[code]) return;
+  applyLang(code);
+  // Apply full DOM text replacement for all elements
+  if(typeof _applyDomTexts === 'function') _applyDomTexts(code);
+  // Second pass after short delay to catch dynamically rendered elements
+  setTimeout(function(){ if(typeof _applyDomTexts === 'function') _applyDomTexts(code); }, 150);
+  // Close dropdown
+  document.querySelectorAll('.lang-dropdown.open').forEach(d=>d.classList.remove('open'));
+  // Show toast
+  const toast = document.getElementById('langToast');
+  if(toast){
+    toast.textContent = I18N[code].langChangedToast || '✅';
+    toast.classList.add('show');
+    setTimeout(()=>toast.classList.remove('show'), 2200);
+  }
+};
+
+// ─── Profile Language Grid ─────────────────────────────────────────────────
+function _renderProfLangGrid(){
+  const container = document.getElementById('profLangGrid');
+  if(!container) return;
+  container.innerHTML = Object.entries(I18N).map(([code,d])=>`
+    <div class="prof-lang-opt ${code===_currentLang?'active':''}" onclick="setLanguage('${code}')">
+      <span class="plo-flag">${d.flag}</span>
+      <span class="plo-name">${d.name}</span>
+      <span class="plo-dot"></span>
+    </div>`).join('');
+}
+
+// Inject language section into profile settings
+function _injectLangInSettings(){
+  const sc = document.getElementById('settingsContent');
+  if(!sc || document.getElementById('profLangSection')) return;
+  const sec = document.createElement('div');
+  sec.id = 'profLangSection';
+  sec.className = 'prof-lang-section';
+  sec.innerHTML = `
+    <div class="prof-lang-title" data-i18n="profileLangTitle">🌐 لغة التطبيق</div>
+    <div class="prof-lang-sub" data-i18n="profileLangSubtitle">اختر لغتك المفضلة</div>
+    <div class="prof-lang-grid" id="profLangGrid"></div>`;
+  sc.insertAdjacentElement('afterbegin', sec);
+  _renderProfLangGrid();
+  // Apply current lang texts to the newly injected element
+  const data = I18N[_currentLang] || I18N['ar'];
+  sec.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(data[key]) el.textContent = data[key];
+  });
+}
+
+// Hook into profTab to inject lang section when settings tab is opened
+const _origProfTab_i18n = window.profTab;
+window.profTab = function(btn, panel){
+  if(typeof _origProfTab_i18n === 'function') _origProfTab_i18n(btn, panel);
+  if(panel === 'pp-settings') setTimeout(_injectLangInSettings, 80);
+};
+
+// Also inject when profile is opened directly to settings
+const _origOpenM_i18n = window.openM;
+window.openM = function(id){
+  if(typeof _origOpenM_i18n === 'function') _origOpenM_i18n(id);
+  if(id === 'mProf') setTimeout(()=>{ _injectLangInSettings(); }, 200);
+};
+
+// ─── Home Screen Language Notification ────────────────────────────────────
+let _langNotifShown = false;
+window._showLangNotif = function(){
+  if(_langNotifShown) return;
+  _langNotifShown = true;
+  const notif = document.getElementById('langNotif');
+  const txt = document.getElementById('langNotifText');
+  if(!notif) return;
+  const data = I18N[_currentLang] || I18N['ar'];
+  if(txt) txt.textContent = data.langNotifMsg;
+  setTimeout(()=>{ notif.classList.add('show'); }, 800);
+  // Auto dismiss after 6 seconds
+  setTimeout(()=>{ notif.classList.remove('show'); }, 6800);
+};
+window.dismissLangNotif = function(){
+  const notif = document.getElementById('langNotif');
+  if(notif) notif.classList.remove('show');
+};
+
+// Hook into goLobby to show notification on first login
+const _origGoLobby = window.goLobby;
+window.goLobby = function(){
+  if(typeof _origGoLobby === 'function') _origGoLobby.apply(this, arguments);
+  const notifKey = 'ronda_lang_notif_shown';
+  if(!localStorage.getItem(notifKey)){
+    localStorage.setItem(notifKey, '1');
+    setTimeout(window._showLangNotif, 1500);
+  }
+};
+
+// ─── Patch checkAlias to use i18n hints ──────────────────────────────────
+const _origCheckAlias = window.checkAlias;
+window.checkAlias = function(){
+  const v=(document.getElementById('aliasInp')||{}).value||'';
+  const btn=document.getElementById('aliasGo');
+  const hint=document.getElementById('aliasHint');
+  if(!btn||!hint){ if(typeof _origCheckAlias==='function') _origCheckAlias(); return; }
+  const trimmed=v.trim();
+  const ok=trimmed.length>=3 && trimmed.length<=20;
+  btn.disabled=!ok;
+  const d=I18N[_currentLang]||I18N['ar'];
+  const tooLong=trimmed.length>20;
+  hint.textContent=tooLong?(d.hintTooLong||'❌ Name too long'):ok?(typeof d.hintAvail==='function'?d.hintAvail(trimmed):`✅ "${trimmed}"`):(d.hintDefault||'3-20 chars');
+  hint.style.color=tooLong?'var(--ruby3)':ok?'var(--emer3)':'var(--t5)';
+};
+
+// ─── Full DOM Text Replacement ────────────────────────────────────────────
+// Maps element IDs/selectors to i18n keys for elements without data-i18n
+const I18N_DOM = {
+  ar:{
+    // Home screen
+    'refInputRefQuestion': 'عندك رمز دعوة؟',
+    'refInputBothGet': 'الطرفان يحصلان على',
+    'refInputApplyBtn': '✓ تطبيق',
+    'homePrivacyLink': '🔒 سياسة الخصوصية',
+    'homeDeleteLink': '🗑️ حذف البيانات',
+    // Lobby topbar
+    'myNm': null, // dynamic
+    // Daily challenge
+    'dcbBadgeText': 'تحدي اليوم',
+    // Trio
+    'lobChestTitle': 'الصناديق',
+    'lobChallengeTitle': 'التحديات',
+    'lobAchTitle': 'الإنجازات',
+    // 1v1 card
+    'gc1sub': 'تحدى خصمك وجهاً لوجه',
+    'bet-ttl-1': 'الرهان',
+    'pm1fBtn': '<b>مع الأصدقاء</b><small>أنشئ غرفة وادعُ صديقك</small>',
+    'pm1wBtn': '<b>اتحد العالم</b><small>منافس عشوائي بمستواك</small>',
+    'pm1cBtn': '<b>أدخل رمز</b><small>لديك رمز دعوة؟</small>',
+    // 2v2 card
+    'gc2sub': 'تحالف وتحدّوا العالم معاً',
+    // Game area
+    'tblLbl': 'الطاولة',
+    'tblEmpty': 'الطاولة فارغة',
+    'myNmG': 'أنت',
+    'dpMyName': 'أنت',
+    'dpOppName': 'خصمك',
+    'oppNm': 'خصم',
+    // Win screen
+    'wt': 'فزت!',
+    'ws': 'لعبة مذهلة 🌟',
+    'wsl1': 'نقاطي',
+    'wsl2': 'أوراق',
+    'wsl3': 'ميسا',
+    'wsl4': 'بومبا',
+    'wsl5': 'روندة',
+    'wsl6': 'ترينكه',
+    'wsl7': '👑 ملك',
+    'wsl8': '🎯 +10',
+    'wsl9': '⚖ عقوبة',
+    'endSbTitle': '⚔ النتيجة النهائية',
+    'endPrizeLbl': 'ذهب',
+    // Waiting room
+    'wTtl': 'غرفة اللعب',
+    'wCodeLbl': 'رمز الغرفة',
+    'wSt': 'في انتظار لاعبين...',
+    'wHint': 'اضغط أيقونة المنصة — ينسخ الدعوة وينتقل إليها تلقائياً 🚀',
+    'wExitBtn': 'خروج من المباراة',
+    // Score bar
+    'sb2pMyNm': 'أنت',
+    'sb2pOppNm': 'الخصم',
+    // Dealer transition
+    'dtLabel': 'انتقل دور الموزع',
+    'dtSub': 'يوزع الآن...',
+    // Round modal
+    'rndTitle': 'انتهت الجولة!',
+    'rndSub': 'النتيجة النهائية',
+    'rndContinue': 'متابعة ▶',
+    // Profile tabs
+    'profTabStats': '📊 إحصائيات',
+    'profTabChallenges': '🎯 تحديات',
+    'profTabAch': '🏆 إنجازات',
+    'profTabHist': '📜 السجل',
+    'profTabRef': '🎁 الإحالة',
+    'profTabChests': '🎁 الصناديق',
+    'profTabSettings': '⚙️ الإعدادات',
+    // Stat cards
+    'statLblWins': 'انتصارات',
+    'statLblGames': 'ألعاب',
+    'statLblRate': 'نسبة الفوز',
+    'statLblStreak': 'سلسلة انتصارات',
+    'statLblXp': 'نقاط الخبرة',
+    'statLblLevel': 'المستوى',
+    // Chest items
+    'chestRarityCommon': 'عادي',
+    'chestNameGold': 'صندوق الذهب',
+    'chestRarityRare': 'نادر',
+    'chestNameGem': 'صندوق الجواهر',
+    'chestRarityEpic': 'ملحمي',
+    'chestNameKings': 'صندوق الملوك',
+    'chestRarityLegendary': 'أسطوري نادر',
+    'chestNameMystery': 'صندوق الغموض',
+    'chestRarityDaily': 'يومي',
+    'chestNameDaily': 'اليومي',
+    'chestRarityWeekly': 'أسبوعي',
+    'chestNameWeekly': 'الأسبوعي',
+    'chestRarityWin': 'فوز',
+    'chestNameWin': 'صندوق الفوز',
+    // Auto toggle
+    'autoToggleLbl': 'تلقائي',
+    // Quick chat buttons
+    'qcb1': 'ميسا!', 'qcb2': 'بومبا!', 'qcb3': 'روندة', 'qcb4': 'ترينغا',
+    'qcb5': 'زرب!', 'qcb6': 'واعرة!', 'qcb7': 'عطيني', 'qcb8': 'كايلا',
+    // Searching
+    'pt1wTx': 'جاري البحث...',
+    'pt2tTx': 'جاري البحث...',
+    'pt2wTx': 'جاري البحث...',
+    'pt3wTx': 'جاري البحث...',
+    // Lobby connection
+    'lobConnected': 'متصل',
+  },
+  en:{
+    'refInputRefQuestion': 'Have a referral code?',
+    'refInputBothGet': 'Both players receive',
+    'refInputApplyBtn': '✓ Apply',
+    'homePrivacyLink': '🔒 Privacy Policy',
+    'homeDeleteLink': '🗑️ Delete Data',
+    'dcbBadgeText': 'Daily Challenge',
+    'lobChestTitle': 'Chests',
+    'lobChallengeTitle': 'Challenges',
+    'lobAchTitle': 'Achievements',
+    'gc1sub': 'Challenge your opponent face to face',
+    'bet-ttl-1': 'Bet',
+    'gc2sub': 'Team up and challenge the world together',
+    'tblLbl': 'Table',
+    'tblEmpty': 'Table is empty',
+    'myNmG': 'You',
+    'dpMyName': 'You',
+    'dpOppName': 'Opponent',
+    'oppNm': 'Opponent',
+    'wt': 'You Won!',
+    'ws': 'Amazing Game 🌟',
+    'wsl1': 'My Points',
+    'wsl2': 'Cards',
+    'wsl3': 'Mesa',
+    'wsl4': 'Bomba',
+    'wsl5': 'Ronda',
+    'wsl6': 'Trinca',
+    'wsl7': '👑 King',
+    'wsl8': '🎯 +10',
+    'wsl9': '⚖ Penalty',
+    'endSbTitle': '⚔ Final Score',
+    'endPrizeLbl': 'Gold',
+    'wTtl': 'Game Room',
+    'wCodeLbl': 'Room Code',
+    'wSt': 'Waiting for players...',
+    'wHint': 'Tap the platform icon — copies invite and navigates automatically 🚀',
+    'wExitBtn': 'Leave Match',
+    'sb2pMyNm': 'You',
+    'sb2pOppNm': 'Opponent',
+    'dtLabel': 'Dealer Changed',
+    'dtSub': 'Dealing now...',
+    'rndTitle': 'Round Over!',
+    'rndSub': 'Final Result',
+    'rndContinue': 'Continue ▶',
+    'profTabStats': '📊 Stats',
+    'profTabChallenges': '🎯 Challenges',
+    'profTabAch': '🏆 Achievements',
+    'profTabHist': '📜 History',
+    'profTabRef': '🎁 Referral',
+    'profTabChests': '🎁 Chests',
+    'profTabSettings': '⚙️ Settings',
+    'statLblWins': 'Wins',
+    'statLblGames': 'Games',
+    'statLblRate': 'Win Rate',
+    'statLblStreak': 'Win Streak',
+    'statLblXp': 'XP Points',
+    'statLblLevel': 'Level',
+    'chestRarityCommon': 'Common',
+    'chestNameGold': 'Gold Chest',
+    'chestRarityRare': 'Rare',
+    'chestNameGem': 'Gem Chest',
+    'chestRarityEpic': 'Epic',
+    'chestNameKings': 'Kings Chest',
+    'chestRarityLegendary': 'Legendary',
+    'chestNameMystery': 'Mystery Chest',
+    'chestRarityDaily': 'Daily',
+    'chestNameDaily': 'Daily',
+    'chestRarityWeekly': 'Weekly',
+    'chestNameWeekly': 'Weekly',
+    'chestRarityWin': 'Win',
+    'chestNameWin': 'Win Chest',
+    'autoToggleLbl': 'Auto',
+    'qcb1': 'Mesa!', 'qcb2': 'Bomba!', 'qcb3': 'Ronda', 'qcb4': 'Tringa',
+    'qcb5': 'Play!', 'qcb6': 'Hot!', 'qcb7': 'Give me!', 'qcb8': 'Play',
+    'pt1wTx': 'Searching...',
+    'pt2tTx': 'Searching...',
+    'pt2wTx': 'Searching...',
+    'pt3wTx': 'Searching...',
+    'lobConnected': 'Online',
+  },
+  fr:{
+    'refInputRefQuestion': 'Vous avez un code de parrainage?',
+    'refInputBothGet': 'Les deux joueurs reçoivent',
+    'refInputApplyBtn': '✓ Appliquer',
+    'homePrivacyLink': '🔒 Politique de confidentialité',
+    'homeDeleteLink': '🗑️ Supprimer mes données',
+    'dcbBadgeText': 'Défi du jour',
+    'lobChestTitle': 'Coffres',
+    'lobChallengeTitle': 'Défis',
+    'lobAchTitle': 'Succès',
+    'gc1sub': 'Défiez votre adversaire en face à face',
+    'bet-ttl-1': 'Mise',
+    'gc2sub': 'Faites équipe et défiez le monde ensemble',
+    'tblLbl': 'Table',
+    'tblEmpty': 'Table vide',
+    'myNmG': 'Vous',
+    'dpMyName': 'Vous',
+    'dpOppName': 'Adversaire',
+    'oppNm': 'Adversaire',
+    'wt': 'Vous avez gagné!',
+    'ws': 'Partie Incroyable 🌟',
+    'wsl1': 'Mes Points',
+    'wsl2': 'Cartes',
+    'wsl3': 'Mesa',
+    'wsl4': 'Bomba',
+    'wsl5': 'Ronda',
+    'wsl6': 'Trinca',
+    'wsl7': '👑 Roi',
+    'wsl8': '🎯 +10',
+    'wsl9': '⚖ Pénalité',
+    'endSbTitle': '⚔ Score Final',
+    'endPrizeLbl': 'Or',
+    'wTtl': 'Salle de jeu',
+    'wCodeLbl': 'Code de salle',
+    'wSt': 'En attente de joueurs...',
+    'wHint': 'Appuyez sur l\'icône de la plateforme — copie et navigue automatiquement 🚀',
+    'wExitBtn': 'Quitter le match',
+    'sb2pMyNm': 'Vous',
+    'sb2pOppNm': 'Adversaire',
+    'dtLabel': 'Donneur changé',
+    'dtSub': 'Distribution en cours...',
+    'rndTitle': 'Manche terminée!',
+    'rndSub': 'Résultat final',
+    'rndContinue': 'Continuer ▶',
+    'profTabStats': '📊 Statistiques',
+    'profTabChallenges': '🎯 Défis',
+    'profTabAch': '🏆 Succès',
+    'profTabHist': '📜 Historique',
+    'profTabRef': '🎁 Parrainage',
+    'profTabChests': '🎁 Coffres',
+    'profTabSettings': '⚙️ Paramètres',
+    'statLblWins': 'Victoires',
+    'statLblGames': 'Parties',
+    'statLblRate': 'Taux de victoire',
+    'statLblStreak': 'Série de victoires',
+    'statLblXp': 'Points XP',
+    'statLblLevel': 'Niveau',
+    'chestRarityCommon': 'Commun',
+    'chestNameGold': 'Coffre d\'or',
+    'chestRarityRare': 'Rare',
+    'chestNameGem': 'Coffre de gemmes',
+    'chestRarityEpic': 'Épique',
+    'chestNameKings': 'Coffre des rois',
+    'chestRarityLegendary': 'Légendaire',
+    'chestNameMystery': 'Coffre mystère',
+    'chestRarityDaily': 'Quotidien',
+    'chestNameDaily': 'Quotidien',
+    'chestRarityWeekly': 'Hebdomadaire',
+    'chestNameWeekly': 'Hebdomadaire',
+    'chestRarityWin': 'Victoire',
+    'chestNameWin': 'Coffre de victoire',
+    'autoToggleLbl': 'Auto',
+    'qcb1': 'Mesa!', 'qcb2': 'Bomba!', 'qcb3': 'Ronda', 'qcb4': 'Tringa',
+    'qcb5': 'Joue!', 'qcb6': 'Chaud!', 'qcb7': 'Donne!', 'qcb8': 'Joue',
+    'pt1wTx': 'Recherche...',
+    'pt2tTx': 'Recherche...',
+    'pt2wTx': 'Recherche...',
+    'pt3wTx': 'Recherche...',
+    'lobConnected': 'En ligne',
+  },
+  es:{
+    'refInputRefQuestion': '¿Tienes un código de referido?',
+    'refInputBothGet': 'Ambos jugadores reciben',
+    'refInputApplyBtn': '✓ Aplicar',
+    'homePrivacyLink': '🔒 Política de privacidad',
+    'homeDeleteLink': '🗑️ Eliminar mis datos',
+    'dcbBadgeText': 'Desafío del día',
+    'lobChestTitle': 'Cofres',
+    'lobChallengeTitle': 'Desafíos',
+    'lobAchTitle': 'Logros',
+    'gc1sub': 'Desafía a tu oponente cara a cara',
+    'bet-ttl-1': 'Apuesta',
+    'gc2sub': 'Únete y desafíen al mundo juntos',
+    'tblLbl': 'Mesa',
+    'tblEmpty': 'Mesa vacía',
+    'myNmG': 'Tú',
+    'dpMyName': 'Tú',
+    'dpOppName': 'Oponente',
+    'oppNm': 'Oponente',
+    'wt': '¡Ganaste!',
+    'ws': '¡Partida Increíble! 🌟',
+    'wsl1': 'Mis Puntos',
+    'wsl2': 'Cartas',
+    'wsl3': 'Mesa',
+    'wsl4': 'Bomba',
+    'wsl5': 'Ronda',
+    'wsl6': 'Trinca',
+    'wsl7': '👑 Rey',
+    'wsl8': '🎯 +10',
+    'wsl9': '⚖ Penalti',
+    'endSbTitle': '⚔ Puntuación Final',
+    'endPrizeLbl': 'Oro',
+    'wTtl': 'Sala de juego',
+    'wCodeLbl': 'Código de sala',
+    'wSt': 'Esperando jugadores...',
+    'wHint': 'Toca el ícono de la plataforma — copia la invitación y navega automáticamente 🚀',
+    'wExitBtn': 'Salir del partido',
+    'sb2pMyNm': 'Tú',
+    'sb2pOppNm': 'Oponente',
+    'dtLabel': 'Repartidor cambiado',
+    'dtSub': 'Repartiendo ahora...',
+    'rndTitle': '¡Ronda terminada!',
+    'rndSub': 'Resultado final',
+    'rndContinue': 'Continuar ▶',
+    'profTabStats': '📊 Estadísticas',
+    'profTabChallenges': '🎯 Desafíos',
+    'profTabAch': '🏆 Logros',
+    'profTabHist': '📜 Historial',
+    'profTabRef': '🎁 Referidos',
+    'profTabChests': '🎁 Cofres',
+    'profTabSettings': '⚙️ Ajustes',
+    'statLblWins': 'Victorias',
+    'statLblGames': 'Partidas',
+    'statLblRate': 'Tasa de victoria',
+    'statLblStreak': 'Racha de victorias',
+    'statLblXp': 'Puntos XP',
+    'statLblLevel': 'Nivel',
+    'chestRarityCommon': 'Común',
+    'chestNameGold': 'Cofre de Oro',
+    'chestRarityRare': 'Raro',
+    'chestNameGem': 'Cofre de Gemas',
+    'chestRarityEpic': 'Épico',
+    'chestNameKings': 'Cofre de Reyes',
+    'chestRarityLegendary': 'Legendario',
+    'chestNameMystery': 'Cofre Misterioso',
+    'chestRarityDaily': 'Diario',
+    'chestNameDaily': 'Diario',
+    'chestRarityWeekly': 'Semanal',
+    'chestNameWeekly': 'Semanal',
+    'chestRarityWin': 'Victoria',
+    'chestNameWin': 'Cofre de victoria',
+    'autoToggleLbl': 'Auto',
+    'qcb1': '¡Mesa!', 'qcb2': '¡Bomba!', 'qcb3': 'Ronda', 'qcb4': 'Tringa',
+    'qcb5': '¡Juega!', 'qcb6': '¡Caliente!', 'qcb7': '¡Dame!', 'qcb8': 'Juega',
+    'pt1wTx': 'Buscando...',
+    'pt2tTx': 'Buscando...',
+    'pt2wTx': 'Buscando...',
+    'pt3wTx': 'Buscando...',
+    'lobConnected': 'En línea',
+  },
+};
+// Fill missing langs with English fallback, then override key game strings
+['zh','ja','tr','de','pt','ko'].forEach(function(code){
+  I18N_DOM[code] = Object.assign({}, I18N_DOM['en']);
+});
+// Override game quick-chat & key UI for each language
+(function(){
+  var overrides = {
+    zh: { 'qcb1':'上桌!','qcb2':'炸弹!','qcb3':'Ronda','qcb4':'三张','qcb5':'出牌!','qcb6':'好手!','qcb7':'给我!','qcb8':'走',
+          'autoToggleLbl':'自动','pt1wTx':'搜索...','pt2tTx':'搜索...','pt2wTx':'搜索...','pt3wTx':'搜索...',
+          'lobConnected':'在线',
+          'wt':'你赢了! 🎉','wl':'你输了!','wTie':'平局! 🤝',
+          'ws':'精彩对局 🌟','endSbTitle':'⚔ 最终得分','endPrizeLbl':'金币',
+          'wTtl':'游戏房间','wCodeLbl':'房间代码','wSt':'等待玩家...','wExitBtn':'离开比赛',
+          'sb2pMyNm':'我','sb2pOppNm':'对手','oppNm':'对手','myNmG':'我',
+          'dpMyName':'我','dpOppName':'对手',
+          'tblLbl':'桌面','tblEmpty':'桌面为空',
+          'dtLabel':'换庄','dtSub':'发牌中...',
+          'rndTitle':'回合结束!','rndSub':'最终结果','rndContinue':'继续 ▶',
+          'profTabStats':'📊 统计','profTabChallenges':'🎯 挑战','profTabAch':'🏆 成就',
+          'profTabHist':'📜 历史','profTabRef':'🎁 推荐','profTabChests':'🎁 宝箱','profTabSettings':'⚙️ 设置',
+          'statLblWins':'胜利','statLblGames':'游戏','statLblRate':'胜率','statLblStreak':'连胜','statLblXp':'经验值','statLblLevel':'等级',
+          'chestRarityCommon':'普通','chestNameGold':'金币宝箱','chestRarityRare':'稀有','chestNameGem':'宝石宝箱',
+          'chestRarityEpic':'史诗','chestNameKings':'王者宝箱','chestRarityLegendary':'传奇','chestNameMystery':'神秘宝箱',
+          'chestRarityDaily':'每日','chestNameDaily':'每日宝箱','chestRarityWeekly':'每周','chestNameWeekly':'每周宝箱',
+          'chestRarityWin':'胜利','chestNameWin':'胜利宝箱',
+          'wHint':'点击平台图标 — 自动复制邀请链接 🚀',
+          'lobChestTitle':'宝箱','lobChallengeTitle':'挑战','lobAchTitle':'成就',
+          'dcbBadgeText':'每日挑战','gc1sub':'与对手正面对决','gc2sub':'组队挑战全球',
+          'bet-ttl-1':'赌注','pt1wTx':'搜索...','pt2tTx':'搜索...','pt2wTx':'搜索...','pt3wTx':'搜索...',
+          'histLabelWin':'赢了','histLabelTie':'平局','histLabelLose':'输了',
+          'notifWin':'你赢得了比赛!','notifTie':'平局!','notifLose':'你输掉了比赛','notifKeepTrying':'继续努力!',
+          'challTxt1':'«敢在Ronda和我一战吗？🃏⚔ 输入代码来较量吧...如果你有胆量！😤🔥»',
+          'challTxt2':'«Ronda队伍需要你！🃏🔥 用代码加入，我们一起挑战全球——对手们在等我们！⚔👑»',
+          'challTxt2t':'«我的Ronda搭档：现在加入我的队伍！🤝🃏 我们将击败全世界——代码在等你！⚔🔥»',
+          'challTxt3':'«四人入局，只有一人成为冠军！👑🃏 大Ronda等着你——你准备好了吗？😤🏆»',
+          'profLinkHint':'🔗 关联账户以在所有设备上保存数据和头像',
+          'profLinkGoogle':'关联Google账户',
+          'histEmpty':'暂无游戏记录 — 开始游戏后将显示在这里！',
+          'statMore':'🃏 多玩几局以升级并获得专属奖励',
+          'giftTitle':'欢迎来到Ronda！','giftSub':'欢迎礼物 — 您首次进入游戏',
+          'giftCoinLabel':'金币','giftWelcomeLabel':'欢迎礼物',
+          'giftClaimBtn':'🎴 领取礼物并开始游戏！',
+          'promoTitle':'🎁 礼品码','promoSub':'输入礼品码，领取您的专属奖励！',
+          'frndEmptyHint':'在对局中点击玩家头像来添加好友',
+          'rulesClose':'明白了！开始游戏 🎴',
+          'shopSecurity':'🔒 安全加密支付 — 我们从不存储您的卡片数据',
+          'shopCardSteps':['选择合适的套餐','点击下方支付按钮','选择信用卡或借记卡','安全输入您的卡片信息'],
+          'lbmScopeLoc':'🇲🇦 全国',
+          'luoTitle':'恭喜！您已升至','luoDefaultName':'冉冉新星','luoCloseBtn':'🎴 继续游戏！',
+          'wait3':'⏳ 等待3名玩家...','pm2tPartnerWait':'⏳ 等待您的搭档输入代码...',
+          'codeHint1':'输入好友发给您的代码','codeHint2':'输入房间代码或队伍代码' },
+    ja: { 'qcb1':'テーブル!','qcb2':'爆弾!','qcb3':'Ronda','qcb4':'三枚','qcb5':'プレイ!','qcb6':'熱い!','qcb7':'頂戴!','qcb8':'プレイ',
+          'autoToggleLbl':'自動','pt1wTx':'検索中...','pt2tTx':'検索中...','pt2wTx':'検索中...','pt3wTx':'検索中...',
+          'lobConnected':'オンライン',
+          'wt':'勝ちました! 🎉','wl':'負けました!','wTie':'引き分け! 🤝',
+          'ws':'素晴らしい対局 🌟','endSbTitle':'⚔ 最終スコア','endPrizeLbl':'ゴールド',
+          'wTtl':'ゲームルーム','wCodeLbl':'ルームコード','wSt':'プレイヤーを待っています...','wExitBtn':'マッチを離れる',
+          'sb2pMyNm':'あなた','sb2pOppNm':'相手','oppNm':'相手','myNmG':'あなた',
+          'dpMyName':'あなた','dpOppName':'相手',
+          'tblLbl':'テーブル','tblEmpty':'テーブルが空です',
+          'dtLabel':'ディーラー交代','dtSub':'配牌中...',
+          'rndTitle':'ラウンド終了!','rndSub':'最終結果','rndContinue':'続ける ▶',
+          'profTabStats':'📊 統計','profTabChallenges':'🎯 チャレンジ','profTabAch':'🏆 実績',
+          'profTabHist':'📜 履歴','profTabRef':'🎁 紹介','profTabChests':'🎁 チェスト','profTabSettings':'⚙️ 設定',
+          'statLblWins':'勝利','statLblGames':'ゲーム','statLblRate':'勝率','statLblStreak':'連勝','statLblXp':'経験値','statLblLevel':'レベル',
+          'chestRarityCommon':'コモン','chestNameGold':'ゴールドチェスト','chestRarityRare':'レア','chestNameGem':'ジェムチェスト',
+          'chestRarityEpic':'エピック','chestNameKings':'キングチェスト','chestRarityLegendary':'レジェンダリー','chestNameMystery':'ミステリーチェスト',
+          'chestRarityDaily':'デイリー','chestNameDaily':'デイリーチェスト','chestRarityWeekly':'ウィークリー','chestNameWeekly':'ウィークリーチェスト',
+          'chestRarityWin':'勝利','chestNameWin':'勝利チェスト',
+          'wHint':'プラットフォームアイコンをタップ — 招待を自動コピー 🚀',
+          'lobChestTitle':'チェスト','lobChallengeTitle':'チャレンジ','lobAchTitle':'実績',
+          'dcbBadgeText':'デイリーチャレンジ','gc1sub':'対戦相手に挑戦','gc2sub':'チームを組んで世界に挑む',
+          'bet-ttl-1':'ベット',
+          'histLabelWin':'勝利','histLabelTie':'引き分け','histLabelLose':'敗北',
+          'notifWin':'試合に勝ちました!','notifTie':'引き分け!','notifLose':'試合に負けました','notifKeepTrying':'練習を続けましょう!',
+          'challTxt1':'«Rondaで私に挑む勇気がありますか？🃏⚔ コードを入力して、誰が最強か見せましょう...勇気があれば！😤🔥»',
+          'challTxt2':'«Rondaチームが今あなたを必要としています！🃏🔥 コードで参加して一緒に世界に挑戦——相手が待っています！⚔👑»',
+          'challTxt2t':'«私のRondaパートナー：今チームに参加しましょう！🤝🃏 一緒に世界を倒す——コードが待っています！⚔🔥»',
+          'challTxt3':'«4人が入り、1人だけがチャンピオンとして出る！👑🃏 大きなRondaが待っている——挑む準備はできていますか？😤🏆»',
+          'profLinkHint':'🔗 アカウントをリンクしてすべてのデバイスにデータと写真を保存',
+          'profLinkGoogle':'Googleでリンク',
+          'histEmpty':'まだゲームなし — プレイすればここに表示されます！',
+          'statMore':'🃏 もっとプレイしてレベルアップして限定報酬を獲得しましょう',
+          'giftTitle':'Rondaへようこそ！','giftSub':'ウェルカムギフト — ゲーム初回ログイン',
+          'giftCoinLabel':'ゴールドコイン','giftWelcomeLabel':'ウェルカムギフト',
+          'giftClaimBtn':'🎴 ギフトを受け取ってプレイ開始！',
+          'promoTitle':'🎁 ギフトコード','promoSub':'ギフトコードを入力して限定報酬を受け取りましょう！',
+          'frndEmptyHint':'対戦中にプレイヤーのアバターをタップして友達を追加',
+          'rulesClose':'わかりました！プレイしましょう 🎴',
+          'shopSecurity':'🔒 安全な暗号化決済 — カードデータは保存しません',
+          'shopCardSteps':['適切なパッケージを選択','下の支払うボタンをタップ','クレジットカードまたはデビットカードを選択','カード情報を安全に入力'],
+          'lbmScopeLoc':'🇲🇦 国内',
+          'luoTitle':'おめでとう！レベルに到達しました','luoDefaultName':'新進気鋭','luoCloseBtn':'🎴 プレイを続ける！',
+          'wait3':'⏳ 3人のプレイヤーを待っています...','pm2tPartnerWait':'⏳ パートナーのコード入力を待っています...',
+          'codeHint1':'友達から送られたコードを入力してください','codeHint2':'ルームコードまたはチームコードを入力してください' },
+    tr: { 'qcb1':'Masa!','qcb2':'Bomba!','qcb3':'Ronda','qcb4':'Üçlü','qcb5':'Oyna!','qcb6':'Ateşli!','qcb7':'Ver!','qcb8':'Oyna',
+          'autoToggleLbl':'Otomatik','pt1wTx':'Aranıyor...','pt2tTx':'Aranıyor...','pt2wTx':'Aranıyor...','pt3wTx':'Aranıyor...',
+          'lobConnected':'Çevrimiçi',
+          'wt':'Kazandınız! 🎉','wl':'Kaybettiniz!','wTie':'Beraberlik! 🤝',
+          'ws':'Muhteşem oyun 🌟','endSbTitle':'⚔ Final Skoru','endPrizeLbl':'Altın',
+          'wTtl':'Oyun Odası','wCodeLbl':'Oda Kodu','wSt':'Oyuncular bekleniyor...','wExitBtn':'Maçtan ayrıl',
+          'sb2pMyNm':'Sen','sb2pOppNm':'Rakip','oppNm':'Rakip','myNmG':'Sen',
+          'dpMyName':'Sen','dpOppName':'Rakip',
+          'tblLbl':'Masa','tblEmpty':'Masa boş',
+          'dtLabel':'Dağıtıcı Değişti','dtSub':'Dağıtılıyor...',
+          'rndTitle':'Tur Bitti!','rndSub':'Final Sonucu','rndContinue':'Devam ▶',
+          'profTabStats':'📊 İstatistik','profTabChallenges':'🎯 Görevler','profTabAch':'🏆 Başarımlar',
+          'profTabHist':'📜 Geçmiş','profTabRef':'🎁 Davet','profTabChests':'🎁 Sandıklar','profTabSettings':'⚙️ Ayarlar',
+          'statLblWins':'Galibiyet','statLblGames':'Oyun','statLblRate':'Kazanma Oranı','statLblStreak':'Seri','statLblXp':'Deneyim','statLblLevel':'Seviye',
+          'chestRarityCommon':'Yaygın','chestNameGold':'Altın Sandığı','chestRarityRare':'Nadir','chestNameGem':'Mücevher Sandığı',
+          'chestRarityEpic':'Destansı','chestNameKings':'Kral Sandığı','chestRarityLegendary':'Efsanevi','chestNameMystery':'Gizemli Sandık',
+          'chestRarityDaily':'Günlük','chestNameDaily':'Günlük Sandık','chestRarityWeekly':'Haftalık','chestNameWeekly':'Haftalık Sandık',
+          'chestRarityWin':'Galibiyet','chestNameWin':'Galibiyet Sandığı',
+          'wHint':'Platform simgesine dokunun — daveti otomatik kopyalar 🚀',
+          'lobChestTitle':'Sandıklar','lobChallengeTitle':'Görevler','lobAchTitle':'Başarımlar',
+          'dcbBadgeText':'Günlük Görev','gc1sub':'Rakibinize meydan okuyun','gc2sub':'Ekip olup dünyaya meydan okuyun',
+          'bet-ttl-1':'Bahis',
+          'histLabelWin':'Kazandı','histLabelTie':'Beraberlik','histLabelLose':'Kaybetti',
+          'notifWin':'Maçı Kazandınız!','notifTie':'Beraberlik!','notifLose':'Maçı Kaybettiniz','notifKeepTrying':'Antrenman yapmaya devam!',
+          'challTxt1':'«Ronda\'da bana meydan okumaya cesaret eder misin? 🃏⚔ Kodu gir ve kimin en iyi olduğunu görelim... cesaretın varsa! 😤🔥»',
+          'challTxt2':'«Ronda takımı şimdi seni bekliyor! 🃏🔥 Kodla katıl, birlikte dünyaya meydan okuyalım — rakipler bizi bekliyor! ⚔👑»',
+          'challTxt2t':'«Ronda ortağım: takımıma şimdi katıl! 🤝🃏 Birlikte dünyayı yeneceğiz — kod seni bekliyor! ⚔🔥»',
+          'challTxt3':'«Dört giriyor, yalnız biri şampiyon olarak çıkıyor! 👑🃏 Büyük Ronda bekliyor — hazır mısın? 😤🏆»',
+          'profLinkHint':'🔗 Tüm cihazlarında verilerini ve fotoğrafını kaydetmek için hesabını bağla',
+          'profLinkGoogle':'Google ile bağla',
+          'histEmpty':'Henüz oyun yok — oyna ve burada görünecek!',
+          'statMore':'🃏 Seviye atlamak ve özel ödüller kazanmak için daha fazla oyna',
+          'giftTitle':'Ronda\'ya Hoş Geldiniz!','giftSub':'Hoş geldin hediyesi — oyundaki ilk girişin',
+          'giftCoinLabel':'Altın para','giftWelcomeLabel':'Hoş geldin hediyesi',
+          'giftClaimBtn':'🎴 Hediyeni al ve oynamaya başla!',
+          'promoTitle':'🎁 Hediye Kodu','promoSub':'Hediye kodunu gir ve özel ödülünü al!',
+          'frndEmptyHint':'Bir maç sırasında oyuncu avatarına dokunarak arkadaş ekle',
+          'rulesClose':'Anladım! Oynayalım 🎴',
+          'shopSecurity':'🔒 Güvenli şifreli ödeme — kart verilerini asla saklamıyoruz',
+          'shopCardSteps':['Uygun paketi seçin','Aşağıdaki Öde butonuna dokunun','Kredi veya banka kartı seçin','Kart bilgilerini güvenle girin'],
+          'lbmScopeLoc':'🇲🇦 Ulusal',
+          'luoTitle':'Tebrikler! Seviye atladın','luoDefaultName':'Yükselen Yıldız','luoCloseBtn':'🎴 Oynamaya devam et!',
+          'wait3':'⏳ 3 oyuncu bekleniyor...','pm2tPartnerWait':'⏳ Ortağının kodu girmesi bekleniyor...',
+          'codeHint1':'Arkadaşının gönderdiği kodu gir','codeHint2':'Oda kodunu veya takım kodunu gir' },
+    de: { 'qcb1':'Tisch!','qcb2':'Bombe!','qcb3':'Ronda','qcb4':'Drilling','qcb5':'Spiel!','qcb6':'Heiß!','qcb7':'Gib mir!','qcb8':'Spielen',
+          'autoToggleLbl':'Auto','pt1wTx':'Suche...','pt2tTx':'Suche...','pt2wTx':'Suche...','pt3wTx':'Suche...',
+          'lobConnected':'Online',
+          'wt':'Gewonnen! 🎉','wl':'Verloren!','wTie':'Unentschieden! 🤝',
+          'ws':'Fantastisches Spiel 🌟','endSbTitle':'⚔ Endstand','endPrizeLbl':'Gold',
+          'wTtl':'Spielraum','wCodeLbl':'Raumcode','wSt':'Warten auf Spieler...','wExitBtn':'Spiel verlassen',
+          'sb2pMyNm':'Du','sb2pOppNm':'Gegner','oppNm':'Gegner','myNmG':'Du',
+          'dpMyName':'Du','dpOppName':'Gegner',
+          'tblLbl':'Tisch','tblEmpty':'Tisch ist leer',
+          'dtLabel':'Geber gewechselt','dtSub':'Karten werden ausgeteilt...',
+          'rndTitle':'Runde beendet!','rndSub':'Endergebnis','rndContinue':'Weiter ▶',
+          'profTabStats':'📊 Statistik','profTabChallenges':'🎯 Aufgaben','profTabAch':'🏆 Errungenschaften',
+          'profTabHist':'📜 Verlauf','profTabRef':'🎁 Empfehlung','profTabChests':'🎁 Truhen','profTabSettings':'⚙️ Einstellungen',
+          'statLblWins':'Siege','statLblGames':'Spiele','statLblRate':'Siegrate','statLblStreak':'Serie','statLblXp':'Erfahrung','statLblLevel':'Level',
+          'chestRarityCommon':'Gewöhnlich','chestNameGold':'Goldtruhe','chestRarityRare':'Selten','chestNameGem':'Edelsteintruhe',
+          'chestRarityEpic':'Episch','chestNameKings':'Königstruhe','chestRarityLegendary':'Legendär','chestNameMystery':'Geheimnisvolle Truhe',
+          'chestRarityDaily':'Täglich','chestNameDaily':'Tägliche Truhe','chestRarityWeekly':'Wöchentlich','chestNameWeekly':'Wöchentliche Truhe',
+          'chestRarityWin':'Sieg','chestNameWin':'Siegestruhe',
+          'wHint':'Plattform-Symbol tippen — Einladung wird automatisch kopiert 🚀',
+          'lobChestTitle':'Truhen','lobChallengeTitle':'Aufgaben','lobAchTitle':'Errungenschaften',
+          'dcbBadgeText':'Tagesaufgabe','gc1sub':'Fordern Sie Ihren Gegner heraus','gc2sub':'Im Team die Welt herausfordern',
+          'bet-ttl-1':'Einsatz',
+          'histLabelWin':'Gewonnen','histLabelTie':'Unentschieden','histLabelLose':'Verloren',
+          'notifWin':'Spiel gewonnen!','notifTie':'Unentschieden!','notifLose':'Spiel verloren','notifKeepTrying':'Weiter üben!',
+          'challTxt1':'«Wagst du es, dich in Ronda mit mir zu messen? 🃏⚔ Gib den Code ein und lass uns sehen, wer besser ist... wenn du den Mut hast! 😤🔥»',
+          'challTxt2':'«Das Ronda-Team braucht dich jetzt! 🃏🔥 Tritt mit dem Code bei, wir fordern die Welt heraus — die Gegner warten! ⚔👑»',
+          'challTxt2t':'«Mein Ronda-Partner: Tritt jetzt meinem Team bei! 🤝🃏 Gemeinsam besiegen wir die Welt — der Code wartet auf dich! ⚔🔥»',
+          'challTxt3':'«Vier treten an, nur einer wird Champion! 👑🃏 Großes Ronda wartet — bist du bereit? 😤🏆»',
+          'profLinkHint':'🔗 Konto verknüpfen, um Daten und Foto auf allen Geräten zu speichern',
+          'profLinkGoogle':'Mit Google verknüpfen',
+          'histEmpty':'Noch keine Spiele — spiele und sie erscheinen hier!',
+          'statMore':'🃏 Spiele mehr, um aufzusteigen und exklusive Belohnungen zu verdienen',
+          'giftTitle':'Willkommen bei Ronda!','giftSub':'Willkommensgeschenk — dein erster Eintritt ins Spiel',
+          'giftCoinLabel':'Goldmünzen','giftWelcomeLabel':'Willkommensgeschenk',
+          'giftClaimBtn':'🎴 Hole dein Geschenk und fang an zu spielen!',
+          'promoTitle':'🎁 Geschenkcode','promoSub':'Gib deinen Geschenkcode ein und erhalte deine exklusive Belohnung!',
+          'frndEmptyHint':'Freunde hinzufügen, indem du während eines Spiels auf den Spieler-Avatar tippst',
+          'rulesClose':'Verstanden! Los spielen 🎴',
+          'shopSecurity':'🔒 Sichere verschlüsselte Zahlung — wir speichern niemals deine Kartendaten',
+          'shopCardSteps':['Das richtige Paket auswählen','Auf die Schaltfläche Bezahlen tippen','Kredit- oder Debitkarte auswählen','Kartendaten sicher eingeben'],
+          'lbmScopeLoc':'🇲🇦 National',
+          'luoTitle':'Glückwunsch! Du hast Stufe erreicht','luoDefaultName':'Aufgehender Stern','luoCloseBtn':'🎴 Weiter spielen!',
+          'wait3':'⏳ Warten auf 3 Spieler...','pm2tPartnerWait':'⏳ Warten auf Ihren Partner...',
+          'codeHint1':'Gib den Code ein, den dir dein Freund geschickt hat','codeHint2':'Gib den Raum- oder Teamcode ein' },
+    pt: { 'qcb1':'Mesa!','qcb2':'Bomba!','qcb3':'Ronda','qcb4':'Trinca','qcb5':'Joga!','qcb6':'Quente!','qcb7':'Me dá!','qcb8':'Jogar',
+          'autoToggleLbl':'Auto','pt1wTx':'Buscando...','pt2tTx':'Buscando...','pt2wTx':'Buscando...','pt3wTx':'Buscando...',
+          'lobConnected':'Online',
+          'wt':'Você Ganhou! 🎉','wl':'Você Perdeu!','wTie':'Empate! 🤝',
+          'ws':'Jogo incrível 🌟','endSbTitle':'⚔ Pontuação Final','endPrizeLbl':'Ouro',
+          'wTtl':'Sala de Jogo','wCodeLbl':'Código da Sala','wSt':'Aguardando jogadores...','wExitBtn':'Sair da partida',
+          'sb2pMyNm':'Você','sb2pOppNm':'Oponente','oppNm':'Oponente','myNmG':'Você',
+          'dpMyName':'Você','dpOppName':'Oponente',
+          'tblLbl':'Mesa','tblEmpty':'Mesa vazia',
+          'dtLabel':'Distribuidor Mudou','dtSub':'Distribuindo...',
+          'rndTitle':'Rodada Encerrada!','rndSub':'Resultado Final','rndContinue':'Continuar ▶',
+          'profTabStats':'📊 Estatísticas','profTabChallenges':'🎯 Desafios','profTabAch':'🏆 Conquistas',
+          'profTabHist':'📜 Histórico','profTabRef':'🎁 Indicação','profTabChests':'🎁 Baús','profTabSettings':'⚙️ Configurações',
+          'statLblWins':'Vitórias','statLblGames':'Jogos','statLblRate':'Taxa de Vitória','statLblStreak':'Sequência','statLblXp':'Experiência','statLblLevel':'Nível',
+          'chestRarityCommon':'Comum','chestNameGold':'Baú de Ouro','chestRarityRare':'Raro','chestNameGem':'Baú de Gemas',
+          'chestRarityEpic':'Épico','chestNameKings':'Baú dos Reis','chestRarityLegendary':'Lendário','chestNameMystery':'Baú Misterioso',
+          'chestRarityDaily':'Diário','chestNameDaily':'Baú Diário','chestRarityWeekly':'Semanal','chestNameWeekly':'Baú Semanal',
+          'chestRarityWin':'Vitória','chestNameWin':'Baú de Vitória',
+          'wHint':'Toque no ícone da plataforma — copia o convite automaticamente 🚀',
+          'lobChestTitle':'Baús','lobChallengeTitle':'Desafios','lobAchTitle':'Conquistas',
+          'dcbBadgeText':'Desafio do Dia','gc1sub':'Desafie seu oponente frente a frente','gc2sub':'Une-se e desafia o mundo juntos',
+          'bet-ttl-1':'Aposta',
+          'histLabelWin':'Ganhou','histLabelTie':'Empate','histLabelLose':'Perdeu',
+          'notifWin':'Você ganhou a partida!','notifTie':'Empate!','notifLose':'Você perdeu a partida','notifKeepTrying':'Continue treinando!',
+          'challTxt1':'«Você ousa me enfrentar no Ronda? 🃏⚔ Insira o código e vamos ver quem é melhor... se você tiver coragem! 😤🔥»',
+          'challTxt2':'«O time Ronda precisa de você agora! 🃏🔥 Entre com o código, desafiaremos o mundo juntos — os oponentes estão esperando! ⚔👑»',
+          'challTxt2t':'«Meu parceiro de Ronda: entre no meu time agora! 🤝🃏 Juntos venceremos o mundo — o código está esperando! ⚔🔥»',
+          'challTxt3':'«Quatro entram, apenas um sai como campeão! 👑🃏 O grande Ronda aguarda — você tem o que é preciso? 😤🏆»',
+          'profLinkHint':'🔗 Vincule sua conta para salvar seus dados e foto em todos os dispositivos',
+          'profLinkGoogle':'Vincular com Google',
+          'histEmpty':'Nenhum jogo ainda — jogue e eles aparecerão aqui!',
+          'statMore':'🃏 Jogue mais para subir de nível e ganhar recompensas exclusivas',
+          'giftTitle':'Bem-vindo ao Ronda!','giftSub':'Presente de boas-vindas — sua primeira vez no jogo',
+          'giftCoinLabel':'Moedas de ouro','giftWelcomeLabel':'Presente de boas-vindas',
+          'giftClaimBtn':'🎴 Reivindique seu presente e comece a jogar!',
+          'promoTitle':'🎁 Código de presente','promoSub':'Insira seu código de presente e reivindique sua recompensa exclusiva!',
+          'frndEmptyHint':'Adicione amigos durante uma partida tocando no avatar do jogador',
+          'rulesClose':'Entendido! Vamos jogar 🎴',
+          'shopSecurity':'🔒 Pagamento seguro criptografado — nunca armazenamos os dados do seu cartão',
+          'shopCardSteps':['Escolha o pacote certo','Toque no botão Pagar abaixo','Selecione Cartão de crédito ou débito','Insira os dados do cartão com segurança'],
+          'lbmScopeLoc':'🇲🇦 Nacional',
+          'luoTitle':'Parabéns! Você alcançou o nível','luoDefaultName':'Estrela em Ascensão','luoCloseBtn':'🎴 Continue jogando!',
+          'wait3':'⏳ Aguardando 3 jogadores...','pm2tPartnerWait':'⏳ Aguardando seu parceiro inserir o código...',
+          'codeHint1':'Insira o código que seu amigo enviou','codeHint2':'Insira o código da sala ou código da equipe' },
+    ko: { 'qcb1':'테이블!','qcb2':'폭탄!','qcb3':'Ronda','qcb4':'트리플','qcb5':'플레이!','qcb6':'뜨거워!','qcb7':'줘!','qcb8':'플레이',
+          'autoToggleLbl':'자동','pt1wTx':'검색 중...','pt2tTx':'검색 중...','pt2wTx':'검색 중...','pt3wTx':'검색 중...',
+          'lobConnected':'온라인',
+          'wt':'이겼습니다! 🎉','wl':'졌습니다!','wTie':'무승부! 🤝',
+          'ws':'멋진 게임 🌟','endSbTitle':'⚔ 최종 점수','endPrizeLbl':'골드',
+          'wTtl':'게임 방','wCodeLbl':'방 코드','wSt':'플레이어를 기다리는 중...','wExitBtn':'경기 나가기',
+          'sb2pMyNm':'나','sb2pOppNm':'상대','oppNm':'상대','myNmG':'나',
+          'dpMyName':'나','dpOppName':'상대',
+          'tblLbl':'테이블','tblEmpty':'테이블이 비어 있음',
+          'dtLabel':'딜러 교체','dtSub':'배분 중...',
+          'rndTitle':'라운드 종료!','rndSub':'최종 결과','rndContinue':'계속 ▶',
+          'profTabStats':'📊 통계','profTabChallenges':'🎯 도전','profTabAch':'🏆 업적',
+          'profTabHist':'📜 기록','profTabRef':'🎁 추천','profTabChests':'🎁 상자','profTabSettings':'⚙️ 설정',
+          'statLblWins':'승리','statLblGames':'게임','statLblRate':'승률','statLblStreak':'연승','statLblXp':'경험치','statLblLevel':'레벨',
+          'chestRarityCommon':'일반','chestNameGold':'골드 상자','chestRarityRare':'희귀','chestNameGem':'보석 상자',
+          'chestRarityEpic':'에픽','chestNameKings':'킹 상자','chestRarityLegendary':'전설','chestNameMystery':'미스터리 상자',
+          'chestRarityDaily':'일일','chestNameDaily':'일일 상자','chestRarityWeekly':'주간','chestNameWeekly':'주간 상자',
+          'chestRarityWin':'승리','chestNameWin':'승리 상자',
+          'wHint':'플랫폼 아이콘 탭 — 초대장 자동 복사 🚀',
+          'lobChestTitle':'상자','lobChallengeTitle':'도전','lobAchTitle':'업적',
+          'dcbBadgeText':'일일 도전','gc1sub':'상대방에게 도전하세요','gc2sub':'팀을 이루어 세계에 도전',
+          'bet-ttl-1':'배팅',
+          'histLabelWin':'승리','histLabelTie':'무승부','histLabelLose':'패배',
+          'notifWin':'경기에서 이겼습니다!','notifTie':'무승부!','notifLose':'경기에서 졌습니다','notifKeepTrying':'계속 노력하세요!',
+          'challTxt1':'«Ronda에서 나와 대결할 용기가 있나요? 🃏⚔ 코드를 입력하고 누가 최고인지 보여주세요...용기가 있다면! 😤🔥»',
+          'challTxt2':'«Ronda 팀이 지금 당신이 필요합니다! 🃏🔥 코드로 참가해서 함께 세계에 도전해요 — 상대방들이 기다리고 있어요! ⚔👑»',
+          'challTxt2t':'«내 Ronda 파트너: 지금 내 팀에 합류하세요! 🤝🃏 함께 세계를 이겨냅시다 — 코드가 기다리고 있어요! ⚔🔥»',
+          'challTxt3':'«네 명이 입장하고, 한 명만 챔피언으로 나옵니다! 👑🃏 큰 Ronda가 기다립니다 — 준비가 되셨나요? 😤🏆»',
+          'profLinkHint':'🔗 모든 기기에 데이터와 사진을 저장하려면 계정을 연결하세요',
+          'profLinkGoogle':'Google로 연결',
+          'histEmpty':'아직 게임 없음 — 플레이하면 여기에 나타납니다!',
+          'statMore':'🃏 레벨업하고 독점 보상을 얻으려면 더 많이 플레이하세요',
+          'giftTitle':'Ronda에 오신 것을 환영합니다!','giftSub':'환영 선물 — 게임 첫 입장',
+          'giftCoinLabel':'금화','giftWelcomeLabel':'환영 선물',
+          'giftClaimBtn':'🎴 선물을 받고 게임 시작!',
+          'promoTitle':'🎁 선물 코드','promoSub':'선물 코드를 입력하고 독점 보상을 받으세요!',
+          'frndEmptyHint':'게임 중 플레이어 아바타를 탭하여 친구 추가',
+          'rulesClose':'알겠습니다! 게임 시작 🎴',
+          'shopSecurity':'🔒 안전한 암호화 결제 — 카드 데이터를 절대 저장하지 않습니다',
+          'shopCardSteps':['적합한 패키지 선택','아래 결제 버튼 탭','신용카드 또는 직불카드 선택','카드 정보를 안전하게 입력'],
+          'lbmScopeLoc':'🇲🇦 국내',
+          'luoTitle':'축하합니다! 레벨에 도달했습니다','luoDefaultName':'떠오르는 별','luoCloseBtn':'🎴 계속 플레이!',
+          'wait3':'⏳ 3명의 플레이어를 기다리는 중...','pm2tPartnerWait':'⏳ 파트너의 코드 입력을 기다리는 중...',
+          'codeHint1':'친구가 보낸 코드를 입력하세요','codeHint2':'방 코드 또는 팀 코드를 입력하세요' }
+  };
+  Object.keys(overrides).forEach(function(code){
+    Object.assign(I18N_DOM[code], overrides[code]);
+  });
+})();
+
+// ─── Apply DOM text updates ────────────────────────────────────────────────
+function _applyDomTexts(lang){
+  const d = I18N_DOM[lang] || I18N_DOM['ar'];
+  if(!d) return;
+
+  // Helper: set textContent safely
+  function setText(id, txt){
+    if(txt === null) return;
+    const el = document.getElementById(id);
+    if(el) el.textContent = txt;
+  }
+
+  // Referral input section - target by class/structure
+  (function(){
+    const wrap = document.getElementById('refInputWrap');
+    if(!wrap) return;
+    const spans = wrap.querySelectorAll('span');
+    if(spans[1]) spans[1].textContent = d.refInputRefQuestion;
+    if(spans[2]) spans[2].textContent = d.refInputBothGet;
+    const applyBtn = wrap.querySelector('button');
+    if(applyBtn) applyBtn.textContent = d.refInputApplyBtn;
+  })();
+
+  // Home privacy/delete links (target by href)
+  document.querySelectorAll('a[href*="privacy"]').forEach(function(a){
+    if(a.textContent.trim()) a.textContent = d.homePrivacyLink;
+  });
+  document.querySelectorAll('a[href*="delete"]').forEach(function(a){
+    if(a.textContent.trim()) a.textContent = d.homeDeleteLink;
+  });
+
+  // Daily challenge badge
+  (function(){
+    const badge = document.querySelector('.dcb-badge');
+    if(badge){
+      const dot = badge.querySelector('.dcb-badge-dot');
+      badge.textContent = '';
+      if(dot) badge.appendChild(dot);
+      badge.appendChild(document.createTextNode(d.dcbBadgeText));
+    }
+  })();
+
+  // Trio titles
+  (function(){
+    const titles = document.querySelectorAll('.trio-title');
+    if(titles[0]) titles[0].textContent = d.lobChestTitle;
+    if(titles[1]) titles[1].textContent = d.lobChallengeTitle;
+    if(titles[2]) titles[2].textContent = d.lobAchTitle;
+  })();
+
+  // Table label & empty
+  (function(){
+    const tblLbl = document.querySelector('.tbl-lbl');
+    if(tblLbl) tblLbl.textContent = d.tblLbl;
+    const tblEmpty = document.querySelector('.tbl-empty');
+    if(tblEmpty) tblEmpty.textContent = d.tblEmpty;
+  })();
+
+  // ID-based updates
+  setText('myNmG', d.myNmG);
+
+  // Duel card: dp-name elements
+  (function(){
+    const dpNames = document.querySelectorAll('.dp-name');
+    if(dpNames[0]) dpNames[0].textContent = d.dpMyName;
+    if(dpNames[1]) dpNames[1].textContent = d.dpOppName;
+  })();
+
+  setText('oppNm', d.oppNm);
+  setText('oppSideLeftNm', d.oppNm);
+  setText('oppSideRightNm', d.oppNm);
+  setText('sb2pMyNm', d.sb2pMyNm);
+  setText('sb2pOppNm', d.sb2pOppNm);
+
+  // Win screen
+  setText('wt', d.wt);
+  setText('ws', d.ws);
+  // Win stats labels
+  (function(){
+    const wsls = document.querySelectorAll('.wsl');
+    const keys = ['wsl1','wsl2','wsl3','wsl4','wsl5','wsl6','wsl7','wsl8','wsl9'];
+    wsls.forEach(function(el, i){ if(d[keys[i]]) el.textContent = d[keys[i]]; });
+  })();
+  // End scoreboard title
+  (function(){
+    const t = document.querySelector('.end-sb-title');
+    if(t) t.textContent = d.endSbTitle;
+  })();
+  // Prize label
+  (function(){
+    const pl = document.querySelector('.end-prize-lbl');
+    if(pl) pl.textContent = d.endPrizeLbl;
+  })();
+
+  // Waiting room
+  setText('wTtl', d.wTtl);
+  setText('wSt', d.wSt);
+  (function(){
+    const codeLbl = document.querySelector('.code-lbl');
+    if(codeLbl) codeLbl.textContent = d.wCodeLbl;
+    const whint = document.querySelector('.whint');
+    if(whint) whint.textContent = d.wHint;
+    // Exit button
+    const exitBtn = document.querySelector('button[onclick*="exitMatch"], button[onclick*="leaveMatch"]');
+    if(exitBtn) exitBtn.textContent = d.wExitBtn;
+  })();
+  // Exit button by text content
+  document.querySelectorAll('button').forEach(function(btn){
+    var t2=btn.textContent.trim();
+    if(t2==='خروج من المباراة'||t2==='Leave Match'||t2==='Quitter le match'||t2==='Salir del partido'||
+       t2==='离开比赛'||t2==='試合を離れる'||t2==='Maçı Bırak'||t2==='Match verlassen'||t2==='Sair da partida'||t2==='경기 나가기'){
+      btn.textContent = d.wExitBtn;
+    }
+  });
+
+  // Dealer transition
+  (function(){
+    const dtLabel = document.querySelector('.dt-label');
+    if(dtLabel) dtLabel.textContent = d.dtLabel;
+    const dtSub = document.getElementById('dtSub');
+    if(dtSub) dtSub.textContent = d.dtSub;
+  })();
+
+  // Round modal
+  (function(){
+    const rndTitle = document.getElementById('rndTitle');
+    if(rndTitle) rndTitle.textContent = d.rndTitle;
+    const rndSub = document.getElementById('rndSub');
+    if(rndSub) rndSub.textContent = d.rndSub;
+    const rndContinue = document.querySelector('.rnd-continue');
+    if(rndContinue) rndContinue.textContent = d.rndContinue;
+  })();
+
+  // Profile tabs
+  (function(){
+    const tabs = document.querySelectorAll('.prof-tab');
+    if(tabs[0]) tabs[0].innerHTML = '<span class="pt-ic">📊</span>' + d.profTabStats.replace('📊 ','');
+    if(tabs[1]) tabs[1].innerHTML = '<span class="pt-ic">🎯</span>' + d.profTabChallenges.replace('🎯 ','');
+    if(tabs[2]) tabs[2].innerHTML = '<span class="pt-ic">🏆</span>' + d.profTabAch.replace('🏆 ','');
+    if(tabs[3]) tabs[3].innerHTML = '<span class="pt-ic">📜</span>' + d.profTabHist.replace('📜 ','');
+    if(tabs[4]) tabs[4].innerHTML = '<span class="pt-ic">🎁</span>' + d.profTabRef.replace('🎁 ','');
+    if(tabs[5]) tabs[5].innerHTML = '<span class="pt-ic">🎁</span>' + d.profTabChests.replace('🎁 ','');
+    if(tabs[6]) tabs[6].innerHTML = '<span class="pt-ic">⚙️</span>' + d.profTabSettings.replace('⚙️ ','');
+  })();
+
+  // Stat card labels
+  (function(){
+    const statLabels = document.querySelectorAll('.stat-lbl');
+    const statKeys = ['statLblWins','statLblGames','statLblRate','statLblStreak','statLblXp','statLblLevel'];
+    statLabels.forEach(function(el, i){ if(d[statKeys[i]]) el.textContent = d[statKeys[i]]; });
+  })();
+
+  // Chest rarities and names
+  (function(){
+    const rarities = document.querySelectorAll('.chest-rarity');
+    const rarKeys = ['chestRarityCommon','chestRarityRare','chestRarityEpic','chestRarityLegendary','chestRarityDaily','chestRarityWeekly','chestRarityWin'];
+    rarities.forEach(function(el, i){ if(d[rarKeys[i]]) el.textContent = d[rarKeys[i]]; });
+    const names = document.querySelectorAll('.chest-name');
+    const nameKeys = ['chestNameGold','chestNameGem','chestNameKings','chestNameMystery','chestNameDaily','chestNameWeekly','chestNameWin'];
+    names.forEach(function(el, i){ if(d[nameKeys[i]]) el.textContent = d[nameKeys[i]]; });
+  })();
+
+  // Auto toggle label
+  (function(){
+    const atl = document.querySelector('.auto-toggle-lbl');
+    if(atl) atl.textContent = d.autoToggleLbl;
+  })();
+
+  // Quick chat buttons
+  (function(){
+    const qcbs = document.querySelectorAll('.qcb');
+    const qKeys = ['qcb1','qcb2','qcb3','qcb4','qcb5','qcb6','qcb7','qcb8'];
+    qcbs.forEach(function(el, i){ if(d[qKeys[i]]) el.textContent = d[qKeys[i]]; });
+  })();
+
+  // Searching status texts (only if still showing search text)
+  (function(){
+    const searchTexts = ['جاري البحث...','Searching...','Recherche...','Buscando...','搜索...','検索中...','Aranıyor...','Suche...','Procurando...','검색 중...'];
+    ['pt1w-tx','pt2t-tx','pt2w-tx','pt3w-tx'].forEach(function(id, i){
+      const el = document.getElementById(id);
+      if(el && searchTexts.indexOf(el.textContent.trim()) >= 0){
+        el.textContent = d['pt'+(i===0?'1w':i===1?'2t':i===2?'2w':'3w')+'Tx'];
+      }
+    });
+  })();
+
+  // Lobby connected badge
+  (function(){
+    const oping = document.querySelector('.oping');
+    if(oping){
+      const ring = oping.querySelector('.oring');
+      oping.textContent = '';
+      if(ring) oping.appendChild(ring);
+      oping.appendChild(document.createTextNode(d.lobConnected));
+    }
+  })();
+
+  // Bet title labels
+  document.querySelectorAll('.bet-ttl').forEach(function(el){
+    el.textContent = d['bet-ttl-1'] || (I18N_DOM['ar']['bet-ttl-1']);
+  });
+
+  // gc2sub - card subtitles
+  (function(){
+    const subs = document.querySelectorAll('.gcsub2');
+    if(subs[0]) subs[0].textContent = d.gc1sub;
+    if(subs[1]) subs[1].textContent = d.gc2sub;
+  })();
+
+  // ── Carousel card titles & badges ────────────────────────────────────────
+  (function(){
+    const cardTitles = document.querySelectorAll('.gctitle2');
+    const cardTitleMap = {
+      ar:['⚔ 1 ضد 1','🤝 2 ضد 2','🏆 4 مستقلين','👥 الأصدقاء','🤖 ضد الكمبيوتر'],
+      en:['⚔ 1 vs 1','🤝 2 vs 2','🏆 4 Players','👥 Friends','🤖 vs Computer'],
+      fr:['⚔ 1 contre 1','🤝 2 contre 2','🏆 4 Joueurs','👥 Amis','🤖 vs Ordinateur'],
+      es:['⚔ 1 vs 1','🤝 2 vs 2','🏆 4 Jugadores','👥 Amigos','🤖 vs Computadora'],
+      zh:['⚔ 1对1','🤝 2对2','🏆 4人独立','👥 好友','🤖 对电脑'],
+      ja:['⚔ 1対1','🤝 2対2','🏆 4人独立','👥 フレンド','🤖 コンピュータ対戦'],
+      tr:['⚔ 1\'e 1','🤝 2\'ye 2','🏆 4 Bağımsız','👥 Arkadaşlar','🤖 Bilgisayara Karşı'],
+      de:['⚔ 1 gegen 1','🤝 2 gegen 2','🏆 4 Unabhängige','👥 Freunde','🤖 gegen Computer'],
+      pt:['⚔ 1 vs 1','🤝 2 vs 2','🏆 4 Independentes','👥 Amigos','🤖 vs Computador'],
+      ko:['⚔ 1대1','🤝 2대2','🏆 4인 독립','👥 친구','🤖 컴퓨터 대전'],
+    };
+    const titles = cardTitleMap[lang] || cardTitleMap['en'];
+    cardTitles.forEach(function(el, i){ if(titles[i]) el.textContent = titles[i]; });
+
+    // Card badges
+    const cardBadges = document.querySelectorAll('.gcbadge2');
+    const badgeMap = {
+      ar:['👥 فريق','⚡ مثير','🟢 اجتماعي','✦ ذكاء اصطناعي'],
+      en:['👥 Team','⚡ Exciting','🟢 Social','✦ AI'],
+      fr:['👥 Équipe','⚡ Excitant','🟢 Social','✦ IA'],
+      es:['👥 Equipo','⚡ Emocionante','🟢 Social','✦ IA'],
+      zh:['👥 组队','⚡ 刺激','🟢 社交','✦ AI'],
+      ja:['👥 チーム','⚡ 熱い','🟢 ソーシャル','✦ AI'],
+      tr:['👥 Takım','⚡ Heyecanlı','🟢 Sosyal','✦ AI'],
+      de:['👥 Team','⚡ Aufregend','🟢 Sozial','✦ KI'],
+      pt:['👥 Equipe','⚡ Empolgante','🟢 Social','✦ IA'],
+      ko:['👥 팀','⚡ 신나는','🟢 소셜','✦ AI'],
+    };
+    const badges = badgeMap[lang] || badgeMap['en'];
+    cardBadges.forEach(function(el, i){ if(badges[i]) el.textContent = badges[i]; });
+
+    // Royal title
+    const royalTitles = document.querySelectorAll('.royal-title');
+    const royalMap = {ar:'الكل ضد الكل',en:'Free for All',fr:'Chacun pour soi',es:'Todos contra todos',
+      zh:'混战',ja:'全員対戦',tr:'Herkese Karşı',de:'Jeder gegen jeden',pt:'Todos contra todos',ko:'모두 대결'};
+    royalTitles.forEach(function(el){ el.textContent = royalMap[lang] || royalMap['en']; });
+  })();
+
+  // ── Card subtitles (gcsub2) ───────────────────────────────────────────────
+  (function(){
+    const subs = document.querySelectorAll('.gcsub2');
+    const subMap = {
+      ar:['تحدى خصمك وجهاً لوجه','تحالف وتحدّوا العالم معاً','الكل ضد الكل — واحد يخرج بطلاً','أصدقاؤك المتصلون الآن','تدرب وطور مهاراتك'],
+      en:['Challenge your opponent face to face','Team up and challenge the world','Free for all — one champion emerges','Your friends online now','Train and improve your skills'],
+      fr:['Défiez votre adversaire face à face','Faites équipe et défiez le monde','Chacun pour soi — un seul champion','Vos amis en ligne maintenant','Entraînez-vous et améliorez vos compétences'],
+      es:['Desafía a tu oponente cara a cara','Únete y desafíen al mundo juntos','Todos contra todos — un solo campeón','Tus amigos en línea ahora','Entrena y mejora tus habilidades'],
+      zh:['与对手正面对决','组队挑战全球','混战 — 一位冠军诞生','你的在线好友','训练并提高技能'],
+      ja:['対戦相手と真っ向勝負','チームを組んで世界に挑む','全員対戦 — 一人が王者に','オンラインの友達','練習してスキルを向上'],
+      tr:['Rakibinize doğrudan meydan okuyun','Ekip kurun ve dünyaya meydan okuyun','Herkese karşı — bir şampiyon çıkar','Çevrimiçi arkadaşlarınız','Antrenman yapın ve kendinizi geliştirin'],
+      de:['Fordern Sie Ihren Gegner direkt heraus','Im Team die Welt herausfordern','Jeder gegen jeden — ein Champion','Ihre Freunde jetzt online','Trainieren und Fähigkeiten verbessern'],
+      pt:['Desafie seu oponente de frente','Una-se e desafie o mundo','Todos contra todos — um campeão','Seus amigos online agora','Treine e melhore suas habilidades'],
+      ko:['상대방과 맞대결','팀을 이루어 세계에 도전','모두 대결 — 한 명의 챔피언','지금 온라인 친구','훈련하고 실력을 향상'],
+    };
+    const texts = subMap[lang] || subMap['en'];
+    subs.forEach(function(el, i){ if(texts[i]) el.textContent = texts[i]; });
+  })();
+
+  // ── Play mode buttons (pbtn-txt) ──────────────────────────────────────────
+  (function(){
+    const pbtns = document.querySelectorAll('.pbtn-txt');
+    const btnMap = {
+      ar:[
+        ['مع الأصدقاء','أنشئ غرفة وادعُ صديقك'],
+        ['اتحد العالم','منافس عشوائي بمستواك'],
+        ['أدخل رمز','لديك رمز دعوة؟'],
+        ['مع الأصدقاء','ادعُ 3 أصدقاء'],
+        ['اتحد مع صديقك في الفريق','شريك + بحث عن خصمين'],
+        ['اتحد العالم','3 لاعبين عشوائيين'],
+        ['أدخل رمز','لديك رمز دعوة؟'],
+        ['مع الأصدقاء','ادعُ 3 أصدقاء وتنافسوا'],
+        ['اتحد العالم','البحث عن 3 منافسين'],
+        ['أدخل رمز','لديك رمز دعوة؟'],
+        ['ادعُ من قائمة الأصدقاء','دعوة مباشرة بدون رمز'],
+        ['ادعُ من قائمة الأصدقاء','ادعُ حتى 3 أصدقاء مباشرة'],
+        ['ادعُ صديقاً كشريك في الفريق','يكون معك ضد خصمين'],
+        ['ادعُ من قائمة الأصدقاء','ادعُ حتى 3 أصدقاء مباشرة'],
+      ],
+      en:[
+        ['With Friends','Create room & invite a friend'],
+        ['Global Match','Random opponent at your level'],
+        ['Enter Code','Have an invite code?'],
+        ['With Friends','Invite 3 friends'],
+        ['Team with Friend','Partner + find 2 opponents'],
+        ['Global Match','3 random players'],
+        ['Enter Code','Have an invite code?'],
+        ['With Friends','Invite 3 friends to compete'],
+        ['Global Match','Find 3 opponents'],
+        ['Enter Code','Have an invite code?'],
+        ['Invite from Friends','Direct invite without code'],
+        ['Invite from Friends','Invite up to 3 friends'],
+        ['Invite Friend as Partner','They\'re with you vs opponents'],
+        ['Invite from Friends','Invite up to 3 friends'],
+      ],
+      fr:[
+        ['Avec des amis','Créer salle & inviter un ami'],
+        ['Match mondial','Adversaire aléatoire de votre niveau'],
+        ['Entrer un code','Vous avez un code d\'invitation?'],
+        ['Avec des amis','Inviter 3 amis'],
+        ['Équipe avec ami','Partenaire + trouver 2 adversaires'],
+        ['Match mondial','3 joueurs aléatoires'],
+        ['Entrer un code','Vous avez un code d\'invitation?'],
+        ['Avec des amis','Inviter 3 amis pour concourir'],
+        ['Match mondial','Trouver 3 adversaires'],
+        ['Entrer un code','Vous avez un code d\'invitation?'],
+        ['Inviter depuis Amis','Invitation directe sans code'],
+        ['Inviter depuis Amis','Inviter jusqu\'à 3 amis'],
+        ['Inviter ami comme Partenaire','Avec vous contre adversaires'],
+        ['Inviter depuis Amis','Inviter jusqu\'à 3 amis'],
+      ],
+      es:[
+        ['Con Amigos','Crear sala e invitar a un amigo'],
+        ['Partida Global','Oponente aleatorio de tu nivel'],
+        ['Ingresar Código','¿Tienes un código de invitación?'],
+        ['Con Amigos','Invitar 3 amigos'],
+        ['Equipo con Amigo','Socio + encontrar 2 oponentes'],
+        ['Partida Global','3 jugadores aleatorios'],
+        ['Ingresar Código','¿Tienes un código de invitación?'],
+        ['Con Amigos','Invitar 3 amigos a competir'],
+        ['Partida Global','Encontrar 3 oponentes'],
+        ['Ingresar Código','¿Tienes un código de invitación?'],
+        ['Invitar de Amigos','Invitación directa sin código'],
+        ['Invitar de Amigos','Invitar hasta 3 amigos'],
+        ['Invitar Amigo como Socio','Contigo vs oponentes'],
+        ['Invitar de Amigos','Invitar hasta 3 amigos'],
+      ],
+      zh:[
+        ['与朋友','创建房间并邀请朋友'],
+        ['全球匹配','随机匹配同等水平对手'],
+        ['输入代码','有邀请码？'],
+        ['与朋友','邀请3位朋友'],
+        ['组队与朋友','队友+寻找2名对手'],
+        ['全球匹配','3位随机玩家'],
+        ['输入代码','有邀请码？'],
+        ['与朋友','邀请3位朋友竞争'],
+        ['全球匹配','寻找3名对手'],
+        ['输入代码','有邀请码？'],
+        ['从好友中邀请','直接邀请无需代码'],
+        ['从好友中邀请','邀请最多3位朋友'],
+        ['邀请朋友为队友','与你一起对抗对手'],
+        ['从好友中邀请','邀请最多3位朋友'],
+      ],
+      ja:[
+        ['友達と','部屋を作って友達を招待'],
+        ['グローバル対戦','同レベルのランダム対戦相手'],
+        ['コードを入力','招待コードをお持ちですか？'],
+        ['友達と','3人の友達を招待'],
+        ['友達とチーム','パートナー+2人の対戦相手を探す'],
+        ['グローバル対戦','3人のランダムプレイヤー'],
+        ['コードを入力','招待コードをお持ちですか？'],
+        ['友達と','3人の友達と競争'],
+        ['グローバル対戦','3人の対戦相手を探す'],
+        ['コードを入力','招待コードをお持ちですか？'],
+        ['友達リストから招待','コードなしで直接招待'],
+        ['友達リストから招待','最大3人の友達を招待'],
+        ['友達をパートナーとして招待','あなたと一緒に対戦相手と戦う'],
+        ['友達リストから招待','最大3人の友達を招待'],
+      ],
+      tr:[
+        ['Arkadaşlarla','Oda oluştur ve arkadaşını davet et'],
+        ['Küresel Maç','Seviyende rastgele rakip'],
+        ['Kod Gir','Davet kodun var mı?'],
+        ['Arkadaşlarla','3 arkadaş davet et'],
+        ['Arkadaşla Takım','Ortak + 2 rakip bul'],
+        ['Küresel Maç','3 rastgele oyuncu'],
+        ['Kod Gir','Davet kodun var mı?'],
+        ['Arkadaşlarla','3 arkadaş yarışa davet et'],
+        ['Küresel Maç','3 rakip bul'],
+        ['Kod Gir','Davet kodun var mı?'],
+        ['Arkadaşlardan Davet','Kodsuz doğrudan davet'],
+        ['Arkadaşlardan Davet','3\'e kadar arkadaş davet et'],
+        ['Arkadaşı Ortak Olarak Davet Et','Rakiplere karşı seninle'],
+        ['Arkadaşlardan Davet','3\'e kadar arkadaş davet et'],
+      ],
+      de:[
+        ['Mit Freunden','Raum erstellen & Freund einladen'],
+        ['Globales Match','Zufälliger Gegner auf deinem Level'],
+        ['Code eingeben','Einladungscode vorhanden?'],
+        ['Mit Freunden','3 Freunde einladen'],
+        ['Mit Freund im Team','Partner + 2 Gegner finden'],
+        ['Globales Match','3 zufällige Spieler'],
+        ['Code eingeben','Einladungscode vorhanden?'],
+        ['Mit Freunden','3 Freunde zum Wettkampf einladen'],
+        ['Globales Match','3 Gegner finden'],
+        ['Code eingeben','Einladungscode vorhanden?'],
+        ['Von Freunden einladen','Direkte Einladung ohne Code'],
+        ['Von Freunden einladen','Bis zu 3 Freunde einladen'],
+        ['Freund als Partner einladen','Mit dir gegen Gegner'],
+        ['Von Freunden einladen','Bis zu 3 Freunde einladen'],
+      ],
+      pt:[
+        ['Com Amigos','Criar sala e convidar amigo'],
+        ['Partida Global','Oponente aleatório do seu nível'],
+        ['Inserir Código','Tem um código de convite?'],
+        ['Com Amigos','Convidar 3 amigos'],
+        ['Equipe com Amigo','Parceiro + encontrar 2 oponentes'],
+        ['Partida Global','3 jogadores aleatórios'],
+        ['Inserir Código','Tem um código de convite?'],
+        ['Com Amigos','Convidar 3 amigos para competir'],
+        ['Partida Global','Encontrar 3 oponentes'],
+        ['Inserir Código','Tem um código de convite?'],
+        ['Convidar de Amigos','Convite direto sem código'],
+        ['Convidar de Amigos','Convidar até 3 amigos'],
+        ['Convidar Amigo como Parceiro','Com você contra oponentes'],
+        ['Convidar de Amigos','Convidar até 3 amigos'],
+      ],
+      ko:[
+        ['친구와 함께','방 만들고 친구 초대'],
+        ['글로벌 매치','내 레벨의 랜덤 상대방'],
+        ['코드 입력','초대 코드가 있으신가요?'],
+        ['친구와 함께','친구 3명 초대'],
+        ['친구와 팀','파트너 + 상대방 2명 찾기'],
+        ['글로벌 매치','랜덤 플레이어 3명'],
+        ['코드 입력','초대 코드가 있으신가요?'],
+        ['친구와 함께','경쟁할 친구 3명 초대'],
+        ['글로벌 매치','상대방 3명 찾기'],
+        ['코드 입력','초대 코드가 있으신가요?'],
+        ['친구 목록에서 초대','코드 없이 직접 초대'],
+        ['친구 목록에서 초대','최대 3명 초대'],
+        ['친구를 파트너로 초대','상대방과 맞서 함께'],
+        ['친구 목록에서 초대','최대 3명 초대'],
+      ],
+    };
+    const btns = btnMap[lang] || btnMap['en'];
+    pbtns.forEach(function(el, i){
+      if(btns[i]){
+        el.innerHTML = '<b>'+btns[i][0]+'</b><small>'+btns[i][1]+'</small>';
+      }
+    });
+  })();
+
+  // ── Team/opponent labels ──────────────────────────────────────────────────
+  (function(){
+    const tsGreen = document.querySelector('.ts-label.ts-lbl-green');
+    const tsRed   = document.querySelector('.ts-label.ts-lbl-red');
+    const teamMap  = {ar:'فريقك',en:'Your Team',fr:'Votre équipe',es:'Tu equipo',
+      zh:'你的队伍',ja:'あなたのチーム',tr:'Takımınız',de:'Dein Team',pt:'Seu time',ko:'내 팀'};
+    const oppMap   = {ar:'خصومك',en:'Opponents',fr:'Adversaires',es:'Oponentes',
+      zh:'对手',ja:'対戦相手',tr:'Rakipler',de:'Gegner',pt:'Oponentes',ko:'상대팀'};
+    if(tsGreen) tsGreen.textContent = teamMap[lang] || teamMap['en'];
+    if(tsRed)   tsRed.textContent   = oppMap[lang]  || oppMap['en'];
+  })();
+
+  // ── Friends card label ────────────────────────────────────────────────────
+  (function(){
+    const fcsLbl = document.querySelector('.fcs-label');
+    const fcsMap = {ar:'قائمة الأصدقاء',en:'Friends List',fr:"Liste d'amis",es:'Lista de amigos',
+      zh:'好友列表',ja:'フレンドリスト',tr:'Arkadaş Listesi',de:'Freundesliste',pt:'Lista de amigos',ko:'친구 목록'};
+    if(fcsLbl) fcsLbl.textContent = fcsMap[lang] || fcsMap['en'];
+  })();
+
+  // ── AI card labels ────────────────────────────────────────────────────────
+  (function(){
+    const ai4lbl = document.querySelector('.ai4card-lbl');
+    const ai4sub = document.querySelector('.ai4card-sub');
+    const lblMap = {ar:'ضبط وانطلاق',en:'Set & Play',fr:'Régler et jouer',es:'Configurar y jugar',zh:'设置并开始',ja:'設定してプレイ',tr:'Ayarla ve Oyna',de:'Einstellen und Spielen',pt:'Configurar e Jogar',ko:'설정 후 플레이'};
+    const subMap2 = {ar:'نظام · تنسيق · مستوى الصعوبة',en:'Mode · Format · Difficulty',fr:'Mode · Format · Difficulté',es:'Modo · Formato · Dificultad',zh:'模式 · 格式 · 难度',ja:'モード · フォーマット · 難易度',tr:'Mod · Format · Zorluk',de:'Modus · Format · Schwierigkeit',pt:'Modo · Formato · Dificuldade',ko:'모드 · 형식 · 난이도'};
+    if(ai4lbl) ai4lbl.textContent = lblMap[lang] || lblMap['en'];
+    if(ai4sub) ai4sub.textContent = subMap2[lang] || subMap2['en'];
+    // AI format subtitles
+    const fmtSubs = document.querySelectorAll('.ai4-fmt-sub');
+    const fmtMap = {
+      ar:['ثنائي','فريق','الكل ضد الكل'],
+      en:['Duel','Team','Free for All'],
+      fr:['Duel','Équipe','Chacun pour soi'],
+      es:['Duelo','Equipo','Todos contra todos'],
+      zh:['对决','团队','混战'],
+      ja:['デュエル','チーム','全員対戦'],
+      tr:['Düello','Takım','Herkese Karşı'],
+      de:['Duell','Team','Jeder gegen jeden'],
+      pt:['Duelo','Equipe','Todos contra todos'],
+      ko:['결투','팀','모두 대결'],
+    };
+    const fmts = fmtMap[lang] || fmtMap['en'];
+    fmtSubs.forEach(function(el, i){ if(fmts[i]) el.textContent = fmts[i]; });
+  })();
+
+  // ── Game systems (sgem) ───────────────────────────────────────────────────
+  (function(){
+    const sgemNms = document.querySelectorAll('.sgem-nm');
+    const sgemSubs = document.querySelectorAll('.sgem-sub');
+    const nmMap  = {ar:['كلاسيك','إسباني','سريع'],en:['Classic','Spanish','Fast'],fr:['Classique','Espagnol','Rapide'],es:['Clásico','Español','Rápido'],zh:['经典','西班牙','快速'],ja:['クラシック','スパニッシュ','ファスト'],tr:['Klasik','İspanyol','Hızlı'],de:['Klassisch','Spanisch','Schnell'],pt:['Clássico','Espanhol','Rápido'],ko:['클래식','스페인식','빠른']};
+    const subMap3 = {ar:['القواعد الأصلية','بتعديلات خاصة','جولات أقصر'],en:['Original rules','Special modifications','Shorter rounds'],fr:['Règles originales','Modifications spéciales','Manches plus courtes'],es:['Reglas originales','Modificaciones especiales','Rondas más cortas'],zh:['原版规则','特殊修改','更短回合'],ja:['オリジナルルール','特別ルール','短いラウンド'],tr:['Orijinal kurallar','Özel değişiklikler','Daha kısa turlar'],de:['Originalregeln','Besondere Änderungen','Kürzere Runden'],pt:['Regras originais','Modificações especiais','Rodadas mais curtas'],ko:['오리지널 규칙','특별 수정','짧은 라운드']};
+    const nms  = nmMap[lang]   || nmMap['en'];
+    const subs = subMap3[lang] || subMap3['en'];
+    // These repeat every 3 (one set per mode card)
+    sgemNms.forEach(function(el, i){ el.textContent = nms[i%3] || el.textContent; });
+    sgemSubs.forEach(function(el, i){ el.textContent = subs[i%3] || el.textContent; });
+  })();
+
+  // ── Searching notes ───────────────────────────────────────────────────────
+  (function(){
+    const noteMap = {
+      ar:[
+        'سيتم اختيار خصم بمستواك تلقائياً<br><strong>⏱ بعد 20 ثانية:</strong> يبدأ المنافس تلقائياً',
+        'بعد دخول شريكك يبدأ البحث عن خصمين<br><strong>⏱ بعد 20 ثانية:</strong> يكتمل الفريق تلقائياً',
+        'سيتم توزيعكم على فريقين بشكل عادل<br><strong>⏱ بعد 20 ثانية:</strong> يكتمل الفريق تلقائياً',
+        'كل لاعب يلعب لحسابه — الكل ضد الكل<br><strong>⏱ بعد 20 ثانية:</strong> تكتمل الطاولة تلقائياً',
+      ],
+      en:[
+        'An opponent at your level will be found automatically<br><strong>⏱ After 20 seconds:</strong> opponent starts automatically',
+        'After your partner joins, search for 2 opponents begins<br><strong>⏱ After 20 seconds:</strong> team completes automatically',
+        'You will be split into 2 fair teams<br><strong>⏱ After 20 seconds:</strong> team completes automatically',
+        'Every player for themselves — free for all<br><strong>⏱ After 20 seconds:</strong> table fills automatically',
+      ],
+      fr:[
+        "Un adversaire à votre niveau sera trouvé automatiquement<br><strong>⏱ Après 20 secondes:</strong> l'adversaire commence automatiquement",
+        "Après l'entrée de votre partenaire, la recherche de 2 adversaires commence<br><strong>⏱ Après 20 secondes:</strong> équipe complète automatiquement",
+        'Vous serez répartis en 2 équipes équilibrées<br><strong>⏱ Après 20 secondes:</strong> équipe complète automatiquement',
+        'Chaque joueur joue pour lui-même — chacun pour soi<br><strong>⏱ Après 20 secondes:</strong> table remplie automatiquement',
+      ],
+      es:[
+        'Se encontrará un oponente a tu nivel automáticamente<br><strong>⏱ Después de 20 segundos:</strong> el oponente inicia automáticamente',
+        'Después de que tu socio ingrese, comienza la búsqueda de 2 oponentes<br><strong>⏱ Después de 20 segundos:</strong> equipo completa automáticamente',
+        'Se dividirán en 2 equipos justos<br><strong>⏱ Después de 20 segundos:</strong> equipo completa automáticamente',
+        'Cada jugador juega por sí mismo — todos contra todos<br><strong>⏱ Después de 20 segundos:</strong> mesa llena automáticamente',
+      ],
+      zh:[
+        '将自动为您匹配同等水平的对手<br><strong>⏱ 20秒后:</strong> 对手自动开始',
+        '队友加入后开始寻找2名对手<br><strong>⏱ 20秒后:</strong> 队伍自动完成',
+        '您将被平均分配到2支队伍<br><strong>⏱ 20秒后:</strong> 队伍自动完成',
+        '每个玩家各自为战 — 混战<br><strong>⏱ 20秒后:</strong> 座位自动填满',
+      ],
+      ja:[
+        '同レベルの対戦相手が自動的に見つかります<br><strong>⏱ 20秒後:</strong> 対戦相手が自動的に始まります',
+        'パートナーが参加後、2人の対戦相手を検索します<br><strong>⏱ 20秒後:</strong> チームが自動的に完成します',
+        '2つの公平なチームに分けられます<br><strong>⏱ 20秒後:</strong> チームが自動的に完成します',
+        '全員が自分のために戦う — 全員対戦<br><strong>⏱ 20秒後:</strong> テーブルが自動的に埋まります',
+      ],
+      tr:[
+        'Seviyenize uygun bir rakip otomatik olarak bulunacak<br><strong>⏱ 20 saniye sonra:</strong> rakip otomatik başlıyor',
+        'Ortağınız katıldıktan sonra 2 rakip aranmaya başlar<br><strong>⏱ 20 saniye sonra:</strong> takım otomatik tamamlanır',
+        '2 adil takıma bölüneceksiniz<br><strong>⏱ 20 saniye sonra:</strong> takım otomatik tamamlanır',
+        'Her oyuncu kendi başına — herkese karşı<br><strong>⏱ 20 saniye sonra:</strong> masa otomatik dolar',
+      ],
+      de:[
+        'Ein Gegner auf Ihrem Niveau wird automatisch gefunden<br><strong>⏱ Nach 20 Sekunden:</strong> Gegner startet automatisch',
+        'Nach Beitritt Ihres Partners beginnt die Suche nach 2 Gegnern<br><strong>⏱ Nach 20 Sekunden:</strong> Team vervollständigt automatisch',
+        'Sie werden in 2 faire Teams aufgeteilt<br><strong>⏱ Nach 20 Sekunden:</strong> Team vervollständigt automatisch',
+        'Jeder Spieler für sich — jeder gegen jeden<br><strong>⏱ Nach 20 Sekunden:</strong> Tisch füllt sich automatisch',
+      ],
+      pt:[
+        'Um oponente do seu nível será encontrado automaticamente<br><strong>⏱ Após 20 segundos:</strong> oponente começa automaticamente',
+        'Após seu parceiro entrar, busca por 2 oponentes começa<br><strong>⏱ Após 20 segundos:</strong> equipe completa automaticamente',
+        'Vocês serão divididos em 2 equipes justas<br><strong>⏱ Após 20 segundos:</strong> equipe completa automaticamente',
+        'Cada jogador por si mesmo — todos contra todos<br><strong>⏱ Após 20 segundos:</strong> mesa preenche automaticamente',
+      ],
+      ko:[
+        '같은 수준의 상대방이 자동으로 찾아집니다<br><strong>⏱ 20초 후:</strong> 상대방이 자동으로 시작됩니다',
+        '파트너 입장 후 2명의 상대방 검색이 시작됩니다<br><strong>⏱ 20초 후:</strong> 팀이 자동으로 완성됩니다',
+        '2개의 공평한 팀으로 나눠집니다<br><strong>⏱ 20초 후:</strong> 팀이 자동으로 완성됩니다',
+        '각 플레이어 개인전 — 모두 대결<br><strong>⏱ 20초 후:</strong> 자리가 자동으로 채워집니다',
+      ],
+    };
+    const notes = noteMap[lang] || noteMap['en'];
+    const noteEls = document.querySelectorAll('.sbox7-note');
+    noteEls.forEach(function(el, i){ if(notes[i]) el.innerHTML = notes[i]; });
+  })();
+
+  // ── Step labels (mlb7) ────────────────────────────────────────────────────
+  (function(){
+    const mlb7s = document.querySelectorAll('.mlb7');
+    const stepMap = {
+      ar:['الخطوة 1 — ادعُ شريكك في الفريق','الخطوة 2 — بحث عن خصمين'],
+      en:['Step 1 — Invite your team partner','Step 2 — Search for 2 opponents'],
+      fr:["Étape 1 — Invitez votre partenaire d'équipe","Étape 2 — Rechercher 2 adversaires"],
+      es:['Paso 1 — Invita a tu compañero de equipo','Paso 2 — Buscar 2 oponentes'],
+      zh:['第1步 — 邀请你的队友','第2步 — 寻找2名对手'],
+      ja:['ステップ1 — チームパートナーを招待','ステップ2 — 2人の対戦相手を検索'],
+      tr:['Adım 1 — Takım ortağınızı davet edin','Adım 2 — 2 rakip arayın'],
+      de:['Schritt 1 — Teampartner einladen','Schritt 2 — 2 Gegner suchen'],
+      pt:['Passo 1 — Convide seu parceiro de equipe','Passo 2 — Buscar 2 oponentes'],
+      ko:['1단계 — 팀 파트너 초대','2단계 — 상대방 2명 검색'],
+    };
+    const steps = stepMap[lang] || stepMap['en'];
+    mlb7s.forEach(function(el, i){ if(steps[i]) el.textContent = steps[i]; });
+  })();
+
+  // ── Invite box subtitles (ibox-sub) ──────────────────────────────────────
+  (function(){
+    const iboxSubs = document.querySelectorAll('.ibox-sub');
+    const iboxMap = {
+      ar:['صالح 30 دقيقة · لاعبان فقط','ادعُ 3 أصدقاء بهذا الرمز','الكل ضد الكل — 4 لاعبين'],
+      en:['Valid 30 min · 2 players only','Invite 3 friends with this code','Free for all — 4 players'],
+      fr:['Valide 30 min · 2 joueurs seulement','Inviter 3 amis avec ce code','Chacun pour soi — 4 joueurs'],
+      es:['Válido 30 min · solo 2 jugadores','Invitar 3 amigos con este código','Todos contra todos — 4 jugadores'],
+      zh:['有效30分钟 · 仅2名玩家','用此代码邀请3位好友','混战 — 4名玩家'],
+      ja:['有効30分 · 2名のみ','このコードで3人を招待','全員対戦 — 4プレイヤー'],
+      tr:['30 dk geçerli · sadece 2 oyuncu','Bu kodla 3 arkadaş davet et','Herkese Karşı — 4 oyuncu'],
+      de:['30 Min gültig · nur 2 Spieler','3 Freunde mit diesem Code einladen','Jeder gegen jeden — 4 Spieler'],
+      pt:['Válido 30 min · apenas 2 jogadores','Convide 3 amigos com este código','Todos contra todos — 4 jogadores'],
+      ko:['30분 유효 · 2명만','이 코드로 친구 3명 초대','모두 대결 — 4명'],
+    };
+    const iboxes = iboxMap[lang] || iboxMap['en'];
+    iboxSubs.forEach(function(el, i){ if(iboxes[i]) el.textContent = iboxes[i]; });
+  })();
+
+  // ── Social share labels ───────────────────────────────────────────────────
+  (function(){
+    const socLabels = document.querySelectorAll('.soc-lbl2');
+    const socMap = {
+      ar:['فيسبوك','تويتر','واتساب','انستغرام','تيليغرام'],
+      en:['Facebook','Twitter','WhatsApp','Instagram','Telegram'],
+      fr:['Facebook','Twitter','WhatsApp','Instagram','Telegram'],
+      es:['Facebook','Twitter','WhatsApp','Instagram','Telegram'],
+      zh:['脸书','推特','WhatsApp','Instagram','Telegram'],
+      ja:['Facebook','Twitter','WhatsApp','Instagram','Telegram'],
+      tr:['Facebook','Twitter','WhatsApp','Instagram','Telegram'],
+      de:['Facebook','Twitter','WhatsApp','Instagram','Telegram'],
+      pt:['Facebook','Twitter','WhatsApp','Instagram','Telegram'],
+      ko:['Facebook','Twitter','WhatsApp','Instagram','Telegram'],
+    };
+    const socs = socMap[lang] || socMap['en'];
+    // Repeat every 5
+    socLabels.forEach(function(el, i){ el.textContent = socs[i%5] || el.textContent; });
+  })();
+
+  // ══════════════════════════════════════════════════════════════════
+  // ██ COMPREHENSIVE FULL-APP i18n — covers all 532 uncovered strings
+  // ══════════════════════════════════════════════════════════════════
+  var T={ar:{ldLabel:'🃏 اختر نمط اللعب',scrollDiscover:'مرر للاكتشاف',dpNameMe:'أنت',dpNameOpp:'خصمك',gcBadgeHot:'🔥 الأشهر',opingText:'متصل',copyCodeBtn:'📋 نسخ الرمز',wHintFull:'اضغط أيقونة المنصة — ينسخ الدعوة وينتقل إليها تلقائياً 🚀',wStartBtn:'▶ ابدأ اللعبة',wLeaveBtn:'✕ مغادرة',wCodeLblFull:'رمز الغرفة',rcTitleText:'جاري استعادة الاتصال...',rcSubText:'محاولة 1 / 3',deckLbl:'بيضة',dealtLbl:'موزعة',tableLbl2:'طاولة',turnBadgeLbl:'دور',autoBadgeLbl:'تلقائي',acHint:'تلميح',acPlay:'العب',acQuit:'خروج',cardsCollected:'ورقة جُمِعت',rematchBtn:'🔄 مرة ثانية',homeBtn:'🏠 الرئيسية',mhd1v1f:'👥 1 ضد 1 — مع الأصدقاء',mhd1v1w:'🌍 1 ضد 1 — اتحد العالم',mhd1v1c:'🔑 أدخل رمز الدعوة',mhd2v2f:'👥 2 ضد 2 — مع الأصدقاء',mhd2v2t:'🤝 اتحد مع صديقك في الفريق',mhd2v2w:'🌍 2 ضد 2 — اتحد العالم',mhd2v2c:'🔑 أدخل رمز الدعوة',mhd4pf:'👥 4 مستقلين — مع الأصدقاء',mhd4pw:'🌍 4 مستقلين — اتحد العالم',mhd4pc:'🔑 أدخل رمز الدعوة',mhdAi:'🤖 ضد الذكاء الاصطناعي',mlb7System:'🎮 نظام اللعب',mlb7Share:'📣 شارك التحدي',mlb7Step1:'الخطوة 1 — ادعُ شريكك في الفريق',mlb7Step2:'الخطوة 2 — بحث عن خصمين',iboxLbl1f:'🔐 رمز غرفتك الخاصة',iboxLbl2f:'🔐 رمز الغرفة — 4 لاعبين',iboxLbl2t:'🔐 رمز الفريق — لشريكك فقط',iboxLbl3f:'🔐 رمز الغرفة — 4 مستقلين',iboxCopyBtn:'📋 نسخ الرمز',challTxt1:'«هل تجرؤ على مواجهتي في روندة؟ 🃏⚔ ادخل الرمز وتعال نرى من هو الأفضل... إذا كانت لديك الجرأة! 😤🔥»',challTxt2:'«فريق روندة يحتاجك الآن! 🃏🔥 انضم بالرمز وسنتحدى العالم معاً — الخصوم في انتظارنا! ⚔👑»',challTxt2t:'«شريكي في روندة: انضم لفريقي الآن! 🤝🃏 معاً سنهزم العالم — الرمز بانتظارك! ⚔🔥»',challTxt3:'«أربعة يدخلون، واحد فقط يخرج بطلاً! 👑🃏 روندة الكبار تنتظر — هل عندك ما يلزم؟ 😤🏆»',wait1:'⏳ بانتظار دخول خصمك...',wait3:'⏳ بانتظار دخول 3 لاعبين...',pm2tPartnerWait:'⏳ في انتظار دخول شريكك بالرمز...',codeHint1:'أدخل الرمز الذي أرسله لك صديقك',codeHint2:'أدخل رمز الغرفة أو رمز الفريق',joinBtn1:'🚀 انضم للغرفة الآن',joinBtn2:'🚀 انضم الآن',joinBtn3:'🚀 انضم للغرفة الآن',pm2tSearchBtn:'🔍 ابدأ البحث عن خصمين',friendsOnlineNow:'متصل الآن',friendsViewAll:'عرض القائمة الكاملة',friendsInviteHint:'ادعُ أصدقاء للعب معك',aiLevelLabel:'⚡ مستوى الذكاء:',ai4SecSystem:'🎮 نظام اللعب',ai4SecFormat:'🎯 تنسيق المباراة',ai4SecLevel:'🧠 مستوى الذكاء الاصطناعي',ai4StartBtn:'🚀 ابدأ المباراة',ai4FmtNames:['1 ضد 1','2 ضد 2','4 مستقلين'],ai4FmtSubs:['ثنائي','فريق','الكل ضد الكل'],ai4SysNames:['كلاسيك','إسباني','سريع'],ai4SysSubs:['أصيل','خاص','أقصر'],dtLabelFull:'انتقل دور الموزع',dtNameDefault:'الموزع',lotteryTitle:'🎲 قرعة البداية',lotteryReveal:'🃏 اكشف الأوراق',lotteryResultTitle:'🏆 الموزع الأول',lotteryStartBtn:'▶ ابدأ اللعبة',rulesClose:'فهمت! لنلعب 🎴',profPhoto:'📷 صورة',profNamePlaceholder:'اسمك...',profSaveBtn:'✓ حفظ',profLinkHint:'🔗 اربط حسابك لحفظ بياناتك وصورتك على كل أجهزتك',profLinkGoogle:'ربط بـ Google',profTabsArr:['إحصائيات','تحديات','إنجازات','السجل','الإحالة','الصناديق','الإعدادات'],statMode1v1:'⚔ 1 ضد 1',statMode2v2:'🤝 2 ضد 2',statMode4p:'🏟 4 مستقلين',statMatches:'مباريات',statWinRate:'نسبة فوز',statMore:'🃏 العب أكثر لترقية مستواك واكسب مكافآت حصرية',histEmpty:'لا توجد ألعاب بعد — العب وستظهر هنا!',refTitle:'ادعُ أصدقاءك — كلاكما يفوز!',refCodeTitle:'رمز الإحالة الخاص بك',refCodeHint:'شارك هذا الرمز مع أصدقائك',refCopyCode:'📋 نسخ الرمز',refCopyLink:'🔗 نسخ الرابط',refShareVia:'شارك عبر',refShareNames:['فيسبوك','تويتر','واتساب','إنستغرام','تيليغرام'],refStatLbls:['إحالات ناجحة','عملات مكتسبة'],chestPageTitle:'🗺️ صناديق المفاجآت',chestPermLabel:'⚔ صناديق دائمة',chestSpecialLabel:'🌟 صناديق خاصة',chestLocations:['📍 مراكش','📍 فاس','📍 طنجة','📍 أغادير'],chestCooldowns:['⏱ كل ساعة','⏱ كل ساعتين','⏱ كل 6 ساعات','⏱ كل 4 ساعات'],chestDailyFree:'مجاني',chestWeeklyFree:'مجاني',chestWinEvery:'كل 5 انتصارات',chestDailyCooldown:'⏱ كل يوم',chestWeeklyCooldown:'⏱ كل أسبوع',chestWinCooldown:'تلقائي عند الفوز',chestLockBadge:'🔒 يحتاج مستوى 5+',chestGrade:'⭐ عادي → نادر → ملحمي → أسطوري نادر · احتمال الجائزة الأسطورية أعلى في الصناديق الغالية',chestWinSuffix:'فوز',settingsTerms:'⚖️ الشروط والخصوصية',settingsPrivacy:'🔒 سياسة الخصوصية',settingsDeleteReq:'🗑️ طلب حذف البيانات',settingsDeleteTitle:'⚠️ حذف الحساب والبيانات',giftTitle:'مرحباً بك في روندة!',giftSub:'هدية الترحيب — أول دخول لك في اللعبة',giftCoinLabel:'عملة ذهبية',giftWelcomeLabel:'هدية ترحيبية',giftClaimBtn:'🎴 استلم هديتك وابدأ اللعب!',lbTitle:'🏆 المتصدرون',lbSubtitle:'أفضل اللاعبين عالمياً',lbMyRankPill:'ترتيبك: —',lbRefreshBtn:'🔄 تحديث',lbTabs:['🏆 الكل','⚔ 1ضد1','🤝 2ضد2','🏟 4مست','🎮 ألعاب','🎴 كلاسيك','🧮 إسباني','⚡ سريع'],lbLoading:'⏳ جاري التحميل...',lbmTitle:'🏆 المتصدرون',lbmMyRank:'ترتيبك: —',lbmScopeIntl:'🌍 دولي',lbmScopeLoc:'🇲🇦 وطني',pstatsPlayer:'اللاعب',pstatsCellLbls:['🏆 انتصار','🎴 لعبة','📈 % فوز','💀 خسارة','⭐ أعلى نقاط','🎯 إجمالي'],pstatsAddFriend:'➕ إضافة صديق',pstatsClickOutside:'اضغط خارج النافذة للإغلاق',pstatsClose:'✕ إغلاق',chestRevealCongrats:'تهانيك!',chestRevealReward:'مكافأة رائعة',chestRevealClose:'✓ رائع! استلمت',shopTitle:'🏪 متجر الذهب',shopBalance:'رصيدك الحالي:',shopCurrency:'عملة',shopSuccessTitle:'تم الشراء بنجاح!',shopSuccessCoins:'تمت إضافة 0 عملة ذهبية',shopSuccessBalanceLbl:'رصيدك الجديد:',shopPlayBtn:'🎴 العب الآن!',shopDealBadge:'🔥 عرض اليوم فقط!',shopDealName:'الحزمة الاستثنائية',shopTabs:['🪙 أساسية','💎 مميزة','👑 نخبة','🎁 حزم'],shopPayTitle:'وسيلة الدفع',shopGuestLabel:'✓ بدون حساب',shopCardTitle:'💳 كيفية الدفع بالبطاقة:',shopCardSteps:['اختر الباقة المناسبة','اضغط زر "ادفع" أدناه','اختر "بطاقة ائتمان أو خصم"','أدخل بيانات البطاقة بأمان'],shopSecurity:'🔒 دفع آمن ومشفر — لا نحتفظ ببيانات بطاقتك',dlmTitle:'🗓 مكافآت تسجيل الدخول',dlmRewardLbl:'مكافأة اليوم',dlmCollectBtn:'🎁 استلم المكافأة',dlmStreakMsg:'واصل التسجيل لمكافآت أكبر!',notifTitle:'🔔 الإشعارات',notifClearBtn:'🗑 مسح الكل',notifEmpty:'لا توجد إشعارات بعد',luoTitle:'مبروك! ارتقيت للمستوى',luoDefaultName:'النجم الصاعد',luoCloseBtn:'🎴 استمر في اللعب!',promoTitle:'🎁 كود الهدية',promoSub:'أدخل كود هديتك واستلم مكافأتك الحصرية!',promoSubmit:'✓ تطبيق',splashSub:'لعبة الملوك الأندلسية',admobTitle:'رصيدك نفد!',admobSub:'لا يكفي رصيدك للمراهنة<br>شاهد إعلاناً قصيراً لكسب عملات مجاناً',admobSecTitle:'🎬 اكسب عملات بمشاهدة إعلان',admobRewardCoins:['+ 100 🪙 عملة ذهبية','+ 500 🪙 عملة ذهبية','+ 1,000 🪙 عملة ذهبية'],admobRewardDescs:['إعلان قصير • مجاناً تماماً','إعلان ثانٍ • مكافأة أكبر','إعلان ثالث • أكبر مكافأة'],admobWatch:'شاهد',admobShopBtn:'شراء عملات من المتجر',frndTitle:'👥 قائمة الأصدقاء',frndEmpty:'لا يوجد أصدقاء بعد',frndEmptyHint:'أضف أصدقاء من داخل المباراة عند الضغط على صورة اللاعب',frndInviteTitle:'👥 ادعُ صديقاً',frndInviteEmpty:'لا يوجد أصدقاء لدعوتهم',frndShareLabel:'📤 أو شارك الرمز مباشرة عبر المنصة',dcbClaimBtn:'🎁 استلم المكافأة!',dcbLoading:'جاري التحميل...',lobChestLoading:'جاري الفحص...',lobChallSuffix:'مكتمل',lobAchSuffix:'مكتسب',achNewBadge:'جديد',myNmDefault:'لاعب',backHome:'← الرئيسية',dlmDayOf:'من 7',dlmStreakDays:'يوم',},
+  en:{ldLabel:'🃏 Choose Game Mode',scrollDiscover:'Swipe to explore',dpNameMe:'You',dpNameOpp:'Opponent',gcBadgeHot:'🔥 Most Popular',opingText:'Online',copyCodeBtn:'📋 Copy Code',wHintFull:'Tap the platform icon — copies invite and opens it automatically 🚀',wStartBtn:'▶ Start Game',wLeaveBtn:'✕ Leave',wCodeLblFull:'Room Code',rcTitleText:'Reconnecting...',rcSubText:'Attempt 1 / 3',deckLbl:'Deck',dealtLbl:'Dealt',tableLbl2:'Table',turnBadgeLbl:'Turn',autoBadgeLbl:'Auto',acHint:'Hint',acPlay:'Play',acQuit:'Quit',cardsCollected:'cards collected',rematchBtn:'🔄 Rematch',homeBtn:'🏠 Home',mhd1v1f:'👥 1v1 — With Friends',mhd1v1w:'🌍 1v1 — Global Match',mhd1v1c:'🔑 Enter Invite Code',mhd2v2f:'👥 2v2 — With Friends',mhd2v2t:'🤝 Team Up With a Friend',mhd2v2w:'🌍 2v2 — Global Match',mhd2v2c:'🔑 Enter Invite Code',mhd4pf:'👥 4 Players — With Friends',mhd4pw:'🌍 4 Players — Global Match',mhd4pc:'🔑 Enter Invite Code',mhdAi:'🤖 vs Artificial Intelligence',mlb7System:'🎮 Game Mode',mlb7Share:'📣 Share Challenge',mlb7Step1:'Step 1 — Invite your team partner',mlb7Step2:'Step 2 — Search for 2 opponents',iboxLbl1f:'🔐 Your Private Room Code',iboxLbl2f:'🔐 Room Code — 4 Players',iboxLbl2t:'🔐 Team Code — For your partner only',iboxLbl3f:'🔐 Room Code — 4 Independent',iboxCopyBtn:'📋 Copy Code',challTxt1:'«Do you dare face me in Ronda? 🃏⚔ Enter the code and lets see who is best... if you have the nerve! 😤🔥»',challTxt2:'«Ronda team needs you now! 🃏🔥 Join with the code and we will challenge the world — opponents are waiting! ⚔👑»',challTxt2t:'«My Ronda partner: join my team now! 🤝🃏 Together we will beat the world — the code is waiting! ⚔🔥»',challTxt3:'«Four enter, only one leaves as champion! 👑🃏 Big Ronda awaits — do you have what it takes? 😤🏆»',wait1:'⏳ Waiting for your opponent...',wait3:'⏳ Waiting for 3 players...',pm2tPartnerWait:'⏳ Waiting for your partner to enter the code...',codeHint1:'Enter the code your friend sent you',codeHint2:'Enter the room code or team code',joinBtn1:'🚀 Join Room Now',joinBtn2:'🚀 Join Now',joinBtn3:'🚀 Join Room Now',pm2tSearchBtn:'🔍 Start Search for Opponents',friendsOnlineNow:'Online Now',friendsViewAll:'View Full List',friendsInviteHint:'Invite friends to play with you',aiLevelLabel:'⚡ AI Level:',ai4SecSystem:'🎮 Game Mode',ai4SecFormat:'🎯 Match Format',ai4SecLevel:'🧠 AI Difficulty Level',ai4StartBtn:'🚀 Start Match',ai4FmtNames:['1 vs 1','2 vs 2','4 Independent'],ai4FmtSubs:['Duel','Team','Free for All'],ai4SysNames:['Classic','Spanish','Fast'],ai4SysSubs:['Authentic','Special','Shorter'],dtLabelFull:'Dealer Changed',dtNameDefault:'Dealer',lotteryTitle:'🎲 Starting Draw',lotteryReveal:'🃏 Reveal Cards',lotteryResultTitle:'🏆 First Dealer',lotteryStartBtn:'▶ Start Game',rulesClose:'Got it! Lets play 🎴',profPhoto:'📷 Photo',profNamePlaceholder:'Your name...',profSaveBtn:'✓ Save',profLinkHint:'🔗 Link your account to save your data across all devices',profLinkGoogle:'Link with Google',profTabsArr:['Stats','Challenges','Achievements','History','Referral','Chests','Settings'],statMode1v1:'⚔ 1 vs 1',statMode2v2:'🤝 2 vs 2',statMode4p:'🏟 4 Players',statMatches:'Matches',statWinRate:'Win Rate',statMore:'🃏 Play more to level up and earn exclusive rewards',histEmpty:'No games yet — play and they will appear here!',refTitle:'Invite Friends — Both of you win!',refCodeTitle:'Your Referral Code',refCodeHint:'Share this code with your friends',refCopyCode:'📋 Copy Code',refCopyLink:'🔗 Copy Link',refShareVia:'Share via',refShareNames:['Facebook','Twitter','WhatsApp','Instagram','Telegram'],refStatLbls:['Successful Referrals','Coins Earned'],chestPageTitle:'🗺️ Mystery Chests',chestPermLabel:'⚔ Permanent Chests',chestSpecialLabel:'🌟 Special Chests',chestLocations:['📍 Marrakech','📍 Fez','📍 Tangier','📍 Agadir'],chestCooldowns:['⏱ Every hour','⏱ Every 2 hours','⏱ Every 6 hours','⏱ Every 4 hours'],chestDailyFree:'Free',chestWeeklyFree:'Free',chestWinEvery:'Every 5 wins',chestDailyCooldown:'⏱ Every day',chestWeeklyCooldown:'⏱ Every week',chestWinCooldown:'Auto on win',chestLockBadge:'🔒 Requires Level 5+',chestGrade:'⭐ Common → Rare → Epic → Legendary · Higher chance in premium chests',chestWinSuffix:'wins',settingsTerms:'⚖️ Terms & Privacy',settingsPrivacy:'🔒 Privacy Policy',settingsDeleteReq:'🗑️ Request Data Deletion',settingsDeleteTitle:'⚠️ Delete Account & Data',giftTitle:'Welcome to Ronda!',giftSub:'Welcome gift — your first time in the game',giftCoinLabel:'Gold coins',giftWelcomeLabel:'Welcome gift',giftClaimBtn:'🎴 Claim Your Gift & Start Playing!',lbTitle:'🏆 Leaderboard',lbSubtitle:'Top players worldwide',lbMyRankPill:'Your Rank: —',lbRefreshBtn:'🔄 Refresh',lbTabs:['🏆 All','⚔ 1v1','🤝 2v2','🏟 4P','🎮 Games','🎴 Classic','🧮 Spanish','⚡ Fast'],lbLoading:'⏳ Loading...',lbmTitle:'🏆 Leaderboard',lbmMyRank:'Your Rank: —',lbmScopeIntl:'🌍 Global',lbmScopeLoc:'🇲🇦 National',pstatsPlayer:'Player',pstatsCellLbls:['🏆 Wins','🎴 Games','📈 Win%','💀 Losses','⭐ Best Score','🎯 Total'],pstatsAddFriend:'➕ Add Friend',pstatsClickOutside:'Click outside to close',pstatsClose:'✕ Close',chestRevealCongrats:'Congratulations!',chestRevealReward:'Amazing reward',chestRevealClose:'✓ Awesome! Claimed',shopTitle:'🏪 Gold Store',shopBalance:'Your balance:',shopCurrency:'coins',shopSuccessTitle:'Purchase Successful!',shopSuccessCoins:'0 gold coins added',shopSuccessBalanceLbl:'New balance:',shopPlayBtn:'🎴 Play Now!',shopDealBadge:'🔥 Today\'s Deal Only!',shopDealName:'Exceptional Bundle',shopTabs:['🪙 Basic','💎 Pro','👑 Elite','🎁 Bundles'],shopPayTitle:'Payment Method',shopGuestLabel:'✓ No account needed',shopCardTitle:'💳 How to pay by card:',shopCardSteps:['Choose the right package','Tap the Pay button below','Select Credit or Debit card','Enter your card details securely'],shopSecurity:'🔒 Secure encrypted payment — we never store your card data',dlmTitle:'🗓 Daily Login Rewards',dlmRewardLbl:'Today\'s Reward',dlmCollectBtn:'🎁 Claim Reward',dlmStreakMsg:'Keep logging in for bigger rewards!',notifTitle:'🔔 Notifications',notifClearBtn:'🗑 Clear All',notifEmpty:'No notifications yet',luoTitle:'Congrats! You reached level',luoDefaultName:'Rising Star',luoCloseBtn:'🎴 Keep Playing!',promoTitle:'🎁 Gift Code',promoSub:'Enter your gift code and claim your exclusive reward!',promoSubmit:'✓ Apply',splashSub:'Game of Andalusian Kings',admobTitle:'Out of Gold!',admobSub:'Not enough gold to bet<br>Watch a short ad to earn coins for free',admobSecTitle:'🎬 Earn coins by watching an ad',admobRewardCoins:['+ 100 🪙 gold coins','+ 500 🪙 gold coins','+ 1,000 🪙 gold coins'],admobRewardDescs:['Short ad • Completely free','Second ad • Bigger reward','Third ad • Biggest reward'],admobWatch:'Watch',admobShopBtn:'Buy coins from store',frndTitle:'👥 Friends List',frndEmpty:'No friends yet',frndEmptyHint:'Add friends during a match by tapping on a player avatar',frndInviteTitle:'👥 Invite a Friend',frndInviteEmpty:'No friends to invite',frndShareLabel:'📤 Or share the code directly via platform',dcbClaimBtn:'🎁 Claim Reward!',dcbLoading:'Loading...',lobChestLoading:'Checking...',lobChallSuffix:'complete',lobAchSuffix:'earned',achNewBadge:'New',myNmDefault:'Player',backHome:'← Home',dlmDayOf:'of 7',dlmStreakDays:'days',},
+  fr:{ldLabel:'🃏 Choisir le mode',scrollDiscover:'Faites glisser',dpNameMe:'Vous',dpNameOpp:'Adversaire',gcBadgeHot:'🔥 Plus populaire',opingText:'En ligne',copyCodeBtn:'📋 Copier le code',wHintFull:'Appuyez sur icône — copie et ouvre la plateforme 🚀',wStartBtn:'▶ Démarrer',wLeaveBtn:'✕ Quitter',wCodeLblFull:'Code de salle',rcTitleText:'Reconnexion en cours...',rcSubText:'Tentative 1 / 3',deckLbl:'Pioche',dealtLbl:'Distribuées',tableLbl2:'Table',turnBadgeLbl:'Tour',autoBadgeLbl:'Auto',acHint:'Astuce',acPlay:'Jouer',acQuit:'Quitter',cardsCollected:'cartes collectées',rematchBtn:'🔄 Revanche',homeBtn:'🏠 Accueil',mhd1v1f:'👥 1c1 — Avec des amis',mhd1v1w:'🌍 1c1 — Match mondial',mhd1v1c:'🔑 Entrer le code',mhd2v2f:'👥 2c2 — Avec des amis',mhd2v2t:'🤝 Équipe avec un ami',mhd2v2w:'🌍 2c2 — Match mondial',mhd2v2c:'🔑 Entrer le code',mhd4pf:'👥 4 Joueurs — Avec des amis',mhd4pw:'🌍 4 Joueurs — Match mondial',mhd4pc:'🔑 Entrer le code',mhdAi:'🤖 contre IA',mlb7System:'🎮 Mode de jeu',mlb7Share:'📣 Partager le défi',mlb7Step1:'Étape 1 — Invitez votre partenaire',mlb7Step2:'Étape 2 — Chercher 2 adversaires',iboxLbl1f:'🔐 Votre code de salle privé',iboxLbl2f:'🔐 Code de salle — 4 joueurs',iboxLbl2t:'🔐 Code équipe — Pour votre partenaire',iboxLbl3f:'🔐 Code de salle — 4 indépendants',iboxCopyBtn:'📋 Copier le code',challTxt1:'«Osez-vous m\'affronter à Ronda? 🃏⚔ Entrez le code! 😤🔥»',challTxt2:'«L\'équipe Ronda a besoin de vous! 🃏🔥 Rejoignez avec le code! ⚔👑»',challTxt2t:'«Mon partenaire Ronda: rejoignez mon équipe! 🤝🃏 Le code vous attend! ⚔🔥»',challTxt3:'«Quatre entrent, un seul sort champion! 👑🃏 Êtes-vous prêt? 😤🏆»',wait1:'⏳ En attente de votre adversaire...',wait3:'⏳ En attente de 3 joueurs...',pm2tPartnerWait:'⏳ En attente de votre partenaire...',codeHint1:'Entrez le code envoyé par votre ami',codeHint2:'Entrez le code de salle ou d\'équipe',joinBtn1:'🚀 Rejoindre maintenant',joinBtn2:'🚀 Rejoindre',joinBtn3:'🚀 Rejoindre maintenant',pm2tSearchBtn:'🔍 Chercher des adversaires',friendsOnlineNow:'En ligne',friendsViewAll:'Voir la liste complète',friendsInviteHint:'Invitez des amis à jouer',aiLevelLabel:'⚡ Niveau IA:',ai4SecSystem:'🎮 Mode de jeu',ai4SecFormat:'🎯 Format',ai4SecLevel:'🧠 Niveau de difficulté',ai4StartBtn:'🚀 Démarrer la partie',ai4FmtNames:['1 contre 1','2 contre 2','4 indépendants'],ai4FmtSubs:['Duel','Équipe','Chacun pour soi'],ai4SysNames:['Classique','Espagnol','Rapide'],ai4SysSubs:['Authentique','Spécial','Plus court'],dtLabelFull:'Donneur changé',dtNameDefault:'Donneur',lotteryTitle:'🎲 Tirage initial',lotteryReveal:'🃏 Révéler les cartes',lotteryResultTitle:'🏆 Premier donneur',lotteryStartBtn:'▶ Démarrer la partie',rulesClose:'Compris! Jouons 🎴',profPhoto:'📷 Photo',profNamePlaceholder:'Votre nom...',profSaveBtn:'✓ Sauvegarder',profLinkHint:'🔗 Liez votre compte pour sauvegarder vos données',profLinkGoogle:'Lier avec Google',profTabsArr:['Stats','Défis','Succès','Historique','Parrainage','Coffres','Paramètres'],statMode1v1:'⚔ 1 contre 1',statMode2v2:'🤝 2 contre 2',statMode4p:'🏟 4 Joueurs',statMatches:'Parties',statWinRate:'Taux de victoire',statMore:'🃏 Jouez plus pour monter de niveau et gagner des récompenses',histEmpty:'Aucune partie — jouez et elles apparaîtront ici!',refTitle:'Invitez des amis — Vous gagnez tous les deux!',refCodeTitle:'Votre code de parrainage',refCodeHint:'Partagez ce code avec vos amis',refCopyCode:'📋 Copier le code',refCopyLink:'🔗 Copier le lien',refShareVia:'Partager via',refShareNames:['Facebook','Twitter','WhatsApp','Instagram','Telegram'],refStatLbls:['Parrainages réussis','Pièces gagnées'],chestPageTitle:'🗺️ Coffres mystères',chestPermLabel:'⚔ Coffres permanents',chestSpecialLabel:'🌟 Coffres spéciaux',chestLocations:['📍 Marrakech','📍 Fès','📍 Tanger','📍 Agadir'],chestCooldowns:['⏱ Toutes les heures','⏱ Toutes les 2h','⏱ Toutes les 6h','⏱ Toutes les 4h'],chestDailyFree:'Gratuit',chestWeeklyFree:'Gratuit',chestWinEvery:'Toutes les 5 victoires',chestDailyCooldown:'⏱ Chaque jour',chestWeeklyCooldown:'⏱ Chaque semaine',chestWinCooldown:'Auto à la victoire',chestLockBadge:'🔒 Nécessite niveau 5+',chestGrade:'⭐ Commun → Rare → Épique → Légendaire · Plus de chances dans les coffres premium',chestWinSuffix:'victoires',settingsTerms:'⚖️ Conditions & Confidentialité',settingsPrivacy:'🔒 Politique de confidentialité',settingsDeleteReq:'🗑️ Demande de suppression',settingsDeleteTitle:'⚠️ Supprimer le compte et les données',giftTitle:'Bienvenue sur Ronda!',giftSub:'Cadeau de bienvenue — votre première connexion',giftCoinLabel:'Pièces d\'or',giftWelcomeLabel:'Cadeau de bienvenue',giftClaimBtn:'🎴 Réclamez votre cadeau et jouez!',lbTitle:'🏆 Classement',lbSubtitle:'Meilleurs joueurs mondiaux',lbMyRankPill:'Votre rang: —',lbRefreshBtn:'🔄 Actualiser',lbTabs:['🏆 Tout','⚔ 1c1','🤝 2c2','🏟 4J','🎮 Parties','🎴 Classique','🧮 Espagnol','⚡ Rapide'],lbLoading:'⏳ Chargement...',lbmTitle:'🏆 Classement',lbmMyRank:'Votre rang: —',lbmScopeIntl:'🌍 Mondial',lbmScopeLoc:'🇲🇦 National',pstatsPlayer:'Joueur',pstatsCellLbls:['🏆 Victoires','🎴 Parties','📈 %Victoire','💀 Défaites','⭐ Meilleur score','🎯 Total'],pstatsAddFriend:'➕ Ajouter ami',pstatsClickOutside:'Cliquez dehors pour fermer',pstatsClose:'✕ Fermer',chestRevealCongrats:'Félicitations!',chestRevealReward:'Récompense incroyable',chestRevealClose:'✓ Super! Réclamé',shopTitle:'🏪 Boutique d\'or',shopBalance:'Votre solde:',shopCurrency:'pièces',shopSuccessTitle:'Achat réussi!',shopSuccessCoins:'0 pièces d\'or ajoutées',shopSuccessBalanceLbl:'Nouveau solde:',shopPlayBtn:'🎴 Jouer maintenant!',shopDealBadge:'🔥 Offre du jour seulement!',shopDealName:'Forfait exceptionnel',shopTabs:['🪙 Basique','💎 Pro','👑 Élite','🎁 Forfaits'],shopPayTitle:'Mode de paiement',shopGuestLabel:'✓ Sans compte',shopCardTitle:'💳 Comment payer par carte:',shopCardSteps:['Choisissez le forfait','Appuyez sur Payer','Sélectionnez Carte de crédit','Entrez vos coordonnées bancaires'],shopSecurity:'🔒 Paiement sécurisé — nous ne stockons pas vos données',dlmTitle:'🗓 Récompenses quotidiennes',dlmRewardLbl:'Récompense du jour',dlmCollectBtn:'🎁 Réclamer',dlmStreakMsg:'Continuez à vous connecter pour de meilleures récompenses!',notifTitle:'🔔 Notifications',notifClearBtn:'🗑 Tout effacer',notifEmpty:'Aucune notification',luoTitle:'Félicitations! Vous atteignez le niveau',luoDefaultName:'Étoile montante',luoCloseBtn:'🎴 Continuez à jouer!',promoTitle:'🎁 Code cadeau',promoSub:'Entrez votre code cadeau et réclamez votre récompense!',promoSubmit:'✓ Appliquer',splashSub:'Le jeu des rois andalous',admobTitle:'Or épuisé!',admobSub:'Solde insuffisant<br>Regardez une pub pour gagner des pièces',admobSecTitle:'🎬 Gagnez des pièces en regardant une pub',admobRewardCoins:['+ 100 🪙 pièces','+ 500 🪙 pièces','+ 1 000 🪙 pièces'],admobRewardDescs:['Pub courte • Gratuit','Deuxième pub • Plus grande récompense','Troisième pub • Récompense max'],admobWatch:'Regarder',admobShopBtn:'Acheter des pièces',frndTitle:'👥 Liste d\'amis',frndEmpty:'Aucun ami',frndEmptyHint:'Ajoutez des amis pendant une partie en appuyant sur l\'avatar',frndInviteTitle:'👥 Inviter un ami',frndInviteEmpty:'Aucun ami à inviter',frndShareLabel:'📤 Ou partagez le code directement',dcbClaimBtn:'🎁 Réclamer la récompense!',dcbLoading:'Chargement...',lobChestLoading:'Vérification...',lobChallSuffix:'complété',lobAchSuffix:'obtenu',achNewBadge:'Nouveau',myNmDefault:'Joueur',backHome:'← Accueil',dlmDayOf:'sur 7',dlmStreakDays:'jours',},
+  es:{ldLabel:'🃏 Elegir modo de juego',scrollDiscover:'Desliza para explorar',dpNameMe:'Tú',dpNameOpp:'Oponente',gcBadgeHot:'🔥 Más popular',opingText:'En línea',copyCodeBtn:'📋 Copiar código',wHintFull:'Toca el ícono de la plataforma — copia la invitación 🚀',wStartBtn:'▶ Iniciar juego',wLeaveBtn:'✕ Salir',wCodeLblFull:'Código de sala',rcTitleText:'Reconectando...',rcSubText:'Intento 1 / 3',deckLbl:'Mazo',dealtLbl:'Repartidas',tableLbl2:'Mesa',turnBadgeLbl:'Turno',autoBadgeLbl:'Auto',acHint:'Pista',acPlay:'Jugar',acQuit:'Salir',cardsCollected:'cartas recogidas',rematchBtn:'🔄 Revancha',homeBtn:'🏠 Inicio',mhd1v1f:'👥 1v1 — Con amigos',mhd1v1w:'🌍 1v1 — Partida global',mhd1v1c:'🔑 Ingresar código',mhd2v2f:'👥 2v2 — Con amigos',mhd2v2t:'🤝 Equipo con amigo',mhd2v2w:'🌍 2v2 — Partida global',mhd2v2c:'🔑 Ingresar código',mhd4pf:'👥 4 Jugadores — Con amigos',mhd4pw:'🌍 4 Jugadores — Partida global',mhd4pc:'🔑 Ingresar código',mhdAi:'🤖 contra la IA',mlb7System:'🎮 Modo de juego',mlb7Share:'📣 Compartir desafío',mlb7Step1:'Paso 1 — Invita a tu compañero',mlb7Step2:'Paso 2 — Buscar 2 oponentes',iboxLbl1f:'🔐 Tu código de sala privado',iboxLbl2f:'🔐 Código de sala — 4 jugadores',iboxLbl2t:'🔐 Código de equipo — Solo para tu compañero',iboxLbl3f:'🔐 Código de sala — 4 independientes',iboxCopyBtn:'📋 Copiar código',challTxt1:'«¿Te atreves a enfrentarme en Ronda? 🃏⚔ Ingresa el código! 😤🔥»',challTxt2:'«El equipo Ronda te necesita! 🃏🔥 Únete con el código! ⚔👑»',challTxt2t:'«Mi compañero Ronda: únete a mi equipo! 🤝🃏 El código te espera! ⚔🔥»',challTxt3:'«Cuatro entran, solo uno sale campeón! 👑🃏 ¿Tienes lo que hace falta? 😤🏆»',wait1:'⏳ Esperando a tu oponente...',wait3:'⏳ Esperando a 3 jugadores...',pm2tPartnerWait:'⏳ Esperando a tu compañero...',codeHint1:'Ingresa el código que te envió tu amigo',codeHint2:'Ingresa el código de sala o de equipo',joinBtn1:'🚀 Unirse ahora',joinBtn2:'🚀 Unirse',joinBtn3:'🚀 Unirse ahora',pm2tSearchBtn:'🔍 Buscar oponentes',friendsOnlineNow:'En línea',friendsViewAll:'Ver lista completa',friendsInviteHint:'Invita amigos a jugar',aiLevelLabel:'⚡ Nivel IA:',ai4SecSystem:'🎮 Modo de juego',ai4SecFormat:'🎯 Formato',ai4SecLevel:'🧠 Nivel de dificultad',ai4StartBtn:'🚀 Iniciar partida',ai4FmtNames:['1 vs 1','2 vs 2','4 independientes'],ai4FmtSubs:['Duelo','Equipo','Todos contra todos'],ai4SysNames:['Clásico','Español','Rápido'],ai4SysSubs:['Auténtico','Especial','Más corto'],dtLabelFull:'Repartidor cambiado',dtNameDefault:'Repartidor',lotteryTitle:'🎲 Sorteo inicial',lotteryReveal:'🃏 Revelar cartas',lotteryResultTitle:'🏆 Primer repartidor',lotteryStartBtn:'▶ Iniciar juego',rulesClose:'¡Entendido! ¡A jugar! 🎴',profPhoto:'📷 Foto',profNamePlaceholder:'Tu nombre...',profSaveBtn:'✓ Guardar',profLinkHint:'🔗 Vincula tu cuenta para guardar tus datos',profLinkGoogle:'Vincular con Google',profTabsArr:['Estadísticas','Desafíos','Logros','Historial','Referidos','Cofres','Ajustes'],statMode1v1:'⚔ 1 vs 1',statMode2v2:'🤝 2 vs 2',statMode4p:'🏟 4 Jugadores',statMatches:'Partidas',statWinRate:'% victoria',statMore:'🃏 Juega más para subir de nivel y ganar recompensas exclusivas',histEmpty:'Sin partidas aún — ¡juega y aparecerán aquí!',refTitle:'¡Invita amigos — Ambos ganan!',refCodeTitle:'Tu código de referido',refCodeHint:'Comparte este código con tus amigos',refCopyCode:'📋 Copiar código',refCopyLink:'🔗 Copiar enlace',refShareVia:'Compartir via',refShareNames:['Facebook','Twitter','WhatsApp','Instagram','Telegram'],refStatLbls:['Referidos exitosos','Monedas ganadas'],chestPageTitle:'🗺️ Cofres misteriosos',chestPermLabel:'⚔ Cofres permanentes',chestSpecialLabel:'🌟 Cofres especiales',chestLocations:['📍 Marrakech','📍 Fez','📍 Tánger','📍 Agadir'],chestCooldowns:['⏱ Cada hora','⏱ Cada 2 horas','⏱ Cada 6 horas','⏱ Cada 4 horas'],chestDailyFree:'Gratis',chestWeeklyFree:'Gratis',chestWinEvery:'Cada 5 victorias',chestDailyCooldown:'⏱ Cada día',chestWeeklyCooldown:'⏱ Cada semana',chestWinCooldown:'Auto al ganar',chestLockBadge:'🔒 Requiere nivel 5+',chestGrade:'⭐ Común → Raro → Épico → Legendario · Más probabilidad en cofres premium',chestWinSuffix:'victorias',settingsTerms:'⚖️ Términos y Privacidad',settingsPrivacy:'🔒 Política de privacidad',settingsDeleteReq:'🗑️ Solicitar eliminación de datos',settingsDeleteTitle:'⚠️ Eliminar cuenta y datos',giftTitle:'¡Bienvenido a Ronda!',giftSub:'Regalo de bienvenida — tu primera vez en el juego',giftCoinLabel:'Monedas de oro',giftWelcomeLabel:'Regalo de bienvenida',giftClaimBtn:'🎴 ¡Reclama tu regalo y empieza a jugar!',lbTitle:'🏆 Clasificación',lbSubtitle:'Mejores jugadores mundiales',lbMyRankPill:'Tu rango: —',lbRefreshBtn:'🔄 Actualizar',lbTabs:['🏆 Todo','⚔ 1v1','🤝 2v2','🏟 4J','🎮 Partidas','🎴 Clásico','🧮 Español','⚡ Rápido'],lbLoading:'⏳ Cargando...',lbmTitle:'🏆 Clasificación',lbmMyRank:'Tu rango: —',lbmScopeIntl:'🌍 Global',lbmScopeLoc:'🇲🇦 Nacional',pstatsPlayer:'Jugador',pstatsCellLbls:['🏆 Victorias','🎴 Partidas','📈 %Victoria','💀 Derrotas','⭐ Mejor puntuación','🎯 Total'],pstatsAddFriend:'➕ Agregar amigo',pstatsClickOutside:'Toca fuera para cerrar',pstatsClose:'✕ Cerrar',chestRevealCongrats:'¡Felicitaciones!',chestRevealReward:'Recompensa increíble',chestRevealClose:'✓ ¡Genial! Reclamado',shopTitle:'🏪 Tienda de oro',shopBalance:'Tu saldo:',shopCurrency:'monedas',shopSuccessTitle:'¡Compra exitosa!',shopSuccessCoins:'0 monedas de oro añadidas',shopSuccessBalanceLbl:'Nuevo saldo:',shopPlayBtn:'🎴 ¡Jugar ahora!',shopDealBadge:'🔥 ¡Oferta de hoy solo!',shopDealName:'Paquete excepcional',shopTabs:['🪙 Básico','💎 Pro','👑 Élite','🎁 Paquetes'],shopPayTitle:'Método de pago',shopGuestLabel:'✓ Sin cuenta',shopCardTitle:'💳 Cómo pagar con tarjeta:',shopCardSteps:['Elige el paquete','Toca el botón Pagar','Selecciona Tarjeta de crédito','Ingresa tus datos de forma segura'],shopSecurity:'🔒 Pago seguro y cifrado — no guardamos los datos de tu tarjeta',dlmTitle:'🗓 Recompensas de inicio de sesión',dlmRewardLbl:'Recompensa de hoy',dlmCollectBtn:'🎁 Reclamar recompensa',dlmStreakMsg:'¡Sigue iniciando sesión para mejores recompensas!',notifTitle:'🔔 Notificaciones',notifClearBtn:'🗑 Borrar todo',notifEmpty:'Sin notificaciones aún',luoTitle:'¡Felicidades! Alcanzaste el nivel',luoDefaultName:'Estrella en ascenso',luoCloseBtn:'🎴 ¡Sigue jugando!',promoTitle:'🎁 Código de regalo',promoSub:'¡Ingresa tu código de regalo y reclama tu recompensa!',promoSubmit:'✓ Aplicar',splashSub:'El juego de los reyes andaluces',admobTitle:'¡Sin oro!',admobSub:'Saldo insuficiente<br>Mira un anuncio corto para ganar monedas',admobSecTitle:'🎬 Gana monedas viendo un anuncio',admobRewardCoins:['+ 100 🪙 monedas','+ 500 🪙 monedas','+ 1.000 🪙 monedas'],admobRewardDescs:['Anuncio corto • Gratis','Segundo anuncio • Mayor recompensa','Tercer anuncio • Máxima recompensa'],admobWatch:'Ver',admobShopBtn:'Comprar monedas en la tienda',frndTitle:'👥 Lista de amigos',frndEmpty:'Sin amigos aún',frndEmptyHint:'Agrega amigos durante una partida tocando el avatar del jugador',frndInviteTitle:'👥 Invitar amigo',frndInviteEmpty:'Sin amigos para invitar',frndShareLabel:'📤 O comparte el código directamente',dcbClaimBtn:'🎁 ¡Reclamar recompensa!',dcbLoading:'Cargando...',lobChestLoading:'Verificando...',lobChallSuffix:'completado',lobAchSuffix:'obtenido',achNewBadge:'Nuevo',myNmDefault:'Jugador',backHome:'← Inicio',dlmDayOf:'de 7',dlmStreakDays:'días',},
+  };
+  // Build T for 6 languages: English base + I18N_DOM overrides (already language-specific)
+  ['zh','ja','tr','de','pt','ko'].forEach(function(c){
+    var base=Object.assign({},T['en']);
+    var dom=I18N_DOM[c]||{};
+    // Map I18N_DOM keys → T keys where they overlap
+    var map={
+      wt:'wt',wl:'wl',wTie:'wTie',
+      endSbTitle:'endSbTitle',endPrizeLbl:'endPrizeLbl',
+      wTtl:'wTtl',wCodeLbl:'wCodeLblFull',wSt:'wait1',wExitBtn:'wLeaveBtn',
+      sb2pMyNm:'dpNameMe',sb2pOppNm:'dpNameOpp',
+      myNmG:'dpNameMe',oppNm:'dpNameOpp',
+      dpMyName:'dpNameMe',dpOppName:'dpNameOpp',
+      tblLbl:'tableLbl2',
+      dtLabel:'dtLabelFull',dtSub:'dtSub',
+      rndContinue:'rndContinue',
+      lobConnected:'opingText',
+      histLabelWin:'histLabelWin',histLabelTie:'histLabelTie',histLabelLose:'histLabelLose',
+      notifWin:'notifWin',notifTie:'notifTie',notifLose:'notifLose',notifKeepTrying:'notifKeepTrying'
+    };
+    // Pull from I18N for the base lang keys
+    var i18n=window.I18N?window.I18N[c]:{};
+    Object.keys(map).forEach(function(dk){
+      if(dom[dk]!==undefined) base[map[dk]]=dom[dk];
+    });
+    // Direct i18n new keys
+    if(i18n.wl) base.wl=i18n.wl;
+    if(i18n.wTie) base.wTie=i18n.wTie;
+    if(i18n.wsWin) base.wsWin=i18n.wsWin;
+    if(i18n.wsLose) base.wsLose=i18n.wsLose;
+    if(i18n.notifWin) base.notifWin=i18n.notifWin;
+    if(i18n.notifTie) base.notifTie=i18n.notifTie;
+    if(i18n.notifLose) base.notifLose=i18n.notifLose;
+    if(i18n.notifKeepTrying) base.notifKeepTrying=i18n.notifKeepTrying;
+    T[c]=base;
+  });
+  // Expose I18N globally for T-builder above (needed if T block runs before I18N is on window)
+  window.I18N = window.I18N || {};
+  var t=T[lang]||T['en'];
+  function st(id,v){var e=document.getElementById(id);if(e&&v!==undefined)e.textContent=v;}
+  function sh(id,v){var e=document.getElementById(id);if(e&&v!==undefined)e.innerHTML=v;}
+  function sq(sel,v){var e=document.querySelector(sel);if(e&&v!==undefined)e.textContent=v;}
+  function sqa(sel,v){document.querySelectorAll(sel).forEach(function(e){if(v!==undefined)e.textContent=v;});}
+  function hasTxt(el,arr){var tx=el.textContent.trim();return arr.some(function(a){return tx===a||tx.indexOf(a)>=0;});}
+  sq('.ld-label',t.ldLabel);sq('.chlbl2',t.scrollDiscover);st('myNm',t.myNmDefault);
+  (function(){var dps=document.querySelectorAll('.dp-name');if(dps[0])dps[0].textContent=t.dpNameMe;if(dps[1])dps[1].textContent=t.dpNameOpp;})();
+  sq('.gcbadge2.bh2',t.gcBadgeHot);
+  (function(){var op=document.querySelector('.oping');if(op){var r=op.querySelector('.oring');op.textContent='';if(r)op.appendChild(r);op.appendChild(document.createTextNode(t.opingText));}sq('.code-lbl',t.wCodeLblFull);sq('.whint',t.wHintFull);var wc=document.querySelector('.wcopy');if(wc)wc.textContent=t.copyCodeBtn;var bs=document.getElementById('btnStart');if(bs)bs.textContent=t.wStartBtn;var bl=document.querySelector('.bleave');if(bl)bl.textContent=t.wLeaveBtn;})();
+  st('rcTitle',t.rcTitleText);
+  (function(){var di=document.querySelector('.tb-deal-info');if(di){var dc=document.getElementById('deckCount'),de=document.getElementById('dealtCount'),tc=document.getElementById('tableCount');di.innerHTML=t.deckLbl+':<span id="deckCount">'+(dc?dc.textContent:'34')+'</span> · '+t.dealtLbl+':<span id="dealtCount">'+(de?de.textContent:'6')+'</span> · '+t.tableLbl2+':<span id="tableCount">'+(tc?tc.textContent:'4')+'</span>';}})();
+  (function(){var tb=document.getElementById('turnBadge');if(tb){var tn=document.getElementById('turnNum');tb.innerHTML=t.turnBadgeLbl+' <span id="turnNum">'+(tn?tn.textContent:'1')+'</span>';}})();
+  ['autoBadgeSeat0','autoBadgeSeat1','autoBadgeSeat2','autoBadgeSeat3'].forEach(function(id){st(id,t.autoBadgeLbl);});sq('.auto-toggle-lbl',t.autoBadgeLbl);
+  (function(){var pc=document.querySelector('.pcol');if(pc){var mc=document.getElementById('gMCol');pc.innerHTML='🃏 <span id="gMCol">'+(mc?mc.textContent:'0')+'</span> '+t.cardsCollected;}})();
+  document.querySelectorAll('.ac-hint').forEach(function(b){var sp=b.querySelector('span');if(sp)sp.textContent=t.acHint;else if(b.innerHTML.indexOf('<br>')>=0)b.innerHTML='💡<br><span style="font-size:.48rem;display:block;margin-top:.15rem">'+t.acHint+'</span>';else b.textContent='💡 '+t.acHint;});
+  document.querySelectorAll('.ac-play').forEach(function(b){var sp=b.querySelector('span');if(sp)sp.textContent=t.acPlay;else if(b.innerHTML.indexOf('<br>')>=0)b.innerHTML='▶<br><span style="font-size:.48rem;display:block;margin-top:.15rem">'+t.acPlay+'</span>';else b.textContent='▶ '+t.acPlay;});
+  document.querySelectorAll('.ac-quit').forEach(function(b){var sp=b.querySelector('span');if(sp)sp.textContent=t.acQuit;else if(b.innerHTML.indexOf('<br>')>=0)b.innerHTML='✕<br><span style="font-size:.48rem;display:block;margin-top:.15rem">'+t.acQuit+'</span>';else b.textContent='✕ '+t.acQuit;});
+  var rm=document.getElementById('btnRematch');if(rm)rm.textContent=t.rematchBtn;
+  (function(){var mhMap={'pm1f':t.mhd1v1f,'pm1w':t.mhd1v1w,'pm1c':t.mhd1v1c,'pm2f':t.mhd2v2f,'pm2t':t.mhd2v2t,'pm2w':t.mhd2v2w,'pm2c':t.mhd2v2c,'pm3f':t.mhd4pf,'pm3w':t.mhd4pw,'pm3c':t.mhd4pc};document.querySelectorAll('.mhd2').forEach(function(mhd){var p=mhd.closest('.mov2');if(!p)return;var mtl=mhd.querySelector('.mtl2');if(mtl&&mhMap[p.id])mtl.textContent=mhMap[p.id];});var ai=document.querySelector('#pm4ai .mtl2');if(ai)ai.textContent=t.mhdAi;})();
+  document.querySelectorAll('.mlb7').forEach(function(el){var tx=el.textContent.trim();if(tx.indexOf('🎮')>=0)el.textContent=t.mlb7System;else if(tx.indexOf('📣')>=0)el.textContent=t.mlb7Share;else if(tx.indexOf('1')>=0&&(tx.indexOf('خطوة')>=0||tx.indexOf('Step')>=0||tx.indexOf('Étape')>=0||tx.indexOf('Paso')>=0))el.textContent=t.mlb7Step1;else if(tx.indexOf('2')>=0&&(tx.indexOf('خطوة')>=0||tx.indexOf('Step')>=0||tx.indexOf('Étape')>=0||tx.indexOf('Paso')>=0))el.textContent=t.mlb7Step2;});
+  (function(){var lb=document.querySelectorAll('.ibox-lbl'),lm=[t.iboxLbl1f,t.iboxLbl2f,t.iboxLbl2t,t.iboxLbl3f];lb.forEach(function(el,i){if(lm[i])el.textContent=lm[i];});sqa('.ibox-copy',t.iboxCopyBtn);})();
+  (function(){var ch=document.querySelectorAll('.chall-txt'),cm=[t.challTxt1,t.challTxt2,t.challTxt2t,t.challTxt3];ch.forEach(function(el,i){if(cm[i])el.textContent=cm[i];});})();
+  (function(){document.querySelectorAll('.wait7').forEach(function(el){var d=el.querySelector('.wdot7'),tx=el.textContent;var msg=tx.indexOf('خصمك')>=0||tx.indexOf('opponent')>=0||tx.indexOf('adversaire')>=0||tx.indexOf('oponente')>=0?t.wait1:t.wait3;el.textContent='';if(d)el.appendChild(d);el.appendChild(document.createTextNode(msg));});var ps=document.getElementById('pm2t-partner-status');if(ps)ps.textContent=t.pm2tPartnerWait;})();
+  (function(){document.querySelectorAll('.mov2').forEach(function(m){m.querySelectorAll('div').forEach(function(d){if(d.className===''&&d.style&&d.style.textAlign==='center'&&d.style.fontSize&&d.style.fontSize.indexOf('.6rem')>=0){if(m.id==='pm2c')d.textContent=t.codeHint2;else d.textContent=t.codeHint1;}});});})();
+  (function(){var ct=document.querySelectorAll('.cta7');ct.forEach(function(btn,i){if(btn.id==='pm2t-search-btn')btn.textContent=t.pm2tSearchBtn;else if(i===0)btn.textContent=t.joinBtn1;else if(i===1)btn.textContent=t.joinBtn2;else btn.textContent=t.joinBtn3;});})();
+  document.querySelectorAll('.ai4-sec-lbl').forEach(function(el){var tx=el.textContent;if(tx.indexOf('🎮')>=0)el.textContent=t.ai4SecSystem;else if(tx.indexOf('🎯')>=0)el.textContent=t.ai4SecFormat;else if(tx.indexOf('🧠')>=0)el.textContent=t.ai4SecLevel;});
+  (function(){var fn=document.querySelectorAll('#pm4ai .ai4-fmt-nm'),fs=document.querySelectorAll('#pm4ai .ai4-fmt-sub');fn.forEach(function(el,i){if(t.ai4FmtNames[i])el.textContent=t.ai4FmtNames[i];});fs.forEach(function(el,i){if(t.ai4FmtSubs[i])el.textContent=t.ai4FmtSubs[i];});})();
+  sq('.dt-label',t.dtLabelFull);
+  sq('.lottery-title',t.lotteryTitle);sq('.lottery-result-title',t.lotteryResultTitle);
+  (function(){var ls=document.getElementById('lotterySub');if(ls)ls.innerHTML=t.lotteryTitle.replace('🎲 ','')&&ls.innerHTML?ls.innerHTML:t.lotteryTitle;})();
+  sqa('.edit-name-btn',t.profSaveBtn);var ni=document.getElementById('editNameInp');if(ni)ni.placeholder=t.profNamePlaceholder;
+  (function(){var tabs=document.querySelectorAll('.prof-tab');tabs.forEach(function(tab,i){var ic=tab.querySelector('.pt-ic');if(ic&&t.profTabsArr[i]){tab.textContent='';tab.appendChild(ic);tab.appendChild(document.createTextNode(t.profTabsArr[i]));}});})();
+  sqa('.ref-stat-lbl:nth-child(1)',t.refStatLbls?t.refStatLbls[0]:'');
+  (function(){var rs=document.querySelectorAll('.ref-stat-lbl');rs.forEach(function(el,i){if(t.refStatLbls&&t.refStatLbls[i])el.textContent=t.refStatLbls[i];});})();
+  (function(){var rb=document.querySelectorAll('.ref-share-btn');rb.forEach(function(btn,i){var sp=btn.querySelector('span:last-child');if(sp&&t.refShareNames&&t.refShareNames[i])sp.textContent=t.refShareNames[i];});})();
+  (function(){var rl=document.getElementById('royal-lock-badge');if(rl)rl.textContent=t.chestLockBadge;var wc=document.getElementById('chestWinCount');if(wc){var n=wc.textContent.replace(/[^0-9]/g,'');wc.textContent=n+' '+t.chestWinSuffix;}})();
+  sq('.gift-title',t.giftTitle);sq('.gift-sub',t.giftSub);sq('.gift-coin-label',t.giftCoinLabel);sqa('.gift-btn',t.giftClaimBtn);
+  sq('.lb-title',t.lbTitle);sq('.lb-subtitle',t.lbSubtitle);sq('.lb-my-rank-pill',t.lbMyRankPill);sq('.lb-loading',t.lbLoading);
+  (function(){var lt=document.querySelectorAll('.lb-tab');lt.forEach(function(el,i){if(t.lbTabs&&t.lbTabs[i])el.textContent=t.lbTabs[i];});var lmt=document.querySelectorAll('.lbm-tab');lmt.forEach(function(el,i){if(t.lbTabs&&t.lbTabs[i])el.textContent=t.lbTabs[i];});document.querySelectorAll('.lbm-scope-btn').forEach(function(b,i){b.textContent=i===0?t.lbmScopeIntl:t.lbmScopeLoc;});})();
+  sq('.lbm-title',t.lbmTitle);st('lbmMyRank',t.lbmMyRank);st('myRankPill',t.lbMyRankPill);
+  (function(){var pc=document.querySelectorAll('.pstats-cell-lbl');pc.forEach(function(el,i){if(t.pstatsCellLbls&&t.pstatsCellLbls[i])el.textContent=t.pstatsCellLbls[i];});sq('.pstats-close-btn',t.pstatsClose);})();
+  st('chestRevealTitle',t.chestRevealCongrats);st('chestRevealRewardText',t.chestRevealReward);sq('.chest-reveal-btn',t.chestRevealClose);
+  (function(){var ac=document.querySelectorAll('.arb-coins');ac.forEach(function(el,i){if(t.admobRewardCoins&&t.admobRewardCoins[i])el.textContent=t.admobRewardCoins[i];});var ad=document.querySelectorAll('.arb-desc');ad.forEach(function(el,i){if(t.admobRewardDescs&&t.admobRewardDescs[i])el.textContent=t.admobRewardDescs[i];});sqa('.arb-badge',t.admobWatch);sq('.admob-title',t.admobTitle);var as=document.querySelector('.admob-sub');if(as)as.innerHTML=t.admobSub;sq('.admob-sec-title',t.admobSecTitle);var asb=document.querySelector('.admob-shop-btn span');if(asb)asb.textContent=t.admobShopBtn;else sq('.admob-shop-btn',t.admobShopBtn);})();
+  (function(){document.querySelectorAll('.frnd-sheet-title').forEach(function(el){if(el.id==='frndInviteTitle')el.textContent=t.frndInviteTitle;else el.textContent=t.frndTitle;});var fi=document.getElementById('frndInviteTitle');if(fi)fi.textContent=t.frndInviteTitle;var _invWords=['لدعوتهم','to invite','à inviter','para invitar','邀请','招待する','davet edilecek','einzuladen','convidar','초대'];document.querySelectorAll('.frnd-empty').forEach(function(el){var tx=el.textContent;if(_invWords.some(function(w){return tx.indexOf(w)>=0;}))el.textContent=t.frndInviteEmpty;else el.innerHTML=t.frndEmpty+'<br><span style="font-size:.6rem">'+t.frndEmptyHint+'</span>';});})();
+  var dcbBtn=document.getElementById('dcbClaimBtn');if(dcbBtn)dcbBtn.textContent=t.dcbClaimBtn;
+  sq('.dlm-title',t.dlmTitle);sq('.dlm-reward-lbl',t.dlmRewardLbl);var dlmC=document.getElementById('dlmCollectBtn');if(dlmC)dlmC.textContent=t.dlmCollectBtn;var dlmM=document.getElementById('dlmStreakMsg');if(dlmM)dlmM.textContent=t.dlmStreakMsg;
+  (function(){var dlmSub=document.getElementById('dlmSub');if(dlmSub){var d=document.getElementById('dlmDayNum'),s=document.getElementById('dlmStreakNum'),dv=d?d.textContent:'1',sv=s?s.textContent:'0';var map={
+  ar:'اليوم <span id="dlmDayNum">'+dv+'</span> من 7 · سلسلتك: <span id="dlmStreakNum">'+sv+'</span> يوم 🔥',
+  en:'Day <span id="dlmDayNum">'+dv+'</span> of 7 · Streak: <span id="dlmStreakNum">'+sv+'</span> days 🔥',
+  fr:'Jour <span id="dlmDayNum">'+dv+'</span> sur 7 · Série: <span id="dlmStreakNum">'+sv+'</span> jours 🔥',
+  es:'Día <span id="dlmDayNum">'+dv+'</span> de 7 · Racha: <span id="dlmStreakNum">'+sv+'</span> días 🔥',
+  zh:'第 <span id="dlmDayNum">'+dv+'</span> 天 / 共7天 · 连续: <span id="dlmStreakNum">'+sv+'</span> 天 🔥',
+  ja:'<span id="dlmDayNum">'+dv+'</span>日目 / 7日 · 連続: <span id="dlmStreakNum">'+sv+'</span>日 🔥',
+  tr:'<span id="dlmDayNum">'+dv+'</span>. Gün / 7 · Seri: <span id="dlmStreakNum">'+sv+'</span> gün 🔥',
+  de:'Tag <span id="dlmDayNum">'+dv+'</span> / 7 · Serie: <span id="dlmStreakNum">'+sv+'</span> Tage 🔥',
+  pt:'Dia <span id="dlmDayNum">'+dv+'</span> de 7 · Sequência: <span id="dlmStreakNum">'+sv+'</span> dias 🔥',
+  ko:'<span id="dlmDayNum">'+dv+'</span>일째 / 7일 · 연속: <span id="dlmStreakNum">'+sv+'</span>일 🔥'
+};dlmSub.innerHTML=map[lang]||map['en'];}})();
+  sq('.notif-drawer-title',t.notifTitle);sq('.notif-clear-btn',t.notifClearBtn);
+  sq('.luo-title',t.luoTitle);sq('.luo-close-btn',t.luoCloseBtn);
+  sq('.promo-title',t.promoTitle);sq('.promo-sub',t.promoSub);sq('.promo-submit',t.promoSubmit);
+  sq('.splash-sub',t.splashSub);
+  (function(){var st2=document.querySelectorAll('.shop-tab');st2.forEach(function(el,i){if(t.shopTabs&&t.shopTabs[i])el.textContent=t.shopTabs[i];});sq('.shop-pay-title',t.shopPayTitle);sq('.ss-title',t.shopSuccessTitle);sq('.ss-btn',t.shopPlayBtn);sq('.deal-badge',t.shopDealBadge);sq('.deal-name',t.shopDealName);sq('.cht-title',t.shopCardTitle);var cs=document.querySelectorAll('.cht-step');cs.forEach(function(el,i){var n=el.querySelector('.cht-n');if(n&&t.shopCardSteps&&t.shopCardSteps[i]){el.textContent='';el.appendChild(n);el.appendChild(document.createTextNode(t.shopCardSteps[i]));}});})();
+  (function(){var ac2=document.getElementById('achNewBadge');if(ac2)ac2.textContent=t.achNewBadge;var cs2=document.getElementById('lobChallSub');if(cs2){var m=cs2.textContent.match(/(\d+)\/(\d+)/);if(m)cs2.textContent=m[0]+' '+t.lobChallSuffix;}var as2=document.getElementById('lobAchSub');if(as2){var n=as2.textContent.match(/\d+/);if(n)as2.textContent=n[0]+' '+t.lobAchSuffix;}})();
+  (function(){var chLocs=document.querySelectorAll('.chest-location');chLocs.forEach(function(el,i){if(t.chestLocations&&t.chestLocations[i])el.textContent=t.chestLocations[i];});var chHints=document.querySelectorAll('.chest-reward-hint');var ci=0;chHints.forEach(function(el){var tx=el.textContent;var dayWords=['يوم','day','jour','día','天','日','gün','Tag','dia','일'];var weekWords=['أسبوع','week','semaine','semana','周','週','hafta','Woche','semana','주'];var winWords=['فوز','win','victoire','ganar','胜','勝','kazan','gewinn','vitória','승','Auto'];if(dayWords.some(function(w){return tx.indexOf(w)>=0;}))el.textContent=t.chestDailyCooldown;else if(weekWords.some(function(w){return tx.indexOf(w)>=0;}))el.textContent=t.chestWeeklyCooldown;else if(winWords.some(function(w){return tx.indexOf(w)>=0;}))el.textContent=t.chestWinCooldown;else if(ci<4&&t.chestCooldowns[ci]){el.textContent=t.chestCooldowns[ci];ci++;}});document.querySelectorAll('.chest-cost').forEach(function(el){var tx=el.textContent.trim();var freeWords=['مجاني','Free','Gratuit','Gratis','免费','無料','Ücretsiz','Kostenlos','Grátis','무료'];var winWords=['انتصارات','wins','victoires','victorias','胜利','勝利','galibiyet','Siege','vitórias','승리'];if(freeWords.some(function(w){return tx===w;}))el.textContent=t.chestDailyFree;else if(winWords.some(function(w){return tx.indexOf(w)>=0;}))el.textContent=t.chestWinEvery;});var rl=document.getElementById('royal-lock-badge');if(rl)rl.textContent=t.chestLockBadge;})();
+
+
+  // Update document title
+  const titles = {
+    ar:'روندة ⚔ اللعبة المغربية الملكية',
+    en:'Ronda ⚔ The Royal Moroccan Game',
+    fr:'Ronda ⚔ Le Jeu Royal Marocain',
+    es:'Ronda ⚔ El Juego Real Marroquí',
+    zh:'Ronda ⚔ 摩洛哥皇家纸牌游戏',
+    ja:'Ronda ⚔ モロッコ王室カードゲーム',
+    tr:'Ronda ⚔ Kraliyet Fas Kart Oyunu',
+    de:'Ronda ⚔ Das Königliche Marokkanische Kartenspiel',
+    pt:'Ronda ⚔ O Jogo Real Marroquino',
+    ko:'Ronda ⚔ 모로코 왕실 카드 게임',
+  };
+  if(titles[lang]) document.title = titles[lang];
+
+  // Update html lang attribute for RTL/LTR
+  const langData = I18N[lang]||I18N['ar'];
+  document.documentElement.lang = lang;
+  document.documentElement.dir = langData.dir;
+  document.body.dir = langData.dir;
+
+  // Re-render leaderboard with new language
+  if(typeof _mlbRender === 'function') _mlbRender();
+}
+
+// ─── Initialize ───────────────────────────────────────────────────────────
+// Patch applyLang to also call _applyDomTexts
+const _origApplyLang = applyLang;
+applyLang = function(lang){
+  _origApplyLang(lang);
+  _applyDomTexts(lang);
+};
+
+document.addEventListener('DOMContentLoaded', function(){
+  // Move dropdown to body so it escapes overflow:hidden parents
+  const dd = document.getElementById('langDropdown');
+  if(dd && dd.parentElement && dd.parentElement.id !== 'body-root'){
+    document.body.appendChild(dd);
+  }
+  applyLang(_currentLang);
+  _renderLangOptions();
+  // Extra call to ensure DOM texts are applied after full render
+  setTimeout(function(){ _applyDomTexts(_currentLang); }, 100);
+});
+// Also apply immediately in case DOMContentLoaded already fired
+applyLang(_currentLang);
+_renderLangOptions();
+
+})(); // end IIFE
+</script>
 
 </body>
 </html>
