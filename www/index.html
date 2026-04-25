@@ -5193,12 +5193,13 @@ body.admob-banner-on{padding-bottom:60px}
   position:fixed;top:60px;right:12px;
   background:linear-gradient(160deg,#0c1a0e,#050d07);
   border:1px solid rgba(212,164,60,.25);border-radius:14px;
-  padding:.45rem;min-width:180px;z-index:99999;
+  padding:.45rem;min-width:180px;z-index:2147483647;
   max-height:calc(100vh - 80px);overflow-y:auto;
   box-shadow:0 8px 40px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.04);
   opacity:0;transform:translateY(-8px) scale(.97);pointer-events:none;
   transition:all .22s cubic-bezier(.175,.885,.32,1.275);
   scrollbar-width:thin;scrollbar-color:rgba(212,164,60,.3) transparent;
+  -webkit-overflow-scrolling:touch;
 }
 .lang-dropdown.open{opacity:1;transform:translateY(0) scale(1);pointer-events:all}
 .lang-dropdown-title{
@@ -30637,9 +30638,14 @@ function _renderLangOptions(){
 
 window.toggleLangDropdown = function(e){
   e.stopPropagation();
+  e.preventDefault();
   const btn = document.getElementById('lobbyLangBtn');
   const dd = document.getElementById('langDropdown');
   if(!dd || !btn) return;
+  // Ensure dropdown is direct child of document.documentElement to escape all overflow:hidden
+  if(dd.parentElement !== document.documentElement){
+    document.documentElement.appendChild(dd);
+  }
   const isOpen = dd.classList.contains('open');
   // Close all first
   document.querySelectorAll('.lang-dropdown.open').forEach(d=>d.classList.remove('open'));
@@ -30660,11 +30666,37 @@ window.toggleLangDropdown = function(e){
     dd.classList.add('open');
   }
 };
+// Support touchstart on mobile for lang button
+(function(){
+  function _attachLangTouch(){
+    const btn = document.getElementById('lobbyLangBtn');
+    if(btn && !btn._langTouchBound){
+      btn._langTouchBound = true;
+      btn.addEventListener('touchstart', function(e){
+        window.toggleLangDropdown(e);
+      }, {passive:false});
+    }
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', _attachLangTouch);
+  } else {
+    _attachLangTouch();
+  }
+})();
 
-// Close dropdown when clicking outside
+// Close dropdown when clicking/touching outside
 document.addEventListener('click', ()=>{
   document.querySelectorAll('.lang-dropdown.open').forEach(d=>d.classList.remove('open'));
 });
+document.addEventListener('touchstart', function(e){
+  const dd = document.getElementById('langDropdown');
+  const btn = document.getElementById('lobbyLangBtn');
+  if(dd && dd.classList.contains('open')){
+    if(!dd.contains(e.target) && e.target !== btn && !btn.contains(e.target)){
+      dd.classList.remove('open');
+    }
+  }
+}, {passive:true});
 
 // ─── Set Language ─────────────────────────────────────────────────────────
 window.setLanguage = function(code){
@@ -35785,10 +35817,10 @@ applyLang = function(lang){
 };
 
 document.addEventListener('DOMContentLoaded', function(){
-  // Move dropdown to body so it escapes overflow:hidden parents
+  // Move dropdown to <html> root so it escapes body's overflow:hidden
   const dd = document.getElementById('langDropdown');
-  if(dd && dd.parentElement && dd.parentElement.id !== 'body-root'){
-    document.body.appendChild(dd);
+  if(dd && dd.parentElement !== document.documentElement){
+    document.documentElement.appendChild(dd);
   }
   applyLang(_currentLang);
   _renderLangOptions();
