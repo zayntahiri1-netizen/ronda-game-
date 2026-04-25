@@ -5870,12 +5870,12 @@ document.addEventListener('deviceready', async () => {
           <span class="lang-flag" id="lobbyLangFlag">🌐</span>
           <span id="lobbyLangName" data-i18n="langBtnLabel">اللغة</span>
           <span style="font-size:.5rem;opacity:.6">▾</span>
-          <!-- Dropdown -->
-          <div class="lang-dropdown" id="langDropdown" onclick="event.stopPropagation()">
-            <div class="lang-dropdown-title" data-i18n="langDropdownTitle">🌐 اختر لغتك</div>
-            <div id="langOptionsList"></div>
-          </div>
         </button>
+      </div>
+      <!-- Dropdown — outside button to avoid mobile click conflicts -->
+      <div class="lang-dropdown" id="langDropdown" onclick="event.stopPropagation()">
+        <div class="lang-dropdown-title" data-i18n="langDropdownTitle">🌐 اختر لغتك</div>
+        <div id="langOptionsList"></div>
       </div>
       <div class="tb-r">
         <div class="cbadge gold" onclick="openM('mShop')">🪙 <span id="myGo">5,000</span></div>
