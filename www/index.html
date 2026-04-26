@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#030508">
-<title>Ronda — Moroccan Royal Game</title>
+<title>روندة ⚔ اللعبة المغربية الملكية</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Cinzel+Decorative:wght@400;700;900&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 /* ── Firebase Status Bar (all cards) ── */
@@ -5529,7 +5529,7 @@ document.addEventListener('deviceready', async () => {
 
           if (errorParam) {
             console.error('[AppUrlOpen] OAuth error:', errorParam, params.get('error_description'));
-            toast('❌ فشل تسجيل الدخول: ' + (params.get('error_description') || errorParam), 'err');
+            toast(_i18n('toast_login_fail') + (params.get('error_description') || errorParam), 'err');
             return;
           }
 
@@ -5547,7 +5547,7 @@ document.addEventListener('deviceready', async () => {
                 P.googleId  = P.googleId || session.user.id;
                 P.email     = P.email || session.user.email || '';
                 saveP();
-                toast('✅ تم ربط حساب Google بنجاح','ok');
+                toast(_i18n('toast_google_linked'),'ok');
                 goLobby();
               } else {
                 await _handleGoogleAuthCallback(session);
@@ -5667,7 +5667,6 @@ const RONDA_I18N = {
     logo_super: 'اللعبة الأندلسية المغربية الأصيلة',
     logo_ar: 'Ronda — لعبة الملوك',
     logo_lat: 'Royal Moroccan Card Game',
-    logo_main: 'Ronda',
     auth_title: 'اختر طريقة الدخول',
     google_login: 'تسجيل الدخول بـ Google',
     or: 'أو',
@@ -5805,308 +5804,6 @@ const RONDA_I18N = {
     cat_final: '👑 نهائية',
     // Misc
     ach_earned_of: 'مكتسب',
-    ach_items: [
-      ["الخطوة الأولى", "العب أول مباراة لك"],
-      ["لاعب جديد", "سجّل الدخول لأول مرة"],
-      ["اخترت هويتك", "اختر صورة رمزية"],
-      ["اخترت لقبك", "اختر لقبًا"],
-      ["هدية الترحيب", "استلم 5000 ذهب ترحيبي"],
-      ["أول انتصار", "اربح أول مباراة لك"],
-      ["خمسة مقابل خمسة", "حقق 5 انتصارات"],
-      ["لا يُهزم", "حقق 10 انتصارات متتالية"],
-      ["بطل روندة", "حقق 50 انتصارًا"],
-      ["أسطورة الساحات", "حقق 200 انتصار"],
-      ["أعلنت روندة!", "أعلن روندة لأول مرة"],
-      ["ملك روندة", "أعلن روندة 25 مرة"],
-      ["روندة الأبطال", "أعلن روندة 100 مرة"],
-      ["ترينغا!", "أعلن ترينغا لأول مرة"],
-      ["موجة ترينغا", "أعلن ترينغا 10 مرات"],
-      ["أسطورة ترينغا", "أعلن ترينغا 50 مرة"],
-      ["أول ميسا", "نفّذ ميسا لأول مرة"],
-      ["إعصار ميسا", "نفّذ 10 ميسات في مباريات مختلفة"],
-      ["ملك الميسا", "نفّذ 50 ميسا إجمالًا"],
-      ["أول بومبا", "سجّل بومبا لأول مرة"],
-      ["قناص بومبا", "سجّل 25 بومبا"],
-      ["إمبراطور بومبا", "سجّل 100 بومبا"],
-      ["وصلتان", "سلسلة انتصارات ×2"],
-      ["الثالوث الناري", "سلسلة انتصارات ×3"],
-      ["خمسة على التوالي", "سلسلة انتصارات ×5"],
-      ["العشرة الذهبية", "سلسلة انتصارات ×10"],
-      ["قمر الأبطال", "سلسلة انتصارات ×20"],
-      ["المستوى الخامس", "صل إلى المستوى 5"],
-      ["العاشر المجيد", "صل إلى المستوى 10"],
-      ["ضمن النخبة", "صل إلى المستوى 25"],
-      ["نخبة النخبة", "صل إلى المستوى 50"],
-      ["المستوى 100", "صل إلى المستوى 100"],
-      ["ساحة المبارزة", "العب أول مباراة 1 ضد 1"],
-      ["بطل المبارزة", "اربح 10 مباريات 1 ضد 1"],
-      ["السيف الحاد", "اربح 50 1ڤ1 مباريات"],
-      ["درع لا يُخترق", "اربح 100 1ڤ1 مباريات"],
-      ["شريك وفيّ", "العب الأول 2ڤ2 مباراة"],
-      ["ثنائي قوي", "اربح 10 مباريات 2 ضد 2"],
-      ["بطل ثنائي", "اربح 50 مباراة 2 ضد 2"],
-      ["كينجس بايرس", "اربح 100 2ڤ2 مباريات"],
-      ["ادخل الساحة", "العب الأول حر-لـ-الكل مباراة"],
-      ["الساحة ناجٍ", "اربح 10 مباريات الكل ضد الكل"],
-      ["الساحة بطل", "اربح 50 مباراة الكل ضد الكل"],
-      ["الساحة إمبراطور", "اربح 100 حر-لـ-الكل مباريات"],
-      ["جامع الذهب", "اجمع 10,000 ذهب"],
-      ["بنك روندة", "اجمع 50,000 ذهب"],
-      ["مليونير", "اجمع مليون ذهب"],
-      ["الأول جوهرة", "احتفظ 10 جواهر"],
-      ["جوهرة ترياسوري", "احتفظ 50 جواهر"],
-      ["جوهرة برينكي", "احتفظ 100 جواهر"],
-      ["اناليست", "ڤييو خصم ستاتس"],
-      ["ريفيررير", "ادعُ صديق"],
-      ["بوت سلايير", "بيات بوت على الأول تري"],
-      ["مواطن عالمي", "العب مع متصل خصم"],
-      ["ليل كنيجهت", "العب افتير ميدنيجهت"],
-      ["داون بيرد", "العب بيفوري 6 ام"],
-      ["قهوة صباح الجمعة", "العب الأول الجمعة صباح مباراة"],
-      ["رامادان ليل", "حقق سوميتهينج في رامادان"],
-      ["حفلة روندة", "العب مع 3 أصدقاء في واحد يوم"],
-      ["باتيينكي", "أكمل كامل مباراة كالملي"],
-      ["التزام", "العب 7 متتالية أيام"],
-      ["وفيّ لاعب", "العب 30 متتالية أيام"],
-      ["جوورنيي ليفيتيمي", "العب 1000 مباريات"],
-      ["وقت ثمين", "سبيند 10 هوورس بلايينج"],
-      ["ستارتير بوينتس", "اجمع 100 بوينتس في مباراة"],
-      ["يكسبيرت بوينتس", "اجمع 200 بوينتس في مباراة"],
-      ["أسطورة بوينتس", "اجمع 300 بوينتس في مباراة"],
-      ["المتصدرون ملك", "توب المتصدرون"],
-      ["المتصدرون ستار", "كن في توب 10"],
-      ["سوكيال ميدال", "الوايس كن في المتصدرون"],
-      ["وحيد القرن", "سجّل 3 رونداس في واحد مباراة"],
-      ["ليجينداري دراجون", "اربح 500 مباريات"],
-      ["يممورتال", "العب 50 مباراة ويتهووت لوسس"],
-      ["قوس قزح", "العب الكل جامي أوضاع 10 تيميس"],
-      ["العبقري", "اربح 5 متتالية مباريات اجاينست هارديست بوت"],
-      ["الطالب", "اجمع 5,000 XP"],
-      ["الخريج", "اجمع 20,000 XP"],
-      ["اكاديميك", "اجمع 100,000 XP"],
-      ["الفخر المغربي", "العب روندة ريجهت واي!"],
-      ["صديق جيد", "شارك روندة مع 5 أصدقاء"],
-      ["أجواء الوطن", "العب اوتهينتيك مغربي روندة"],
-      ["قلعة روندة", "ديفيند تيتلي 10 تيميس"],
-      ["محترف ارتيست", "كهانجي صورة رمزية 10 تيميس"],
-      ["بطاقة أستاذ", "اجمع 1000 بطاقات توتال"],
-      ["موجة لورد", "اربح 20 متتالية مباريات"],
-      ["لا راحة", "العب 10 مباريات في واحد يوم"],
-      ["فييلد ناري", "سجّل 5 بومباس في 5 متتالية مباريات"],
-      ["الكمال", "أكمل الكل مبتدئ إنجازات"],
-      ["هاوك ييي", "وبسيرڤي و اربح — صل إلى ماكس سجّل"],
-      ["حر سبيريت", "العب 100 ليل مباريات"],
-      ["كهيلد سون", "العب 100 يوم مباريات"],
-      ["كليار جوال", "اربح الكل أسبوعي تحديات"],
-      ["كامل إتقان", "أكمل 50 تحديات"],
-      ["الكون كله", "العب 2000 مباريات"],
-      ["وهيتي ليون", "حقق 1000 انتصارات"],
-      ["نهاية البداية", "كونجراتس — أنت اري حقيقي روندة محارب!"],
-      ["الانتصار الذهبي", "اربح 200 مباراة متعددة اللاعبين"],
-      ["الساحر", "حقق روندة وترينغا في مباراة واحدة"],
-      ["المنارة", "كن مرجعًا لجميع لاعبي روندة"],
-      ["عرض الأبطال", "اربح 3 أوضاع مختلفة في يوم واحد"]
-    ],
-    ch_items: [
-      ["محارب مبتدئ", "العب 10 مباريات"],
-      ["محارب مخضرم", "العب 50 مباراة"],
-      ["محارب محترف", "العب 100 مباراة"],
-      ["مقاتل الساحة", "العب 250 مباراة"],
-      ["أسطورة الساحات", "العب 500 مباراة"],
-      ["أول انتصار", "اربح أول مباراة لك"],
-      ["خمسة انتصارات", "حقق 5 انتصارات"],
-      ["عشرة انتصارات", "حقق 10 انتصارات"],
-      ["الخمسون الذهبية", "حقق 50 انتصارًا"],
-      ["مائة انتصار", "حقق 100 انتصار"],
-      ["دبلوماسي المبارزة", "العب 5 1ڤ1 مباريات"],
-      ["بطل المبارزة", "العب 25 1ڤ1 مباريات"],
-      ["سيد المبارزة", "اربح 10 مباريات 1 ضد 1"],
-      ["أسطورة المبارزة", "اربح 50 1ڤ1 مباريات"],
-      ["مبارز لا يُضاهى", "اربح 100 1ڤ1 مباريات"],
-      ["لاعب فريق", "العب 5 مباريات 2 ضد 2"],
-      ["روح الفريق", "العب 25 مباراة 2 ضد 2"],
-      ["قائد الفريق", "اربح 10 مباريات 2 ضد 2"],
-      ["الفريق الحديدي", "اربح 25 مباراة 2 ضد 2"],
-      ["ملك الأزواج", "اربح 50 مباراة 2 ضد 2"],
-      ["ادخل الساحة", "العب 5 مباريات الكل ضد الكل"],
-      ["قاتل الجميع", "العب 25 مباراة الكل ضد الكل"],
-      ["سيد الساحة", "اربح 10 مباريات الكل ضد الكل"],
-      ["ونديفياتابلي", "اربح 25 مباراة الكل ضد الكل"],
-      ["إمبراطور الساحة", "اربح 50 مباراة الكل ضد الكل"],
-      ["البداية", "صل إلى المستوى 5"],
-      ["في الطريق", "صل إلى المستوى 10"],
-      ["نجم صاعد", "صل إلى المستوى 20"],
-      ["نجم لامع", "صل إلى المستوى 30"],
-      ["جامع الذهب", "اجمع 10,000 ذهب"],
-      ["تاجر الذهب", "اجمع 50,000 ذهب"],
-      ["بنك روندة", "اجمع 100,000 ذهب"],
-      ["ملك الثروات", "اجمع 500,000 ذهب"],
-      ["مليونير", "اجمع مليون ذهب"],
-      ["جوهرة واحدة", "اجمع 10 جواهر"],
-      ["جوهرة ترياسوري", "اجمع 50 جواهر"],
-      ["جوهرة ملك", "اجمع 100 جواهر"],
-      ["ليارنير", "اجمع 1,000 XP"],
-      ["سبيكياليست", "اجمع 5,000 XP"],
-      ["يكسبيرت", "اجمع 10,000 XP"],
-      ["بروفيسسور", "اجمع 50,000 XP"],
-      ["العبقري", "اجمع 100,000 XP"],
-      ["ناري سبارك", "حقق 3-اربح سلسلة"],
-      ["ناري فلامي", "حقق 5-اربح سلسلة"],
-      ["ناري ستورم", "حقق 10-اربح سلسلة"],
-      ["كبير يكسبلوسيون", "حقق 15-اربح سلسلة"],
-      ["كوميت", "حقق 25-اربح سلسلة"],
-      ["الأول ليل جامي", "العب مباراة افتير ميدنيجهت"],
-      ["صباح انتصار", "اربح الأول صباح مباراة"],
-      ["ماكهيني سلايير", "ديفيات بوت 5 تيميس"],
-      ["مواطن عالمي", "العب 10 متصل مباريات"],
-      ["روليس ريادير", "وبين روليس سكريين"],
-      ["هدية الترحيب", "استلم هدية الترحيب"],
-      ["وفيّ صديق", "ادعُ صديق ڤيا ريفيررال"],
-      ["لوتتيري", "وبين لوتتيري كهيست"],
-      ["حاد وبسيرڤير", "ڤييو خصم ستاتس"],
-      ["اكتور", "كهانجي صورة رمزية 3 تيميس"],
-      ["خمسون بطاقات", "اجمع 50 بطاقات في واحد مباراة"],
-      ["هيجه اككوراكي", "60% اربح راتي في 20 مباريات"],
-      ["خمسة بومباس", "سجّل 5 بومباس في مباراة"],
-      ["كامل ميسسا", "سجّل 5 ميسساس في مباراة"],
-      ["هارد ترينجا", "أعلن ترينجا 5 تيميس"],
-      ["ديفينسي كاستلي", "العب 30 ديفينسيڤي مباريات"],
-      ["جوورنيي 1000 مباريات", "العب 1000 مباريات"],
-      ["سهوو فوركي", "اربح مع 20+ بوينتس"],
-      ["تسونامي موجة", "العب 5 متتالية مباريات"],
-      ["فييلد ياجلي", "70% اربح راتي في 30 مباريات"],
-      ["أسبوعي بطل", "العب 7 مباريات تهيس وييك"],
-      ["ريجولار", "العب 30 متتالية أيام"],
-      ["لاعب مونته", "العب 100 مباراة في واحد مونته"],
-      ["ليل كنيجهت", "العب 20 ليل مباريات"],
-      ["صباح ينيرجي", "العب 20 صباح مباريات"],
-      ["سبعة كولورس", "العب على 7 ديففيرينت أيام"],
-      ["جامي رهيتهم", "العب 50 مباراة"],
-      ["كامل سيمبهوني", "العب 200 مباريات"],
-      ["فريق العب", "العب 10 مولتيبلايير مباريات"],
-      ["قوي الليانكي", "العب 25 مباراة 2 ضد 2"],
-      ["ويدي نيتوورك", "العب مع 10 ديففيرينت لاعبون"],
-      ["فامي", "شارك تحدي متصل"],
-      ["فان فاڤوريتي", "اجمع 1000 توتال XP"],
-      ["سيتتينجس يكسبلورير", "يكسبلوري الكل جامي أوضاع"],
-      ["ديجيتال محترف", "العب فروم موبيلي 20 تيميس"],
-      ["الأول ديسكوڤيري", "العب الأول بوت مباراة"],
-      ["روندة سبرينج", "العب 50 سبرينج مباريات"],
-      ["وينتير انتصار", "العب 50 وينتير مباريات"],
-      ["هارڤيست سياسون", "اجمع 20,000 ذهب في مونته"],
-      ["سونفلووير", "اربح 20 متتالية تيميس في وييك"],
-      ["ترانسفورماتيون", "ريسي فروم المستوى 1 إلى 10"],
-      ["هونور ميدال", "75% اربح راتي في 40 مباريات"],
-      ["ليجهتنينج", "اربح في ليسس تهان 5 مينوتيس"],
-      ["ستار يللوميناتيون", "العب 100 مباراة مع 50%+ اربح راتي"],
-      ["كريستال بالل", "بريديكت و اربح 15 تيميس"],
-      ["برونزي ميدال", "اربح 25 مباريات"],
-      ["فضي ميدال", "اربح 75 مباريات"],
-      ["ذهب ميدال", "اربح 150 مباريات"],
-      ["أبطال كوب", "اربح 300 مباريات"],
-      ["كروون أساطير", "اربح 500 مباريات"],
-      ["بومة روندة الليلية", "العب 200 ليل مباريات"],
-      ["الخطوة الأولى", "العب أول مباراة لك"],
-      ["لاعب جديد", "سجّل الدخول لأول مرة"],
-      ["اخترت هويتك", "اختر صورة رمزية"],
-      ["اخترت لقبك", "اختر لقبًا"],
-      ["هدية الترحيب", "استلم 5000 ذهب ترحيبي"],
-      ["أول انتصار", "اربح أول مباراة لك"],
-      ["خمسة مقابل خمسة", "حقق 5 انتصارات"],
-      ["لا يُهزم", "حقق 10 انتصارات متتالية"],
-      ["بطل روندة", "حقق 50 انتصارًا"],
-      ["أسطورة الساحات", "حقق 200 انتصار"],
-      ["أعلنت روندة!", "أعلن روندة لأول مرة"],
-      ["ملك روندة", "أعلن روندة 25 مرة"],
-      ["روندة الأبطال", "أعلن روندة 100 مرة"],
-      ["ترينغا!", "أعلن ترينغا لأول مرة"],
-      ["موجة ترينغا", "أعلن ترينغا 10 مرات"],
-      ["أسطورة ترينغا", "أعلن ترينغا 50 مرة"],
-      ["أول ميسا", "نفّذ ميسا لأول مرة"],
-      ["إعصار ميسا", "نفّذ 10 ميسات في مباريات مختلفة"],
-      ["ملك الميسا", "نفّذ 50 ميسا إجمالًا"],
-      ["أول بومبا", "سجّل بومبا لأول مرة"],
-      ["قناص بومبا", "سجّل 25 بومبا"],
-      ["إمبراطور بومبا", "سجّل 100 بومبا"],
-      ["وصلتان", "سلسلة انتصارات ×2"],
-      ["الثالوث الناري", "سلسلة انتصارات ×3"],
-      ["خمسة على التوالي", "سلسلة انتصارات ×5"],
-      ["العشرة الذهبية", "سلسلة انتصارات ×10"],
-      ["قمر الأبطال", "سلسلة انتصارات ×20"],
-      ["المستوى الخامس", "صل إلى المستوى 5"],
-      ["العاشر المجيد", "صل إلى المستوى 10"],
-      ["ضمن النخبة", "صل إلى المستوى 25"],
-      ["نخبة النخبة", "صل إلى المستوى 50"],
-      ["المستوى 100", "صل إلى المستوى 100"],
-      ["ساحة المبارزة", "العب أول مباراة 1 ضد 1"],
-      ["بطل المبارزة", "اربح 10 مباريات 1 ضد 1"],
-      ["السيف الحاد", "اربح 50 1ڤ1 مباريات"],
-      ["درع لا يُخترق", "اربح 100 1ڤ1 مباريات"],
-      ["شريك وفيّ", "العب الأول 2ڤ2 مباراة"],
-      ["ثنائي قوي", "اربح 10 مباريات 2 ضد 2"],
-      ["بطل ثنائي", "اربح 50 مباراة 2 ضد 2"],
-      ["كينجس بايرس", "اربح 100 2ڤ2 مباريات"],
-      ["ادخل الساحة", "العب الأول حر-لـ-الكل مباراة"],
-      ["الساحة ناجٍ", "اربح 10 مباريات الكل ضد الكل"],
-      ["الساحة بطل", "اربح 50 مباراة الكل ضد الكل"],
-      ["الساحة إمبراطور", "اربح 100 حر-لـ-الكل مباريات"],
-      ["جامع الذهب", "اجمع 10,000 ذهب"],
-      ["بنك روندة", "اجمع 50,000 ذهب"],
-      ["مليونير", "اجمع مليون ذهب"],
-      ["الأول جوهرة", "احتفظ 10 جواهر"],
-      ["جوهرة ترياسوري", "احتفظ 50 جواهر"],
-      ["جوهرة برينكي", "احتفظ 100 جواهر"],
-      ["اناليست", "ڤييو خصم ستاتس"],
-      ["ريفيررير", "ادعُ صديق"],
-      ["بوت سلايير", "بيات بوت على الأول تري"],
-      ["مواطن عالمي", "العب مع متصل خصم"],
-      ["ليل كنيجهت", "العب افتير ميدنيجهت"],
-      ["داون بيرد", "العب بيفوري 6 ام"],
-      ["قهوة صباح الجمعة", "العب الأول الجمعة صباح مباراة"],
-      ["رامادان ليل", "حقق سوميتهينج في رامادان"],
-      ["حفلة روندة", "العب مع 3 أصدقاء في واحد يوم"],
-      ["باتيينكي", "أكمل كامل مباراة كالملي"],
-      ["التزام", "العب 7 متتالية أيام"],
-      ["وفيّ لاعب", "العب 30 متتالية أيام"],
-      ["جوورنيي ليفيتيمي", "العب 1000 مباريات"],
-      ["وقت ثمين", "سبيند 10 هوورس بلايينج"],
-      ["ستارتير بوينتس", "اجمع 100 بوينتس في مباراة"],
-      ["يكسبيرت بوينتس", "اجمع 200 بوينتس في مباراة"],
-      ["أسطورة بوينتس", "اجمع 300 بوينتس في مباراة"],
-      ["المتصدرون ملك", "توب المتصدرون"],
-      ["المتصدرون ستار", "كن في توب 10"],
-      ["سوكيال ميدال", "الوايس كن في المتصدرون"],
-      ["وحيد القرن", "سجّل 3 رونداس في واحد مباراة"],
-      ["ليجينداري دراجون", "اربح 500 مباريات"],
-      ["يممورتال", "العب 50 مباراة ويتهووت لوسس"],
-      ["قوس قزح", "العب الكل جامي أوضاع 10 تيميس"],
-      ["العبقري", "اربح 5 متتالية مباريات اجاينست هارديست بوت"],
-      ["الطالب", "اجمع 5,000 XP"],
-      ["الخريج", "اجمع 20,000 XP"],
-      ["اكاديميك", "اجمع 100,000 XP"],
-      ["الفخر المغربي", "العب روندة ريجهت واي!"],
-      ["صديق جيد", "شارك روندة مع 5 أصدقاء"],
-      ["أجواء الوطن", "العب اوتهينتيك مغربي روندة"],
-      ["قلعة روندة", "ديفيند تيتلي 10 تيميس"],
-      ["محترف ارتيست", "كهانجي صورة رمزية 10 تيميس"],
-      ["بطاقة أستاذ", "اجمع 1000 بطاقات توتال"],
-      ["موجة لورد", "اربح 20 متتالية مباريات"],
-      ["لا راحة", "العب 10 مباريات في واحد يوم"],
-      ["فييلد ناري", "سجّل 5 بومباس في 5 متتالية مباريات"],
-      ["الكمال", "أكمل الكل مبتدئ إنجازات"],
-      ["هاوك ييي", "وبسيرڤي و اربح — صل إلى ماكس سجّل"],
-      ["حر سبيريت", "العب 100 ليل مباريات"],
-      ["كهيلد سون", "العب 100 يوم مباريات"],
-      ["كليار جوال", "اربح الكل أسبوعي تحديات"],
-      ["كامل إتقان", "أكمل 50 تحديات"],
-      ["الكون كله", "العب 2000 مباريات"],
-      ["وهيتي ليون", "حقق 1000 انتصارات"],
-      ["نهاية البداية", "كونجراتس — أنت اري حقيقي روندة محارب!"],
-      ["الانتصار الذهبي", "اربح 200 مباراة متعددة اللاعبين"],
-      ["الساحر", "حقق روندة وترينغا في مباراة واحدة"],
-      ["المنارة", "كن مرجعًا لجميع لاعبي روندة"],
-      ["عرض الأبطال", "اربح 3 أوضاع مختلفة في يوم واحد"]
-    ],
     claim_btn: 'استلم',
     toast_challenge_incomplete: '⏳ لم تكمل التحدي بعد!',
     toast_level_up: (lvl) => `🌟 مبروك! وصلت للمستوى ${lvl}`,
@@ -6202,13 +5899,235 @@ const RONDA_I18N = {
     chall_2v2: '«فريق روندة يحتاجك الآن! 🃏🔥 انضم بالرمز وسنتحدى العالم معاً — الخصوم في انتظارنا! ⚔👑»',
     chall_2v2t: '«شريكي في روندة: انضم لفريقي الآن! 🤝🃏 معاً سنهزم العالم — الرمز بانتظارك! ⚔🔥»',
     chall_4p: '«أربعة يدخلون، واحد فقط يخرج بطلاً! 👑🃏 روندة الكبار تنتظر — هل عندك ما يلزم؟ 😤🏆»',
+    // 4p card labels
+    v4p_card_title: '🏆 4 مستقلين',
+    v4p_badge_exciting: '⚡ مثير',
+    // Friends list
+    friends_list_label: 'قائمة الأصدقاء',
+    friends_count_default: '0 صديق',
+    friends_count: (n) => `${n} صديق`,
+    // AI level badge
+    ai_level_badge: (n) => `⚡ مستوى الذكاء: ${n}/10`,
+    // Waiting room
+    wait_connected: 'متصل',
+    wait_room_title: 'غرفة اللعب',
+    wait_room_code_label: 'رمز الغرفة',
+    wait_copy_code: '📋 نسخ الرمز',
+    wait_hint: 'اضغط أيقونة المنصة — ينسخ الدعوة وينتقل إليها تلقائياً 🚀',
+    wait_start_btn: '▶ ابدأ اللعبة',
+    wait_status: 'في انتظار لاعبين...',
+    wait_leave_btn: '✕ مغادرة',
+    wait_share_whatsapp: 'واتساب',
+    wait_share_telegram: 'تيليغرام',
+    wait_share_twitter: 'تويتر / X',
+    wait_share_facebook: 'فيسبوك',
+    wait_share_instagram: 'إنستغرام',
+    // Reconnect overlay
+    reconnect_title: 'جاري استعادة الاتصال...',
+    reconnect_sub: 'محاولة 1 / 3',
+    // Exit game
+    quit_game_btn: 'خروج من المباراة',
+    // Game screen
+    deal_label: 'توزيعة',
+    deck_label: 'بيضة:',
+    dealt_label: 'موزعة:',
+    table_cards_label: 'طاولة:',
+    table_label: 'الطاولة',
+    table_empty: 'الطاولة فارغة',
+    auto_badge: 'تلقائي',
+    auto_toggle_label: 'تلقائي',
+    my_name_game: 'أنت',
+    cards_collected: 'ورقة جُمِعت',
+    connection_status_lbl: 'حالة الاتصال',
+    // Quick chat
+    qc_missa: 'ميسا!',
+    qc_bumba: 'بومبا!',
+    qc_ronda: 'روندة',
+    qc_tringa: 'ترينغا',
+    qc_hurry: 'زرب!',
+    qc_nice: 'واعرة!',
+    qc_giveme: 'عطيني',
+    qc_cool: 'كايلا',
+    qc_zrba: 'الزربة!',
+    qc_andi: 'عندي!',
+    qc_missa2: 'ميسة!',
+    // Action buttons
+    quit_label: 'خروج',
+    hint_label: 'تلميح',
+    play_label: 'العب',
+    // Result screen
+    win_title: 'فزت!',
+    lose_title: 'خسرت!',
+    draw_title: 'تعادل!',
+    win_subtitle: 'لعبة مذهلة 🌟',
+    final_score_title: '⚔ النتيجة النهائية',
+    stat_my_points: 'نقاطي',
+    stat_cards: 'أوراق',
+    stat_missa: 'ميسا',
+    stat_bumba: 'بومبا',
+    stat_ronda: 'روندة',
+    stat_tringa: 'ترينكه',
+    stat_king: '👑 ملك',
+    stat_penalty: '⚖ عقوبة',
+    prize_gold_label: 'ذهب',
+    rematch_btn: '🔄 مرة أخرى',
+    home_main_btn: '🏠 الرئيسية',
+    // Lobby dynamic
+    new_badge: 'جديد',
+    searching_label: 'جاري البحث...',
+    enter_friend_code_hint: 'أدخل الرمز الذي أرسله لك صديقك',
+    // Player defaults
+    player_default: 'لاعب',
+    player_default2: 'لاعب2',
+    player_default3: 'لاعب3',
+    player_default4: 'لاعب4',
+    opp_default: 'خصم',
+    // Turn badge
+    turn_badge: (n) => `دور ${n}`,
+    // Searching modal
+    search_status_txt: 'جاري البحث...',
+    // Checking status
+    checking_label: 'جاري الفحص...',
+    // Score display
+    score_sb_me: 'أنت',
+    score_sb_opp: 'الخصم',
+    // Toast messages - Auth
+    toast_login_fail: '❌ فشل تسجيل الدخول: ',
+    toast_google_linked: '✅ تم ربط حساب Google بنجاح',
+    toast_reconnecting: '🔄 جاري إعادة الاتصال بالمباراة...',
+    toast_welcome: (name) => `🎊 أهلاً بك ${name}!`,
+    toast_bonus_gold: '💰 500 عملة ذهبية أضيفت لرصيدك!',
+    toast_ref_code_copied: '📋 تم نسخ رمز الإحالة: ',
+    toast_ref_code_plain: 'الرمز: ',
+    toast_invite_link_copied: '🔗 تم نسخ رابط الدعوة! شاركه الآن 🎁',
+    toast_invite_link_plain: 'الرابط: ',
+    toast_invite_msg_copied: '📋 تم نسخ رسالة الدعوة!',
+    toast_google_linking: '✅ جارٍ الربط بـ Google...',
+    toast_connect_fail: '❌ تعذّر الاتصال',
+    toast_img_too_large: '❌ الصورة كبيرة جداً (الحد 5MB)',
+    toast_not_image: '❌ الملف ليس صورة',
+    toast_uploading_photo: '⏳ جاري تحميل صورتك...',
+    toast_photo_updated: '✅ تم تحديث صورتك الشخصية بنجاح!',
+    toast_name_short: '❌ الاسم قصير جداً',
+    toast_name_long: '❌ الاسم طويل جداً',
+    toast_name_updated: '✅ تم تحديث اسمك: ',
+    toast_referral_reward: '🎉 حصلت على 2,000 🪙 مكافأة الإحالة!',
+    toast_low_gold: '💰 رصيدك لا يكفي للرهان — اختر مبلغاً أقل أو اجمع المزيد!',
+    toast_building_room: '🏗 جاري بناء الغرفة...',
+    toast_offline_bot: '📡 الإنترنت انقطع — البوت يلعب مكانك لحين عودتك',
+    toast_conn_heavy: '🌐 الاتصال ثقيل — تحلّ بالصبر...',
+    toast_conn_weak: '📶 الإنترنت ضعيف جداً — قرّب من الراوتر',
+    toast_server_fail: '⚠ تعذّر الاتصال بالخادم — تحقق من الإنترنت وأعد المحاولة',
+    toast_reconnected: '✅ عاد الاتصال — اللعبة مستمرة!',
+    toast_restoring_conn: '🔄 جاري استعادة الاتصال...',
+    toast_became_host: '👑 أصبحت قائد المباراة — استمر!',
+    toast_cards_error: '⚠ خطأ في استلام الأوراق (P2P) — انضم مجدداً',
+    toast_player_joined: (name) => `🎮 ${name} دخل الميدان!`,
+    toast_partner_found: (name) => `🤝 ${name} شريكك في الفريق — أبحث عن خصمين!`,
+    toast_new_host: (name) => `👑 ${name} يقود المباراة الآن`,
+    toast_cards_error2: '⚠ خطأ في استلام الأوراق — انضم مجدداً',
+    toast_big_match: '🤝 انتقلنا للمباراة الكبرى — أنت وشريكك ضد الخصمين!',
+    toast_retry_conn: '🔄 تأخر في الاتصال — نعيد المحاولة',
+    toast_retry_conn2: '🔄 اتصال متقطع — نعيد الاتصال...',
+    toast_no_internet: '⚠ لا يوجد اتصال — تحقق من الإنترنت',
+    toast_send_fail: '⚠ تعذّر الإرسال — تحقق من الإنترنت وأعد المحاولة',
+    toast_joined_team: (name) => `🤝 انضممت لفريق ${name} — الحرب تبدأ قريباً!`,
+    toast_big_match2: '🤝 انتقلنا للمباراة الكبرى!',
+    toast_seat_error: '😕 لم نجد مقعدك — حاول الانضمام مجدداً',
+    toast_rematch_req: (name) => `✋ ${name} يريد مرة ثانية`,
+    toast_all_agreed: '🔄 جميع اللاعبين وافقوا — بدء المباراة!',
+    toast_rematch_declined: (name) => `❌ ${name} لم يوافق على مرة ثانية`,
+    toast_play_your_card: '⚠️ لديك بطاقات متبقية - لعب ورقتك!',
+    toast_player_left: (name) => `🚪 ${name} غادر اللعبة`,
+    toast_code_copied: (code) => `📋 تم نسخ الرمز: ${code}`,
+    toast_no_code: '⚠ لا يوجد رمز بعد',
+    toast_invite_copied_story: '📋 تم نسخ الدعوة — الصق في قصتك أو رسالة مباشرة! 📸',
+    toast_invite_copied: '📋 تم نسخ الدعوة — الصق وأرسل!',
+    toast_invite_platform: '📋 تم نسخ الدعوة وفتح المنصة! 🚀',
+    toast_no_room: '⚠ لا توجد غرفة نشطة',
+    toast_invite_copied_ig: '📋 تم نسخ الدعوة — الصق في قصتك أو DM في إنستغرام!',
+    toast_need_players: (need, have, min) => `👥 تحتاج ${min} لاعبين — لديك ${have}/${min}`,
+    toast_king_end_me: '👑 ختمها بالملك — المضمار له! +5 نقاط',
+    toast_king_end_opp: (name) => `👑 ${name} ختم بالملك! +5`,
+    toast_bumba_pre_me: '🎯 أكلت بالملك قبل الموزع — اللقطة لك! +10',
+    toast_bumba_pre_opp: (name) => `🎯 ${name} اختطف الملك من الموزع! +10`,
+    toast_game_restoring: '🔄 نستعيد اللعبة — لحظة صبر...',
+    toast_disconnected_lobby: '🔌 انقطع الاتصال — نعود للبهو',
+    toast_turn: (name) => `▶ دور ${name}`,
+    toast_opp_slow: '⏳ الخصم تأخر — ننتظر قليلاً...',
+    toast_opp_gone: '🔌 الخصم غاب طويلاً — نعود للبهو',
+    toast_wait_turn: '⏸ انتظر دورك...',
+    toast_hint_bumba: (rank, suit) => `💡 بومبا! العب ${rank} ${suit} ⚡`,
+    toast_hint_play: (rank, suit, extra) => `💡 العب ${rank} ${suit}${extra}`,
+    toast_hint_throw: '💡 لا تطابق — ارمِ ورقة على الطاولة',
+    toast_vote_timeout: '⏰ انتهى الوقت — لم يوافق جميع اللاعبين',
+    toast_google_ok: '✅ تم ربط حساب Google بنجاح',
+    toast_google_fail: '❌ فشل استكمال تسجيل الدخول بـ Google',
+    toast_login_error: '❌ خطأ في تسجيل الدخول',
+    toast_room_ready: '🎮 الغرفة جاهزة — شارك الرمز!',
+    toast_bot_hint: '💡 يمكنك البدء وسيكون شريكك بوتاً إذا لم يتصل',
+    toast_no_team_mode: '⚠ يجب فتح وضع "اتحد مع صديقك" أولاً',
+    toast_no_internet2: '📵 لا يوجد إنترنت — تحقق من الاتصال',
+    toast_low_gold_world: (amt) => `💰 رصيدك لا يكفي للرهان (${amt} ذهبية مطلوبة)`,
+    toast_connected: '🤝 تم الاتصال!',
+    toast_conn_error: '⚠ خطأ في الاتصال',
+    toast_bet_refunded: '💰 تم استرداد الرهان',
+    toast_already_joining: '⏳ الاتصال جارٍ بالفعل...',
+    toast_invalid_code: 'الرجاء إدخال رمز صحيح (4-6 أحرف)',
+    toast_connecting: '🔗 جاري الاتصال...',
+    toast_room_gone: '🚫 هذه الغرفة لم تعد موجودة',
+    toast_room_full: '🚫 الغرفة ممتلئة — جرّب غرفة أخرى',
+    toast_room_full2: '🚫 الغرفة ممتلئة',
+    toast_conn_fail2: '😓 تعذّر الاتصال — تحقق من الإنترنت',
+    toast_room_gone2: '🚫 هذه الغرفة لم تعد موجودة',
+    toast_room_full3: '🚫 الغرفة ممتلئة — جرّب غرفة أخرى',
+    toast_room_full4: '🚫 الغرفة ممتلئة — جرّب غرفة أخرى',
+    toast_conn_issue: '😓 مشكلة في الاتصال — تحقق من الإنترنت',
+    toast_room_access: '😓 تعذّر الوصول للغرفة — تحقق من الإنترنت',
+    toast_login_err2: (msg) => `❌ خطأ في تسجيل الدخول: ${msg}`,
+    toast_server_err: '❌ تعذّر الاتصال بالخادم',
+    toast_google_ok2: '✅ تم تسجيل الدخول بـ Google',
+    toast_conn_restored: '🔄 تم استعادة الاتصال',
+    toast_firebase_rules: '⚠ Firebase Rules مغلقة — اللعب الإنترنت لن يعمل. افتح Console (F12) للتفاصيل',
+    toast_bought_gold: (amt) => `🎊 تم شراء ${amt} عملة ذهبية بنجاح!`,
+    toast_daily_collected: '✅ تم الاستلام اليوم بالفعل!',
+    toast_result_copied: '📋 تم نسخ النتيجة!',
+    toast_season_active: '🌟 الموسم جارٍ — العب لتصعد في الترتيب!',
+    toast_share_copied: '📋 تم نسخ نص المشاركة!',
+    toast_already_friend: '✅ هذا الشخص صديقك بالفعل',
+    toast_req_pending: '⏳ طلب الصداقة مرسل بالفعل',
+    toast_req_sent: (name) => `📨 طلب صداقة أُرسل إلى ${name}`,
+    toast_now_friends: (name) => `✅ أصبحت أنت و ${name} أصدقاء!`,
+    toast_accepted_req: (name) => `✅ ${name} وافق على طلب صداقتك!`,
+    toast_open_room_first: '⚠ يجب فتح الغرفة أولاً قبل الدعوة',
+    toast_no_active_room: '⚠ لا توجد غرفة نشطة',
+    toast_invited: (name) => `📨 تمت دعوة ${name}`,
+    toast_invited2: (name) => `📨 دُعي ${name} للانضمام`,
+    toast_bot_partner: (name) => `🤝 ${name} شريكك في الفريق — أبحث عن خصمين!`,
+    toast_bot_joined: (name) => `✅ ${name} انضم للغرفة`,
+    toast_low_gold2: (amt) => `💰 رصيدك لا يكفي (${amt} مطلوبة)`,
+    toast_rejected: (name) => `❌ ${name} رفض الدعوة`,
+    toast_ad_fail: '⚠️ لم يُحمَّل الإعلان، حاول مرة أخرى',
+    toast_ad_fail2: '⚠️ تعذّر تحميل الإعلان، حاول لاحقاً',
+    toast_gold_earned: (amt) => `🏆 +${amt} عملة ذهبية! 🪙`,
+    toast_card_returned: '↩ انقطع الاتصال — أُعيدت ورقتك إليك',
+    toast_card_returned2: '⚠ انقطع الاتصال — أُعيدت الورقة لك',
+    toast_phase_sync: '🔄 تم إعادة مزامنة المرحلة',
+    toast_missa_me: (txt) => `${txt} نقطة`,
+    toast_missa_opp: (txt) => `⚠ الخصم: ${txt}`,
+    toast_bumba_king_me: '👑 ختمت بالملك! +5 نقاط',
+    toast_bumba_king_opp: (name) => `👑 ${name} ختم بالملك! +5 له`,
+    toast_bumba_pre_steal: '🎯 اختطفت الملك من الموزع! +10',
+    fxboom_king_steal: 'ملك الختم',
+    fxboom_king_close: 'ختم المضمار',
+    hint_missa: '— ميسا 🧹!',
+    hint_eat: '— تأكل',
   },
   en: {
     dir: 'ltr',
     logo_super: 'The Authentic Andalusian Moroccan Game',
     logo_ar: 'Ronda — Game of Kings',
     logo_lat: 'Royal Moroccan Card Game',
-    logo_main: 'Ronda',
     auth_title: 'Choose Login Method',
     google_login: 'Sign in with Google',
     or: 'or',
@@ -6491,13 +6410,235 @@ const RONDA_I18N = {
     chall_2v2: '«Ronda team needs you now! 🃏🔥 Join with the code and we\'ll challenge the world — opponents are waiting! ⚔👑»',
     chall_2v2t: '«My Ronda partner: join my team now! 🤝🃏 Together we\'ll conquer the world — code is waiting for you! ⚔🔥»',
     chall_4p: '«Four enter, only one leaves as champion! 👑🃏 The big Ronda awaits — do you have what it takes? 😤🏆»',
+    // 4p card labels
+    v4p_card_title: '🏆 4 Players',
+    v4p_badge_exciting: '⚡ Exciting',
+    // Friends list
+    friends_list_label: 'Friends List',
+    friends_count_default: '0 friends',
+    friends_count: (n) => `${n} friend${n !== 1 ? 's' : ''}`,
+    // AI level badge
+    ai_level_badge: (n) => `⚡ AI Level: ${n}/10`,
+    // Waiting room
+    wait_connected: 'Connected',
+    wait_room_title: 'Game Room',
+    wait_room_code_label: 'Room Code',
+    wait_copy_code: '📋 Copy Code',
+    wait_hint: 'Tap platform icon — copies invite and opens it automatically 🚀',
+    wait_start_btn: '▶ Start Game',
+    wait_status: 'Waiting for players...',
+    wait_leave_btn: '✕ Leave',
+    wait_share_whatsapp: 'WhatsApp',
+    wait_share_telegram: 'Telegram',
+    wait_share_twitter: 'Twitter / X',
+    wait_share_facebook: 'Facebook',
+    wait_share_instagram: 'Instagram',
+    // Reconnect overlay
+    reconnect_title: 'Reconnecting...',
+    reconnect_sub: 'Attempt 1 / 3',
+    // Exit game
+    quit_game_btn: 'Exit Match',
+    // Game screen
+    deal_label: 'Deal',
+    deck_label: 'Deck:',
+    dealt_label: 'Dealt:',
+    table_cards_label: 'Table:',
+    table_label: 'Table',
+    table_empty: 'Table is empty',
+    auto_badge: 'Auto',
+    auto_toggle_label: 'Auto',
+    my_name_game: 'You',
+    cards_collected: 'cards collected',
+    connection_status_lbl: 'Connection Status',
+    // Quick chat
+    qc_missa: 'Missa!',
+    qc_bumba: 'Bumba!',
+    qc_ronda: 'Ronda',
+    qc_tringa: 'Tringa',
+    qc_hurry: 'Hurry!',
+    qc_nice: 'Nice!',
+    qc_giveme: 'Give me!',
+    qc_cool: 'Cool!',
+    qc_zrba: 'Strike!',
+    qc_andi: 'Mine!',
+    qc_missa2: 'Missa!',
+    // Action buttons
+    quit_label: 'Quit',
+    hint_label: 'Hint',
+    play_label: 'Play',
+    // Result screen
+    win_title: 'You Won!',
+    lose_title: 'You Lost!',
+    draw_title: 'Draw!',
+    win_subtitle: 'Amazing game 🌟',
+    final_score_title: '⚔ Final Score',
+    stat_my_points: 'My Points',
+    stat_cards: 'Cards',
+    stat_missa: 'Missa',
+    stat_bumba: 'Bumba',
+    stat_ronda: 'Ronda',
+    stat_tringa: 'Tringa',
+    stat_king: '👑 King',
+    stat_penalty: '⚖ Penalty',
+    prize_gold_label: 'Gold',
+    rematch_btn: '🔄 Rematch',
+    home_main_btn: '🏠 Home',
+    // Lobby dynamic
+    new_badge: 'New',
+    searching_label: 'Searching...',
+    enter_friend_code_hint: 'Enter the code your friend sent you',
+    // Player defaults
+    player_default: 'Player',
+    player_default2: 'Player 2',
+    player_default3: 'Player 3',
+    player_default4: 'Player 4',
+    opp_default: 'Opponent',
+    // Turn badge
+    turn_badge: (n) => `Turn ${n}`,
+    // Searching modal
+    search_status_txt: 'Searching...',
+    // Checking status
+    checking_label: 'Checking...',
+    // Score display
+    score_sb_me: 'You',
+    score_sb_opp: 'Opponent',
+    // Toast messages - Auth
+    toast_login_fail: '❌ Login failed: ',
+    toast_google_linked: '✅ Google account linked successfully',
+    toast_reconnecting: '🔄 Reconnecting to match...',
+    toast_welcome: (name) => `🎊 Welcome ${name}!`,
+    toast_bonus_gold: '💰 500 gold coins added to your balance!',
+    toast_ref_code_copied: '📋 Referral code copied: ',
+    toast_ref_code_plain: 'Code: ',
+    toast_invite_link_copied: '🔗 Invite link copied! Share it now 🎁',
+    toast_invite_link_plain: 'Link: ',
+    toast_invite_msg_copied: '📋 Invite message copied!',
+    toast_google_linking: '✅ Linking with Google...',
+    toast_connect_fail: '❌ Connection failed',
+    toast_img_too_large: '❌ Image too large (max 5MB)',
+    toast_not_image: '❌ File is not an image',
+    toast_uploading_photo: '⏳ Uploading your photo...',
+    toast_photo_updated: '✅ Profile photo updated successfully!',
+    toast_name_short: '❌ Name too short',
+    toast_name_long: '❌ Name too long',
+    toast_name_updated: '✅ Name updated: ',
+    toast_referral_reward: '🎉 You got 2,000 🪙 referral reward!',
+    toast_low_gold: '💰 Insufficient balance — choose a lower bet or earn more!',
+    toast_building_room: '🏗 Building room...',
+    toast_offline_bot: '📡 Internet disconnected — bot is playing for you until you return',
+    toast_conn_heavy: '🌐 Connection is heavy — please be patient...',
+    toast_conn_weak: '📶 Internet very weak — move closer to router',
+    toast_server_fail: '⚠ Cannot connect to server — check internet and retry',
+    toast_reconnected: '✅ Connection restored — game continues!',
+    toast_restoring_conn: '🔄 Restoring connection...',
+    toast_became_host: '👑 You became match leader — keep going!',
+    toast_cards_error: '⚠ Card reception error (P2P) — rejoin',
+    toast_player_joined: (name) => `🎮 ${name} entered the arena!`,
+    toast_partner_found: (name) => `🤝 ${name} is your team partner — looking for opponents!`,
+    toast_new_host: (name) => `👑 ${name} is now leading the match`,
+    toast_cards_error2: '⚠ Card reception error — rejoin',
+    toast_big_match: '🤝 Moving to the big match — you and your partner vs opponents!',
+    toast_retry_conn: '🔄 Connection delayed — retrying',
+    toast_retry_conn2: '🔄 Intermittent connection — reconnecting...',
+    toast_no_internet: '⚠ No connection — check your internet',
+    toast_send_fail: '⚠ Send failed — check internet and retry',
+    toast_joined_team: (name) => `🤝 Joined ${name}'s team — battle starts soon!`,
+    toast_big_match2: '🤝 Moving to the big match!',
+    toast_seat_error: '😕 Your seat not found — try rejoining',
+    toast_rematch_req: (name) => `✋ ${name} wants a rematch`,
+    toast_all_agreed: '🔄 All players agreed — starting match!',
+    toast_rematch_declined: (name) => `❌ ${name} declined rematch`,
+    toast_play_your_card: '⚠️ You have remaining cards — play your card!',
+    toast_player_left: (name) => `🚪 ${name} left the game`,
+    toast_code_copied: (code) => `📋 Code copied: ${code}`,
+    toast_no_code: '⚠ No code yet',
+    toast_invite_copied_story: '📋 Invite copied — paste in your story or DM! 📸',
+    toast_invite_copied: '📋 Invite copied — paste and send!',
+    toast_invite_platform: '📋 Invite copied and platform opened! 🚀',
+    toast_no_room: '⚠ No active room',
+    toast_invite_copied_ig: '📋 Invite copied — paste in your story or Instagram DM!',
+    toast_need_players: (need, have, min) => `👥 Need ${min} players — you have ${have}/${min}`,
+    toast_king_end_me: '👑 Closed with King — round is yours! +5 points',
+    toast_king_end_opp: (name) => `👑 ${name} closed with King! +5`,
+    toast_bumba_pre_me: '🎯 Took King before dealer — it\'s yours! +10',
+    toast_bumba_pre_opp: (name) => `🎯 ${name} snatched King from dealer! +10`,
+    toast_game_restoring: '🔄 Restoring game — one moment...',
+    toast_disconnected_lobby: '🔌 Disconnected — returning to lobby',
+    toast_turn: (name) => `▶ ${name}'s turn`,
+    toast_opp_slow: '⏳ Opponent is slow — waiting a bit...',
+    toast_opp_gone: '🔌 Opponent gone too long — returning to lobby',
+    toast_wait_turn: '⏸ Wait for your turn...',
+    toast_hint_bumba: (rank, suit) => `💡 Bumba! Play ${rank} ${suit} ⚡`,
+    toast_hint_play: (rank, suit, extra) => `💡 Play ${rank} ${suit}${extra}`,
+    toast_hint_throw: '💡 No match — throw a card on the table',
+    toast_vote_timeout: '⏰ Time out — not all players agreed',
+    toast_google_ok: '✅ Google account linked successfully',
+    toast_google_fail: '❌ Failed to complete Google sign-in',
+    toast_login_error: '❌ Login error',
+    toast_room_ready: '🎮 Room ready — share the code!',
+    toast_bot_hint: '💡 You can start and your partner will be a bot if not connected',
+    toast_no_team_mode: '⚠ Open "Team Up with a Friend" mode first',
+    toast_no_internet2: '📵 No internet — check connection',
+    toast_low_gold_world: (amt) => `💰 Insufficient balance (${amt} gold required)`,
+    toast_connected: '🤝 Connected!',
+    toast_conn_error: '⚠ Connection error',
+    toast_bet_refunded: '💰 Bet refunded',
+    toast_already_joining: '⏳ Connection already in progress...',
+    toast_invalid_code: 'Please enter a valid code (4-6 characters)',
+    toast_connecting: '🔗 Connecting...',
+    toast_room_gone: '🚫 This room no longer exists',
+    toast_room_full: '🚫 Room is full — try another',
+    toast_room_full2: '🚫 Room is full',
+    toast_conn_fail2: '😓 Connection failed — check internet',
+    toast_room_gone2: '🚫 This room no longer exists',
+    toast_room_full3: '🚫 Room is full — try another',
+    toast_room_full4: '🚫 Room is full — try another',
+    toast_conn_issue: '😓 Connection issue — check internet',
+    toast_room_access: '😓 Cannot access room — check internet',
+    toast_login_err2: (msg) => `❌ Login error: ${msg}`,
+    toast_server_err: '❌ Cannot connect to server',
+    toast_google_ok2: '✅ Signed in with Google',
+    toast_conn_restored: '🔄 Connection restored',
+    toast_firebase_rules: '⚠ Firebase Rules closed — online play won\'t work. Open Console (F12) for details',
+    toast_bought_gold: (amt) => `🎊 Successfully purchased ${amt} gold coins!`,
+    toast_daily_collected: '✅ Already collected today!',
+    toast_result_copied: '📋 Result copied!',
+    toast_season_active: '🌟 Season active — play to climb the rankings!',
+    toast_share_copied: '📋 Share text copied!',
+    toast_already_friend: '✅ This person is already your friend',
+    toast_req_pending: '⏳ Friend request already sent',
+    toast_req_sent: (name) => `📨 Friend request sent to ${name}`,
+    toast_now_friends: (name) => `✅ You and ${name} are now friends!`,
+    toast_accepted_req: (name) => `✅ ${name} accepted your friend request!`,
+    toast_open_room_first: '⚠ Open the room first before inviting',
+    toast_no_active_room: '⚠ No active room',
+    toast_invited: (name) => `📨 ${name} invited`,
+    toast_invited2: (name) => `📨 ${name} invited to join`,
+    toast_bot_partner: (name) => `🤝 ${name} is your team partner — looking for opponents!`,
+    toast_bot_joined: (name) => `✅ ${name} joined the room`,
+    toast_low_gold2: (amt) => `💰 Insufficient balance (${amt} required)`,
+    toast_rejected: (name) => `❌ ${name} declined the invitation`,
+    toast_ad_fail: '⚠️ Ad not loaded, try again',
+    toast_ad_fail2: '⚠️ Failed to load ad, try later',
+    toast_gold_earned: (amt) => `🏆 +${amt} gold coins! 🪙`,
+    toast_card_returned: '↩ Disconnected — card returned to you',
+    toast_card_returned2: '⚠ Disconnected — card returned to you',
+    toast_phase_sync: '🔄 Phase resynchronized',
+    toast_missa_me: (txt) => `${txt} points`,
+    toast_missa_opp: (txt) => `⚠ Opponent: ${txt}`,
+    toast_bumba_king_me: '👑 Closed with King! +5 points',
+    toast_bumba_king_opp: (name) => `👑 ${name} closed with King! +5`,
+    toast_bumba_pre_steal: '🎯 Snatched King from dealer! +10',
+    fxboom_king_steal: 'King Steal',
+    fxboom_king_close: 'Round Closer',
+    hint_missa: '— Missa 🧹!',
+    hint_eat: '— takes',
   },
   es: {
     dir: 'ltr',
     logo_super: 'El auténtico juego andaluz marroquí',
     logo_ar: 'Ronda — Juego de Reyes',
     logo_lat: 'Juego de Cartas Real Marroquí',
-    logo_main: 'Ronda',
     auth_title: 'Elige método de acceso',
     google_login: 'Iniciar sesión con Google',
     or: 'o',
@@ -6780,13 +6921,235 @@ const RONDA_I18N = {
     chall_2v2: '«¡El equipo de Ronda te necesita ahora! 🃏🔥 Únete con el código y desafiaremos al mundo juntos — ¡los oponentes nos esperan! ⚔👑»',
     chall_2v2t: '«Mi compañero de Ronda: ¡únete a mi equipo ahora! 🤝🃏 Juntos conquistaremos el mundo — ¡el código te espera! ⚔🔥»',
     chall_4p: '«¡Cuatro entran, solo uno sale campeón! 👑🃏 La gran Ronda espera — ¿tienes lo que se necesita? 😤🏆»',
+    // 4p card labels
+    v4p_card_title: '🏆 4 Independientes',
+    v4p_badge_exciting: '⚡ Emocionante',
+    // Friends list
+    friends_list_label: 'Lista de Amigos',
+    friends_count_default: '0 amigos',
+    friends_count: (n) => `${n} amigo${n !== 1 ? 's' : ''}`,
+    // AI level badge
+    ai_level_badge: (n) => `⚡ Nivel IA: ${n}/10`,
+    // Waiting room
+    wait_connected: 'Conectado',
+    wait_room_title: 'Sala de Juego',
+    wait_room_code_label: 'Código de Sala',
+    wait_copy_code: '📋 Copiar Código',
+    wait_hint: 'Toca el ícono de la plataforma — copia la invitación y la abre automáticamente 🚀',
+    wait_start_btn: '▶ Iniciar Juego',
+    wait_status: 'Esperando jugadores...',
+    wait_leave_btn: '✕ Salir',
+    wait_share_whatsapp: 'WhatsApp',
+    wait_share_telegram: 'Telegram',
+    wait_share_twitter: 'Twitter / X',
+    wait_share_facebook: 'Facebook',
+    wait_share_instagram: 'Instagram',
+    // Reconnect overlay
+    reconnect_title: 'Reconectando...',
+    reconnect_sub: 'Intento 1 / 3',
+    // Exit game
+    quit_game_btn: 'Salir del Partido',
+    // Game screen
+    deal_label: 'Reparto',
+    deck_label: 'Mazo:',
+    dealt_label: 'Repartidas:',
+    table_cards_label: 'Mesa:',
+    table_label: 'Mesa',
+    table_empty: 'Mesa vacía',
+    auto_badge: 'Auto',
+    auto_toggle_label: 'Auto',
+    my_name_game: 'Tú',
+    cards_collected: 'cartas recogidas',
+    connection_status_lbl: 'Estado de Conexión',
+    // Quick chat
+    qc_missa: '¡Missa!',
+    qc_bumba: '¡Bumba!',
+    qc_ronda: 'Ronda',
+    qc_tringa: 'Tringa',
+    qc_hurry: '¡Rápido!',
+    qc_nice: '¡Bien!',
+    qc_giveme: '¡Dame!',
+    qc_cool: '¡Genial!',
+    qc_zrba: '¡Golpe!',
+    qc_andi: '¡Mío!',
+    qc_missa2: '¡Missa!',
+    // Action buttons
+    quit_label: 'Salir',
+    hint_label: 'Pista',
+    play_label: 'Jugar',
+    // Result screen
+    win_title: '¡Ganaste!',
+    lose_title: '¡Perdiste!',
+    draw_title: '¡Empate!',
+    win_subtitle: 'Juego increíble 🌟',
+    final_score_title: '⚔ Resultado Final',
+    stat_my_points: 'Mis Puntos',
+    stat_cards: 'Cartas',
+    stat_missa: 'Missa',
+    stat_bumba: 'Bumba',
+    stat_ronda: 'Ronda',
+    stat_tringa: 'Tringa',
+    stat_king: '👑 Rey',
+    stat_penalty: '⚖ Penalidad',
+    prize_gold_label: 'Oro',
+    rematch_btn: '🔄 Revancha',
+    home_main_btn: '🏠 Inicio',
+    // Lobby dynamic
+    new_badge: 'Nuevo',
+    searching_label: 'Buscando...',
+    enter_friend_code_hint: 'Ingresa el código que te envió tu amigo',
+    // Player defaults
+    player_default: 'Jugador',
+    player_default2: 'Jugador 2',
+    player_default3: 'Jugador 3',
+    player_default4: 'Jugador 4',
+    opp_default: 'Oponente',
+    // Turn badge
+    turn_badge: (n) => `Turno ${n}`,
+    // Searching modal
+    search_status_txt: 'Buscando...',
+    // Checking status
+    checking_label: 'Verificando...',
+    // Score display
+    score_sb_me: 'Tú',
+    score_sb_opp: 'Oponente',
+    // Toast messages
+    toast_login_fail: '❌ Error al iniciar sesión: ',
+    toast_google_linked: '✅ Cuenta de Google vinculada con éxito',
+    toast_reconnecting: '🔄 Reconectando a la partida...',
+    toast_welcome: (name) => `🎊 ¡Bienvenido ${name}!`,
+    toast_bonus_gold: '💰 ¡500 monedas de oro añadidas!',
+    toast_ref_code_copied: '📋 Código de referido copiado: ',
+    toast_ref_code_plain: 'Código: ',
+    toast_invite_link_copied: '🔗 ¡Enlace de invitación copiado! Compártelo ahora 🎁',
+    toast_invite_link_plain: 'Enlace: ',
+    toast_invite_msg_copied: '📋 ¡Mensaje de invitación copiado!',
+    toast_google_linking: '✅ Vinculando con Google...',
+    toast_connect_fail: '❌ Error de conexión',
+    toast_img_too_large: '❌ Imagen demasiado grande (máx 5MB)',
+    toast_not_image: '❌ El archivo no es una imagen',
+    toast_uploading_photo: '⏳ Subiendo tu foto...',
+    toast_photo_updated: '✅ ¡Foto de perfil actualizada!',
+    toast_name_short: '❌ Nombre muy corto',
+    toast_name_long: '❌ Nombre muy largo',
+    toast_name_updated: '✅ Nombre actualizado: ',
+    toast_referral_reward: '🎉 ¡Obtuviste 2,000 🪙 de recompensa por referido!',
+    toast_low_gold: '💰 Saldo insuficiente — elige una apuesta menor',
+    toast_building_room: '🏗 Construyendo sala...',
+    toast_offline_bot: '📡 Sin internet — el bot juega por ti',
+    toast_conn_heavy: '🌐 Conexión pesada — ten paciencia...',
+    toast_conn_weak: '📶 Internet muy débil — acércate al router',
+    toast_server_fail: '⚠ No se puede conectar al servidor',
+    toast_reconnected: '✅ ¡Conexión restaurada!',
+    toast_restoring_conn: '🔄 Restaurando conexión...',
+    toast_became_host: '👑 ¡Eres el líder de la partida!',
+    toast_cards_error: '⚠ Error al recibir cartas (P2P) — reconéctate',
+    toast_player_joined: (name) => `🎮 ¡${name} entró!`,
+    toast_partner_found: (name) => `🤝 ${name} es tu compañero — buscando rivales!`,
+    toast_new_host: (name) => `👑 ${name} lidera ahora`,
+    toast_cards_error2: '⚠ Error al recibir cartas — reconéctate',
+    toast_big_match: '🤝 ¡Pasamos a la gran partida!',
+    toast_retry_conn: '🔄 Retraso — reintentando',
+    toast_retry_conn2: '🔄 Conexión intermitente — reconectando...',
+    toast_no_internet: '⚠ Sin conexión — revisa el internet',
+    toast_send_fail: '⚠ Error al enviar — revisa el internet',
+    toast_joined_team: (name) => `🤝 ¡Te uniste al equipo de ${name}!`,
+    toast_big_match2: '🤝 ¡Pasamos a la gran partida!',
+    toast_seat_error: '😕 Asiento no encontrado — reintenta',
+    toast_rematch_req: (name) => `✋ ${name} quiere revancha`,
+    toast_all_agreed: '🔄 ¡Todos aceptaron — comenzando!',
+    toast_rematch_declined: (name) => `❌ ${name} rechazó la revancha`,
+    toast_play_your_card: '⚠️ Tienes cartas — ¡juega una!',
+    toast_player_left: (name) => `🚪 ${name} salió`,
+    toast_code_copied: (code) => `📋 Código copiado: ${code}`,
+    toast_no_code: '⚠ Sin código aún',
+    toast_invite_copied_story: '📋 Invitación copiada — pega en tu historia! 📸',
+    toast_invite_copied: '📋 Invitación copiada — pega y envía!',
+    toast_invite_platform: '📋 ¡Invitación copiada y plataforma abierta! 🚀',
+    toast_no_room: '⚠ No hay sala activa',
+    toast_invite_copied_ig: '📋 Invitación copiada — pega en historia o DM!',
+    toast_need_players: (need, have, min) => `👥 Necesitas ${min} jugadores — tienes ${have}/${min}`,
+    toast_king_end_me: '👑 ¡Cerró con Rey! +5 puntos',
+    toast_king_end_opp: (name) => `👑 ¡${name} cerró con Rey! +5`,
+    toast_bumba_pre_me: '🎯 ¡Tomaste el Rey antes del repartidor! +10',
+    toast_bumba_pre_opp: (name) => `🎯 ¡${name} robó el Rey! +10`,
+    toast_game_restoring: '🔄 Restaurando partida...',
+    toast_disconnected_lobby: '🔌 Desconectado — volviendo al lobby',
+    toast_turn: (name) => `▶ Turno de ${name}`,
+    toast_opp_slow: '⏳ El rival tarda — esperando...',
+    toast_opp_gone: '🔌 Rival ausente — volviendo al lobby',
+    toast_wait_turn: '⏸ Espera tu turno...',
+    toast_hint_bumba: (rank, suit) => `💡 ¡Bumba! Juega ${rank} ${suit} ⚡`,
+    toast_hint_play: (rank, suit, extra) => `💡 Juega ${rank} ${suit}${extra}`,
+    toast_hint_throw: '💡 Sin coincidencia — descarta',
+    toast_vote_timeout: '⏰ Tiempo agotado',
+    toast_google_ok: '✅ Cuenta Google vinculada',
+    toast_google_fail: '❌ Error al iniciar sesión con Google',
+    toast_login_error: '❌ Error de inicio de sesión',
+    toast_room_ready: '🎮 ¡Sala lista — comparte el código!',
+    toast_bot_hint: '💡 Puedes empezar; tu compañero será bot si no se conecta',
+    toast_no_team_mode: '⚠ Abre el modo "Únete con amigo" primero',
+    toast_no_internet2: '📵 Sin internet — revisa conexión',
+    toast_low_gold_world: (amt) => `💰 Saldo insuficiente (${amt} oro requerido)`,
+    toast_connected: '🤝 ¡Conectado!',
+    toast_conn_error: '⚠ Error de conexión',
+    toast_bet_refunded: '💰 Apuesta reembolsada',
+    toast_already_joining: '⏳ Conexión ya en curso...',
+    toast_invalid_code: 'Ingresa un código válido (4-6 caracteres)',
+    toast_connecting: '🔗 Conectando...',
+    toast_room_gone: '🚫 Esta sala ya no existe',
+    toast_room_full: '🚫 Sala llena — intenta otra',
+    toast_room_full2: '🚫 Sala llena',
+    toast_conn_fail2: '😓 Error de conexión — revisa internet',
+    toast_room_gone2: '🚫 Esta sala ya no existe',
+    toast_room_full3: '🚫 Sala llena — intenta otra',
+    toast_room_full4: '🚫 Sala llena — intenta otra',
+    toast_conn_issue: '😓 Problema de conexión',
+    toast_room_access: '😓 No se puede acceder a la sala',
+    toast_login_err2: (msg) => `❌ Error de inicio de sesión: ${msg}`,
+    toast_server_err: '❌ No se puede conectar al servidor',
+    toast_google_ok2: '✅ Sesión iniciada con Google',
+    toast_conn_restored: '🔄 Conexión restaurada',
+    toast_firebase_rules: '⚠ Firebase Rules cerradas — el juego online no funcionará',
+    toast_bought_gold: (amt) => `🎊 ¡Compra de ${amt} monedas exitosa!`,
+    toast_daily_collected: '✅ ¡Ya recolectado hoy!',
+    toast_result_copied: '📋 ¡Resultado copiado!',
+    toast_season_active: '🌟 Temporada activa — ¡juega para subir!',
+    toast_share_copied: '📋 ¡Texto compartido copiado!',
+    toast_already_friend: '✅ Ya es tu amigo',
+    toast_req_pending: '⏳ Solicitud ya enviada',
+    toast_req_sent: (name) => `📨 Solicitud enviada a ${name}`,
+    toast_now_friends: (name) => `✅ ¡Tú y ${name} son amigos!`,
+    toast_accepted_req: (name) => `✅ ¡${name} aceptó tu solicitud!`,
+    toast_open_room_first: '⚠ Abre la sala antes de invitar',
+    toast_no_active_room: '⚠ No hay sala activa',
+    toast_invited: (name) => `📨 ${name} invitado`,
+    toast_invited2: (name) => `📨 ${name} invitado a unirse`,
+    toast_bot_partner: (name) => `🤝 ${name} es tu compañero — buscando rivales!`,
+    toast_bot_joined: (name) => `✅ ${name} se unió`,
+    toast_low_gold2: (amt) => `💰 Saldo insuficiente (${amt} requerido)`,
+    toast_rejected: (name) => `❌ ${name} rechazó la invitación`,
+    toast_ad_fail: '⚠️ Anuncio no cargado, intenta de nuevo',
+    toast_ad_fail2: '⚠️ Error al cargar anuncio',
+    toast_gold_earned: (amt) => `🏆 +${amt} monedas! 🪙`,
+    toast_card_returned: '↩ Desconectado — carta devuelta',
+    toast_card_returned2: '⚠ Desconectado — carta devuelta',
+    toast_phase_sync: '🔄 Fase resincronizada',
+    toast_missa_me: (txt) => `${txt} puntos`,
+    toast_missa_opp: (txt) => `⚠ Rival: ${txt}`,
+    toast_bumba_king_me: '👑 ¡Cerró con Rey! +5 puntos',
+    toast_bumba_king_opp: (name) => `👑 ¡${name} cerró con Rey! +5`,
+    toast_bumba_pre_steal: '🎯 ¡Robaste el Rey! +10',
+    fxboom_king_steal: 'Rey Robado',
+    fxboom_king_close: 'Cierre de Ronda',
+    hint_missa: '— ¡Missa 🧹!',
+    hint_eat: '— come',
   },
   zh: {
     dir: 'ltr',
     logo_super: '正宗安达卢西亚摩洛哥游戏',
     logo_ar: 'Ronda — 国王游戏',
     logo_lat: '摩洛哥皇家纸牌游戏',
-    logo_main: 'Ronda',
     auth_title: '选择登录方式',
     google_login: '使用 Google 登录',
     or: '或',
@@ -7069,6 +7432,232 @@ const RONDA_I18N = {
     chall_2v2: '«Ronda队伍现在需要你！🃏🔥 用代码加入，我们一起挑战世界 — 对手已在等待！⚔👑»',
     chall_2v2t: '«我的Ronda队友：现在加入我的队伍！🤝🃏 我们将一起征服世界 — 代码在等你！⚔🔥»',
     chall_4p: '«四人入场，只有一人成为冠军！👑🃏 大Ronda在等待 — 你有资格吗？😤🏆»',
+    // 4p card labels
+    v4p_card_title: '🏆 4人独立',
+    v4p_badge_exciting: '⚡ 刺激',
+    // Friends list
+    friends_list_label: '好友列表',
+    friends_count_default: '0 位好友',
+    friends_count: (n) => `${n} 位好友`,
+    // AI level badge
+    ai_level_badge: (n) => `⚡ AI等级: ${n}/10`,
+    // Waiting room
+    wait_connected: '已连接',
+    wait_room_title: '游戏房间',
+    wait_room_code_label: '房间码',
+    wait_copy_code: '📋 复制码',
+    wait_hint: '点击平台图标 — 自动复制邀请并打开 🚀',
+    wait_start_btn: '▶ 开始游戏',
+    wait_status: '等待玩家加入...',
+    wait_leave_btn: '✕ 离开',
+    wait_share_whatsapp: 'WhatsApp',
+    wait_share_telegram: 'Telegram',
+    wait_share_twitter: 'Twitter / X',
+    wait_share_facebook: 'Facebook',
+    wait_share_instagram: 'Instagram',
+    // Reconnect overlay
+    reconnect_title: '正在重新连接...',
+    reconnect_sub: '尝试 1 / 3',
+    // Exit game
+    quit_game_btn: '退出比赛',
+    // Game screen
+    deal_label: '发牌',
+    deck_label: '牌堆:',
+    dealt_label: '已发:',
+    table_cards_label: '桌面:',
+    table_label: '桌面',
+    table_empty: '桌面为空',
+    auto_badge: '自动',
+    auto_toggle_label: '自动',
+    my_name_game: '我',
+    cards_collected: '张牌已收集',
+    connection_status_lbl: '连接状态',
+    // Quick chat
+    qc_missa: 'Missa！',
+    qc_bumba: 'Bumba！',
+    qc_ronda: 'Ronda',
+    qc_tringa: 'Tringa',
+    qc_hurry: '快点！',
+    qc_nice: '不错！',
+    qc_giveme: '给我！',
+    qc_cool: '酷！',
+    qc_zrba: '打！',
+    qc_andi: '我的！',
+    qc_missa2: 'Missa！',
+    // Action buttons
+    quit_label: '退出',
+    hint_label: '提示',
+    play_label: '出牌',
+    // Result screen
+    win_title: '你赢了！',
+    lose_title: '你输了！',
+    draw_title: '平局！',
+    win_subtitle: '精彩的游戏 🌟',
+    final_score_title: '⚔ 最终得分',
+    stat_my_points: '我的积分',
+    stat_cards: '牌数',
+    stat_missa: 'Missa',
+    stat_bumba: 'Bumba',
+    stat_ronda: 'Ronda',
+    stat_tringa: 'Tringa',
+    stat_king: '👑 国王',
+    stat_penalty: '⚖ 惩罚',
+    prize_gold_label: '金币',
+    rematch_btn: '🔄 再来一局',
+    home_main_btn: '🏠 首页',
+    // Lobby dynamic
+    new_badge: '新',
+    searching_label: '搜索中...',
+    enter_friend_code_hint: '输入好友发给你的代码',
+    // Player defaults
+    player_default: '玩家',
+    player_default2: '玩家2',
+    player_default3: '玩家3',
+    player_default4: '玩家4',
+    opp_default: '对手',
+    // Turn badge
+    turn_badge: (n) => `第 ${n} 轮`,
+    // Searching modal
+    search_status_txt: '搜索中...',
+    // Checking status
+    checking_label: '检查中...',
+    // Score display
+    score_sb_me: '我',
+    score_sb_opp: '对手',
+    // Toast messages
+    toast_login_fail: '❌ 登录失败: ',
+    toast_google_linked: '✅ Google账户绑定成功',
+    toast_reconnecting: '🔄 正在重新连接比赛...',
+    toast_welcome: (name) => `🎊 欢迎 ${name}!`,
+    toast_bonus_gold: '💰 已添加500金币!',
+    toast_ref_code_copied: '📋 推荐码已复制: ',
+    toast_ref_code_plain: '代码: ',
+    toast_invite_link_copied: '🔗 邀请链接已复制! 现在分享 🎁',
+    toast_invite_link_plain: '链接: ',
+    toast_invite_msg_copied: '📋 邀请消息已复制!',
+    toast_google_linking: '✅ 正在绑定Google...',
+    toast_connect_fail: '❌ 连接失败',
+    toast_img_too_large: '❌ 图片太大 (最大5MB)',
+    toast_not_image: '❌ 文件不是图片',
+    toast_uploading_photo: '⏳ 正在上传照片...',
+    toast_photo_updated: '✅ 头像更新成功!',
+    toast_name_short: '❌ 名字太短',
+    toast_name_long: '❌ 名字太长',
+    toast_name_updated: '✅ 名字已更新: ',
+    toast_referral_reward: '🎉 获得2,000 🪙推荐奖励!',
+    toast_low_gold: '💰 余额不足 — 选择较低赌注',
+    toast_building_room: '🏗 正在建房...',
+    toast_offline_bot: '📡 网络断开 — 机器人代替您游戏',
+    toast_conn_heavy: '🌐 连接较重 — 请耐心等待...',
+    toast_conn_weak: '📶 网络很弱 — 靠近路由器',
+    toast_server_fail: '⚠ 无法连接服务器',
+    toast_reconnected: '✅ 连接已恢复!',
+    toast_restoring_conn: '🔄 正在恢复连接...',
+    toast_became_host: '👑 您成为比赛领导者!',
+    toast_cards_error: '⚠ 接收牌错误 (P2P) — 重新加入',
+    toast_player_joined: (name) => `🎮 ${name} 加入了!`,
+    toast_partner_found: (name) => `🤝 ${name} 是您的队友 — 寻找对手!`,
+    toast_new_host: (name) => `👑 ${name} 现在领导比赛`,
+    toast_cards_error2: '⚠ 接收牌错误 — 重新加入',
+    toast_big_match: '🤝 进入大比赛!',
+    toast_retry_conn: '🔄 连接延迟 — 重试中',
+    toast_retry_conn2: '🔄 连接不稳定 — 重连中...',
+    toast_no_internet: '⚠ 无连接 — 检查网络',
+    toast_send_fail: '⚠ 发送失败 — 检查网络',
+    toast_joined_team: (name) => `🤝 加入了${name}的队伍!`,
+    toast_big_match2: '🤝 进入大比赛!',
+    toast_seat_error: '😕 未找到座位 — 重试',
+    toast_rematch_req: (name) => `✋ ${name} 想再来一局`,
+    toast_all_agreed: '🔄 所有玩家同意 — 开始!',
+    toast_rematch_declined: (name) => `❌ ${name} 拒绝再来一局`,
+    toast_play_your_card: '⚠️ 您还有牌 — 请出牌!',
+    toast_player_left: (name) => `🚪 ${name} 离开了`,
+    toast_code_copied: (code) => `📋 代码已复制: ${code}`,
+    toast_no_code: '⚠ 暂无代码',
+    toast_invite_copied_story: '📋 邀请已复制 — 粘贴到故事! 📸',
+    toast_invite_copied: '📋 邀请已复制 — 粘贴发送!',
+    toast_invite_platform: '📋 邀请已复制并打开平台! 🚀',
+    toast_no_room: '⚠ 无活跃房间',
+    toast_invite_copied_ig: '📋 邀请已复制 — 粘贴到故事或DM!',
+    toast_need_players: (need, have, min) => `👥 需要${min}名玩家 — 当前${have}/${min}`,
+    toast_king_end_me: '👑 以国王结束! +5分',
+    toast_king_end_opp: (name) => `👑 ${name} 以国王结束! +5`,
+    toast_bumba_pre_me: '🎯 在发牌者前取得国王! +10',
+    toast_bumba_pre_opp: (name) => `🎯 ${name} 抢走国王! +10`,
+    toast_game_restoring: '🔄 正在恢复游戏...',
+    toast_disconnected_lobby: '🔌 断开连接 — 返回大厅',
+    toast_turn: (name) => `▶ ${name}的回合`,
+    toast_opp_slow: '⏳ 对手很慢 — 等待中...',
+    toast_opp_gone: '🔌 对手长时间离线 — 返回大厅',
+    toast_wait_turn: '⏸ 等待您的回合...',
+    toast_hint_bumba: (rank, suit) => `💡 Bumba! 出 ${rank} ${suit} ⚡`,
+    toast_hint_play: (rank, suit, extra) => `💡 出 ${rank} ${suit}${extra}`,
+    toast_hint_throw: '💡 无匹配 — 丢一张牌',
+    toast_vote_timeout: '⏰ 时间到 — 并非所有人同意',
+    toast_google_ok: '✅ Google账户绑定成功',
+    toast_google_fail: '❌ Google登录失败',
+    toast_login_error: '❌ 登录错误',
+    toast_room_ready: '🎮 房间准备好了 — 分享代码!',
+    toast_bot_hint: '💡 可以开始，队友未连接则为机器人',
+    toast_no_team_mode: '⚠ 先打开"与朋友组队"模式',
+    toast_no_internet2: '📵 无网络 — 检查连接',
+    toast_low_gold_world: (amt) => `💰 余额不足 (需要${amt}金币)`,
+    toast_connected: '🤝 已连接!',
+    toast_conn_error: '⚠ 连接错误',
+    toast_bet_refunded: '💰 赌注已退还',
+    toast_already_joining: '⏳ 连接已在进行...',
+    toast_invalid_code: '请输入有效代码 (4-6个字符)',
+    toast_connecting: '🔗 连接中...',
+    toast_room_gone: '🚫 该房间不再存在',
+    toast_room_full: '🚫 房间已满 — 试试其他房间',
+    toast_room_full2: '🚫 房间已满',
+    toast_conn_fail2: '😓 连接失败 — 检查网络',
+    toast_room_gone2: '🚫 该房间不再存在',
+    toast_room_full3: '🚫 房间已满 — 试试其他房间',
+    toast_room_full4: '🚫 房间已满 — 试试其他房间',
+    toast_conn_issue: '😓 连接问题 — 检查网络',
+    toast_room_access: '😓 无法访问房间 — 检查网络',
+    toast_login_err2: (msg) => `❌ 登录错误: ${msg}`,
+    toast_server_err: '❌ 无法连接服务器',
+    toast_google_ok2: '✅ 已用Google登录',
+    toast_conn_restored: '🔄 连接已恢复',
+    toast_firebase_rules: '⚠ Firebase Rules关闭 — 在线游戏无法工作',
+    toast_bought_gold: (amt) => `🎊 成功购买${amt}金币!`,
+    toast_daily_collected: '✅ 今天已领取!',
+    toast_result_copied: '📋 结果已复制!',
+    toast_season_active: '🌟 赛季进行中 — 游戏提升排名!',
+    toast_share_copied: '📋 分享文字已复制!',
+    toast_already_friend: '✅ 此人已是您的朋友',
+    toast_req_pending: '⏳ 好友请求已发送',
+    toast_req_sent: (name) => `📨 已向${name}发送好友请求`,
+    toast_now_friends: (name) => `✅ 您和${name}现在是朋友!`,
+    toast_accepted_req: (name) => `✅ ${name}接受了您的请求!`,
+    toast_open_room_first: '⚠ 邀请前先打开房间',
+    toast_no_active_room: '⚠ 无活跃房间',
+    toast_invited: (name) => `📨 已邀请${name}`,
+    toast_invited2: (name) => `📨 已邀请${name}加入`,
+    toast_bot_partner: (name) => `🤝 ${name}是您的队友 — 寻找对手!`,
+    toast_bot_joined: (name) => `✅ ${name}加入了房间`,
+    toast_low_gold2: (amt) => `💰 余额不足 (需要${amt})`,
+    toast_rejected: (name) => `❌ ${name}拒绝了邀请`,
+    toast_ad_fail: '⚠️ 广告未加载，请重试',
+    toast_ad_fail2: '⚠️ 加载广告失败，稍后重试',
+    toast_gold_earned: (amt) => `🏆 +${amt}金币! 🪙`,
+    toast_card_returned: '↩ 断开连接 — 牌已归还',
+    toast_card_returned2: '⚠ 断开连接 — 牌已归还',
+    toast_phase_sync: '🔄 阶段已重新同步',
+    toast_missa_me: (txt) => `${txt}分`,
+    toast_missa_opp: (txt) => `⚠ 对手: ${txt}`,
+    toast_bumba_king_me: '👑 以国王结束! +5分',
+    toast_bumba_king_opp: (name) => `👑 ${name}以国王结束! +5`,
+    toast_bumba_pre_steal: '🎯 抢走发牌者的国王! +10',
+    fxboom_king_steal: '抢王',
+    fxboom_king_close: '收局',
+    hint_missa: '— 米萨 🧹!',
+    hint_eat: '— 吃',
+    // missing keys
+    dir: 'ltr',
+    logo_super: '正宗安达卢西亚摩洛哥游戏',
   },
 };
 
@@ -7138,7 +7727,6 @@ function _applyLang(lang) {
 
   // Update dynamic lobby texts if elements exist
   _updateLobbyDynamicTexts(lang);
-  _applyLooseTranslations(lang);
   // Re-render challenges & achievements if panel is open
   try { _renderChallengesAndAchievements(); } catch(e) {}
   // Re-render theme bars so button labels update
@@ -7149,6 +7737,14 @@ function _applyLang(lang) {
   // Re-render sound settings labels if visible
   const sfxLabel=document.querySelector('.sound-label');
   if(sfxLabel){ const sc=document.getElementById('soundSettingsRow'); if(sc){ const labels=sc.querySelectorAll('.sound-label'); if(labels[0]) labels[0].textContent=_i18n('sound_effects'); if(labels[1]) labels[1].textContent=_i18n('vibration'); } }
+
+  // Update AI level badge
+  const lvBadge2 = document.getElementById('lvBadge2');
+  if(lvBadge2){ const _aib=T.ai_level_badge; const _curV=parseInt((lvBadge2.textContent.match(/\d+/)||['5'])[0])||5; lvBadge2.textContent=typeof _aib==='function'?_aib(_curV):('⚡ '+_i18n('ai_level_label')+': '+_curV+'/10'); }
+
+  // Update lobby static elements
+  const fcsLbl = document.querySelector('.fcs-label');
+  if(fcsLbl) fcsLbl.textContent = T.friends_list_label || fcsLbl.textContent;
 
   // Update lottery modal static texts if visible
   const lotteryTitle = document.getElementById('lotteryTitle');
@@ -7198,646 +7794,51 @@ function _applyLang(lang) {
 }
 
 /* ── Update dynamic lobby panel texts ── */
-
-function _normI18nText(s) {
-  return String(s || '')
-    .replace(/[‎‏]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function _languageWord(lang, key) {
-  const words = {
-    you: { en: 'You', es: 'Tú', zh: '你' },
-    opponent: { en: 'Opponent', es: 'Oponente', zh: '对手' },
-    player: { en: 'Player', es: 'Jugador', zh: '玩家' },
-    players: { en: 'Players', es: 'Jugadores', zh: '玩家' },
-    wins: { en: 'wins', es: 'victorias', zh: '胜利' },
-    win: { en: 'Win', es: 'Victoria', zh: '胜利' },
-    loss: { en: 'Loss', es: 'Derrota', zh: '失败' },
-    gold: { en: 'gold', es: 'oro', zh: '金币' },
-    coin: { en: 'coin', es: 'moneda', zh: '硬币' },
-    coins: { en: 'coins', es: 'monedas', zh: '硬币' },
-    table: { en: 'table', es: 'mesa', zh: '桌面' },
-    turn: { en: 'turn', es: 'turno', zh: '回合' },
-    loading: { en: 'Loading...', es: 'Cargando...', zh: '加载中...' },
-    checking: { en: 'Checking...', es: 'Comprobando...', zh: '检查中...' },
-    searching: { en: 'Searching...', es: 'Buscando...', zh: '搜索中...' },
-    waiting_players: { en: 'Waiting for players...', es: 'Esperando jugadores...', zh: '等待玩家...' },
-    exit: { en: 'Exit', es: 'Salir', zh: '退出' },
-    play: { en: 'Play', es: 'Jugar', zh: '开始' },
-    hint: { en: 'Hint', es: 'Pista', zh: '提示' },
-    auto: { en: 'Auto', es: 'Auto', zh: '自动' },
-    online: { en: 'Online', es: 'En línea', zh: '在线' },
-    free: { en: 'Free', es: 'Gratis', zh: '免费' },
-    weekly: { en: 'Weekly', es: 'Semanal', zh: '每周' },
-    daily: { en: 'Daily', es: 'Diario', zh: '每日' },
-    today: { en: 'Today', es: 'Hoy', zh: '今天' },
-    final_score: { en: 'Final score', es: 'Marcador final', zh: '最终得分' },
-    reward: { en: 'Reward', es: 'Recompensa', zh: '奖励' },
-    congratulations: { en: 'Congratulations!', es: '¡Felicidades!', zh: '恭喜！' },
-    got_it: { en: 'Got it!', es: '¡Entendido!', zh: '知道了！' },
-    leader: { en: 'Leader', es: 'Líder', zh: '领先' },
-    weekly_badge: { en: 'Weekly', es: 'Semanal', zh: '每周' },
-  };
-  return (words[key] && words[key][lang]) || words[key] && words[key].en || '';
-}
-
-
-
-const FORCE_LOOSE_REPLACEMENTS = [
-  ['روندة', { en: 'Ronda', es: 'Ronda', zh: 'Ronda' }],
-  ['الرئيسية', { en: 'Home', es: 'Inicio', zh: '首页' }],
-  ['الأصدقاء', { en: 'Friends', es: 'Amigos', zh: '好友' }],
-  ['قائمة الأصدقاء', { en: 'Friends list', es: 'Lista de amigos', zh: '好友列表' }],
-  ['متجر الذهب', { en: 'Gold shop', es: 'Tienda de oro', zh: '金币商店' }],
-  ['الصناديق', { en: 'Chests', es: 'Cofres', zh: '宝箱' }],
-  ['التحديات', { en: 'Challenges', es: 'Desafíos', zh: '挑战' }],
-  ['الإنجازات', { en: 'Achievements', es: 'Logros', zh: '成就' }],
-  ['الإشعارات', { en: 'Notifications', es: 'Notificaciones', zh: '通知' }],
-  ['إغلاق', { en: 'Close', es: 'Cerrar', zh: '关闭' }],
-  ['خروج', { en: 'Exit', es: 'Salir', zh: '退出' }],
-  ['مغادرة', { en: 'Leave', es: 'Salir', zh: '离开' }],
-  ['تلميح', { en: 'Hint', es: 'Pista', zh: '提示' }],
-  ['العب الآن', { en: 'Play now', es: 'Jugar ahora', zh: '立即游玩' }],
-  ['ابدأ اللعبة', { en: 'Start game', es: 'Iniciar partida', zh: '开始游戏' }],
-  ['العب', { en: 'Play', es: 'Jugar', zh: '游玩' }],
-  ['غرفة اللعب', { en: 'Game room', es: 'Sala de juego', zh: '游戏房间' }],
-  ['رمز الغرفة', { en: 'Room code', es: 'Código de sala', zh: '房间代码' }],
-  ['رمز الإحالة', { en: 'Referral code', es: 'Código de referidos', zh: '邀请代码' }],
-  ['مكافأة اليوم', { en: 'Daily reward', es: 'Recompensa diaria', zh: '每日奖励' }],
-  ['مكافأة رائعة', { en: 'Great reward', es: 'Recompensa increíble', zh: '丰厚奖励' }],
-  ['شاهد', { en: 'Watch', es: 'Ver', zh: '观看' }],
-  ['تم الشراء بنجاح!', { en: 'Purchase successful!', es: '¡Compra exitosa!', zh: '购买成功！' }],
-  ['رصيدك الحالي:', { en: 'Current balance:', es: 'Saldo actual:', zh: '当前余额：' }],
-  ['رصيدك الجديد:', { en: 'New balance:', es: 'Nuevo saldo:', zh: '新余额：' }],
-  ['رصيدك نفد!', { en: 'Out of balance!', es: '¡Sin saldo!', zh: '余额不足！' }],
-  ['لا يكفي رصيدك للمراهنة', { en: 'Not enough balance to bet', es: 'No tienes saldo suficiente para apostar', zh: '余额不足，无法下注' }],
-  ['لا توجد إشعارات بعد', { en: 'No notifications yet', es: 'Aún no hay notificaciones', zh: '暂无通知' }],
-  ['لا يوجد أصدقاء بعد', { en: 'No friends yet', es: 'Aún no hay amigos', zh: '暂无好友' }],
-  ['لا يوجد أصدقاء لدعوتهم', { en: 'No friends to invite', es: 'No hay amigos para invitar', zh: '没有可邀请的好友' }],
-  ['أدخل الرمز الذي أرسله لك صديقك', { en: 'Enter the code your friend sent you', es: 'Ingresa el código que te envió tu amigo', zh: '输入好友发给你的代码' }],
-  ['أدخل بيانات البطاقة بأمان', { en: 'Enter card details securely', es: 'Ingresa los datos de la tarjeta de forma segura', zh: '安全输入卡片信息' }],
-  ['أدخل كود هديتك واستلم مكافأتك الحصرية!', { en: 'Enter your gift code and claim your exclusive reward!', es: 'Ingresa tu código de regalo y recibe tu recompensa exclusiva!', zh: '输入礼物码并领取专属奖励！' }],
-  ['اضغط خارج النافذة للإغلاق', { en: 'Tap outside the window to close', es: 'Toca fuera de la ventana para cerrar', zh: '点击窗口外部关闭' }],
-  ['اضغط زر "ادفع" أدناه', { en: 'Tap the "Pay" button below', es: 'Pulsa el botón "Pagar" abajo', zh: '点击下方“支付”按钮' }],
-  ['البحث يبدأ تلقائياً عند فتح المودال', { en: 'Search starts automatically when the modal opens', es: 'La búsqueda comienza automáticamente al abrir el modal', zh: '打开弹窗时自动开始搜索' }],
-  ['اختر الباقة المناسبة', { en: 'Choose the right package', es: 'Elige el paquete adecuado', zh: '选择合适的套餐' }],
-  ['وسائل الدفع المقبولة', { en: 'Accepted payment methods', es: 'Métodos de pago aceptados', zh: '可接受的支付方式' }],
-  ['وسيلة الدفع', { en: 'Payment method', es: 'Método de pago', zh: '支付方式' }],
-  ['منطقة الدفع', { en: 'Payment area', es: 'Zona de pago', zh: '支付区域' }],
-  ['بطاقة ائتمان أو خصم', { en: 'Credit or debit card', es: 'Tarjeta de crédito o débito', zh: '信用卡或借记卡' }],
-  ['شاهد إعلاناً قصيراً لكسب عملات مجاناً', { en: 'Watch a short ad to earn free coins', es: 'Mira un anuncio corto para ganar monedas gratis', zh: '观看短广告赚取免费金币' }],
-  ['إعلان قصير • مجاناً تماماً', { en: 'Short ad • Completely free', es: 'Anuncio corto • Totalmente gratis', zh: '短广告 • 完全免费' }],
-  ['إعلان ثانٍ • مكافأة أكبر', { en: 'Second ad • Bigger reward', es: 'Segundo anuncio • Mayor recompensa', zh: '第二个广告 • 更大奖励' }],
-  ['إعلان ثالث • أكبر مكافأة', { en: 'Third ad • Biggest reward', es: 'Tercer anuncio • Mayor recompensa', zh: '第三个广告 • 最大奖励' }],
-  ['واتساب', { en: 'WhatsApp', es: 'WhatsApp', zh: 'WhatsApp' }],
-  ['تيليغرام', { en: 'Telegram', es: 'Telegram', zh: 'Telegram' }],
-  ['فيسبوك', { en: 'Facebook', es: 'Facebook', zh: 'Facebook' }],
-  ['إنستغرام', { en: 'Instagram', es: 'Instagram', zh: 'Instagram' }],
-  ['انستغرام', { en: 'Instagram', es: 'Instagram', zh: 'Instagram' }],
-  ['تويتر', { en: 'Twitter', es: 'Twitter', zh: 'Twitter' }],
-  ['▶ ابدأ اللعبة', { en: '▶ Start game', es: '▶ Iniciar partida', zh: '▶ 开始游戏' }],
-  ['▶ العب', { en: '▶ Play', es: '▶ Jugar', zh: '▶ 游玩' }],
-  ['🏠 الرئيسية', { en: '🏠 Home', es: '🏠 Inicio', zh: '🏠 首页' }],
-  ['👥 قائمة الأصدقاء', { en: '👥 Friends list', es: '👥 Lista de amigos', zh: '👥 好友列表' }],
-  ['👑 ملك', { en: '👑 King', es: '👑 Rey', zh: '👑 国王' }],
-  ['👑 نخبة', { en: '👑 Elite', es: '👑 Élite', zh: '👑 精英' }],
-  ['🪙 أساسية', { en: '🪙 Basic', es: '🪙 Básico', zh: '🪙 基础' }],
-  ['🗓 مكافآت تسجيل الدخول', { en: '🗓 Login rewards', es: '🗓 Recompensas de inicio de sesión', zh: '🗓 登录奖励' }],
-  ['🔔 الإشعارات', { en: '🔔 Notifications', es: '🔔 Notificaciones', zh: '🔔 通知' }],
-  ['🗑 مسح الكل', { en: '🗑 Clear all', es: '🗑 Borrar todo', zh: '🗑 全部清除' }],
-  ['🎁 كود الهدية', { en: '🎁 Gift code', es: '🎁 Código de regalo', zh: '🎁 礼物码' }],
-  ['🎁 حزم', { en: '🎁 Packs', es: '🎁 Paquetes', zh: '🎁 套装' }],
-  ['🎬 اكسب عملات بمشاهدة إعلان', { en: '🎬 Earn coins by watching an ad', es: '🎬 Gana monedas viendo un anuncio', zh: '🎬 观看广告赚取金币' }],
-  ['🎴 العب الآن!', { en: '🎴 Play now!', es: '🎴 ¡Juega ahora!', zh: '🎴 立即游玩！' }],
-  ['🎴 كلاسيك', { en: '🎴 Classic', es: '🎴 Clásico', zh: '🎴 经典' }],
-  ['🏆 4 مستقلين', { en: '🏆 4-player free-for-all', es: '🏆 4 jugadores libres', zh: '🏆 4人乱斗' }],
-  ['💡 تلميح', { en: '💡 Hint', es: '💡 Pista', zh: '💡 提示' }],
-  ['⚖ عقوبة', { en: '⚖ Penalty', es: '⚖ Penalización', zh: '⚖ 惩罚' }],
-  ['⚔ النتيجة النهائية', { en: '⚔ Final score', es: '⚔ Puntuación final', zh: '⚔ 最终得分' }],
-  ['⚡ مثير', { en: '⚡ Exciting', es: '⚡ Emocionante', zh: '⚡ 刺激' }],
-  ['⚡ المستوى 5/10', { en: '⚡ Level 5/10', es: '⚡ Nivel 5/10', zh: '⚡ 等级 5/10' }],
-  ['⚡ مستوى الذكاء: 5/10', { en: '⚡ AI level: 5/10', es: '⚡ Nivel de IA: 5/10', zh: '⚡ AI 等级：5/10' }],
-  ['✓ بدون حساب', { en: '✓ No account', es: '✓ Sin cuenta', zh: '✓ 无账号' }],
-  ['✓ رائع! استلمت', { en: '✓ Great! Received', es: '✓ ¡Genial! Recibido', zh: '✓ 太好了！已领取' }],
-  ['✕ إغلاق', { en: '✕ Close', es: '✕ Cerrar', zh: '✕ 关闭' }],
-  ['✕ خروج', { en: '✕ Exit', es: '✕ Salir', zh: '✕ 退出' }],
-  ['✕ مغادرة', { en: '✕ Leave', es: '✕ Salir', zh: '✕ 离开' }],
-  ['🔥 عرض اليوم فقط!', { en: '🔥 Today only!', es: '🔥 ¡Solo hoy!', zh: '🔥 仅限今天！' }],
-  ['🗑️ حذف البيانات', { en: '🗑️ Delete data', es: '🗑️ Eliminar datos', zh: '🗑️ 删除数据' }],
-  ['🔒 دفع آمن ومشفر — لا نحتفظ ببيانات بطاقتك', { en: '🔒 Secure, encrypted payment — we do not store your card data', es: '🔒 Pago seguro y cifrado — no guardamos los datos de tu tarjeta', zh: '🔒 安全加密支付——我们不会保存你的卡信息' }],
-  ['🔄 مرة ثانية', { en: '🔄 Once again', es: '🔄 Otra vez', zh: '🔄 再来一次' }],
-  ['صندوق: الصناديق', { en: 'Chest: Chests', es: 'Caja: Cofres', zh: '宝箱：宝箱' }],
-  ['صندوق: التحديات', { en: 'Chest: Challenges', es: 'Caja: Desafíos', zh: '宝箱：挑战' }],
-  ['صندوق: الإنجازات', { en: 'Chest: Achievements', es: 'Caja: Logros', zh: '宝箱：成就' }],
-  ['يفتح', { en: 'Open', es: 'Abrir', zh: '打开' }],
-  ['عادي', { en: 'Common', es: 'Común', zh: '普通' }],
-  ['مجاني', { en: 'Free', es: 'Gratis', zh: '免费' }],
-  ['مكافأة اليوم', { en: 'Daily reward', es: 'Recompensa diaria', zh: '每日奖励' }],
-  ['بومبا!', { en: 'Bomba!', es: 'Bomba!', zh: 'Bomba！' }],
-  ['ميسا!', { en: 'Mesa!', es: 'Mesa!', zh: 'Mesa！' }],
-  ['ترينغا', { en: 'Tringa', es: 'Tringa', zh: 'Tringa' }],
-  ['ترينكه', { en: 'Trinke', es: 'Trinke', zh: 'Trinke' }],
-  ['زرب!', { en: 'Go!', es: '¡Ya!', zh: '快走！' }],
-  ['واعرة!', { en: 'Awesome!', es: '¡Genial!', zh: '太棒了！' }],
-  ['تهانيك!', { en: 'Congrats!', es: '¡Felicidades!', zh: '恭喜！' }],
-  ['فهمت! لنلعب 🎴', { en: 'Got it! Let’s play 🎴', es: '¡Entendido! Juguemos 🎴', zh: '明白了！开玩吧 🎴' }],
-  ['لا توجد إشعارات بعد', { en: 'No notifications yet', es: 'Aún no hay notificaciones', zh: '暂无通知' }],
-  ['لا يوجد أصدقاء بعد', { en: 'No friends yet', es: 'Aún no hay amigos', zh: '暂无好友' }],
-  ['لا يوجد أصدقاء لدعوتهم', { en: 'No friends to invite', es: 'No hay amigos para invitar', zh: '没有可邀请的好友' }],
-  ['الكود بانتظار صديقك', { en: 'Code is waiting for your friend', es: 'El código espera a tu amigo', zh: '代码在等待你的好友' }],
-  ['يكتمل الفريق تلقائياً', { en: 'The team fills automatically', es: 'El equipo se completa automáticamente', zh: '队伍会自动补齐' }],
-  ['سيتم اختيار خصم بمستواك تلقائياً', { en: 'An opponent at your level will be chosen automatically', es: 'Se elegirá automáticamente un rival de tu nivel', zh: '系统将自动选择同等级对手' }],
-  ['سيتم توزيعكم على فريقين بشكل عادل', { en: 'You will be split into two teams fairly', es: 'Se les dividirá en dos equipos de forma justa', zh: '将公平分成两个队伍' }],
-  ['يبدأ المنافس تلقائياً', { en: 'The opponent starts automatically', es: 'El rival comienza automáticamente', zh: '对手将自动开始' }],
-  ['يلعب بشكل تكتيكي مع بعض الأخطاء', { en: 'Plays tactically with a few mistakes', es: 'Juega de forma táctica con algunos errores', zh: '以战术方式游玩，偶尔会出错' }],
-  ['كل لاعب يلعب لحسابه — الكل ضد الكل', { en: 'Each player plays for themselves — free-for-all', es: 'Cada jugador juega por su cuenta — todos contra todos', zh: '每位玩家各自为战——大乱斗' }],
-  ['الكل ضد الكل', { en: 'Free-for-all', es: 'Todos contra todos', zh: '大乱斗' }]
-];
-
-function _forceLooseTranslate(text, lang) {
-  if (lang === 'ar' || !text) return text;
-  let out = text;
-  for (const [src, map] of FORCE_LOOSE_REPLACEMENTS) {
-    const dst = (map && map[lang]) || (map && map.en) || src;
-    if (!src || !dst) continue;
-    if (out.includes(src)) out = out.split(src).join(dst);
-  }
-  return out;
-}
-
-function _translateLooseTextNode(text, lang) {
-  if (lang === 'ar' || !text || !/[\u0600-\u06FF]/.test(text)) return text;
-  const ar = (RONDA_I18N && RONDA_I18N.ar) || {};
-  const T = (RONDA_I18N && RONDA_I18N[lang]) || RONDA_I18N.en || {};
-  const norm = _normI18nText(text);
-
-  // exact source-value match from the Arabic dictionary
-  for (const k in ar) {
-    const src = ar[k];
-    const dst = T[k];
-    if (typeof src === 'string' && typeof dst === 'string') {
-      if (_normI18nText(src) === norm) return dst;
-    }
-  }
-
-  // exact fallback matches for visible texts
-  const exactMap = {
-    "روندة ⚔ اللعبة المغربية الملكية": { en: "Ronda — Moroccan Royal Game", es: "Ronda — Juego real marroquí", zh: "Ronda — 摩洛哥皇家纸牌游戏" },
-    "العربية": { en: "Arabic", es: "Árabe", zh: "阿拉伯语" },
-    "جديد": { en: "New", es: "Nuevo", zh: "新" },
-    "500 ذهبية": { en: "500 gold", es: "500 monedas de oro", zh: "500 金币" },
-    "اضغط أيقونة المنصة — ينسخ الدعوة وينتقل إليها تلقائياً 🚀": { en: "Tap a platform icon — it copies the invite and opens it automatically 🚀", es: "Toca un icono de plataforma — copia la invitación y la abre automáticamente 🚀", zh: "点击平台图标—会复制邀请并自动打开 🚀" },
-    "في انتظار لاعبين...": { en: "Waiting for players...", es: "Esperando jugadores...", zh: "等待玩家..." },
-    "جاري استعادة الاتصال...": { en: "Reconnecting...", es: "Reconectando...", zh: "正在重新连接..." },
-    "محاولة 1 / 3": { en: "Attempt 1 / 3", es: "Intento 1 / 3", zh: "尝试 1 / 3" },
-    "خروج من المباراة": { en: "Leave match", es: "Salir de la partida", zh: "退出比赛" },
-    "توزيعة 1/6": { en: "Deal 1/6", es: "Reparto 1/6", zh: "发牌 1/6" },
-    "الطاولة فارغة": { en: "Table is empty", es: "La mesa está vacía", zh: "牌桌为空" },
-    "روندة!": { en: "Ronda!", es: "¡Ronda!", zh: "Ronda！" },
-    "+1 نقطة": { en: "+1 point", es: "+1 punto", zh: "+1 分" },
-    "انتقل دور الموزع": { en: "Dealer turn", es: "Turno del repartidor", zh: "发牌员回合" },
-    "الموزع": { en: "Dealer", es: "Repartidor", zh: "发牌员" },
-    "يوزع الآن...": { en: "Dealing now...", es: "Repartiendo...", zh: "正在发牌..." },
-    "انتهت الجولة!": { en: "Round over!", es: "¡Ronda terminada!", zh: "回合结束！" },
-    "متابعة ▶": { en: "Continue ▶", es: "Continuar ▶", zh: "继续 ▶" },
-    "📖 قواعد الروندة الكاملة": { en: "📖 Full Ronda rules", es: "📖 Reglas completas de Ronda", zh: "📖 Ronda 完整规则" },
-    "🃏 الأوراق — 40 ورقة إسبانية": { en: "🃏 Cards — 40 Spanish cards", es: "🃏 Cartas — 40 cartas españolas", zh: "🃏 纸牌 — 40 张西班牙牌" },
-    "🎯 الهدف — 41 نقطة أولاً": { en: "🎯 Goal — reach 41 points first", es: "🎯 Objetivo — llegar primero a 41 puntos", zh: "🎯 目标 — 先到 41 分" },
-    "🔄 الضرب (الأساس)": { en: "🔄 Capture (base rule)", es: "🔄 Captura (regla base)", zh: "🔄 捕获（基础规则）" },
-    "⚡ البومبا (+1 نقطة)": { en: "⚡ Bomba (+1 point)", es: "⚡ Bomba (+1 punto)", zh: "⚡ Bomba（+1 分）" },
-    "🧹 الميسا (+1 نقطة)": { en: "🧹 Mesa (+1 point)", es: "🧹 Mesa (+1 punto)", zh: "🧹 Mesa（+1 分）" },
-    "🎴 روندة (+1 لكل منافس)": { en: "🎴 Ronda (+1 per opponent)", es: "🎴 Ronda (+1 por rival)", zh: "🎴 Ronda（每位对手 +1）" },
-    "🔱 ترينغا (+5 لكل منافس)": { en: "🔱 Tringa (+5 per opponent)", es: "🔱 Tringa (+5 por rival)", zh: "🔱 Tringa（每位对手 +5）" },
-    "📊 حساب نهاية الجولة": { en: "📊 End-of-round scoring", es: "📊 Puntuación final de la ronda", zh: "📊 回合结算" },
-    "آخر من أكل يأخذ الأوراق الباقية على الطاولة. ثم:": { en: "The last player to capture takes the remaining cards on the table. Then:", es: "El último en capturar se lleva las cartas restantes en la mesa. Luego:", zh: "最后一位捕获的玩家拿走桌面上剩余的牌。然后：" },
-    "📷 صورة": { en: "📷 Photo", es: "📷 Foto", zh: "📷 照片" },
-    "✓ حفظ": { en: "✓ Save", es: "✓ Guardar", zh: "✓ 保存" },
-    "🔗 اربط حسابك لحفظ بياناتك وصورتك على كل أجهزتك": { en: "🔗 Link your account to save your data and photo across all devices", es: "🔗 Vincula tu cuenta para guardar tus datos y foto en todos tus dispositivos", zh: "🔗 绑定你的账号，以便在所有设备上保存数据和头像" },
-    "ربط Google": { en: "Link Google", es: "Vincular Google", zh: "绑定 Google" },
-    "لا توجد ألعاب بعد — العب وستظهر هنا!": { en: "No games yet — play and they will appear here!", es: "Aún no hay partidas — ¡juega y aparecerán aquí!", zh: "还没有游戏—开始玩后会出现在这里！" },
-    "ادعُ أصدقاءك — كلاكما يفوز!": { en: "Invite your friends — both of you win!", es: "¡Invita a tus amigos — ganan ambos!", zh: "邀请朋友—双方都会获奖！" },
-    "👤 أنت": { en: "👤 You", es: "👤 Tú", zh: "👤 你" },
-    "👥 صديقك": { en: "👥 Your friend", es: "👥 Tu amigo", zh: "👥 你的朋友" },
-    "عبر فيسبوك · X · أو اسم مستعار": { en: "Via Facebook · X · or alias", es: "Vía Facebook · X · o alias", zh: "通过 Facebook · X · 或昵称" },
-    "رمز الإحالة الخاص بك": { en: "Your referral code", es: "Tu código de invitación", zh: "你的邀请代码" },
-    "شارك هذا الرمز مع أصدقائك": { en: "Share this code with your friends", es: "Comparte este código con tus amigos", zh: "把这个代码分享给你的朋友" },
-    "🔗 نسخ الرابط": { en: "🔗 Copy link", es: "🔗 Copiar enlace", zh: "🔗 复制链接" },
-    "شارك عبر": { en: "Share via", es: "Compartir por", zh: "分享方式" },
-    "إحالات ناجحة": { en: "Successful referrals", es: "Referidos exitosos", zh: "成功邀请" },
-    "عملات مكتسبة": { en: "Coins earned", es: "Monedas ganadas", zh: "获得的金币" },
-    "🗺️ صناديق المفاجآت — اكسب عملات وXP وجواهر نادرة · كل صندوق له cooldown خاص!": { en: "🗺️ Surprise boxes — earn coins, XP, and rare gems · each box has its own cooldown!", es: "🗺️ Cajas sorpresa — gana monedas, XP y gemas raras · ¡cada caja tiene su propio cooldown!", zh: "🗺️ 惊喜宝箱—可获得金币、XP 和稀有宝石 · 每个宝箱都有独立冷却！" },
-    "⚔ صناديق دائمة": { en: "⚔ Permanent boxes", es: "⚔ Cajas permanentes", zh: "⚔ 永久宝箱" },
-    "عادي": { en: "Common", es: "Común", zh: "普通" },
-    "صندوق الذهب": { en: "Gold box", es: "Caja de oro", zh: "金币宝箱" },
-    "📍 مراكش": { en: "📍 Marrakech", es: "📍 Marrakech", zh: "📍 马拉喀什" },
-    "⏱ كل ساعة": { en: "⏱ Every hour", es: "⏱ Cada hora", zh: "⏱ 每小时" },
-    "نادر": { en: "Rare", es: "Raro", zh: "稀有" },
-    "صندوق الجواهر": { en: "Gem box", es: "Caja de gemas", zh: "宝石宝箱" },
-    "📍 فاس": { en: "📍 Fez", es: "📍 Fez", zh: "📍 非斯" },
-    "⏱ كل ساعتين": { en: "⏱ Every 2 hours", es: "⏱ Cada 2 horas", zh: "⏱ 每 2 小时" },
-    "ملحمي": { en: "Epic", es: "Épico", zh: "史诗" },
-    "صندوق الملوك": { en: "Kings box", es: "Caja de reyes", zh: "王者宝箱" },
-    "📍 طنجة": { en: "📍 Tangier", es: "📍 Tánger", zh: "📍 丹吉尔" },
-    "⏱ كل 6 ساعات": { en: "⏱ Every 6 hours", es: "⏱ Cada 6 horas", zh: "⏱ 每 6 小时" },
-    "🔒 يحتاج مستوى 5+": { en: "🔒 Requires level 5+", es: "🔒 Requiere nivel 5+", zh: "🔒 需要 5 级以上" },
-    "أسطوري نادر": { en: "Legendary rare", es: "Legendario raro", zh: "传说稀有" },
-    "صندوق الغموض": { en: "Mystery box", es: "Caja misteriosa", zh: "神秘宝箱" },
-    "📍 أغادير": { en: "📍 Agadir", es: "📍 Agadir", zh: "📍 阿加迪尔" },
-    "⏱ كل 4 ساعات": { en: "⏱ Every 4 hours", es: "⏱ Cada 4 horas", zh: "⏱ 每 4 小时" },
-    "🌟 صناديق خاصة": { en: "🌟 Special boxes", es: "🌟 Cajas especiales", zh: "🌟 特殊宝箱" },
-    "يومي": { en: "Daily", es: "Diario", zh: "每日" },
-    "اليومي": { en: "Daily", es: "Diario", zh: "每日" },
-    "مجاني": { en: "Free", es: "Gratis", zh: "免费" },
-    "⏱ كل يوم": { en: "⏱ Every day", es: "⏱ Cada día", zh: "⏱ 每天" },
-    "أسبوعي": { en: "Weekly", es: "Semanal", zh: "每周" },
-    "الأسبوعي": { en: "Weekly", es: "Semanal", zh: "每周" },
-    "⏱ كل أسبوع": { en: "⏱ Every week", es: "⏱ Cada semana", zh: "⏱ 每周" },
-    "مكافأة الفوز": { en: "Win reward", es: "Recompensa de victoria", zh: "胜利奖励" },
-    "كل 5 انتصارات": { en: "Every 5 wins", es: "Cada 5 victorias", zh: "每 5 胜一次" },
-    "تلقائي عند الفوز": { en: "Automatic on win", es: "Automático al ganar", zh: "获胜后自动领取" },
-    "🗑️ طلب حذف البيانات": { en: "🗑️ Request data deletion", es: "🗑️ Solicitar eliminación de datos", zh: "🗑️ 请求删除数据" },
-    "مرحباً بك في روندة!": { en: "Welcome to Ronda!", es: "¡Bienvenido a Ronda!", zh: "欢迎来到 Ronda！" },
-    "هدية الترحيب — أول دخول لك في اللعبة": { en: "Welcome gift — your first time in the game", es: "Regalo de bienvenida — tu primer ingreso al juego", zh: "欢迎礼物—你首次进入游戏" },
-    "استمتع بهذه العملات الذهبية لتبدأ رحلتك": { en: "Enjoy these gold coins to start your journey", es: "Disfruta estas monedas de oro para empezar tu aventura", zh: "使用这些金币开始你的旅程" },
-    "عملة ذهبية": { en: "Gold coin", es: "Moneda de oro", zh: "金币" },
-    "هدية ترحيبية": { en: "Welcome gift", es: "Regalo de bienvenida", zh: "欢迎礼物" },
-    "🎴 استلم هديتك وابدأ اللعب!": { en: "🎴 Claim your gift and start playing!", es: "🎴 ¡Reclama tu regalo y empieza a jugar!", zh: "🎴 领取你的礼物并开始游戏！" },
-    "🏆 المتصدرون": { en: "🏆 Leaderboard", es: "🏆 Clasificación", zh: "🏆 排行榜" },
-    "أفضل اللاعبين عالمياً": { en: "Best players worldwide", es: "Mejores jugadores del mundo", zh: "全球最佳玩家" },
-    "ترتيبك: —": { en: "Your rank: —", es: "Tu posición: —", zh: "你的排名：—" },
-    "🔄 تحديث": { en: "🔄 Refresh", es: "🔄 Actualizar", zh: "🔄 刷新" },
-    "🏆 الكل": { en: "🏆 All", es: "🏆 Todo", zh: "🏆 全部" },
-    "⚔ 1ضد1": { en: "⚔ 1v1", es: "⚔ 1 contra 1", zh: "⚔ 1v1" },
-    "🤝 2ضد2": { en: "🤝 2v2", es: "🤝 2 contra 2", zh: "🤝 2v2" },
-    "🏟 4مست": { en: "🏟 4-player free-for-all", es: "🏟 4 jugadores todos contra todos", zh: "🏟 4 人乱斗" },
-    "🎮 ألعاب": { en: "🎮 Games", es: "🎮 Juegos", zh: "🎮 游戏" },
-    "🧮 إسباني": { en: "🧮 Spanish", es: "🧮 Español", zh: "🧮 西班牙牌" },
-    "⚡ سريع": { en: "⚡ Fast", es: "⚡ Rápido", zh: "⚡ 快速" },
-    "⏳ جاري التحميل...": { en: "⏳ Loading...", es: "⏳ Cargando...", zh: "⏳ 加载中..." },
-    "🌍 دولي": { en: "🌍 Global", es: "🌍 Global", zh: "🌍 全球" },
-    "🇲🇦 وطني": { en: "🇲🇦 Local", es: "🇲🇦 Local", zh: "🇲🇦 本地" },
-    "🏆 انتصار": { en: "🏆 Wins", es: "🏆 Victorias", zh: "🏆 胜场" },
-    "🎴 لعبة": { en: "🎴 Game", es: "🎴 Juego", zh: "🎴 游戏" },
-    "📈 % فوز": { en: "📈 Win %", es: "📈 % de victoria", zh: "📈 胜率" },
-    "💀 خسارة": { en: "💀 Losses", es: "💀 Derrotas", zh: "💀 败场" },
-    "⭐ أعلى نقاط": { en: "⭐ Top score", es: "⭐ Puntuación máxima", zh: "⭐ 最高分" },
-    "🎯 إجمالي": { en: "🎯 Total", es: "🎯 Total", zh: "🎯 总计" },
-    "➕ إضافة صديق": { en: "➕ Add friend", es: "➕ Añadir amigo", zh: "➕ 添加好友" }
-    "روندة": { en: "Ronda" },
-    "واتساب": { en: "WhatsApp" },
-    "تيليغرام": { en: "Telegram" },
-    "فيسبوك": { en: "Facebook" },
-    "تويتر": { en: "Twitter" },
-    "انستغرام": { en: "Instagram" },
-    "إنستغرام": { en: "Instagram" },
-    "قائمة الأصدقاء": { en: "Friends list" },
-    "👥 قائمة الأصدقاء": { en: "👥 Friends list" },
-    "👥 ادعُ صديقاً": { en: "👥 Invite a friend" },
-    "لا يوجد أصدقاء بعد": { en: "No friends yet" },
-    "أضف أصدقاء من داخل المباراة عند الضغط على صورة اللاعب": { en: "Add friends from inside the match by tapping a player photo" },
-    "لا يوجد أصدقاء لدعوتهم": { en: "No friends to invite" },
-    "📤 أو شارك الرمز مباشرة عبر المنصة": { en: "📤 Or share the code directly through the platform" },
-    "📣 شارك التحدي": { en: "📣 Share the challenge" },
-    "ادعُ من قائمة الأصدقاء": { en: "Invite from the friends list" },
-    "دعوة مباشرة بدون رمز": { en: "Direct invite without a code" },
-    "سيتم اختيار خصم بمستواك تلقائياً": { en: "An opponent at your level will be chosen automatically" },
-    "⏱ بعد 20 ثانية:": { en: "⏱ After 20 seconds:" },
-    "يبدأ المنافس تلقائياً": { en: "The opponent starts automatically" },
-    "🔑 أدخل رمز الدعوة": { en: "🔑 Enter invite code" },
-    "أدخل الرمز الذي أرسله لك صديقك": { en: "Enter the code your friend sent you" },
-    "🚀 انضم للغرفة الآن": { en: "🚀 Join the room now" },
-    "👥 1 ضد 1 — مع الأصدقاء": { en: "👥 1 vs 1 — with friends" },
-    "🌍 1 ضد 1 — اتحد العالم": { en: "🌍 1 vs 1 — Unite the world" },
-    "👥 2 ضد 2 — مع الأصدقاء": { en: "👥 2 vs 2 — with friends" },
-    "🤝 اتحد مع صديقك في الفريق": { en: "🤝 Team up with your friend" },
-    "🌍 2 ضد 2 — اتحد العالم": { en: "🌍 2 vs 2 — Unite the world" },
-    "👥 4 مستقلين — مع الأصدقاء": { en: "👥 4 free players — with friends" },
-    "🌍 4 مستقلين — اتحد العالم": { en: "🌍 4 free players — Unite the world" },
-    "الكل ضد الكل — 4 لاعبين": { en: "Free-for-all — 4 players" },
-    "الكل ضد الكل": { en: "Free-for-all" },
-    "كل لاعب يلعب لحسابه — الكل ضد الكل": { en: "Each player plays for themselves — free-for-all" },
-    "تكتمل الطاولة تلقائياً": { en: "The table fills automatically" },
-    "المنافس الافتراضي": { en: "Virtual opponent" },
-    "⚡ المستوى 5/10": { en: "⚡ Level 5/10" },
-    "يلعب بشكل تكتيكي مع بعض الأخطاء": { en: "Plays tactically with a few mistakes" },
-    "🎯 متوسط — يلعب بشكل تكتيكي مع بعض الأخطاء الطبيعية": { en: "🎯 Medium — plays tactically with a few natural mistakes" },
-    "النتيجة النهائية": { en: "Final score" },
-    "ارمِ ورقة: إذا طابقت رقماً على الطاولة، تأخذها.": { en: "Play a card: if it matches a number on the table, you take it." },
-    "التسلسل التلقائي:": { en: "Automatic sequence:" },
-    "تأخذ أيضاً الأرقام الأعلى المتسلسلة بدون انقطاع.": { en: "You also take the higher consecutive numbers without interruption." },
-    "مثال: ارمِ 4 والطاولة [4,5,6,8] → تأخذ 4+5+6 (وتبقى 8)": { en: "Example: play 4 and the table [4,5,6,8] → you take 4+5+6 (and 8 remains)" },
-    "الخصم وضع 6 على الطاولة → أنت رميت 6 = بومبا ⚡": { en: "Opponent played 6 on the table → you played 6 = Bomba ⚡" },
-    "2 لاعبين→ +10 | 3 لاعبين→ +15 | 4 لاعبين→ +20 | ترينغا+روندة→ +النقاط+1": { en: "2 players → +10 | 3 players → +15 | 4 players → +20 | Tringa+Ronda → +points+1" },
-    "1v1: كل ورقة فوق الـ20 = نقطة | 4 مستقلين: كل ورقة فوق الـ10 = نقطة": { en: "1v1: every card above 20 = 1 point | 4 players: every card above 10 = 1 point" },
-    ". تضاف نقاط البومبا والميسا والنداءات.": { en: "Bomba, Mesa, and call points are added." },
-    "1v1: 24 ورقة = +4 | 4 مستقلين: 14 ورقة = +4 | 30 ورقة = +20": { en: "1v1: 24 cards = +4 | 4 players: 14 cards = +4 | 30 cards = +20" },
-    "فهمت! لنلعب 🎴": { en: "Got it! Let’s play 🎴" },
-    "0 فوز": { en: "0 wins" },
-    "اضغط خارج النافذة للإغلاق": { en: "Tap outside the window to close" },
-    "✕ إغلاق": { en: "✕ Close" },
-    "المرحلة:": { en: "Stage:" },
-    "🎲 قرعة البداية": { en: "🎲 Starting draw" },
-    "🃏 اكشف الأوراق": { en: "🃏 Reveal cards" },
-    "🏆 الموزع الأول": { en: "🏆 First dealer" },
-    "تهانيك!": { en: "Congratulations!" },
-    "مكافأة رائعة": { en: "Great reward" },
-    "✓ رائع! استلمت": { en: "✓ Nice! You received it" },
-    "متجر الذهب": { en: "Gold shop" },
-    "رصيدك الحالي:": { en: "Your current balance:" },
-    "تم الشراء بنجاح!": { en: "Purchase successful!" },
-    "تمت إضافة 0 عملة ذهبية": { en: "0 gold coins added" },
-    "رصيدك الجديد:": { en: "Your new balance:" },
-    "🎴 العب الآن!": { en: "🎴 Play now!" },
-    "🔥 عرض اليوم فقط!": { en: "🔥 Today only!" },
-    "الحزمة الاستثنائية": { en: "Special bundle" },
-    "+75% مجاناً": { en: "+75% free" },
-    "8,750 عملة ذهبية": { en: "8,750 gold coins" },
-    "$60 عادةً": { en: "$60 normally" },
-    "🪙 أساسية": { en: "🪙 Basic" },
-    "💎 مميزة": { en: "💎 Premium" },
-    "👑 نخبة": { en: "👑 Elite" },
-    "🎁 حزم": { en: "🎁 Bundles" },
-    "وسيلة الدفع": { en: "Payment method" },
-    "✓ بدون حساب": { en: "✓ No account" },
-    "💳 كيفية الدفع بالبطاقة:": { en: "💳 How to pay by card:" },
-    "اختر الباقة المناسبة": { en: "Choose the right package" },
-    "اضغط زر \"ادفع\" أدناه": { en: "Tap the \"Pay\" button below" },
-    "اختر \"بطاقة ائتمان أو خصم\"": { en: "Choose \"Credit or debit card\"" },
-    "أدخل بيانات البطاقة بأمان": { en: "Enter card details securely" },
-    "🔒 دفع آمن ومشفر — لا نحتفظ ببيانات بطاقتك": { en: "🔒 Secure encrypted payment — we do not store your card data" },
-    "🗓 مكافآت تسجيل الدخول": { en: "🗓 Login rewards" },
-    "من 7 · سلسلتك:": { en: "From 7 · your streak:" },
-    "يوم 🔥": { en: "Day 🔥" },
-    "مكافأة اليوم": { en: "Today’s reward" },
-    "واصل التسجيل لمكافآت أكبر!": { en: "Keep logging in for bigger rewards!" },
-    "🔔 الإشعارات": { en: "🔔 Notifications" },
-    "🗑 مسح الكل": { en: "🗑 Clear all" },
-    "لا توجد إشعارات بعد": { en: "No notifications yet" },
-    "مبروك! ارتقيت للمستوى": { en: "Congrats! You leveled up" },
-    "النجم الصاعد": { en: "Rising star" },
-    "🎴 استمر في اللعب!": { en: "🎴 Keep playing!" },
-    "🎁 كود الهدية": { en: "🎁 Gift code" },
-    "أدخل كود هديتك واستلم مكافأتك الحصرية!": { en: "Enter your gift code and claim your exclusive reward!" },
-    "سلسلة 3 انتصارات! مكافأة: +500 ذهب": { en: "3-win streak! Reward: +500 gold" },
-    "لعبة الملوك الأندلسية": { en: "The Andalusian Kings game" },
-    "رصيدك نفد!": { en: "You are out of balance!" },
-    "لا يكفي رصيدك للمراهنة": { en: "You do not have enough balance to bet" },
-    "شاهد إعلاناً قصيراً لكسب عملات مجاناً": { en: "Watch a short ad to earn free coins" },
-    "🎬 اكسب عملات بمشاهدة إعلان": { en: "🎬 Earn coins by watching an ad" },
-    "+ 100 🪙 عملة ذهبية": { en: "+ 100 🪙 gold coins" },
-    "إعلان قصير • مجاناً تماماً": { en: "Short ad • completely free" },
-    "شاهد": { en: "Watch" },
-    "+ 500 🪙 عملة ذهبية": { en: "+ 500 🪙 gold coins" },
-    "إعلان ثانٍ • مكافأة أكبر": { en: "Second ad • bigger reward" },
-    "+ 1,000 🪙 عملة ذهبية": { en: "+ 1,000 🪙 gold coins" },
-    "إعلان ثالث • أكبر مكافأة": { en: "Third ad • biggest reward" },
-    "شراء عملات من المتجر": { en: "Buy coins from the shop" },
-    "انضم الآن": { en: "Join now" },
-    "صالح 30 دقيقة · لاعبان فقط": { en: "Valid for 30 minutes · 2 players only" },
-    "🔐 رمز غرفتك الخاصة": { en: "🔐 Your private room code" },
-    "🔐 رمز الغرفة — 4 لاعبين": { en: "🔐 Room code — 4 players" },
-    "🔐 رمز الغرفة — 4 مستقلين": { en: "🔐 Room code — 4 free players" },
-    "🔐 رمز الفريق — لشريكك فقط": { en: "🔐 Team code — for your teammate only" },
-    "⏳ في انتظار دخول شريكك بالرمز...": { en: "⏳ Waiting for your teammate to join with the code..." },
-    "بعد دخول شريكك يبدأ البحث عن خصمين": { en: "After your teammate joins, the search for two opponents begins" },
-    "يكتمل الفريق تلقائياً": { en: "The team fills automatically" },
-    "سيتم توزيعكم على فريقين بشكل عادل": { en: "You will be split into two teams fairly" },
-    "أدخل رمز الغرفة أو رمز الفريق": { en: "Enter the room code or team code" },
-    "🚀 انضم الآن": { en: "🚀 Join now" },
-    "🤖 ضد الذكاء الاصطناعي": { en: "🤖 vs AI" },
-    "🎯 تنسيق المباراة": { en: "🎯 Match format" },
-    "ثنائي": { en: "Duo" },
-    "🧠 مستوى الذكاء الاصطناعي": { en: "🧠 AI level" },
-    "🚀 ابدأ المباراة": { en: "🚀 Start the match" },
-    "لعبة مذهلة 🌟": { en: "Amazing game 🌟" },
-    "نقاطي": { en: "My points" },
-    "ترينكه": { en: "Tringa" },
-    "👑 ملك": { en: "👑 King" },
-    "⚖ عقوبة": { en: "⚖ Penalty" },
-    "🔄 مرة ثانية": { en: "🔄 Again" },
-    "🏠 الرئيسية": { en: "🏠 Home" },
-    "🪙 عملة ذهبية": { en: "🪙 gold coin" },
-    "«شريكي في روندة: انضم لفريقي الآن! 🤝🃏 معاً سنهزم العالم — الرمز بانتظارك! ⚔🔥»": { en: "My teammate in Ronda: join my team now! 🤝🃏 Together we will beat the world — the code is waiting for you! ⚔🔥" },
-    "اضغط زر "ادفع" أدناه": { en: "Tap the "Pay" button below" },
-    "اختر "بطاقة ائتمان أو خصم"": { en: "Choose "Credit or debit card"" },
-  };
-  if (exactMap[norm]) {
-    return exactMap[norm][lang] || exactMap[norm].en || text;
-  }
-
-  const phraseMap = {
-    'أنت': _languageWord(lang, 'you'),
-    'خصمك': _languageWord(lang, 'opponent'),
-    'الخصم': _languageWord(lang, 'opponent'),
-    'لاعب': _languageWord(lang, 'player'),
-    'لاعب 2': _languageWord(lang, 'player') + ' 2',
-    'لاعب 3': _languageWord(lang, 'player') + ' 3',
-    'لاعب 4': _languageWord(lang, 'player') + ' 4',
-    'متصل': _languageWord(lang, 'online'),
-    'مباشر': _languageWord(lang, 'live'),
-    'تلقائي': _languageWord(lang, 'auto'),
-    'العب': _languageWord(lang, 'play'),
-    'تلميح': _languageWord(lang, 'hint'),
-    'خروج': _languageWord(lang, 'exit'),
-    'خروج من المباراة': lang === 'es' ? 'Salir de la partida' : (lang === 'zh' ? '退出比赛' : 'Leave match'),
-    'الطاولة': _languageWord(lang, 'table'),
-    'دور': _languageWord(lang, 'turn'),
-    'فوز': _languageWord(lang, 'win'),
-    'فزت!': lang === 'es' ? '¡Ganaste!' : (lang === 'zh' ? '你赢了！' : 'You won!'),
-    'خسارة': _languageWord(lang, 'loss'),
-    'ذهب': _languageWord(lang, 'gold'),
-    'عملة': _languageWord(lang, 'coin'),
-    'عملات': _languageWord(lang, 'coins'),
-    'جاري التحميل...': _languageWord(lang, 'loading'),
-    'جاري الفحص...': _languageWord(lang, 'checking'),
-    'جاري البحث...': _languageWord(lang, 'searching'),
-    'في انتظار لاعبين...': _languageWord(lang, 'waiting_players'),
-    'مكافأة': _languageWord(lang, 'reward'),
-    'اليوم': _languageWord(lang, 'today'),
-    'يومي': _languageWord(lang, 'daily'),
-    'أسبوعي': _languageWord(lang, 'weekly'),
-    'الكل ضد الكل': lang === 'es' ? 'Todos contra todos' : (lang === 'zh' ? '大乱斗' : 'Free-for-all'),
-  };
-  if (phraseMap[text]) return phraseMap[text];
-  if (phraseMap[norm]) return phraseMap[norm];
-
-  const forced = _forceLooseTranslate(text, lang);
-  if (forced !== text) return forced;
-
-  // number/label patterns
-  const simplePatterns = [
-    [/^0\s*فوز$/, '0 ' + _languageWord(lang, 'wins')],
-    [/^(\d+)\s*فوز$/, function(m){ return m[1] + ' ' + _languageWord(lang, 'wins'); }],
-    [/^0\s*مكتسب$/, '0 ' + (lang === 'es' ? 'obtenido' : lang === 'zh' ? '已获得' : 'earned')],
-    [/^(\d+)\s*مكتسب$/, function(m){ return m[1] + ' ' + (lang === 'es' ? 'obtenidos' : lang === 'zh' ? '已获得' : 'earned'); }],
-    [/^0\s*صديق$/, '0 ' + (lang === 'es' ? 'amigos' : lang === 'zh' ? '好友' : 'friends')],
-    [/^(\d+)\s*صديق$/, function(m){ return m[1] + ' ' + (lang === 'es' ? 'amigos' : lang === 'zh' ? '好友' : 'friends'); }],
-    [/^0\/100\s*مكتمل$/, '0/100 ' + (lang === 'es' ? 'completado' : lang === 'zh' ? '完成' : 'completed')],
-    [/^(\d+)\s*ذهبية$/, function(m){ return m[1] + ' ' + (lang === 'es' ? 'gold' : lang === 'zh' ? '金币' : 'gold'); }],
-    [/^(\d+)٪$/, function(){ return norm.replace('٪', '%'); }],
-    [/^توزيعة\s*(\d+)\s*\/\s*(\d+)$/, function(m){ return (lang === 'es' ? 'Reparto ' : lang === 'zh' ? '发牌 ' : 'Deal ') + m[1] + '/' + m[2]; }],
-    [/^محاولة\s*(\d+)\s*\/\s*(\d+)$/, function(m){ return (lang === 'es' ? 'Intento ' : lang === 'zh' ? '尝试 ' : 'Attempt ') + m[1] + '/' + m[2]; }],
-  ];
-  for (const [re, rep] of simplePatterns) {
-    const m = norm.match(re);
-    if (m) return typeof rep === 'function' ? rep(m) : rep;
-  }
-
-  // token-level fallback for mixed strings
-  const tokens = [
-    ["روندة", { en: "Ronda", es: "Ronda", zh: "Ronda" }],
-    ["العربية", { en: "Arabic", es: "Árabe", zh: "阿拉伯语" }],
-    ["اختر", { en: "Choose", es: "Elegir", zh: "选择" }],
-    ["طريقة", { en: "method", es: "método", zh: "方式" }],
-    ["الدخول", { en: "login", es: "inicio", zh: "登录" }],
-    ["تسجيل", { en: "Sign in", es: "Iniciar", zh: "登录" }],
-    ["الحساب", { en: "account", es: "cuenta", zh: "账号" }],
-    ["حسابك", { en: "your account", es: "tu cuenta", zh: "你的账号" }],
-    ["صورة", { en: "photo", es: "foto", zh: "照片" }],
-    ["بيانات", { en: "data", es: "datos", zh: "数据" }],
-    ["أجهزتك", { en: "your devices", es: "tus dispositivos", zh: "你的设备" }],
-    ["أجهزة", { en: "devices", es: "dispositivos", zh: "设备" }],
-    ["حفظ", { en: "save", es: "guardar", zh: "保存" }],
-    ["هدية", { en: "gift", es: "regalo", zh: "礼物" }],
-    ["الترحيب", { en: "welcome", es: "bienvenida", zh: "欢迎" }],
-    ["أول", { en: "first", es: "primer", zh: "首次" }],
-    ["دخول", { en: "entry", es: "ingreso", zh: "进入" }],
-    ["اليوم", { en: "today", es: "hoy", zh: "今天" }],
-    ["الأصدقاء", { en: "friends", es: "amigos", zh: "好友" }],
-    ["أصدقاء", { en: "friends", es: "amigos", zh: "好友" }],
-    ["صديق", { en: "friend", es: "amigo", zh: "好友" }],
-    ["شريكك", { en: "your partner", es: "tu compañero", zh: "你的伙伴" }],
-    ["شريك", { en: "partner", es: "compañero", zh: "伙伴" }],
-    ["فريقك", { en: "your team", es: "tu equipo", zh: "你的团队" }],
-    ["فريق", { en: "team", es: "equipo", zh: "团队" }],
-    ["خصمك", { en: "your opponent", es: "tu rival", zh: "你的对手" }],
-    ["خصومك", { en: "your opponents", es: "tus rivales", zh: "你的对手们" }],
-    ["خصم", { en: "opponent", es: "rival", zh: "对手" }],
-    ["لاعبين", { en: "players", es: "jugadores", zh: "玩家" }],
-    ["لاعب", { en: "player", es: "jugador", zh: "玩家" }],
-    ["لاعب 2", { en: "Player 2", es: "Jugador 2", zh: "玩家 2" }],
-    ["لاعب 3", { en: "Player 3", es: "Jugador 3", zh: "玩家 3" }],
-    ["لاعب 4", { en: "Player 4", es: "Jugador 4", zh: "玩家 4" }],
-    ["متصل", { en: "online", es: "en línea", zh: "在线" }],
-    ["مباشر", { en: "live", es: "en vivo", zh: "实时" }],
-    ["قائمة", { en: "list", es: "lista", zh: "列表" }],
-    ["كاملة", { en: "full", es: "completa", zh: "完整" }],
-    ["تعلم", { en: "Learn", es: "Aprender", zh: "学习" }],
-    ["القواعد", { en: "rules", es: "reglas", zh: "规则" }],
-    ["تحدي", { en: "challenge", es: "desafío", zh: "挑战" }],
-    ["التحدي", { en: "challenge", es: "desafío", zh: "挑战" }],
-    ["التحديات", { en: "challenges", es: "desafíos", zh: "挑战" }],
-    ["الإنجازات", { en: "achievements", es: "logros", zh: "成就" }],
-    ["إحصائيات", { en: "statistics", es: "estadísticas", zh: "统计" }],
-    ["رمز", { en: "code", es: "código", zh: "代码" }],
-    ["دعوة", { en: "invite", es: "invitación", zh: "邀请" }],
-    ["المنصة", { en: "platform", es: "plataforma", zh: "平台" }],
-    ["أيقونة", { en: "icon", es: "icono", zh: "图标" }],
-    ["ينسخ", { en: "copies", es: "copia", zh: "复制" }],
-    ["ينتقل", { en: "opens", es: "abre", zh: "打开" }],
-    ["إليها", { en: "to it", es: "a ella", zh: "到它" }],
-    ["تلقائياً", { en: "automatically", es: "automáticamente", zh: "自动" }],
-    ["الطاولة", { en: "table", es: "mesa", zh: "牌桌" }],
-    ["ورقة", { en: "card", es: "carta", zh: "牌" }],
-    ["أوراق", { en: "cards", es: "cartas", zh: "牌" }],
-    ["الأوراق", { en: "cards", es: "cartas", zh: "牌" }],
-    ["الرهان", { en: "bet", es: "apuesta", zh: "赌注" }],
-    ["النقاط", { en: "points", es: "puntos", zh: "分数" }],
-    ["نقطة", { en: "point", es: "punto", zh: "分" }],
-    ["فوز", { en: "win", es: "victoria", zh: "胜利" }],
-    ["خسارة", { en: "loss", es: "derrota", zh: "失败" }],
-    ["مباراة", { en: "match", es: "partida", zh: "比赛" }],
-    ["مباريات", { en: "matches", es: "partidas", zh: "比赛" }],
-    ["جولة", { en: "round", es: "ronda", zh: "回合" }],
-    ["جولات", { en: "rounds", es: "rondas", zh: "回合" }],
-    ["غرفة", { en: "room", es: "sala", zh: "房间" }],
-    ["النتيجة", { en: "score", es: "resultado", zh: "结果" }],
-    ["الموزع", { en: "dealer", es: "repartidor", zh: "发牌员" }],
-    ["يوزع", { en: "deals", es: "reparte", zh: "发牌" }],
-    ["التوزيع", { en: "deal", es: "reparto", zh: "发牌" }],
-    ["توزيعة", { en: "deal", es: "reparto", zh: "发牌" }],
-    ["بيضة", { en: "egg", es: "huevo", zh: "蛋" }],
-    ["التحميل", { en: "loading", es: "cargando", zh: "加载中" }],
-    ["البحث", { en: "search", es: "búsqueda", zh: "搜索" }],
-    ["خروج", { en: "exit", es: "salir", zh: "退出" }],
-    ["تلميح", { en: "hint", es: "pista", zh: "提示" }],
-    ["العب", { en: "play", es: "jugar", zh: "玩" }],
-    ["ابدأ", { en: "start", es: "comenzar", zh: "开始" }],
-    ["انضم", { en: "join", es: "unirse", zh: "加入" }],
-    ["ادعُ", { en: "invite", es: "invita", zh: "邀请" }],
-    ["شارك", { en: "share", es: "compartir", zh: "分享" }],
-    ["نسخ", { en: "copy", es: "copiar", zh: "复制" }],
-    ["رابط", { en: "link", es: "enlace", zh: "链接" }],
-    ["تحديث", { en: "refresh", es: "actualizar", zh: "刷新" }],
-    ["مستوى", { en: "level", es: "nivel", zh: "等级" }],
-    ["المستوى", { en: "level", es: "nivel", zh: "等级" }],
-    ["الذكاء", { en: "AI", es: "IA", zh: "AI" }],
-    ["الاصطناعي", { en: "artificial", es: "artificial", zh: "人工" }],
-    ["الخاص", { en: "private", es: "privado", zh: "私有" }],
-    ["الخصوصية", { en: "privacy", es: "privacidad", zh: "隐私" }],
-    ["البيانات", { en: "data", es: "datos", zh: "数据" }],
-    ["حذف", { en: "delete", es: "eliminar", zh: "删除" }],
-    ["أفضل", { en: "best", es: "mejores", zh: "最佳" }],
-    ["عالمياً", { en: "worldwide", es: "en el mundo", zh: "全球" }],
-    ["الكل", { en: "all", es: "todo", zh: "全部" }],
-    ["ضد", { en: "vs", es: "contra", zh: "对战" }],
-    ["سريع", { en: "fast", es: "rápido", zh: "快速" }],
-    ["عادي", { en: "common", es: "común", zh: "普通" }],
-    ["نادر", { en: "rare", es: "raro", zh: "稀有" }],
-    ["ملحمي", { en: "epic", es: "épico", zh: "史诗" }],
-    ["مثير", { en: "exciting", es: "emocionante", zh: "刺激" }],
-    ["مكتمل", { en: "completed", es: "completado", zh: "已完成" }],
-    ["مكتسب", { en: "earned", es: "obtenido", zh: "已获得" }],
-    ["عملة", { en: "coin", es: "moneda", zh: "金币" }],
-    ["عملات", { en: "coins", es: "monedas", zh: "金币" }],
-    ["ذهب", { en: "gold", es: "oro", zh: "金币" }],
-    ["ذهبية", { en: "gold", es: "de oro", zh: "金币" }],
-    ["الترحيب", { en: "welcome", es: "bienvenida", zh: "欢迎" }]
-  ];
-  let out = text;
-  for (const [a, packed] of tokens) {
-    const b = packed[lang] || packed.en || a;
-    if (!a) continue;
-    out = out.split(a).join(b);
-  }
-  return out;
-}
-
-function _applyLooseTranslations(lang) {
-  if (lang === 'ar') return;
+function _updateLobbyDynamicTexts(lang) {
+  const T = RONDA_I18N[lang];
+  if (!T) return;
   try {
-    const root = document.body || document.documentElement;
-    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-    let node;
-    while ((node = walker.nextNode())) {
-      const parent = node.parentElement;
-      if (!parent) continue;
-      if (parent.closest('script,style,noscript,[data-i18n],[data-i18n-ph],[data-i18n-default]')) continue;
-      const original = node.nodeValue;
-      if (!original || !/[\u0600-\u06FF]/.test(original)) continue;
-      const translated = _translateLooseTextNode(original, lang);
-      if (translated && translated !== original) node.nodeValue = translated;
-    }
+    var p = {};
+    try { var r = localStorage.getItem('ronda4'); if(r) p = JSON.parse(r); } catch(e) {}
+    var cds = {};
+    try { cds = JSON.parse(localStorage.getItem('ronda_chest_cd_v2') || '{}'); } catch(e) {}
+    var _CD = {gold:3600,gem:7200,royal:21600,mystery:14400,daily:86400,weekly:604800};
+    var now = Date.now();
 
-    document.querySelectorAll('[title],[aria-label],[alt],[placeholder]').forEach(el => {
-      ['title', 'aria-label', 'alt', 'placeholder'].forEach(attr => {
-        if (!el.hasAttribute(attr)) return;
-        if (el.closest('[data-i18n],[data-i18n-ph]')) return;
-        const original = el.getAttribute(attr);
-        if (!original || !/[\u0600-\u06FF]/.test(original)) return;
-        const translated = _translateLooseTextNode(original, lang);
-        if (translated && translated !== original) el.setAttribute(attr, translated);
-      });
-    });
+    // Chests
+    var avail = 0;
+    Object.keys(_CD).forEach(function(t){ var rem = Math.max(0,((cds[t]||0)+_CD[t]*1000)-now); if(rem<=0) avail++; });
+    if((p._chestWins||0) >= 5) avail++;
+    var cs = document.getElementById('lobChestSub');
+    if(cs) cs.textContent = avail > 0 ? T.chests_available(avail) : T.chests_soon;
 
-    if (document.title && /[\u0600-\u06FF]/.test(document.title)) {
-      document.title = _translateLooseTextNode(document.title, lang);
+    // Challenges
+    var claimed = Object.keys(p.claimedChallenges || {}).length;
+    var ce = document.getElementById('lobChallSub');
+    if(ce) ce.textContent = T.challenges_completed(claimed);
+
+    // Achievements
+    var earned = Object.keys(p.earnedAchievements || {}).length;
+    var ae = document.getElementById('lobAchSub');
+    if(ae) ae.textContent = T.achievements_earned(earned);
+
+    // Daily challenge
+    var D = T.daily_challenges;
+    if(D) {
+      var c = D[Math.floor(now/86400000) % D.length];
+      var dcs = {};
+      try { var dcsRaw = JSON.parse(localStorage.getItem('ronda_dc_v2') || '{}'); if(dcsRaw.day === Math.floor(now/86400000)) dcs = dcsRaw; } catch(e) {}
+      var base = (dcs.baseVal != null) ? dcs.baseVal : (p[c.key] || 0);
+      var pct = Math.min(100, Math.round(Math.max(0,(p[c.key]||0)-base)/c.target*100));
+      var te = document.getElementById('dcbTitle');
+      var fe = document.getElementById('dcbFill');
+      var pe = document.getElementById('dcbPct');
+      if(te) te.textContent = c.ic + ' ' + c.name;
+      if(fe) fe.style.width = pct + '%';
+      if(pe) pe.textContent = pct + '%';
     }
-  } catch (e) {}
+  } catch(e) {}
 }
-
 
 /* ── Toggle dropdown ── */
 function toggleLangDrop(dropId) {
@@ -8006,7 +8007,7 @@ document.addEventListener('click', function(e) {
       <div class="tb-l">
         <div class="av" id="myAv" onclick="openM('mProf')">🎭</div>
         <div>
-          <div class="tb-nm" id="myNm">لاعب</div>
+          <div class="tb-nm" id="myNm" data-i18n="player_default">لاعب</div>
           <div style="display:flex;align-items:center;gap:.4rem">
             <div class="tb-lv">⭐ Lv.<span id="myLv">1</span></div>
             <div><div class="xpbar"><div class="xpfill" id="xpf" style="width:0%"></div></div></div>
@@ -8049,7 +8050,7 @@ document.addEventListener('click', function(e) {
           </div>
           <div class="dcb-left">
             <div class="dcb-badge"><span class="dcb-badge-dot"></span><span data-i18n="daily_challenge">تحدي اليوم</span></div>
-            <div class="dcb-title" id="dcbTitle" data-i18n-default="loading">جاري التحميل...</div>
+            <div class="dcb-title" id="dcbTitle" data-i18n="loading">جاري التحميل...</div>
             <div class="dcb-progress-row">
               <div class="dcb-bar"><div class="dcb-fill" id="dcbFill" style="width:0%"></div></div>
               <span class="dcb-pct" id="dcbPct">0٪</span>
@@ -8070,7 +8071,7 @@ document.addEventListener('click', function(e) {
             </div>
             <div class="trio-info">
               <div class="trio-title" data-i18n="chests">الصناديق</div>
-              <div class="trio-sub" id="lobChestSub">جاري الفحص...</div>
+              <div class="trio-sub" id="lobChestSub" data-i18n="checking_label">جاري الفحص...</div>
             </div>
             <div class="trio-badge trio-badge-chest" id="chestAvailBadge" style="display:none">!</div>
           </div>
@@ -8100,7 +8101,7 @@ document.addEventListener('click', function(e) {
               <div class="trio-title" data-i18n="achievements">الإنجازات</div>
               <div class="trio-sub" id="lobAchSub">0 مكتسب</div>
             </div>
-            <div class="trio-badge trio-badge-ach" id="achNewBadge" style="display:none">جديد</div>
+            <div class="trio-badge trio-badge-ach" id="achNewBadge" style="display:none" data-i18n="new_badge">جديد</div>
           </div>
 
         </div>
@@ -8123,17 +8124,27 @@ document.addEventListener('click', function(e) {
           Object.keys(_CD).forEach(function(t){var rem=Math.max(0,((cds[t]||0)+_CD[t]*1000)-now);if(rem<=0)avail++;});
           if((p._chestWins||0)>=5)avail++;
           var cs=document.getElementById('lobChestSub');
-          if(cs)cs.textContent=avail>0?avail+' صندوق متاح 🟢':'قريباً ⏳';
+          var _T=window.RONDA_I18N&&window._currentLang?window.RONDA_I18N[window._currentLang]||window.RONDA_I18N['ar']:null;
+          if(cs){
+            if(_T&&_T.chests_available&&_T.chests_soon) cs.textContent=avail>0?_T.chests_available(avail):_T.chests_soon;
+            else cs.textContent=avail>0?avail+' صندوق متاح 🟢':'قريباً ⏳';
+          }
           // التحديات
           var claimed=Object.keys(p.claimedChallenges||{}).length;
           var ce=document.getElementById('lobChallSub');
-          if(ce)ce.textContent=claimed+' مكتمل';
+          if(ce){
+            if(_T&&_T.challenges_completed) ce.textContent=_T.challenges_completed(claimed);
+            else ce.textContent=claimed+' مكتمل';
+          }
           // الإنجازات
           var earned=Object.keys(p.earnedAchievements||{}).length;
           var ae=document.getElementById('lobAchSub');
-          if(ae)ae.textContent=earned+' مكتسب';
+          if(ae){
+            if(_T&&_T.achievements_earned) ae.textContent=_T.achievements_earned(earned);
+            else ae.textContent=earned+' مكتسب';
+          }
           // تحدي اليوم
-          var D=[
+          var D=_T&&_T.daily_challenges?_T.daily_challenges:[
             {ic:'⚔',key:'games',target:3,name:'اخض 3 مباريات اليوم'},
             {ic:'🏆',key:'wins',target:2,name:'انتصر في مباراتين'},
             {ic:'💥',key:'totalBumbas',target:3,name:'سجّل 3 بومبات'},
@@ -8150,7 +8161,7 @@ document.addEventListener('click', function(e) {
           var te=document.getElementById('dcbTitle'),fe=document.getElementById('dcbFill'),pe=document.getElementById('dcbPct');
           if(te)te.textContent=c.ic+' '+c.name;
           if(fe)fe.style.width=pct+'%';
-          if(pe)pe.textContent=pct+'٪';
+          if(pe)pe.textContent=pct+'%';
         }catch(e){}
       })();
       </script>
@@ -8293,14 +8304,14 @@ document.addEventListener('click', function(e) {
             <div class="royal-crown">👑</div>
             <div class="royal-title" data-i18n="ai_fmt_4p_sub">الكل ضد الكل</div>
             <div class="royal-grid">
-              <div class="rp-slot rp-tl"><div class="rp-glow rp-glow-g"></div><div class="dp-avatar av2-g" style="width:42px;height:42px;font-size:1.1rem">🧑</div><div class="rp-name">أنت</div><div class="rp-score-bar"><div class="rp-fill rp-fill-g" style="width:65%"></div></div></div>
-              <div class="rp-slot rp-tr"><div class="rp-glow rp-glow-r"></div><div class="dp-avatar av2-r" style="width:42px;height:42px;font-size:1.1rem">👤</div><div class="rp-name">لاعب 2</div><div class="rp-score-bar"><div class="rp-fill rp-fill-r" style="width:42%"></div></div></div>
-              <div class="rp-slot rp-bl"><div class="rp-glow rp-glow-b"></div><div class="dp-avatar av2-b" style="width:42px;height:42px;font-size:1.1rem">👤</div><div class="rp-name">لاعب 3</div><div class="rp-score-bar"><div class="rp-fill rp-fill-b" style="width:28%"></div></div></div>
-              <div class="rp-slot rp-br"><div class="rp-glow rp-glow-p"></div><div class="dp-avatar av2-p" style="width:42px;height:42px;font-size:1.1rem">👤</div><div class="rp-name">لاعب 4</div><div class="rp-score-bar"><div class="rp-fill rp-fill-p" style="width:80%"></div></div></div>
+              <div class="rp-slot rp-tl"><div class="rp-glow rp-glow-g"></div><div class="dp-avatar av2-g" style="width:42px;height:42px;font-size:1.1rem">🧑</div><div class="rp-name" data-i18n="my_name_game">أنت</div><div class="rp-score-bar"><div class="rp-fill rp-fill-g" style="width:65%"></div></div></div>
+              <div class="rp-slot rp-tr"><div class="rp-glow rp-glow-r"></div><div class="dp-avatar av2-r" style="width:42px;height:42px;font-size:1.1rem">👤</div><div class="rp-name" data-i18n="player_default2">لاعب 2</div><div class="rp-score-bar"><div class="rp-fill rp-fill-r" style="width:42%"></div></div></div>
+              <div class="rp-slot rp-bl"><div class="rp-glow rp-glow-b"></div><div class="dp-avatar av2-b" style="width:42px;height:42px;font-size:1.1rem">👤</div><div class="rp-name" data-i18n="player_default3">لاعب 3</div><div class="rp-score-bar"><div class="rp-fill rp-fill-b" style="width:28%"></div></div></div>
+              <div class="rp-slot rp-br"><div class="rp-glow rp-glow-p"></div><div class="dp-avatar av2-p" style="width:42px;height:42px;font-size:1.1rem">👤</div><div class="rp-name" data-i18n="player_default4">لاعب 4</div><div class="rp-score-bar"><div class="rp-fill rp-fill-p" style="width:80%"></div></div></div>
             </div>
           </div>
           <div class="gcbody2">
-            <div class="gctrow2"><div class="gctitle2">🏆 4 مستقلين</div><div class="gcbadge2 b4p2">⚡ مثير</div></div>
+            <div class="gctrow2"><div class="gctitle2" data-i18n="v4p_card_title">🏆 4 مستقلين</div><div class="gcbadge2 b4p2" data-i18n="v4p_badge_exciting">⚡ مثير</div></div>
             <div class="gcsub2" data-i18n="v4p_sub">الكل ضد الكل — واحد يخرج بطلاً</div>
             <div class="bet-block" id="bet-block-3">
               <div class="bet-hdr"><span class="bet-coin">🪙</span><span class="bet-ttl" data-i18n="bet">الرهان</span><span class="bet-cur" id="bv3">500 ذهبية</span></div>
@@ -8336,8 +8347,8 @@ document.addEventListener('click', function(e) {
                 <div class="fcs-link">🤝</div>
                 <div class="fcs-av" id="fcsAv3">👤</div>
               </div>
-              <div class="fcs-count" id="fcsCount">0 صديق</div>
-              <div class="fcs-label">قائمة الأصدقاء</div>
+              <div class="fcs-count" id="fcsCount" data-i18n="friends_count_default">0 صديق</div>
+              <div class="fcs-label" data-i18n="friends_list_label">قائمة الأصدقاء</div>
             </div>
           </div>
           <div class="gcbody2">
@@ -10333,7 +10344,7 @@ function restoreGameState(){
         pMode  = rcState.pMode  || '2p';
         if(G.isMP && (rcState.code || room?.code)){
           const code = rcState.code || room.code;
-          toast('🔄 جاري إعادة الاتصال بالمباراة...','net',3000);
+          toast(_i18n('toast_reconnecting'),'net',3000);
           _fbRoomCode = null;
           setupBC(code);
           bcSend({type:'join', player:{id:P.id,name:P.name,av:P.av,photo:_getActivePhoto()}, reconnect:true});
@@ -10362,7 +10373,7 @@ function restoreGameState(){
 
     // [FIX17] إذا كانت مباراة إنترنت، أعد الاتصال بـ Firebase
     if(G.isMP && room?.code){
-      toast('🔄 جاري إعادة الاتصال بالمباراة...','ok');
+      toast(_i18n('toast_reconnecting'),'ok');
       _fbRoomCode = null; // صفّر أولاً قبل setupBC
       setupBC(room.code);
       // إذا كان الخصم يلعب الآن، انتظر رسالته
@@ -11109,7 +11120,7 @@ function login(m){
   P.id   = P.id || uid();
   const isFirst = !P.loggedBefore;
   P.loggedBefore = true;
-  toast(`🎊 أهلاً بك ${P.name}!`, 'ok');
+  toast(_i18n('toast_welcome')(P.name), 'ok');
   saveP(); updateUI();
   if(isFirst){ showGiftOverlay(); }
   else { goLobby(); }
@@ -11123,7 +11134,7 @@ function loginAlias(){
   if(window._fb){ try{ const {db,ref,set}=window._fb; set(ref(db,'online/'+P.id),{name:P.name,ts:Date.now(),v:1}).catch(()=>{}); }catch(e){} }
   P.id=P.id||uid();
   const isFirst=!P.loggedBefore; P.loggedBefore=true;
-  toast(`🎊 أهلاً بك ${P.name}!`,'ok');
+  toast(_i18n('toast_welcome')(P.name),'ok');
   saveP(); updateUI();
   // أنشئ/حدّث ملف المستخدم في Firebase
   setTimeout(()=>{ savePlayerStats(P.id, P.name, P.av, false, null, 0); _lbOnLogin(); }, 2000);
@@ -11150,7 +11161,7 @@ function claimGift(){
   const ov=document.getElementById('giftOverlay');
   if(ov) ov.classList.remove('on');
   saveP(); updateUI();
-  toast('💰 500 عملة ذهبية أضيفت لرصيدك!','gold');
+  toast(_i18n('toast_bonus_gold'),'gold');
   goLobby();
 }
 function profTab(btn, panelId){
@@ -11162,8 +11173,8 @@ function profTab(btn, panelId){
 }
 function copyRefCode(){
   const code=($('refCode')||{}).textContent||'';
-  try{ navigator.clipboard.writeText(code); toast('📋 تم نسخ رمز الإحالة: '+code,'ok',2500); }
-  catch(e){ toast('الرمز: '+code,'ok',4000); }
+  try{ navigator.clipboard.writeText(code); toast(_i18n('toast_ref_code_copied')+code,'ok',2500); }
+  catch(e){ toast(_i18n('toast_ref_code_plain')+code,'ok',4000); }
 }
 function _getRefUrl(){
   const code=($('refCode')||{}).textContent||'RND-XXX';
@@ -11174,8 +11185,8 @@ function copyRefLink(){
   const url=_getRefUrl();
   const code=($('refCode')||{}).textContent||'RND-XXX';
   const msg='🃏 العب روندة الملكية معي واحصل على 2,000 عملة ذهبية هدية!\nرمز الدعوة: '+code+'\n'+url;
-  try{ navigator.clipboard.writeText(msg); toast('🔗 تم نسخ رابط الدعوة! شاركه الآن 🎁','ok',3500); }
-  catch(e){ toast('الرابط: '+url,'ok',5000); }
+  try{ navigator.clipboard.writeText(msg); toast(_i18n('toast_invite_link_copied'),'ok',3500); }
+  catch(e){ toast(_i18n('toast_invite_link_plain')+url,'ok',5000); }
 }
 function shareRef(p){
   const code=($('refCode')||{}).textContent||'RND-XXX';
@@ -11189,7 +11200,7 @@ function shareRef(p){
     tg:'https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent('🃏 العب روندة الملكية معي واحصل على 2000 عملة!'),
   };
   if(urls[p]) window.open(urls[p],'_blank');
-  else { try{ navigator.clipboard.writeText(msg); toast('📋 تم نسخ رسالة الدعوة!','ok'); }catch(e){} }
+  else { try{ navigator.clipboard.writeText(msg); toast(_i18n('toast_invite_msg_copied'),'ok'); }catch(e){} }
 }
 /* ══ رمز الدعوة من شاشة الدخول ══ */
 function applyRefCodeHome(){
@@ -11599,7 +11610,7 @@ async function linkSocialAccount(provider){
           catch{ window.open(oauthData.url, '_blank'); }
         }
       } else {
-        toast('✅ جارٍ الربط بـ Google...','ok');
+        toast(_i18n('toast_google_linking'),'ok');
         if(isNative){
           // appUrlOpen سيتولى الباقي
         }
@@ -11619,17 +11630,17 @@ async function linkSocialAccount(provider){
         catch{ window.open(oauthData.url, '_blank'); }
       }
     }
-  }catch(e){ console.error('[linkSocial]', e); toast('❌ تعذّر الاتصال','err'); }
+  }catch(e){ console.error('[linkSocial]', e); toast(_i18n('toast_connect_fail'),'err'); }
 }
 
 /* ══ FEATURE 4: رفع صورة شخصية ══ */
 function uploadProfilePhoto(input){
   const file=input.files[0];
   if(!file) return;
-  if(file.size>5*1024*1024){ toast('❌ الصورة كبيرة جداً (الحد 5MB)','err'); return; }
+  if(file.size>5*1024*1024){ toast(_i18n('toast_img_too_large'),'err'); return; }
   // تحقق من النوع
-  if(!file.type.startsWith('image/')){ toast('❌ الملف ليس صورة','err'); return; }
-  toast('⏳ جاري تحميل صورتك...','',1500);
+  if(!file.type.startsWith('image/')){ toast(_i18n('toast_not_image'),'err'); return; }
+  toast(_i18n('toast_uploading_photo'),'',1500);
   const reader=new FileReader();
   reader.onload=function(e){
     // ضغط الصورة للعرض الأمثل
@@ -11644,7 +11655,7 @@ function uploadProfilePhoto(input){
       ctx.drawImage(img,0,0,w,h);
       P.customPhoto=canvas.toDataURL('image/jpeg',0.85);
       saveP(); updateUI();
-      toast('✅ تم تحديث صورتك الشخصية بنجاح!','ok',3000);
+      toast(_i18n('toast_photo_updated'),'ok',3000);
       // مزامنة مع Firebase (صامتة)
       if(window._fb){ try{ const {db,ref,update}=window._fb; update(ref(db,'users/'+P.id),{photo:P.customPhoto.slice(0,800)}).catch(()=>{}); }catch(err){} }
     };
@@ -11657,11 +11668,11 @@ function uploadProfilePhoto(input){
 /* ══ FEATURE 1+4: تعديل الاسم ══ */
 function saveNewName(){
   const v=($('editNameInp')||{}).value||'';
-  if(v.trim().length<2){ toast('❌ الاسم قصير جداً','err'); return; }
-  if(v.trim().length>20){ toast('❌ الاسم طويل جداً','err'); return; }
+  if(v.trim().length<2){ toast(_i18n('toast_name_short'),'err'); return; }
+  if(v.trim().length>20){ toast(_i18n('toast_name_long'),'err'); return; }
   P.name=v.trim();
   saveP(); updateUI();
-  toast('✅ تم تحديث اسمك: '+P.name,'ok');
+  toast(_i18n('toast_name_updated')+P.name,'ok');
   if(window._fb){ try{ const {db,ref,update}=window._fb; update(ref(db,'users/'+P.id),{name:P.name}).catch(()=>{}); update(ref(db,'online/'+P.id),{name:P.name}).catch(()=>{}); }catch(e){} }
 }
 
@@ -11673,7 +11684,7 @@ function _processReferral(refCode){
   P.refBy=refCode;
   P.gold=(P.gold||0)+2000;
   saveP(); updateUI();
-  toast('🎉 حصلت على 2,000 🪙 مكافأة الإحالة!','gold',4000);
+  toast(_i18n('toast_referral_reward'),'gold',4000);
   // مكافأة للمُحيل عبر Firebase (صامتة)
   if(window._fb){
     try{
@@ -11763,7 +11774,7 @@ function createRoom(priv){
   // قراءة الرهان من البطاقة المناسبة حسب pMode
   const cardNum = (pMode==='2v2') ? 2 : (pMode==='4p') ? 3 : 1;
   const entry = _betValues[cardNum] || 500;
-  if(P.gold<entry){if(typeof _admobShowLowGold==='function')_admobShowLowGold();else toast('💰 رصيدك لا يكفي للرهان — اختر مبلغاً أقل أو اجمع المزيد!','warn');return;}
+  if(P.gold<entry){if(typeof _admobShowLowGold==='function')_admobShowLowGold();else toast(_i18n('toast_low_gold'),'warn');return;}
   P.gold-=entry; updateUI(); saveP();
   const code=rndCode();
   // ✅ استخدم pMode الحالي لتحديد عدد اللاعبين
@@ -11773,7 +11784,7 @@ function createRoom(priv){
     host:P.name,hostId:P.id,isPrivate:priv,pMode:roomPMode,
     players:[{id:P.id,name:P.name,av:P.av,ready:false}]};
   isHost=true;
-  toast('🏗 جاري بناء الغرفة...','info');
+  toast(_i18n('toast_building_room'),'info');
 
   /* ══ [FIX-NO-FB-ROOM] إنشاء الغرفة بدون Firebase ══
      1) Supabase Presence: تخزين بيانات الغرفة (مجاني)
@@ -11982,7 +11993,7 @@ window.addEventListener('online', ()=>{
 window.addEventListener('offline', ()=>{
   _NET.online = false;
   _setNetUI('off');
-  if(_fbRoomCode) toast('📡 الإنترنت انقطع — البوت يلعب مكانك لحين عودتك','net',4000);
+  if(_fbRoomCode) toast(_i18n('toast_offline_bot'),'net',4000);
   // [LONG-DISC] إذا انقطع أكثر من 3 دقائق أثناء لعبة → اخرج بهدوء
   const _anyOpenLD = (window._AB?.ready)||(window._PN?.ready)||(window._SB?.ready)||(_P2P.ready)||!!_fbRoomCode;
   if(_anyOpenLD && G && G.isMP && !G.over){
@@ -12181,14 +12192,14 @@ function waitFB(cb, n=0, _onTimeout){
   }
   if(n < NET.FB_WAIT_MAX){
     // [FIX-WAITFB] تحذير مبكر عند 5 ثوانٍ (n≈33) — المستخدم يعرف أن هناك تأخيراً
-    if(n === 33) toast('🌐 الاتصال ثقيل — تحلّ بالصبر...','net',4000);
+    if(n === 33) toast(_i18n('toast_conn_heavy'),'net',4000);
     // [FIX-WAITFB] تحذير ثانٍ عند 15 ثانية (n≈100) — اقتراح التحقق من الإنترنت
-    if(n === 100) toast('📶 الإنترنت ضعيف جداً — قرّب من الراوتر','warn',6000);
+    if(n === 100) toast(_i18n('toast_conn_weak'),'warn',6000);
     setTimeout(()=>waitFB(cb, n+1, _onTimeout), 150);
     return;
   }
   // [FIX-WAITFB] استنفاد المحاولات — إشعار واضح + callback اختياري
-  toast('⚠ تعذّر الاتصال بالخادم — تحقق من الإنترنت وأعد المحاولة','warn',7000);
+  toast(_i18n('toast_server_fail'),'warn',7000);
   if(typeof _onTimeout === 'function') _onTimeout();
 }
 
@@ -12314,7 +12325,7 @@ function _rcSuccess(){
     if(G._multi) bcSend({type:'hb', ts:Date.now(), h:_hashState(), bt_return:true});
   }
 
-  toast('✅ عاد الاتصال — اللعبة مستمرة!','ok', 3000);
+  toast(_i18n('toast_reconnected'),'ok', 3000);
   sessionStorage.removeItem('ronda_rc');
 }
 
@@ -12390,7 +12401,7 @@ function _onReconnect(){
     const _anyOpen2 = (window._AB?.ready)||(window._PN?.ready)||(window._SB?.ready)||(_P2P.ready)||!!_fbRoomCode;
     if(!_anyOpen2) return;
     _setNetUI('good');
-    toast('🔄 جاري استعادة الاتصال...','ok',2000);
+    toast(_i18n('toast_restoring_conn'),'ok',2000);
     // [6] Fast-Forward animation — أظهر أن اللعبة "تتسريع" للحظة الراهنة
     _fastForwardAnim();
     if(!isHost && room) bcSend({type:'join', player:{id:P.id, name:P.name, av:P.av, photo:_getActivePhoto()}});
@@ -12900,7 +12911,7 @@ function _doHostFailover(goneId, reason='leave'){
       set(ref(db,'g/'+_fbRoomCode+'/info/hostId'),P.id).catch(()=>{}); }catch(e){}
   }
 
-  toast('👑 أصبحت قائد المباراة — استمر!','gold',4000);
+  toast(_i18n('toast_became_host'),'gold',4000);
   window._lastHostFailTs = now;
   _startHeartbeat();
 
@@ -13213,7 +13224,7 @@ function _p2pSetupConn(conn, roomCode){
               if(!window._pendingStartMsg) return;
               const m = window._pendingStartMsg; window._pendingStartMsg = null;
               if(!m.hands?.[P.id]?.length){
-                toast('⚠ خطأ في استلام الأوراق (P2P) — انضم مجدداً','warn',4000); return;
+                toast(_i18n('toast_cards_error'),'warn',4000); return;
               }
               handleBC(m);
             }, NET.START_TIMEOUT);
@@ -13603,7 +13614,7 @@ function setupBC(code){
     const already = room.players.find(p=>p.id===fp.id);
     if(!already){
       room.players.push({id:fp.id, name:fp.name||'لاعب', av:fp.av||'🎭', ready:true});
-      toast(`🎮 ${fp.name||'لاعب'} دخل الميدان!`,'ok');
+      toast(_i18n('toast_player_joined')(fp.name||_i18n('player_default')),'ok');
       const needed = room.max||2;
       const current = room.players.length;
       const wSt = document.getElementById('wSt');
@@ -13620,7 +13631,7 @@ function setupBC(code){
         if(_sb2){ _sb2.disabled=false; _sb2.style.opacity='1'; _sb2.style.cursor='pointer'; }
         const _st2 = document.getElementById('pm2t-partner-status');
         if(_st2){ _st2.textContent=`✅ ${_pName} انضم! جاري البحث تلقائياً...`; _st2.style.color='var(--g1,#22c486)'; }
-        toast(`🤝 ${_pName} شريكك في الفريق — أبحث عن خصمين!`,'ok',3500);
+        toast(_i18n('toast_partner_found')(_pName),'ok',3500);
         if((window._AB?.ready||window._PN?.ready||window._SB?.ready||_P2P.ready||_fbRoomCode))
           bcSend({type:'pm2t_partner_ok', hostName:P.name, hostAv:P.av});
         setTimeout(()=>{ if(room && room.isPm2t && window._pm2tPartnerReady) startPm2tSearch(); }, 1200);
@@ -13864,7 +13875,7 @@ function setupBC(code){
           window._DEV_MODE && console.log('[SPLITBRAIN] تنازلنا عن المضافية لـ:', msg.hostName);
           isHost = false;
         }
-        if(!isHost) toast(`👑 ${msg.hostName||'لاعب'} يقود المباراة الآن`,'gold',3000);
+        if(!isHost) toast(_i18n('toast_new_host')(msg.hostName||_i18n('player_default')),'gold',3000);
         return;
       }
       // ─ start: انتظر الأوراق الشخصية ─
@@ -13880,7 +13891,7 @@ function setupBC(code){
           if(!window._pendingStartMsg) return;
           const m=window._pendingStartMsg; window._pendingStartMsg=null;
           if(!m.hands?.[P.id]?.length){
-            toast('⚠ خطأ في استلام الأوراق — انضم مجدداً','warn',4000); return;
+            toast(_i18n('toast_cards_error2'),'warn',4000); return;
           }
           handleBC(m);
         }, NET.START_TIMEOUT);
@@ -13961,7 +13972,7 @@ function setupBC(code){
         const _sjp = ()=>{ if(room&&(window._AB?.ready||window._PN?.ready||window._SB?.ready||_P2P.ready||_fbRoomCode)) bcSend({type:'join',player:{id:P.id,name:P.name,av:P.av,photo:_getActivePhoto()}}); };
         setTimeout(_sjp, 600); setTimeout(_sjp, 2500); setTimeout(_sjp, 6000);
         openWait();
-        toast('🤝 انتقلنا للمباراة الكبرى — أنت وشريكك ضد الخصمين!','ok',4000);
+        toast(_i18n('toast_big_match'),'ok',4000);
       }
     });
     window._DEV_MODE && console.log('[RondaNet] ✅ Firebase msgs listener جاهز:', code);
@@ -14126,11 +14137,11 @@ function _qFlush(){
             setTimeout(()=>{ if(G&&G.isMP&&!G.over) _requestResync('q-fail-pts'); }, 500);
           } else if(_t === 'room_state'){
             // غرفة — لا resync لكن أخبر المستخدم إذا في الانتظار
-            if(!G || !G.isMP) toast('🔄 تأخر في الاتصال — نعيد المحاولة','net',3000);
+            if(!G || !G.isMP) toast(_i18n('toast_retry_conn'),'net',3000);
           } else if(_t !== 'qchat' && _t !== 'phase_sync'){
             // [FIX-FALSE-DISC] لا تُظهر toast الانقطاع إذا كان الاتصال شغالاً فعلاً
             if(!navigator.onLine || _NET.quality === 'off'){
-              toast('🔄 اتصال متقطع — نعيد الاتصال...','net',3500);
+              toast(_i18n('toast_retry_conn2'),'net',3500);
             } else {
               // الاتصال موجود لكن Firebase تأخر → أعد المزامنة بصمت
               setTimeout(()=>{ if(G&&G.isMP&&!G.over) _requestResync('q-fail-silent'); }, 600);
@@ -14267,7 +14278,7 @@ function bcSend(msg, onFinalFail){
   // [FIX-BCFAST-FAIL] إذا لا قناة مجانية ولا Firebase → أخبر المستخدم فوراً بدون انتظار 45s
   if(isHP && !_sentByFreeChannel && !window._fb && !_fbRoomCode){
     console.warn('[RondaNet] ⛔ لا قناة متاحة لرسالة حرجة:', msg.type);
-    toast('⚠ لا يوجد اتصال — تحقق من الإنترنت','warn',4000);
+    toast(_i18n('toast_no_internet'),'warn',4000);
     if(typeof onFinalFail === 'function') onFinalFail();
     else setTimeout(()=>{ if(G&&G.isMP&&!G.over) _requestResync('no-channel-fail'); }, 800);
     return;
@@ -14280,7 +14291,7 @@ function bcSend(msg, onFinalFail){
       if(_p){ clearTimeout(_p.timer); _NET.ackPending.delete(full.seq); }
       if(typeof onFinalFail === 'function') onFinalFail();
       else {
-        toast('⚠ تعذّر الإرسال — تحقق من الإنترنت وأعد المحاولة','warn',5000);
+        toast(_i18n('toast_send_fail'),'warn',5000);
         setTimeout(()=>{ if(G&&G.isMP&&!G.over) _requestResync('waitfb-timeout'); },600);
       }
     };
@@ -14446,7 +14457,7 @@ function handleBC(msg){
     const _hName = msg.hostName || 'المضيف';
     const wSt=$('wSt');
     if(wSt) wSt.textContent=`✅ أنت في فريق ${_hName} — جاري البحث عن خصمين تلقائياً...`;
-    toast(`🤝 انضممت لفريق ${_hName} — الحرب تبدأ قريباً!`,'ok',4000);
+    toast(_i18n('toast_joined_team')(_hName),'ok',4000);
     // [FIX-PM2T-ACK] أعد إرسال join كـ تأكيد مزدوج
     setTimeout(()=>{ if(room && (window._AB?.ready||window._PN?.ready||window._SB?.ready||_P2P.ready||_fbRoomCode))
       bcSend({type:'join',player:{id:P.id,name:P.name,av:P.av,photo:_getActivePhoto()}}); }, 600);
@@ -14480,7 +14491,7 @@ function handleBC(msg){
     setTimeout(()=>{ _sjm(); }, _adaptTimeout(4000));
     setTimeout(()=>{ _sjm(); }, _adaptTimeout(9000)); // retry احتياطي
     openWait();
-    toast('🤝 انتقلنا للمباراة الكبرى!','ok',3000);
+    toast(_i18n('toast_big_match2'),'ok',3000);
     return;
   }
 
@@ -14498,7 +14509,7 @@ function handleBC(msg){
       const _joinSocialBot = !!(msg.player?._isSocialBot);
       room.players.push({id:msg.from, name:msg.pname, av:msg.pav||'🎭', photo:_joinPhoto, ready:true,
         isBot:_joinIsBot, _isSocialBot:_joinSocialBot});
-      if(!_joinIsBot) toast(`🎮 ${esc(msg.pname)} دخل الميدان!`,'ok');
+      if(!_joinIsBot) toast(_i18n('toast_player_joined')(esc(msg.pname)),'ok');
     } else {
       // [BUG2-FIX] اللاعب موجود — حدّث بياناته فقط
       alreadyIn.name  = msg.pname || alreadyIn.name;
@@ -14558,7 +14569,7 @@ function handleBC(msg){
       if(_sb){ _sb.disabled=false; _sb.style.opacity='1'; _sb.style.cursor='pointer'; }
       const _st = document.getElementById('pm2t-partner-status');
       if(_st){ _st.textContent=`✅ ${_pName} انضم! جاري البحث تلقائياً...`; _st.style.color='var(--g1,#22c486)'; }
-      toast(`🤝 ${_pName} شريكك في الفريق — أبحث عن خصمين!`,'ok',3500);
+      toast(_i18n('toast_partner_found')(_pName),'ok',3500);
       // أعلم الشريك بتأكيد انضمامه للفريق
       if((window._AB?.ready||window._PN?.ready||window._SB?.ready||_P2P.ready||_fbRoomCode)) bcSend({type:'pm2t_partner_ok', hostName:P.name, hostAv:P.av});
       // ابدأ البحث تلقائياً بعد ثانية واحدة
@@ -14679,7 +14690,7 @@ function handleBC(msg){
       if(mySeatIdx===-1){
         // [FIX16] لم يُعثر على مقعد → أشعر اللاعب وارجع للـ lobby
         console.warn('My seat not found in players:', players, 'myId:', P.id);
-        toast('😕 لم نجد مقعدك — حاول الانضمام مجدداً','warn',4000);
+        toast(_i18n('toast_seat_error'),'warn',4000);
         setTimeout(()=>{ leaveRoom(); }, 2000);
         return;
       }
@@ -15429,7 +15440,7 @@ function handleBC(msg){
     // [FIX-FLAG] أضف صوتي إذا كنت قد ضغطت فعلاً (استخدم Set وليس حالة الزر)
     // الـ Set نفسه هو المرجع الموثوق — إذا P.id موجود فيه فقد صوّت
     _rematchUpdateUI();
-    toast('✋ ' + esc(msg.name||'لاعب') + ' يريد مرة ثانية','info',2000);
+    toast(_i18n('toast_rematch_req')(esc(msg.name||_i18n('player_default'))),'info',2000);
     // المضيف: تحقق إذا اكتملت الأصوات عبر _rematchCheckAndLaunch
     if(isHost) _rematchCheckAndLaunch();
   }
@@ -15453,7 +15464,7 @@ function handleBC(msg){
     G = newG();
     window._rematchLaunching = false;
     openWait();
-    toast('🔄 جميع اللاعبين وافقوا — بدء المباراة!','ok',2500);
+    toast(_i18n('toast_all_agreed'),'ok',2500);
   }
 
   /* ── [REMATCH-CANCEL] أحد اللاعبين ألغى أو انتهى وقته ──────────── */
@@ -15465,7 +15476,7 @@ function handleBC(msg){
     window._rematchBroadcastTimer = null;
     window._rematchLaunching      = false;
     _rematchReset();
-    toast('❌ ' + esc(msg.name||'لاعب') + ' لم يوافق على مرة ثانية','warn',3000);
+    toast(_i18n('toast_rematch_declined')(esc(msg.name||_i18n('player_default'))),'warn',3000);
   }
 
   // ── مزامنة إحصائيات الخصم عند نهاية المباراة ──
@@ -15634,7 +15645,7 @@ function handleBC(msg){
     
     if(dealerIdx === G.mySeat){
       window._DEV_MODE && console.log('⚠️ [DEALER-ALERT] يجب عليك لعب', remainingCards, 'بطاقة(ات) متبقية!');
-      toast('⚠️ لديك بطاقات متبقية - لعب ورقتك!', 'warn', 4000);
+      toast(_i18n('toast_play_your_card'), 'warn', 4000);
       
       // فعّل الزر للعب إذا كان دوره
       if(G.currentSeat === G.mySeat){
@@ -15834,7 +15845,7 @@ function handleBC(msg){
   }
 
   if(msg.type==='leave'){
-    toast(`🚪 ${msg.pname} غادر اللعبة`,'warn');
+    toast(_i18n('toast_player_left')(msg.pname),'warn');
     // ✅ صفّر حضوره حتى لا يُشغّل Failover مجدداً
     if(msg.from) _NET.presence[msg.from]=0; // أسقط من الحضور
     if(G && G.isMP && !G.over){
@@ -15848,7 +15859,7 @@ function handleBC(msg){
             const lp = room.players.find(p=>p.id===msg.from);
             if(lp) lp._left = true;
           }
-          toast(`🚪 ${msg.pname} خرج من المباراة`,'warn',3000);
+          toast(_i18n('toast_player_left')(msg.pname),'warn',3000);
           // ✅ Host Failover — يستخدم _doHostFailover
           if(room && room.hostId === msg.from && !isHost){
             _doHostFailover(msg.from, 'leave');
@@ -15969,7 +15980,7 @@ function renderSeats(){
 function copyCode(){
   if(!room) return;
   navigator.clipboard?.writeText(room.code).catch(()=>{});
-  toast(`📋 تم نسخ الرمز: ${room.code}`,'ok');
+  toast(_i18n('toast_code_copied')(room.code),'ok');
 }
 
 /* ── بناء رسالة الدعوة بالتفاصيل الكاملة ── */
@@ -16074,7 +16085,7 @@ ${info.icon} الوضع: ${info.label}
 
 /* ── مشاركة مع نسخ تلقائي + فتح مباشر ── */
 function doShare7(platform, code, modalId){
-  if(!code || code==='——'){ toast('⚠ لا يوجد رمز بعد','warn'); return; }
+  if(!code || code==='——'){ toast(_i18n('toast_no_code'),'warn'); return; }
 
   const msg      = _buildModalMsg(code, modalId||'pm1f');
   const storeLink = '';  // ← رابط Play Store يُضاف لاحقاً
@@ -16113,7 +16124,7 @@ function doShare7(platform, code, modalId){
       break;
     case 'instagram':
       // إنستغرام لا يدعم مشاركة نص مباشرة — ننسخ ونفتح
-      toast('📋 تم نسخ الدعوة — الصق في قصتك أو رسالة مباشرة! 📸','ok',4000);
+      toast(_i18n('toast_invite_copied_story'),'ok',4000);
       setTimeout(()=>{
         // محاولة فتح إنستغرام الأصلي أولاً
         const igApp = window.open('instagram://','_system');
@@ -16121,11 +16132,11 @@ function doShare7(platform, code, modalId){
       }, 600);
       return;
     default:
-      toast('📋 تم نسخ الدعوة — الصق وأرسل!','ok');
+      toast(_i18n('toast_invite_copied'),'ok');
       return;
   }
 
-  toast('📋 تم نسخ الدعوة وفتح المنصة! 🚀','ok',2500);
+  toast(_i18n('toast_invite_platform'),'ok',2500);
   setTimeout(()=>{
     const w = window.open(url,'_system');
     if(!w) window.open(url,'_blank');
@@ -16134,7 +16145,7 @@ function doShare7(platform, code, modalId){
 
 /* ── مشاركة عبر منصة محددة + نسخ تلقائي ── */
 function shareWaitCode(platform){
-  if(!room || !room.code){ toast('⚠ لا توجد غرفة نشطة','warn'); return; }
+  if(!room || !room.code){ toast(_i18n('toast_no_active_room'),'warn'); return; }
   const msg  = _buildInviteMsg();
   const code = room.code;
   const link = 'https://ronda-e11cd.web.app';
@@ -16164,15 +16175,15 @@ function shareWaitCode(platform){
       break;
     case 'instagram':
       /* Instagram لا يدعم مشاركة نص مباشرة — ننسخ ونفتح التطبيق */
-      toast('📋 تم نسخ الدعوة — الصق في قصتك أو DM في إنستغرام!','ok',3500);
+      toast(_i18n('toast_invite_copied_ig'),'ok',3500);
       setTimeout(()=>window.open('instagram://','_blank'), 800);
       return;
     default:
       navigator.clipboard?.writeText(msg).catch(()=>{});
-      toast(`📋 تم نسخ الدعوة — الصق وأرسل!`,'ok');
+      toast(_i18n('toast_invite_copied'),'ok');
       return;
   }
-  toast('📋 تم نسخ الدعوة وفتح المنصة!','ok',2200);
+  toast(_i18n('toast_invite_platform'),'ok',2200);
   setTimeout(()=>window.open(url,'_system')||window.open(url,'_blank'), 350);
 }
 
@@ -16193,7 +16204,7 @@ function startFromWait(){
   const minPlayers = (room.pMode==='2v2'||room.pMode==='4p') ? 4 : 2;
   if(room.players.length<minPlayers){
     window._startInProgress = false;
-    toast(`👥 تحتاج ${minPlayers} لاعبين — لديك ${room.players.length}/${minPlayers}`,'warn');
+    toast(_i18n('toast_need_players')(minPlayers,room.players.length,minPlayers),'warn');
     return;
   }
 
@@ -16546,7 +16557,7 @@ function startAI(lvl,mode){
 
   // ── الرهان من البطاقة 4 ──
   const betAmt = _betValues[4] || 500;
-  if(P.gold < betAmt){ if(typeof _admobShowLowGold==='function')_admobShowLowGold();else toast('💰 رصيدك لا يكفي للرهان — اختر مبلغاً أقل أو اجمع المزيد!','warn'); window._startAIInProgress=false; return; }
+  if(P.gold < betAmt){ if(typeof _admobShowLowGold==='function')_admobShowLowGold();else toast(_i18n('toast_low_gold'),'warn'); window._startAIInProgress=false; return; }
   P.gold -= betAmt; updateUI(); saveP();
 
   // [FIX-AI-LOTTERY] نضبط isHost=true قبل القرعة حتى يظهر زر "اكشف"
@@ -16596,7 +16607,7 @@ function startMulti(mode,n,isTeam){
   // الرهان: 4p → بطاقة 3، 2v2 → بطاقة 2، 2p → بطاقة 1
   const cardNum = isTeam ? 2 : (n===4 ? 3 : 1);
   const betAmt = _betValues[cardNum] || 500;
-  if(P.gold < betAmt){ if(typeof _admobShowLowGold==='function')_admobShowLowGold();else toast('💰 رصيدك لا يكفي للرهان — اختر مبلغاً أقل أو اجمع المزيد!','warn'); return; }
+  if(P.gold < betAmt){ if(typeof _admobShowLowGold==='function')_admobShowLowGold();else toast(_i18n('toast_low_gold'),'warn'); return; }
   P.gold -= betAmt; updateUI(); saveP();
 
   /* seat0=أنا, seat1=يمين(oppSideLeft في RTL), seat2=أعلى(oppAv), seat3=يسار(oppSideRight في RTL) */
@@ -16927,11 +16938,11 @@ function applyPlayM(seat,card,moveId){
       if(!gStats.seats[seat]) gStats.seats[seat]=_mkSeatStats();
       gStats.seats[seat].kingKK++; // [FIX-KK-DOUBLE] منع finalM من إعطاء +5 مرة ثانية
       if(seat===G.mySeat){
-        fxBoom('bumba','👑 ختم المضمار!');
-        toast('👑 ختمها بالملك — المضمار له! +5 نقاط','gold',3200);
+        fxBoom('bumba','👑 '+_i18n('fxboom_king_close'));
+        toast(_i18n('toast_king_end_me'),'gold',3200);
       } else {
         const _kkTeamTxt = G.pMode==='2v2' ? ' (+5 لفريقه)' : '';
-        toast(`👑 ${dealerNm} ختم بالملك! +5${_kkTeamTxt}`,'gold',3200);
+        toast(_i18n('toast_king_end_opp')(dealerNm)+_kkTeamTxt,'gold',3200);
       }
     }
     // [Q5] لاعب X أكل 12×12 + الموزع لم يأكل أو أكل بـ1 → +10 للاعب X فقط (بدون عقوبة للموزع)
@@ -16943,8 +16954,8 @@ function applyPlayM(seat,card,moveId){
       if(!gStats.seats[seat]) gStats.seats[seat]=_mkSeatStats();
       gStats.seats[seat].penaltyGiven++;
       const preNm = G.seatNames?.[preDealerSeatFinal]||`لاعب${preDealerSeatFinal+1}`;
-      if(preDealerSeatFinal===G.mySeat){ fxBoom('bumba','🎯 ملك الختم!'); toast('🎯 أكلت بالملك قبل الموزع — اللقطة لك! +10','gold',3500); }
-      else { toast(`🎯 ${preNm} اختطف الملك من الموزع! +10`,'gold',3500); }
+      if(preDealerSeatFinal===G.mySeat){ fxBoom('bumba','🎯 '+_i18n('fxboom_king_steal')); toast(_i18n('toast_bumba_pre_me'),'gold',3500); }
+      else { toast(_i18n('toast_bumba_pre_opp')(preNm),'gold',3500); }
     }
     // [Q3] الموزع أكل بورقة 1 → عقوبة +5 (نفس عقوبة عدم الأكل)
     else if(ateWith1){
@@ -17006,7 +17017,7 @@ function applyPlayM(seat,card,moveId){
         if(!G || G.over || !G.isMP || isHost) return;
         if(G.hands && G.hands.every(h=>!h.length)){
           console.warn(`[RondaNet] لم تصل new_round بعد ${t1}ms — req_resync`);
-          toast('🔄 نستعيد اللعبة — لحظة صبر...','net',3000);
+          toast(_i18n('toast_game_restoring'),'net',3000);
           _requestResync('guest-timeout');
           window._guestRoundTimeoutInner = setTimeout(()=>{
             window._guestRoundTimeoutInner = null;
@@ -17017,7 +17028,7 @@ function applyPlayM(seat,card,moveId){
               setTimeout(()=>{
                 if(!G || G.over || !G.isMP) return;
                 if(G.hands && G.hands.every(h=>!h.length)){
-                  toast('🔌 انقطع الاتصال — نعود للبهو','warn',4000);
+                  toast(_i18n('toast_disconnected_lobby'),'warn',4000);
                   setTimeout(()=>leaveRoom(), 2500);
                 }
               }, _adaptTimeout(5000));
@@ -17067,7 +17078,7 @@ function _advTM(){
   // Toast for bots
   if(next!==0 && G.nSeats>2){
     const nm=G.seatNames?.[next]||`لاعب${next+1}`;
-    toast(`▶ دور ${nm}`,'info',850);
+    toast(_i18n('toast_turn')(nm),'info',850);
   }
 
   // Show turn badge
@@ -17380,7 +17391,7 @@ function _finalM(){
         _requestResync('guest-inner-timeout');
         setTimeout(()=>{
           if(!G || G.over || !G.isMP) return;
-          toast('🔌 انقطع الاتصال — نعود للبهو','warn',4000);
+          toast(_i18n('toast_disconnected_lobby'),'warn',4000);
           setTimeout(()=>leaveRoom(), 2500);
         }, _adaptTimeout(5000));
       }, t2);
@@ -17561,7 +17572,7 @@ function doPlay(){
     const _snapTbl   = [...tblBeforeM];
     const _snapPts   = G.points ? [...G.points] : null;
     const _rollbackM = ()=>{
-      toast('↩ انقطع الاتصال — أُعيدت ورقتك إليك','net',3500);
+      toast(_i18n('toast_card_returned'),'net',3500);
       if(_snapHands) G.hands = _snapHands;
       if(_snapPts)   G.points = _snapPts;
       G.tbl = _snapTbl;
@@ -17595,7 +17606,7 @@ function doPlay(){
       const _snapTbl2  = [...tblBefore];
       const _snapMyPts = G.myPts;
       const _rollback2 = ()=>{
-        toast('⚠ انقطع الاتصال — أُعيدت الورقة لك','warn',3500);
+        toast(_i18n('toast_card_returned2'),'warn',3500);
         G.myHand = _snapHand; G.myPts = _snapMyPts; G.tbl = _snapTbl2;
         G.myTurn = true; G.selCard = null;
         renderAll(); $('playBtn').disabled=false;
@@ -17646,7 +17657,7 @@ function handlePhaseSyncMessage(msg){
       updatePhaseIndicator();
       renderGameUI();
       
-      toast('🔄 تم إعادة مزامنة المرحلة','warn',3000);
+      toast(_i18n('toast_phase_sync'),'warn',3000);
     }
   }
 }
@@ -17991,7 +18002,7 @@ function resolveDeclarations(){
       const _tRealSeat = is4 ? winnerSeat : (winnerSeat==='my'?0:1);
       _broadcastDeclResult('tringa', _tRealSeat, tBonus, label);
       if(isMe){ showDecl(`ترينكه! 🔱`,`${label} نقاط`,tBonus); fxBoom('tringa',`🔱 ترينكه!`); }
-      else { const nm=is4?G.seatNames?.[winnerSeat]:'الخصم'; fxBoom('tringa',`🔱 ${nm}`); toast(`⚠ ${nm}: ترينكه! ${label} 🔱`,'warn',3000); }
+      else { const nm=is4?G.seatNames?.[winnerSeat]:_i18n('score_sb_opp'); fxBoom('tringa',`🔱 ${nm}`); toast(`⚠ ${nm}: ترينكه! ${label} 🔱`,'warn',3000); }
     } else {
       // تعادل الترينكه → لا أحد يأخذ شيئاً، الروندا تُلغى أيضاً
       _broadcastDeclResult('tie_tringa', -1, 0, ''); // [FIX-NOTIF]
@@ -18020,7 +18031,7 @@ function resolveDeclarations(){
       const _rRealSeat = is4 ? winnerSeat : (winnerSeat==='my'?0:1);
       _broadcastDeclResult('ronda', _rRealSeat, bonus, `+${bonus}`);
       if(isMe){ showDecl(`روندة! 🎴`, subTxt, bonus); fxBoom('ronda',`🎴 روندة!`); }
-      else { const nm=is4?G.seatNames?.[winnerSeat]:'الخصم'; fxBoom('ronda',`🎴 ${nm}`); toast(`⚠ ${nm}: روندة! +${bonus} 🎴`,'warn',3000); }
+      else { const nm=is4?G.seatNames?.[winnerSeat]:_i18n('score_sb_opp'); fxBoom('ronda',`🎴 ${nm}`); toast(`⚠ ${nm}: روندة! +${bonus} 🎴`,'warn',3000); }
     } else {
       _broadcastDeclResult('tie_ronda', -1, 0, ''); // [FIX-NOTIF]
       showDecl('روندة تعادل 🤝','',0,true);
@@ -18808,9 +18819,9 @@ function applyPlay(who, card, moveId, ptsOverride){
         _sweepTableCards(isMe);
       }
       if(!_skipScore){ // [SCORE-AUTH]
-        if(isMe){G.myPts+=mPts;fxBoom('missa',mTxt);toast(`${mTxt} نقطة`,'ok');}
-        else    {G.oppPts+=mPts;toast(`⚠ الخصم: ${mTxt}`,'warn');}
-      } else if(isMe){fxBoom('missa',mTxt);toast(`${mTxt} نقطة`,'ok');} // بصري فقط
+        if(isMe){G.myPts+=mPts;fxBoom('missa',mTxt);toast(_i18n('toast_missa_me')(mTxt),'ok');}
+        else    {G.oppPts+=mPts;toast(_i18n('toast_missa_opp')(mTxt),'warn');}
+      } else if(isMe){fxBoom('missa',mTxt);toast(_i18n('toast_missa_me')(mTxt),'ok');} // visual only
     }
   } else {
     G.tbl.push(card);
@@ -18842,8 +18853,8 @@ function applyPlay(who, card, moveId, ptsOverride){
       if(ate12_2p){
           const _dlrSeat2p = isMe ? 0 : 1; gStats.seats[_dlrSeat2p].kingKK++;
         if(!_skipScore){
-          if(isMe){ G.myPts+=5; fxBoom('bumba','👑 ختم المضمار!'); toast('👑 ختمت بالملك! +5 نقاط','gold',3200); }
-          else    { G.oppPts+=5; toast(`👑 ${G.oppName} ختم بالملك! +5 له`,'gold',3200); }
+          if(isMe){ G.myPts+=5; fxBoom('bumba','👑 '+_i18n('fxboom_king_close')); toast(_i18n('toast_bumba_king_me'),'gold',3200); }
+          else    { G.oppPts+=5; toast(_i18n('toast_bumba_king_opp')(G.oppName),'gold',3200); }
         }
       }
       // [Q5] لاعب X أكل 12×12 + الموزع لم يأكل أو أكل بـ1 → +10 للاعب X فقط
@@ -18851,8 +18862,8 @@ function applyPlay(who, card, moveId, ptsOverride){
           const _preSeat2p = isMe ? 1 : 0; const _dlrSeat2pQ5 = isMe ? 0 : 1;
           gStats.seats[_preSeat2p].kingPre++; gStats.seats[_dlrSeat2pQ5].penaltyGiven++;
         if(!_skipScore){
-          if(isMe){ G.oppPts+=10; fxBoom('bumba','🎯 ملك الختم!'); showPenalty('أنت — الموزع','الخصم اختطف الملك!',`+10 للخصم`,true); }
-          else    { G.myPts+=10;  fxBoom('bumba','🎯 ملك الختم!'); toast('🎯 اختطفت الملك من الموزع! +10','gold',3500); }
+          if(isMe){ G.oppPts+=10; fxBoom('bumba','🎯 '+_i18n('fxboom_king_steal')); showPenalty('أنت — الموزع','الخصم اختطف الملك!',`+10 للخصم`,true); }
+          else    { G.myPts+=10;  fxBoom('bumba','🎯 '+_i18n('fxboom_king_steal')); toast(_i18n('toast_bumba_pre_steal'),'gold',3500); }
         }
       }
       // [Q3] الموزع أكل بورقة 1 → +5 للخصم (نفس عقوبة عدم الأكل)
@@ -19599,7 +19610,7 @@ function showOppTimer(){
     if(t<=0){
       clearInterval(oppTI);
       if(G && G.isMP && !G.over){
-        toast('⏳ الخصم تأخر — ننتظر قليلاً...','net',3000);
+        toast(_i18n('toast_opp_slow'),'net',3000);
         if(window._oppAbsenceTimeout) clearTimeout(window._oppAbsenceTimeout);
         // مهلة تتكيّف مع جودة الشبكة: 45s جيد / 90s ضعيف / 120s منقطع
         const absenceMs = _adaptTimeout(45000);
@@ -19609,7 +19620,7 @@ function showOppTimer(){
           if(!isHost) _requestResync('give-up-resync');
           setTimeout(()=>{
             if(!G || G.over || !G.isMP) return;
-            toast('🔌 الخصم غاب طويلاً — نعود للبهو','warn',4000);
+            toast(_i18n('toast_opp_gone'),'warn',4000);
             setTimeout(()=>leaveRoom(), 2500);
           }, _adaptTimeout(10000));
         }, absenceMs);
@@ -19685,13 +19696,13 @@ function doHint(){
   const myHnd = G._multi ? (G.hands[G.mySeat]||[]) : G.myHand;
   if(!myHnd.length) return;
   const canPlay = G._multi ? (G.currentSeat===G.mySeat && !G.over) : (G.myTurn && !G.over);
-  if(!canPlay){ toast('⏸ انتظر دورك...','info'); return; }
+  if(!canPlay){ toast(_i18n('toast_wait_turn'),'info'); return; }
   // Check bumba (2p only)
   if(!G._multi){
     for(const c of myHnd){
       if(G.lastTableBy==='opp' && G.lastTableCard?.rank===c.rank &&
          G.tbl.some(t=>cid(t)===cid(G.lastTableCard))){
-        toast(`💡 بومبا! العب ${RNAME[c.rank]} ${SUIT_SYM[c.suit]} ⚡`,'ok');
+        toast(_i18n('toast_hint_bumba')(RNAME[c.rank],SUIT_SYM[c.suit]),'ok');
         G.selCard=c; $('playBtn').disabled=false; renderMyHand(); renderTable(); return;
       }
     }
@@ -19701,11 +19712,11 @@ function doHint(){
   for(const c of myHnd){const e=getEatable(c);if(e.length>be){be=e.length;best=c;}}
   if(best&&be>0){
     const wm=be===G.tbl.length;
-    toast(`💡 العب ${RNAME[best.rank]} ${SUIT_SYM[best.suit]}${wm?' — ميسا 🧹!':`— تأكل ${be}`}`,'ok');
+    toast(_i18n('toast_hint_play')(RNAME[best.rank],SUIT_SYM[best.suit],wm?_i18n('hint_missa'):`${_i18n('hint_eat')} ${be}`),'ok');
     G.selCard=best; $('playBtn').disabled=false;
     if(G._multi) renderAll(); else { renderMyHand(); renderTable(); }
   } else {
-    toast('💡 لا تطابق — ارمِ ورقة على الطاولة','');
+    toast(_i18n('toast_hint_throw'),'');
   }
 }
 
@@ -20223,7 +20234,7 @@ function doRematch(){
         window._rematchVotes.clear();
         // أبلّغ الآخرين بالإلغاء
         bcSend({type:'rematch_cancel', reason:'timeout'});
-        toast('⏰ انتهى الوقت — لم يوافق جميع اللاعبين','warn',3500);
+        toast(_i18n('toast_vote_timeout'),'warn',3500);
         setTimeout(function(){ doBackLobby(); }, 1500);
       }
     }, REMATCH_TIMEOUT);
@@ -20562,20 +20573,20 @@ function init(){
               P.googleId  = _session.user.id;
               P.email     = P.email || _session.user.email || '';
               saveP();
-              toast('✅ تم ربط حساب Google بنجاح','ok');
+              toast(_i18n('toast_google_ok'),'ok');
               goLobby();
             } else {
               await _handleGoogleAuthCallback(_session);
             }
           }
         } else {
-          toast('❌ فشل استكمال تسجيل الدخول بـ Google','err');
+          toast(_i18n('toast_google_fail'),'err');
           go('sHome');
           if(_oBtn){ _oBtn.disabled=false; _oBtn.style.opacity='1'; _oBtn.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> تسجيل الدخول بـ Google'; }
         }
       }catch(e){
         console.error('[Web-OAuth-Init]', e);
-        toast('❌ خطأ في تسجيل الدخول','err');
+        toast(_i18n('toast_login_error'),'err');
         go('sHome');
       }
     })();
@@ -20668,7 +20679,7 @@ function mo2(id){
   // [FIX-BET-FRIENDS] قراءة الرهان من البطاقة المناسبة حسب pMode
   const _mo2CardNum = (cfg.pMode==='2v2') ? 2 : (cfg.pMode==='4p') ? 3 : 1;
   const _mo2Entry   = _betValues[_mo2CardNum] || 500;
-  if(P.gold < _mo2Entry){ if(typeof _admobShowLowGold==='function')_admobShowLowGold();else toast('💰 رصيدك لا يكفي للرهان — اختر مبلغاً أقل أو اجمع المزيد!','warn'); if(el) el.classList.remove('open'); return; }
+  if(P.gold < _mo2Entry){ if(typeof _admobShowLowGold==='function')_admobShowLowGold();else toast(_i18n('toast_low_gold'),'warn'); if(el) el.classList.remove('open'); return; }
   P.gold -= _mo2Entry; updateUI(); saveP();
 
   room = {
@@ -20685,7 +20696,7 @@ function mo2(id){
 
   // ابدأ فوراً
   setupBC(code);
-  toast('🎮 الغرفة جاهزة — شارك الرمز!','ok');
+  toast(_i18n('toast_room_ready'),'ok');
 
   // [FIX-ENTRY-FB] احفظ بيانات الغرفة في Firebase حتى يجدها الضيف عبر المسار الاحتياطي
   const _saveRoomToFb = () => {
@@ -20732,7 +20743,7 @@ function mo2(id){
         if(_sb && _sb.disabled){
           _sb.disabled=false; _sb.style.opacity='1'; _sb.style.cursor='pointer';
           if(_st){ _st.textContent='⏳ شريكك لم يدخل — يمكنك البحث مع بوت'; _st.style.color='var(--warn,#f6a623)'; }
-          toast('💡 يمكنك البدء وسيكون شريكك بوتاً إذا لم يتصل','info',4000);
+          toast(_i18n('toast_bot_hint'),'info',4000);
         }
       }
     }, 45000);
@@ -20817,7 +20828,7 @@ function sd7(v) {
   if(num) num.textContent = v;
   if(sl)  sl.style.setProperty('--pct', pct+'%');
   if(fill) fill.style.width = pct+'%';
-  if(badge) badge.textContent = '⚡ '+_i18n('ai_level_label')+': '+v+'/10';
+  if(badge){ const _aib = (RONDA_I18N[_currentLang]||RONDA_I18N['ar']).ai_level_badge; badge.textContent = typeof _aib==='function' ? _aib(v) : '⚡ '+_i18n('ai_level_label')+': '+v+'/10'; }
   const descs = {
     1:'🐣 مبتدئ — عشوائي تماماً، مثالي للتدريب',
     2:'🌱 ضعيف — أخطاء كثيرة، ممتاز للمبتدئين',
@@ -21834,10 +21845,10 @@ function _stopMM(modalId){
 ══════════════════════════════════════════════════════════════════ */
 function startPm2tSearch(){
   if(!room || !room.isPm2t){
-    toast('⚠ يجب فتح وضع "اتحد مع صديقك" أولاً','warn'); return;
+    toast(_i18n('toast_no_team_mode'),'warn'); return;
   }
   if(!window._fb && !window._SB?.client && !window._AB?.client){
-    toast('📵 لا يوجد إنترنت — تحقق من الاتصال','warn'); return;
+    toast(_i18n('toast_no_internet2'),'warn'); return;
   }
 
   if(window._MMX) window._MMX.stop();
@@ -22143,7 +22154,7 @@ function startPm2tSearch(){
         });
     }catch(e){ console.warn('[pm2t-FB] خطأ:', e); }
   } else if(!window._MMX || (!window._SB?.client && !window._AB?.client)){
-    toast('📵 لا يوجد إنترنت — تحقق من الاتصال','warn');
+    toast(_i18n('toast_no_internet2'),'warn');
     setTimeout(function(){ _buildMatchBots(); }, 2000);
   }
 }
@@ -22178,7 +22189,7 @@ function ss7(tmId, fillId, txId, modalId) {
   const _worldEntry = _betValues[_betCard] || 500;
   if(P.gold < _worldEntry){
     if(typeof _admobShowLowGold==='function') _admobShowLowGold();
-    else toast(`💰 رصيدك لا يكفي للرهان (${_worldEntry.toLocaleString('ar')} ذهبية مطلوبة)`,'warn');
+    else toast(_i18n('toast_low_gold_world')(_worldEntry.toLocaleString()),'warn');
     return;
   }
   P.gold -= _worldEntry; updateUI(); saveP();
@@ -22337,7 +22348,7 @@ function ss7(tmId, fillId, txId, modalId) {
         setupBC(notif.code);
         _sendJoin();
         openWait();
-        toast('🤝 تم الاتصال!','ok',4000);
+        toast(_i18n('toast_connected'),'ok',4000);
         return;
       }
 
@@ -22360,7 +22371,7 @@ function ss7(tmId, fillId, txId, modalId) {
           setupBC(notif.code);
           _sendJoin();
           openWait();
-          toast('🤝 تم الاتصال!','ok',4000);
+          toast(_i18n('toast_connected'),'ok',4000);
         }).catch(function(){ if(++retries<=5) setTimeout(tryGet,1500); });
       }
       tryGet();
@@ -22617,7 +22628,7 @@ function ss7(tmId, fillId, txId, modalId) {
           _notUnsub=onChildAdded(ref(db,'notify/'+P.id),function(snap){ _onNotify(snap.val()); });
         }).catch(function(err){
           console.error('MM push error:', err);
-          toast('⚠ خطأ في الاتصال','warn');
+          toast(_i18n('toast_conn_error'),'warn');
           setTimeout(function(){
             document.getElementById(modalId)?.classList.remove('open');
             _startWorldAI(_worldBotLevel(), gameMode, cfg);
@@ -22640,7 +22651,7 @@ function mc2(id){
     P.gold += window._pendingMMEntry;
     window._pendingMMEntry = 0;
     updateUI(); saveP();
-    toast('💰 تم استرداد الرهان','ok',2000);
+    toast(_i18n('toast_bet_refunded'),'ok',2000);
   }
   /* أوقف Firebase Matchmaking */
   _stopMM(id);
@@ -22657,24 +22668,24 @@ document.querySelectorAll('.mov2').forEach(o=>o.addEventListener('click',e=>{
    4) لا Transaction — المضيف يتحكم في قبول الضيف              */
 var _joinByCodeInProgress = false;
 function joinByCodePlay(id){
-  if(_joinByCodeInProgress){ toast('⏳ الاتصال جارٍ بالفعل...','ok'); return; }
+  if(_joinByCodeInProgress){ toast(_i18n('toast_already_joining'),'ok'); return; }
   const v=document.getElementById(id)?.value.trim().toUpperCase();
-  if(!v||v.length<4){toast('الرجاء إدخال رمز صحيح (4-6 أحرف)','warn');return;}
+  if(!v||v.length<4){toast(_i18n('toast_invalid_code'),'warn');return;}
 
   _joinByCodeInProgress = true;
   const modal=document.getElementById(id)?.closest('.mov2');
   if(modal) modal.classList.remove('open');
-  toast('🔗 جاري الاتصال...','info');
+  toast(_i18n('toast_connecting'),'info');
 
   /* ── دالة الانضمام الفعلي بعد التحقق من بيانات الغرفة ── */
   const _doJoin = (data) => {
-    if(!data){ _joinByCodeInProgress=false; toast('🚫 هذه الغرفة لم تعد موجودة','warn'); return; }
+    if(!data){ _joinByCodeInProgress=false; toast(_i18n('toast_room_gone'),'warn'); return; }
     const _guestEntry = data.entry || 0;
     if(_guestEntry > 0){
       if(P.gold < _guestEntry){
         _joinByCodeInProgress = false;
         if(typeof _admobShowLowGold==='function') _admobShowLowGold();
-        else toast(`💰 رصيدك لا يكفي للرهان (${_guestEntry.toLocaleString('ar')} ذهبية مطلوبة)`,'warn');
+        else toast(_i18n('toast_low_gold_world')(_guestEntry.toLocaleString()),'warn');
         return;
       }
       P.gold -= _guestEntry; updateUI(); saveP();
@@ -22810,7 +22821,7 @@ function joinByCodePlay(id){
                   _resolved = true; _doJoin(_roomData);
                 } else {
                   _joinByCodeInProgress = false;
-                  toast('🚫 الغرفة ممتلئة — جرّب غرفة أخرى','warn');
+                  toast(_i18n('toast_room_full'),'warn');
                   _resolved = true;
                 }
               }
@@ -22841,7 +22852,7 @@ function joinByCodePlay(id){
               _resolved = true; _doJoin(_roomData);
             } else {
               _joinByCodeInProgress = false;
-              toast('🚫 الغرفة ممتلئة','warn');
+              toast(_i18n('toast_room_full2'),'warn');
               _resolved = true;
             }
           }
@@ -22854,15 +22865,15 @@ function joinByCodePlay(id){
 
   /* ── مسار 2: Firebase REST (احتياطي) ── */
   const _tryFbJoin = () => {
-    if(!window._fb){ _joinByCodeInProgress=false; toast('😓 تعذّر الاتصال — تحقق من الإنترنت','warn'); return; }
+    if(!window._fb){ _joinByCodeInProgress=false; toast(_i18n('toast_conn_fail2'),'warn'); return; }
     const {db, ref, get, runTransaction: tx} = window._fb;
     let _joinRetries = 0;
     const _tryJoinFb = () => {
       get(ref(db,'g/'+v+'/info')).then(snap=>{
         const existing = snap.val();
-        if(!existing){ _joinByCodeInProgress=false; toast('🚫 هذه الغرفة لم تعد موجودة','warn'); return; }
+        if(!existing){ _joinByCodeInProgress=false; toast(_i18n('toast_room_gone'),'warn'); return; }
         if((existing.players||[]).length >= (existing.max||2) && !(existing.players||[]).find(p=>p.id===P.id)){
-          _joinByCodeInProgress=false; toast('🚫 الغرفة ممتلئة — جرّب غرفة أخرى','warn'); return;
+          _joinByCodeInProgress=false; toast(_i18n('toast_room_full'),'warn'); return;
         }
         tx(ref(db,'g/'+v+'/info'), (data)=>{
           if(!data) return existing;
@@ -22873,13 +22884,13 @@ function joinByCodePlay(id){
           data.players = players;
           return data;
         }, { applyLocally: false }).then(result=>{
-          if(!result?.committed){ _joinByCodeInProgress=false; toast('🚫 الغرفة ممتلئة — جرّب غرفة أخرى','warn'); return; }
+          if(!result?.committed){ _joinByCodeInProgress=false; toast(_i18n('toast_room_full'),'warn'); return; }
           _doJoin(result?.snapshot?.val() || existing);
         }).catch(e=>{
           if(++_joinRetries<=3) setTimeout(_tryJoinFb, Math.min(1000*_joinRetries,4000));
-          else { _joinByCodeInProgress=false; toast('😓 مشكلة في الاتصال — تحقق من الإنترنت','warn'); }
+          else { _joinByCodeInProgress=false; toast(_i18n('toast_conn_issue'),'warn'); }
         });
-      }).catch(()=>{ _joinByCodeInProgress=false; toast('😓 تعذّر الوصول للغرفة — تحقق من الإنترنت','warn'); });
+      }).catch(()=>{ _joinByCodeInProgress=false; toast(_i18n('toast_room_access'),'warn'); });
     };
     _tryJoinFb();
   };
@@ -24147,7 +24158,7 @@ async function loginGoogle(){
 
     if(error){
       console.error('[GG-Login] OAuth error:', error);
-      toast('❌ خطأ في تسجيل الدخول: ' + error.message, 'err');
+      toast(_i18n('toast_login_err2')(error.message), 'err');
       if(btn){ btn.disabled=false; btn.style.opacity='1'; btn.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> تسجيل الدخول بـ Google'; }
       return;
     }
@@ -24162,7 +24173,7 @@ async function loginGoogle(){
     }
   }catch(e){
     console.error('[GG-Login]', e);
-    toast('❌ تعذّر الاتصال بالخادم', 'err');
+    toast(_i18n('toast_server_err'), 'err');
     const btn = document.getElementById('btnGg');
     if(btn){ btn.disabled=false; btn.style.opacity='1'; }
   }
@@ -24193,7 +24204,7 @@ async function _handleGoogleAuthCallback(session){
     updateUI();
     await _sbSaveProfile();
     _renderProfile();
-    toast('✅ تم تسجيل الدخول بـ Google', 'ok');
+    toast(_i18n('toast_google_ok2'), 'ok');
 
     // انتقل للـ lobby مثل loginAlias
     setTimeout(()=>{ savePlayerStats(P.id, P.name, P.av, false, null, 0); _lbOnLogin(); }, 2000);
@@ -24360,7 +24371,7 @@ console.log('🚀 [RondaNet] Ably + PubNub + Supabase layers initialized');
             const _anyNow = (window._AB?.ready)||(window._PN?.ready)||(window._SB?.ready)||(window._P2P?.ready)||!!window._fbRoomCode;
             if(_anyNow && typeof bcSend==='function'){
               bcSend({type:'join', player:{id:P.id,name:P.name,av:P.av,photo:_getActivePhoto()}, reconnect:true});
-              toast('🔄 تم استعادة الاتصال','ok',2500);
+              toast(_i18n('toast_conn_restored'),'ok',2500);
             }
           }, 1000);
         }
@@ -24390,7 +24401,7 @@ console.log('🚀 [RondaNet] Ably + PubNub + Supabase layers initialized');
             _setAllFbBars('#f59e0b', true, '⚠ قواعد Firebase مغلقة', true);
             setTimeout(() => {
               if (typeof toast === 'function') {
-                toast('⚠ Firebase Rules مغلقة — اللعب الإنترنت لن يعمل. افتح Console (F12) للتفاصيل', 'warn', 8000);
+                toast(_i18n('toast_firebase_rules'), 'warn', 8000);
               }
               console.warn(`
 ╔══════════════════════════════════════════════════════╗
@@ -27962,7 +27973,7 @@ function _shopShowSuccess(pkg){
     // مطر العملات
     _shopCoinRain(success);
   }
-  toast(`🎊 تم شراء ${pkg.coins.toLocaleString('ar')} عملة ذهبية بنجاح!`, 'gold', 4500);
+  toast(_i18n('toast_bought_gold')(pkg.coins.toLocaleString()), 'gold', 4500);
 }
 
 /* ── تأثير مطر العملات ── */
@@ -28555,7 +28566,7 @@ function closeDailyLogin(){
 function collectDailyLogin(){
   const st=_getDLState();
   const today=Math.floor(Date.now()/86400000);
-  if(st.lastDay===today&&st.collected){toast('✅ تم الاستلام اليوم بالفعل!','warn');return;}
+  if(st.lastDay===today&&st.collected){toast(_i18n('toast_daily_collected'),'warn');return;}
   const dayInWeek=(st.loginStreak%7);
   const r=DL_REWARDS[dayInWeek];
   if(r.gold) P.gold=(P.gold||0)+r.gold;
@@ -28744,7 +28755,7 @@ function _addShareResultBtn(won,myPts,oppPts){
   btn.innerHTML='<span>📤</span><span>شارك النتيجة</span>';
   btn.onclick=()=>{
     if(navigator.share){navigator.share({title:'نتيجة روندة',text:txt}).catch(()=>{});}
-    else{navigator.clipboard?.writeText(txt);toast('📋 تم نسخ النتيجة!','ok',2500);}
+    else{navigator.clipboard?.writeText(txt);toast(_i18n('toast_result_copied'),'ok',2500);}
   };
 }
 
@@ -28958,7 +28969,7 @@ function _injectSeasonBar(){
   const bar=document.createElement('div');
   bar.className='season-bar';
   bar.id='seasonBar';
-  bar.onclick=()=>toast('🌟 الموسم جارٍ — العب لتصعد في الترتيب!','ok',3000);
+  bar.onclick=()=>toast(_i18n('toast_season_active'),'ok',3000);
   topPanel.insertBefore(bar,topPanel.firstChild);
   _renderSeasonBar();
 }
@@ -29876,7 +29887,7 @@ function shareAchievement(achName, achIcon){
     navigator.share({title:'إنجاز في روندة!',text:txt}).catch(()=>{});
   } else {
     navigator.clipboard?.writeText(txt);
-    toast('📋 تم نسخ نص المشاركة!','ok',2500);
+    toast(_i18n('toast_share_copied'),'ok',2500);
   }
 }
 
@@ -30043,8 +30054,8 @@ let _inviteRoomCode = null;      // رمز الغرفة عند الدعوة
 // ─── إرسال طلب صداقة ────────────────────────────────────────
 function sendFriendRequest(targetId, targetName, targetAv, targetPhoto, isBot){
   if(!targetId || targetId === P.id) return;
-  if(_isFriend(targetId)){ toast('✅ هذا الشخص صديقك بالفعل','ok'); return; }
-  if(_isPending(targetId)){ toast('⏳ طلب الصداقة مرسل بالفعل','ok'); return; }
+  if(_isFriend(targetId)){ toast(_i18n('toast_already_friend'),'ok'); return; }
+  if(_isPending(targetId)){ toast(_i18n('toast_req_pending'),'ok'); return; }
 
   // أضف للـ pending
   const pending = _getPending().filter(p=>p.id!==targetId);
@@ -30057,7 +30068,7 @@ function sendFriendRequest(targetId, targetName, targetAv, targetPhoto, isBot){
     setTimeout(()=>{
       _onFriendAccepted({ from:targetId, pname:targetName, av:targetAv, photo:targetPhoto, isBot:true });
     }, delay);
-    toast(`📨 طلب صداقة أُرسل إلى ${targetName}`,'ok');
+    toast(_i18n('toast_req_sent')(targetName),'ok');
     _updateStatsAddBtn(targetId);
     return;
   }
@@ -30070,7 +30081,7 @@ function sendFriendRequest(targetId, targetName, targetAv, targetPhoto, isBot){
       from:P.id, fromId:P.id, fromName:P.name, fromAv:P.av, fromPhoto:_getActivePhoto()||null
     });
   }
-  toast(`📨 طلب صداقة أُرسل إلى ${targetName}`,'ok');
+  toast(_i18n('toast_req_sent')(targetName),'ok');
   _updateStatsAddBtn(targetId);
 }
 
@@ -30146,7 +30157,7 @@ function _acceptFriendRequest(fromId, fromName, fromAv, fromPhoto){
   }
   const card = document.getElementById('frndReq_'+fromId);
   if(card) card.remove();
-  toast(`✅ أصبحت أنت و ${fromName} أصدقاء!`,'ok',3000);
+  toast(_i18n('toast_now_friends')(fromName),'ok',3000);
 }
 
 function _rejectFriendRequest(fromId){
@@ -30168,7 +30179,7 @@ function _onFriendAccepted(msg){
   if(_isFriend(fromId)) return;
   _addFriend({ id:fromId, name:fromName, av:fromAv, photo:fromPhoto, isBot });
   _removePending(fromId);
-  toast(`✅ ${fromName} وافق على طلب صداقتك!`,'ok',3000);
+  toast(_i18n('toast_accepted_req')(fromName),'ok',3000);
   _updateStatsAddBtn(fromId);
 }
 
@@ -30305,7 +30316,7 @@ function _isPlayerOnline(pid){
 function openInviteFriends(mode){
   // تحقق أن الغرفة موجودة
   if(!room || !room.code){
-    toast('⚠ يجب فتح الغرفة أولاً قبل الدعوة','warn');
+    toast(_i18n('toast_open_room_first'),'warn');
     return;
   }
   _inviteMode = mode;
@@ -30397,7 +30408,7 @@ function _renderInviteList(container, mode, slots){
 
 // ─── إرسال دعوة للعب ──────────────────────────────────────────
 function sendGameInvite(friendId, btnEl){
-  if(!room || !room.code){ toast('⚠ لا توجد غرفة نشطة','warn'); return; }
+  if(!room || !room.code){ toast(_i18n('toast_no_active_room'),'warn'); return; }
   const friend = _getFriends().find(f=>f.id===friendId);
   if(!friend) return;
 
@@ -30420,7 +30431,7 @@ function sendGameInvite(friendId, btnEl){
     setTimeout(()=>{
       _botJoinRoom(friend, inviteData);
     }, delay);
-    toast(`📨 تمت دعوة ${friend.name}`,'ok');
+    toast(_i18n('toast_invited')(friend.name),'ok');
     return;
   }
 
@@ -30429,7 +30440,7 @@ function sendGameInvite(friendId, btnEl){
     _notifyPlayer(friendId, inviteData);
   }
   if(btnEl){ btnEl.textContent = '⏳ انتظار'; btnEl.className = 'frnd-item-btn btn-pending'; }
-  toast(`📨 دُعي ${friend.name} للانضمام`,'ok');
+  toast(_i18n('toast_invited2')(friend.name),'ok');
 }
 
 // ─── البوت ينضم للغرفة ─────────────────────────────────────────
@@ -30457,7 +30468,7 @@ function _botJoinRoom(botFriend, inviteData){
     if(_sb){ _sb.disabled=false; _sb.style.opacity='1'; _sb.style.cursor='pointer'; }
     const _st = document.getElementById('pm2t-partner-status');
     if(_st){ _st.textContent=`✅ ${botFriend.name} انضم! جاري البحث تلقائياً خلال ثانية...`; _st.style.color='var(--g1,#22c486)'; }
-    toast(`🤝 ${botFriend.name} شريكك في الفريق — أبحث عن خصمين!`,'ok',3500);
+    toast(_i18n('toast_bot_partner')(botFriend.name),'ok',3500);
     setTimeout(()=>{ closeFrndInvite(); }, 400);
     setTimeout(()=>{ if(room && room.isPm2t && window._pm2tPartnerReady) startPm2tSearch(); }, 1000);
     return;
@@ -30475,7 +30486,7 @@ function _botJoinRoom(botFriend, inviteData){
     }catch(e){ console.warn('[BotJoin] handleBC خطأ:', e); }
   }
 
-  toast(`✅ ${botFriend.name} انضم للغرفة`,'ok',2500);
+  toast(_i18n('toast_bot_joined')(botFriend.name),'ok',2500);
 
   // أغلق المودال إذا اكتملت الغرفة
   const needed = room.max || 2;
@@ -30552,7 +30563,7 @@ function _acceptGameInvite(code, pModeVal, modeVal, entry, cardId, maxVal, isPm2
   if(card) card.remove();
   if(entry > 0 && P.gold < entry){
     if(typeof _admobShowLowGold==='function') _admobShowLowGold();
-    else toast(`💰 رصيدك لا يكفي (${entry.toLocaleString('ar')} مطلوبة)`,'warn');
+    else toast(_i18n('toast_low_gold2')(entry.toLocaleString()),'warn');
     return;
   }
   if(entry > 0){ P.gold -= entry; updateUI(); saveP(); }
@@ -30616,7 +30627,7 @@ function _onGameInviteAccepted(msg){
 }
 function _onGameInviteRejected(msg){
   const fromName = msg.fromName || msg.pname || 'الصديق';
-  toast(`❌ ${fromName} رفض الدعوة`,'warn',2500);
+  toast(_i18n('toast_rejected')(fromName),'warn',2500);
 }
 
 // ─── تحديث UI بطاقة الأصدقاء في الكاروسيل ──────────────────
@@ -31047,7 +31058,7 @@ function _registerRewardedListeners(plugin){
     _log('⚠️ Rewarded FailedToLoad:', err);
     const coins = window._pendingRewardCoins || 0;
     _resetRewBtn(coins);
-    if(typeof toast === 'function') toast('⚠️ لم يُحمَّل الإعلان، حاول مرة أخرى','warn');
+    if(typeof toast === 'function') toast(_i18n('toast_ad_fail'),'warn');
     window._pendingRewardCoins = 0;
   });
 
@@ -31080,7 +31091,7 @@ async function _watchRewarded(coins){
     _log('⚠️ Rewarded error:', e);
     window._pendingRewardCoins = 0;
     _resetRewBtn(coins);
-    if(typeof toast === 'function') toast('⚠️ تعذّر تحميل الإعلان، حاول لاحقاً','warn');
+    if(typeof toast === 'function') toast(_i18n('toast_ad_fail2'),'warn');
   }
 }
 
@@ -31097,7 +31108,7 @@ function _grantRewardCoins(coins){
 
   // إشعار جميل
   if(typeof toast === 'function'){
-    toast(`🏆 +${coins.toLocaleString('ar')} عملة ذهبية! 🪙`,'ok');
+    toast(_i18n('toast_gold_earned')(coins.toLocaleString()),'ok');
   }
   _log(`✅ مُنح ${coins} عملة`);
 
