@@ -22,18 +22,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # ── 3. Cache Gradle ─────────────────────────────────
-      - name: Cache Gradle packages
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            gradle-
-
-      # ── 4. إعداد Node.js 24 ─────────────────────────────
+      # ── 3. إعداد Node.js 24 ─────────────────────────────
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -51,16 +40,6 @@ jobs:
       # ── 6. إضافة Android ────────────────────────────────
       - name: Add Android platform
         run: npx cap add android
-
-      # ── 6b. إصلاح Gradle Wrapper (bin بدل all لتجنب 502) ─
-      - name: Fix Gradle wrapper URL
-        run: |
-          PROPS="android/gradle/wrapper/gradle-wrapper.properties"
-          if [ -f "$PROPS" ]; then
-            sed -i 's|-all\.zip|-bin.zip|g' "$PROPS"
-            echo "✓ Gradle wrapper fixed:"
-            grep distributionUrl "$PROPS"
-          fi
 
       # ── 7. مزامنة Capacitor (يضيف AdMob native تلقائياً)
       - name: Capacitor sync
