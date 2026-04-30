@@ -45,23 +45,43 @@ jobs:
       - name: Capacitor sync
         run: npx cap sync android
 
-      # ── 8. ضبط versionCode و versionName تلقائياً ───────
+      # ── 8. ضبط versionCode و versionName و targetSdk تلقائياً ───────
       # versionCode = 100 + رقم الـ run (يتزايد مع كل build تلقائياً)
       # versionName = 1.0.XX — يظهر للمستخدم في المتجر
-      - name: Set versionCode & versionName
+      # targetSdk = 35 — مطلوب من Google Play (آخر متطلبات 2025)
+      - name: Set versionCode, versionName & targetSdk
         run: |
           VERSION_CODE=$((100 + ${{ github.run_number }}))
           VERSION_NAME="1.0.${{ github.run_number }}"
           echo "📦 versionCode = $VERSION_CODE"
           echo "📦 versionName = $VERSION_NAME"
+          echo "🎯 targetSdk  = 35"
 
           BUILD_GRADLE="android/app/build.gradle"
 
           sed -i "s/versionCode .*/versionCode $VERSION_CODE/" "$BUILD_GRADLE"
           sed -i "s/versionName \".*\"/versionName \"$VERSION_NAME\"/" "$BUILD_GRADLE"
+          sed -i "s/targetSdk[[:space:]]*[0-9]*/targetSdk 35/" "$BUILD_GRADLE"
+          sed -i "s/compileSdk[[:space:]]*[0-9]*/compileSdk 35/" "$BUILD_GRADLE"
 
           echo "✓ build.gradle updated:"
-          grep -E "versionCode|versionName" "$BUILD_GRADLE"
+          grep -E "versionCode|versionName|targetSdk|compileSdk" "$BUILD_GRADLE"
+
+      # ── 8b. إضافة ملف ProGuard mapping لتحليل ANR تلقائياً ──────────
+      - name: Enable ProGuard mapping upload
+        run: |
+          BUILD_GRADLE="android/app/build.gradle"
+          # إضافة إعداد minifyEnabled وملف mapping داخل buildTypes > release
+          # فقط إذا لم يكن موجوداً مسبقاً
+          if ! grep -q "minifyEnabled true" "$BUILD_GRADLE"; then
+            sed -i '/buildTypes {/{
+              :loop
+              n
+              /release {/!b loop
+              a\            minifyEnabled true\n            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            }' "$BUILD_GRADLE" || true
+          fi
+          echo "✓ ProGuard configured"
 
       # ── 9. تطبيق الـ patches ─────────────────────────────
       - name: Apply Android patches (safe)
@@ -76,6 +96,11 @@ jobs:
 
           cp android-patches/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
           echo "✓ AndroidManifest.xml replaced from android-patches"
+
+          if [ -f android-patches/proguard-rules.pro ]; then
+            cp android-patches/proguard-rules.pro android/app/proguard-rules.pro
+            echo "✓ proguard-rules.pro copied"
+          fi
 
           echo "=== Manifest final check ==="
           grep -E "APPLICATION_ID|AD_ID|VIBRATE|networkSecurity|rondatahiro|scheme" android/app/src/main/AndroidManifest.xml || true
