@@ -31,7 +31,7 @@ jobs:
 
       # ── 4. تثبيت المكتبات (بما فيها admob) ──────────────
       - name: Install dependencies
-        run: npm install --ignore-scripts
+        run: npm install --ignore-scripts --legacy-peer-deps
 
       # ── 5. تثبيت Capacitor CLI ──────────────────────────
       - name: Install Capacitor CLI
