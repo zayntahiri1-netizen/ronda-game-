@@ -44,15 +44,6 @@ step "تثبيت المكتبات..."
 npm install
 ok "تم تثبيت المكتبات"
 
-# ── Google Auth Plugin ──────────────────────────────────────────
-step "تثبيت Google Auth Native Plugin..."
-if ! grep -q "capacitor-google-auth" node_modules/.package-lock.json 2>/dev/null; then
-  npm install @codetrix-studio/capacitor-google-auth
-  ok "تم تثبيت capacitor-google-auth"
-else
-  ok "capacitor-google-auth مثبت بالفعل"
-fi
-
 # ── Add PWA to index.html ──────────────────────────────────────
 step "إضافة PWA إلى index.html..."
 
@@ -115,39 +106,6 @@ if [ ! -d "android" ]; then
   ok "تمت إضافة Android"
 else
   ok "Android موجود بالفعل"
-fi
-
-# ── Patch MainActivity for GoogleAuth ─────────────────────────
-step "تسجيل Google Auth Plugin في MainActivity..."
-MAIN_ACTIVITY="android/app/src/main/java/com/rondatahiro/myapp/MainActivity.java"
-if [ -f "$MAIN_ACTIVITY" ]; then
-  if ! grep -q "GoogleAuth" "$MAIN_ACTIVITY"; then
-    sed -i 's/import com.getcapacitor.BridgeActivity;/import com.getcapacitor.BridgeActivity;\nimport co.median.android.googlesignin.GoogleAuth;/' "$MAIN_ACTIVITY" 2>/dev/null || true
-  fi
-  ok "MainActivity محدث"
-fi
-
-# ── Copy google-services.json ──────────────────────────────────
-step "نسخ google-services.json..."
-if [ -f "android-patches/google-services.json" ]; then
-  cp android-patches/google-services.json android/app/google-services.json
-  ok "google-services.json → android/app/"
-else
-  warn "android-patches/google-services.json غير موجود - Firebase لن يعمل"
-fi
-
-# ── Add google-services plugin to build.gradle ─────────────────
-ROOT_GRADLE="android/build.gradle"
-if [ -f "$ROOT_GRADLE" ] && ! grep -q "google-services" "$ROOT_GRADLE"; then
-  sed -i "s|dependencies {|dependencies {\n        classpath 'com.google.gms:google-services:4.4.2'|" "$ROOT_GRADLE" 2>/dev/null || true
-  ok "google-services classpath مضاف إلى build.gradle"
-fi
-
-APP_GRADLE="android/app/build.gradle"
-if [ -f "$APP_GRADLE" ] && ! grep -q "com.google.gms.google-services" "$APP_GRADLE"; then
-  echo "" >> "$APP_GRADLE"
-  echo "apply plugin: 'com.google.gms.google-services'" >> "$APP_GRADLE"
-  ok "google-services plugin مفعّل في app/build.gradle"
 fi
 
 # ── Patch AndroidManifest.xml ──────────────────────────────────

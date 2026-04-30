@@ -57,14 +57,6 @@
       "initializeForTesting": false,
       "tagForChildDirectedTreatment": false,
       "tagForUnderAgeOfConsent": false
-    },
-    "GoogleAuth": {
-      "scopes": [
-        "profile",
-        "email"
-      ],
-      "serverClientId": "148371997868-gvsijdbmh314orojqdh929nh44bjkm32.apps.googleusercontent.com",
-      "forceCodeForRefreshToken": true
     }
   }
 }
