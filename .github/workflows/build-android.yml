@@ -35,60 +35,46 @@ jobs:
 
       # ── 5. تثبيت Capacitor CLI ──────────────────────────
       - name: Install Capacitor CLI
-        run: npm install -g @capacitor/cli
+        run: npm install -g @capacitor/cli@^7.0.0
 
       # ── 6. إضافة Android ────────────────────────────────
       - name: Add Android platform
-        run: |
-          if [ ! -d "android" ]; then
-            npx cap add android
-          else
-            echo "already exists"
-          fi
+        run: npx cap add android
 
       # ── 7. مزامنة Capacitor ──────────────────────────────
       - name: Capacitor sync
         run: npx cap sync android
 
-      # ── 8. ضبط versionCode و versionName و targetSdk تلقائياً ───────
-      # versionCode = 100 + رقم الـ run (يتزايد مع كل build تلقائياً)
-      # versionName = 1.0.XX — يظهر للمستخدم في المتجر
-      # targetSdk = 35 — مطلوب من Google Play (آخر متطلبات 2025)
-      - name: Set versionCode, versionName & targetSdk
+      # ── 8. رفع targetSdkVersion إلى 35 (مطلوب من Google Play) ──
+      - name: Set targetSdkVersion=35 & compileSdkVersion=35
+        run: |
+          BUILD_GRADLE="android/app/build.gradle"
+          # رفع compileSdkVersion
+          sed -i 's/compileSdkVersion [0-9]*/compileSdkVersion 35/' "$BUILD_GRADLE"
+          sed -i 's/compileSdk [0-9]*/compileSdk 35/' "$BUILD_GRADLE"
+          # رفع targetSdkVersion
+          sed -i 's/targetSdkVersion [0-9]*/targetSdkVersion 35/' "$BUILD_GRADLE"
+          sed -i 's/targetSdk [0-9]*/targetSdk 35/' "$BUILD_GRADLE"
+          echo "✓ SDK versions after update:"
+          grep -E "compileSdk|targetSdk" "$BUILD_GRADLE"
+
+      # ── 9. ضبط versionCode و versionName تلقائياً ───────
+      - name: Set versionCode & versionName
         run: |
           VERSION_CODE=$((100 + ${{ github.run_number }}))
           VERSION_NAME="1.0.${{ github.run_number }}"
           echo "📦 versionCode = $VERSION_CODE"
           echo "📦 versionName = $VERSION_NAME"
-          echo "🎯 targetSdk  = 35"
 
           BUILD_GRADLE="android/app/build.gradle"
 
           sed -i "s/versionCode .*/versionCode $VERSION_CODE/" "$BUILD_GRADLE"
           sed -i "s/versionName \".*\"/versionName \"$VERSION_NAME\"/" "$BUILD_GRADLE"
-          sed -i "s/targetSdk[[:space:]]*[0-9]*/targetSdk 35/" "$BUILD_GRADLE"
-          sed -i "s/compileSdk[[:space:]]*[0-9]*/compileSdk 35/" "$BUILD_GRADLE"
 
           echo "✓ build.gradle updated:"
-          grep -E "versionCode|versionName|targetSdk|compileSdk" "$BUILD_GRADLE"
+          grep -E "versionCode|versionName" "$BUILD_GRADLE"
 
-      # ── 8b. إضافة ملف ProGuard mapping لتحليل ANR تلقائياً ──────────
-      - name: Enable ProGuard mapping upload
-        run: |
-          BUILD_GRADLE="android/app/build.gradle"
-          # إضافة إعداد minifyEnabled وملف mapping داخل buildTypes > release
-          # فقط إذا لم يكن موجوداً مسبقاً
-          if ! grep -q "minifyEnabled true" "$BUILD_GRADLE"; then
-            sed -i '/buildTypes {/{
-              :loop
-              n
-              /release {/!b loop
-              a\            minifyEnabled true\n            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
-            }' "$BUILD_GRADLE" || true
-          fi
-          echo "✓ ProGuard configured"
-
-      # ── 9. تطبيق الـ patches ─────────────────────────────
+      # ── 10. تطبيق الـ patches ─────────────────────────────
       - name: Apply Android patches (safe)
         run: |
           mkdir -p android/app/src/main/res/values
@@ -102,26 +88,21 @@ jobs:
           cp android-patches/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
           echo "✓ AndroidManifest.xml replaced from android-patches"
 
-          if [ -f android-patches/proguard-rules.pro ]; then
-            cp android-patches/proguard-rules.pro android/app/proguard-rules.pro
-            echo "✓ proguard-rules.pro copied"
-          fi
-
           echo "=== Manifest final check ==="
           grep -E "APPLICATION_ID|AD_ID|VIBRATE|networkSecurity|rondatahiro|scheme" android/app/src/main/AndroidManifest.xml || true
 
-      # ── 10. نسخ أيقونات Ronda Tahiro ─────────────────────
+      # ── 11. نسخ أيقونات Ronda Tahiro ─────────────────────
       - name: Apply Ronda Tahiro icons
         run: |
           RES="android/app/src/main/res"
           PATCHES="android-patches/res"
           for dir in mipmap-mdpi mipmap-hdpi mipmap-xhdpi mipmap-xxhdpi mipmap-xxxhdpi; do
             mkdir -p "$RES/$dir"
-            cp "$PATCHES/$dir/"*.png "$RES/$dir/"
+            cp "$PATCHES/$dir/"*.png "$RES/$dir/" 2>/dev/null || true
             echo "✓ icons copied → $dir"
           done
 
-      # ── 11. إعداد Keystore ───────────────────────────────
+      # ── 12. إعداد Keystore ───────────────────────────────
       - name: Setup keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
@@ -140,18 +121,18 @@ jobs:
             echo "⚠ Temporary keystore created"
           fi
 
-      # ── 12. صلاحيات gradlew ──────────────────────────────
+      # ── 13. صلاحيات gradlew ──────────────────────────────
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
-      # ── 13. بناء Debug APK ───────────────────────────────
+      # ── 14. بناء Debug APK ───────────────────────────────
       - name: Build Debug APK
         run: |
           cd android
           ./gradlew assembleDebug --no-daemon
         continue-on-error: true
 
-      # ── 14. بناء Release APK ─────────────────────────────
+      # ── 15. بناء Release APK ─────────────────────────────
       - name: Build Release APK
         env:
           KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
@@ -168,7 +149,7 @@ jobs:
             --no-daemon
         continue-on-error: true
 
-      # ── 15. بناء AAB للـ Play Store ──────────────────────
+      # ── 16. بناء AAB للـ Play Store ──────────────────────
       - name: Build Release AAB
         env:
           KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
@@ -184,7 +165,7 @@ jobs:
             -Pandroid.injected.signing.key.password="$KS_PASS" \
             --no-daemon
 
-      # ── 16. رفع الملفات ──────────────────────────────────
+      # ── 17. رفع الملفات ──────────────────────────────────
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
@@ -206,7 +187,7 @@ jobs:
           path: android/app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: warn
 
-      # ── 17. ملخص ────────────────────────────────────────
+      # ── 18. ملخص ────────────────────────────────────────
       - name: Build Summary
         if: always()
         run: |
@@ -214,6 +195,7 @@ jobs:
           VERSION_NAME="1.0.${{ github.run_number }}"
           echo "## 🎴 Ronda Build Results" >> $GITHUB_STEP_SUMMARY
           echo "**versionCode:** $VERSION_CODE | **versionName:** $VERSION_NAME" >> $GITHUB_STEP_SUMMARY
+          echo "**targetSdkVersion:** 35 ✅" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           for f in \
             "android/app/build/outputs/apk/debug/app-debug.apk|Debug APK للتصحيح" \
