@@ -129,8 +129,14 @@ BUILD_GRADLE="android/app/build.gradle"
 
 # Update minSdk if needed
 sed -i 's/minSdkVersion [0-9]*/minSdkVersion 22/g'    "$BUILD_GRADLE" 2>/dev/null || true
-sed -i 's/targetSdkVersion [0-9]*/targetSdkVersion 34/g' "$BUILD_GRADLE" 2>/dev/null || true
-sed -i 's/compileSdkVersion [0-9]*/compileSdkVersion 34/g' "$BUILD_GRADLE" 2>/dev/null || true
+sed -i 's/targetSdkVersion [0-9]*/targetSdkVersion 35/g' "$BUILD_GRADLE" 2>/dev/null || true
+sed -i 's/compileSdkVersion [0-9]*/compileSdkVersion 35/g' "$BUILD_GRADLE" 2>/dev/null || true
+
+# patch variables.gradle (Capacitor 6 يخزن القيم هنا)
+if [ -f "android/variables.gradle" ]; then
+  sed -i 's/targetSdkVersion = [0-9]*/targetSdkVersion = 35/' android/variables.gradle
+  sed -i 's/compileSdkVersion = [0-9]*/compileSdkVersion = 35/' android/variables.gradle
+fi
 
 # Add signing config if keystore exists
 if [ -f "release-keystore.jks" ]; then
