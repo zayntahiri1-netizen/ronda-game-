@@ -22,111 +22,94 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # ── 3. إعداد Node.js 24 ─────────────────────────────
+      # ── 3. إعداد Node.js 20 ─────────────────────────────
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '20'
           cache: 'npm'
 
       # ── 4. تثبيت المكتبات ────────────────────────────────
       - name: Install dependencies
-        run: npm install --ignore-scripts --legacy-peer-deps
+        run: npm install --legacy-peer-deps
 
-      # ── 5. تثبيت Capacitor CLI ──────────────────────────
-      - name: Install Capacitor CLI
-        run: npm install -g @capacitor/cli@^7.0.0
-
-      # ── 6. إضافة Android ────────────────────────────────
-      - name: Add Android platform
+      # ── 5. إضافة Android ومزامنة ─────────────────────────
+      - name: Add & Sync Android
         run: |
           rm -rf android
           npx cap add android
+          npx cap sync android
 
-      # ── 7. مزامنة Capacitor ──────────────────────────────
-      - name: Capacitor sync
-        run: npx cap sync android
-
-      # ── 7b. تشخيص: عرض بنية build.gradle و variables.gradle ─
-      - name: Inspect Gradle files
+      # ── 6. فحص بنية Gradle (تشخيص) ──────────────────────
+      - name: Inspect Gradle structure
         run: |
-          echo "=== android/variables.gradle ==="
-          cat android/variables.gradle 2>/dev/null || echo "NOT FOUND"
-          echo ""
-          echo "=== android/app/build.gradle (first 30 lines) ==="
-          head -30 android/app/build.gradle 2>/dev/null || echo "NOT FOUND"
-          echo ""
-          echo "=== android/build.gradle (first 20 lines) ==="
-          head -20 android/build.gradle 2>/dev/null || echo "NOT FOUND"
+          echo "=== files in android/ ===" && ls android/
+          echo "=== variables.gradle ===" && cat android/variables.gradle 2>/dev/null || echo "NOT FOUND"
+          echo "=== build.gradle (first 40) ===" && head -40 android/app/build.gradle 2>/dev/null || echo "NOT FOUND"
+          echo "=== build.gradle.kts (first 40) ===" && head -40 android/app/build.gradle.kts 2>/dev/null || echo "NOT FOUND"
+          echo "=== settings.gradle ===" && head -10 android/settings.gradle 2>/dev/null || echo "NOT FOUND"
 
-      # ── 8. رفع targetSdkVersion إلى 35 (مطلوب من Google Play) ──
-      - name: Set targetSdkVersion=35 & compileSdkVersion=35
+      # ── 7. ضبط SDK 35 + versionCode + versionName ───────
+      - name: Configure build versions
         run: |
-          # Capacitor 7 يستخدم variables.gradle للتحكم في SDK versions
-          VARS="android/variables.gradle"
-          if [ -f "$VARS" ]; then
-            sed -i "s/minSdkVersion = .*/minSdkVersion = 22/" "$VARS"
-            sed -i "s/compileSdkVersion = .*/compileSdkVersion = 35/" "$VARS"
-            sed -i "s/targetSdkVersion = .*/targetSdkVersion = 35/" "$VARS"
-            echo "✓ variables.gradle updated:"
-            cat "$VARS"
-          else
-            echo "⚠ variables.gradle not found, trying build.gradle directly"
-            BUILD_GRADLE="android/app/build.gradle"
-            # طباعة السطور الأولى للتشخيص
-            head -20 "$BUILD_GRADLE"
-            # تعديل آمن — فقط داخل android {} block
-            sed -i '/compileSdkVersion\s*[0-9]/s/[0-9]\+/35/' "$BUILD_GRADLE"
-            sed -i '/targetSdkVersion\s*[0-9]/s/[0-9]\+/35/' "$BUILD_GRADLE"
-            sed -i '/compileSdk\s*[0-9]/s/[0-9]\+/35/' "$BUILD_GRADLE"
-            sed -i '/targetSdk\s*[0-9]/s/[0-9]\+/35/' "$BUILD_GRADLE"
+          VC=$((100 + ${{ github.run_number }}))
+          VN="1.0.${{ github.run_number }}"
+          echo "versionCode=$VC versionName=$VN"
+
+          # variables.gradle
+          if [ -f "android/variables.gradle" ]; then
+            sed -i "s/compileSdkVersion = [0-9]*/compileSdkVersion = 35/" android/variables.gradle
+            sed -i "s/targetSdkVersion = [0-9]*/targetSdkVersion = 35/"   android/variables.gradle
+            echo "✓ variables.gradle:"; cat android/variables.gradle
           fi
 
-      # ── 9. ضبط versionCode و versionName تلقائياً ───────
-      - name: Set versionCode & versionName
-        run: |
-          VERSION_CODE=$((100 + ${{ github.run_number }}))
-          VERSION_NAME="1.0.${{ github.run_number }}"
-          echo "📦 versionCode = $VERSION_CODE"
-          echo "📦 versionName = $VERSION_NAME"
+          # build.gradle Groovy
+          if [ -f "android/app/build.gradle" ]; then
+            F="android/app/build.gradle"
+            sed -i "s/compileSdkVersion [0-9]*/compileSdkVersion 35/" "$F"
+            sed -i "s/compileSdk [0-9]*/compileSdk 35/"               "$F"
+            sed -i "s/targetSdkVersion [0-9]*/targetSdkVersion 35/"   "$F"
+            sed -i "s/targetSdk [0-9]*/targetSdk 35/"                 "$F"
+            sed -i "s/versionCode [0-9]*/versionCode $VC/"            "$F"
+            sed -i "s/versionName \"[^\"]*\"/versionName \"$VN\"/"    "$F"
+            echo "✓ build.gradle patched"
+            grep -E "compileSdk|targetSdk|versionCode|versionName" "$F"
+          fi
 
-          BUILD_GRADLE="android/app/build.gradle"
+          # build.gradle.kts Kotlin DSL
+          if [ -f "android/app/build.gradle.kts" ]; then
+            F="android/app/build.gradle.kts"
+            sed -i "s/compileSdk = [0-9]*/compileSdk = 35/"           "$F"
+            sed -i "s/targetSdk = [0-9]*/targetSdk = 35/"             "$F"
+            sed -i "s/versionCode = [0-9]*/versionCode = $VC/"        "$F"
+            sed -i "s/versionName = \"[^\"]*\"/versionName = \"$VN\"/" "$F"
+            echo "✓ build.gradle.kts patched"
+            grep -E "compileSdk|targetSdk|versionCode|versionName" "$F"
+          fi
 
-          sed -i "s/versionCode .*/versionCode $VERSION_CODE/" "$BUILD_GRADLE"
-          sed -i "s/versionName \".*\"/versionName \"$VERSION_NAME\"/" "$BUILD_GRADLE"
-
-          echo "✓ build.gradle updated:"
-          grep -E "versionCode|versionName" "$BUILD_GRADLE"
-
-      # ── 10. تطبيق الـ patches ─────────────────────────────
-      - name: Apply Android patches (safe)
+      # ── 8. تطبيق الـ patches ─────────────────────────────
+      - name: Apply Android patches
         run: |
           mkdir -p android/app/src/main/res/values
           cp android-patches/strings.xml android/app/src/main/res/values/strings.xml
           echo "✓ strings.xml"
-
           mkdir -p android/app/src/main/res/xml
           cp android-patches/network_security_config.xml android/app/src/main/res/xml/network_security_config.xml
           echo "✓ network_security_config.xml"
-
           cp android-patches/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
-          echo "✓ AndroidManifest.xml replaced from android-patches"
+          echo "✓ AndroidManifest.xml"
 
-          echo "=== Manifest final check ==="
-          grep -E "APPLICATION_ID|AD_ID|VIBRATE|networkSecurity|rondatahiro|scheme" android/app/src/main/AndroidManifest.xml || true
-
-      # ── 11. نسخ أيقونات Ronda Tahiro ─────────────────────
-      - name: Apply Ronda Tahiro icons
+      # ── 9. نسخ الأيقونات ──────────────────────────────────
+      - name: Apply icons
         run: |
           RES="android/app/src/main/res"
-          PATCHES="android-patches/res"
           for dir in mipmap-mdpi mipmap-hdpi mipmap-xhdpi mipmap-xxhdpi mipmap-xxxhdpi; do
             mkdir -p "$RES/$dir"
-            cp "$PATCHES/$dir/"*.png "$RES/$dir/" 2>/dev/null || true
-            echo "✓ icons copied → $dir"
+            cp "android-patches/res/$dir/"*.png "$RES/$dir/" 2>/dev/null || true
           done
+          echo "✓ icons copied"
 
-      # ── 12. إعداد Keystore ───────────────────────────────
+      # ── 10. إعداد Keystore ───────────────────────────────
       - name: Setup keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
@@ -145,18 +128,16 @@ jobs:
             echo "⚠ Temporary keystore created"
           fi
 
-      # ── 13. صلاحيات gradlew ──────────────────────────────
+      # ── 11. صلاحيات gradlew ──────────────────────────────
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
-      # ── 14. بناء Debug APK ───────────────────────────────
+      # ── 12. بناء Debug APK ───────────────────────────────
       - name: Build Debug APK
-        run: |
-          cd android
-          ./gradlew assembleDebug --no-daemon
+        run: cd android && ./gradlew assembleDebug --no-daemon
         continue-on-error: true
 
-      # ── 15. بناء Release APK ─────────────────────────────
+      # ── 13. بناء Release APK ─────────────────────────────
       - name: Build Release APK
         env:
           KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
@@ -164,8 +145,7 @@ jobs:
         run: |
           KS_PASS="${KEYSTORE_PASS:-ronda2024}"
           KS_ALIAS="${KEY_ALIAS:-ronda-key}"
-          cd android
-          ./gradlew assembleRelease \
+          cd android && ./gradlew assembleRelease \
             -Pandroid.injected.signing.store.file="$(pwd)/../release-keystore.jks" \
             -Pandroid.injected.signing.store.password="$KS_PASS" \
             -Pandroid.injected.signing.key.alias="$KS_ALIAS" \
@@ -173,7 +153,7 @@ jobs:
             --no-daemon
         continue-on-error: true
 
-      # ── 16. بناء AAB للـ Play Store ──────────────────────
+      # ── 14. بناء AAB للـ Play Store ──────────────────────
       - name: Build Release AAB
         env:
           KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
@@ -181,16 +161,15 @@ jobs:
         run: |
           KS_PASS="${KEYSTORE_PASS:-ronda2024}"
           KS_ALIAS="${KEY_ALIAS:-ronda-key}"
-          cd android
-          ./gradlew bundleRelease \
+          cd android && ./gradlew bundleRelease \
             -Pandroid.injected.signing.store.file="$(pwd)/../release-keystore.jks" \
             -Pandroid.injected.signing.store.password="$KS_PASS" \
             -Pandroid.injected.signing.key.alias="$KS_ALIAS" \
             -Pandroid.injected.signing.key.password="$KS_PASS" \
-            --no-daemon --stacktrace 2>&1 | tail -60
+            --no-daemon
         continue-on-error: true
 
-      # ── 17. رفع الملفات ──────────────────────────────────
+      # ── 15. رفع الملفات ──────────────────────────────────
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
@@ -212,20 +191,19 @@ jobs:
           path: android/app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: warn
 
-      # ── 18. ملخص ────────────────────────────────────────
+      # ── 16. ملخص ─────────────────────────────────────────
       - name: Build Summary
         if: always()
         run: |
-          VERSION_CODE=$((100 + ${{ github.run_number }}))
-          VERSION_NAME="1.0.${{ github.run_number }}"
+          VC=$((100 + ${{ github.run_number }}))
+          VN="1.0.${{ github.run_number }}"
           echo "## 🎴 Ronda Build Results" >> $GITHUB_STEP_SUMMARY
-          echo "**versionCode:** $VERSION_CODE | **versionName:** $VERSION_NAME" >> $GITHUB_STEP_SUMMARY
-          echo "**targetSdkVersion:** 35 ✅" >> $GITHUB_STEP_SUMMARY
+          echo "**versionCode:** $VC | **versionName:** $VN | **targetSdk:** 35 ✅" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           for f in \
-            "android/app/build/outputs/apk/debug/app-debug.apk|Debug APK للتصحيح" \
-            "android/app/build/outputs/apk/release/app-release.apk|Release APK للإصدار" \
-            "android/app/build/outputs/bundle/release/app-release.aab|AAB متجر جوجل بلاي"; do
+            "android/app/build/outputs/apk/debug/app-debug.apk|Debug APK" \
+            "android/app/build/outputs/apk/release/app-release.apk|Release APK" \
+            "android/app/build/outputs/bundle/release/app-release.aab|AAB (Play Store)"; do
             FILE="${f%%|*}"; LABEL="${f##*|}"
             if [ -f "$FILE" ]; then
               echo "✅ **$LABEL:** $(du -sh $FILE | cut -f1)" >> $GITHUB_STEP_SUMMARY
