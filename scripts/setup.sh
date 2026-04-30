@@ -44,6 +44,15 @@ step "تثبيت المكتبات..."
 npm install
 ok "تم تثبيت المكتبات"
 
+# ── Google Auth Plugin ──────────────────────────────────────────
+step "تثبيت Google Auth Native Plugin..."
+if ! grep -q "capacitor-google-auth" node_modules/.package-lock.json 2>/dev/null; then
+  npm install @codetrix-studio/capacitor-google-auth
+  ok "تم تثبيت capacitor-google-auth"
+else
+  ok "capacitor-google-auth مثبت بالفعل"
+fi
+
 # ── Add PWA to index.html ──────────────────────────────────────
 step "إضافة PWA إلى index.html..."
 
@@ -106,6 +115,22 @@ if [ ! -d "android" ]; then
   ok "تمت إضافة Android"
 else
   ok "Android موجود بالفعل"
+fi
+
+# ── Patch MainActivity for GoogleAuth ─────────────────────────
+step "تسجيل Google Auth Plugin في MainActivity..."
+MAIN_ACTIVITY="android/app/src/main/java/com/rondatahiro/myapp/MainActivity.java"
+if [ -f "$MAIN_ACTIVITY" ]; then
+  if ! grep -q "GoogleAuth" "$MAIN_ACTIVITY"; then
+    sed -i 's/import com.getcapacitor.BridgeActivity;/import com.getcapacitor.BridgeActivity;\nimport co.median.android.googlesignin.GoogleAuth;/' "$MAIN_ACTIVITY" 2>/dev/null || true
+  fi
+  ok "MainActivity محدث"
+fi
+
+# ── Add google-services plugin to build.gradle ─────────────────
+ROOT_GRADLE="android/build.gradle"
+if [ -f "$ROOT_GRADLE" ] && ! grep -q "google-services" "$ROOT_GRADLE"; then
+  sed -i "s|dependencies {|dependencies {\n        classpath 'com.google.gms:google-services:4.4.0'|"\ "$ROOT_GRADLE" 2>/dev/null || true
 fi
 
 # ── Patch AndroidManifest.xml ──────────────────────────────────
