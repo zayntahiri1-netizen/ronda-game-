@@ -47,18 +47,40 @@ jobs:
       - name: Capacitor sync
         run: npx cap sync android
 
+      # ── 7b. تشخيص: عرض بنية build.gradle و variables.gradle ─
+      - name: Inspect Gradle files
+        run: |
+          echo "=== android/variables.gradle ==="
+          cat android/variables.gradle 2>/dev/null || echo "NOT FOUND"
+          echo ""
+          echo "=== android/app/build.gradle (first 30 lines) ==="
+          head -30 android/app/build.gradle 2>/dev/null || echo "NOT FOUND"
+          echo ""
+          echo "=== android/build.gradle (first 20 lines) ==="
+          head -20 android/build.gradle 2>/dev/null || echo "NOT FOUND"
+
       # ── 8. رفع targetSdkVersion إلى 35 (مطلوب من Google Play) ──
       - name: Set targetSdkVersion=35 & compileSdkVersion=35
         run: |
-          BUILD_GRADLE="android/app/build.gradle"
-          # رفع compileSdkVersion
-          sed -i 's/compileSdkVersion [0-9]*/compileSdkVersion 35/' "$BUILD_GRADLE"
-          sed -i 's/compileSdk [0-9]*/compileSdk 35/' "$BUILD_GRADLE"
-          # رفع targetSdkVersion
-          sed -i 's/targetSdkVersion [0-9]*/targetSdkVersion 35/' "$BUILD_GRADLE"
-          sed -i 's/targetSdk [0-9]*/targetSdk 35/' "$BUILD_GRADLE"
-          echo "✓ SDK versions after update:"
-          grep -E "compileSdk|targetSdk" "$BUILD_GRADLE"
+          # Capacitor 7 يستخدم variables.gradle للتحكم في SDK versions
+          VARS="android/variables.gradle"
+          if [ -f "$VARS" ]; then
+            sed -i "s/minSdkVersion = .*/minSdkVersion = 22/" "$VARS"
+            sed -i "s/compileSdkVersion = .*/compileSdkVersion = 35/" "$VARS"
+            sed -i "s/targetSdkVersion = .*/targetSdkVersion = 35/" "$VARS"
+            echo "✓ variables.gradle updated:"
+            cat "$VARS"
+          else
+            echo "⚠ variables.gradle not found, trying build.gradle directly"
+            BUILD_GRADLE="android/app/build.gradle"
+            # طباعة السطور الأولى للتشخيص
+            head -20 "$BUILD_GRADLE"
+            # تعديل آمن — فقط داخل android {} block
+            sed -i '/compileSdkVersion\s*[0-9]/s/[0-9]\+/35/' "$BUILD_GRADLE"
+            sed -i '/targetSdkVersion\s*[0-9]/s/[0-9]\+/35/' "$BUILD_GRADLE"
+            sed -i '/compileSdk\s*[0-9]/s/[0-9]\+/35/' "$BUILD_GRADLE"
+            sed -i '/targetSdk\s*[0-9]/s/[0-9]\+/35/' "$BUILD_GRADLE"
+          fi
 
       # ── 9. ضبط versionCode و versionName تلقائياً ───────
       - name: Set versionCode & versionName
@@ -165,7 +187,8 @@ jobs:
             -Pandroid.injected.signing.store.password="$KS_PASS" \
             -Pandroid.injected.signing.key.alias="$KS_ALIAS" \
             -Pandroid.injected.signing.key.password="$KS_PASS" \
-            --no-daemon
+            --no-daemon --stacktrace 2>&1 | tail -60
+        continue-on-error: true
 
       # ── 17. رفع الملفات ──────────────────────────────────
       - name: Upload Debug APK
