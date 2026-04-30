@@ -127,10 +127,27 @@ if [ -f "$MAIN_ACTIVITY" ]; then
   ok "MainActivity محدث"
 fi
 
+# ── Copy google-services.json ──────────────────────────────────
+step "نسخ google-services.json..."
+if [ -f "android-patches/google-services.json" ]; then
+  cp android-patches/google-services.json android/app/google-services.json
+  ok "google-services.json → android/app/"
+else
+  warn "android-patches/google-services.json غير موجود - Firebase لن يعمل"
+fi
+
 # ── Add google-services plugin to build.gradle ─────────────────
 ROOT_GRADLE="android/build.gradle"
 if [ -f "$ROOT_GRADLE" ] && ! grep -q "google-services" "$ROOT_GRADLE"; then
-  sed -i "s|dependencies {|dependencies {\n        classpath 'com.google.gms:google-services:4.4.0'|"\ "$ROOT_GRADLE" 2>/dev/null || true
+  sed -i "s|dependencies {|dependencies {\n        classpath 'com.google.gms:google-services:4.4.2'|" "$ROOT_GRADLE" 2>/dev/null || true
+  ok "google-services classpath مضاف إلى build.gradle"
+fi
+
+APP_GRADLE="android/app/build.gradle"
+if [ -f "$APP_GRADLE" ] && ! grep -q "com.google.gms.google-services" "$APP_GRADLE"; then
+  echo "" >> "$APP_GRADLE"
+  echo "apply plugin: 'com.google.gms.google-services'" >> "$APP_GRADLE"
+  ok "google-services plugin مفعّل في app/build.gradle"
 fi
 
 # ── Patch AndroidManifest.xml ──────────────────────────────────
