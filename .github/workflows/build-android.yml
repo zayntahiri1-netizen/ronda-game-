@@ -40,11 +40,8 @@ jobs:
       # ── 6. إضافة Android ────────────────────────────────
       - name: Add Android platform
         run: |
-          if [ -d "android" ]; then
-            echo "skip: android already exists"
-          else
-            npx cap add android
-          fi
+          rm -rf android
+          npx cap add android
 
       # ── 7. مزامنة Capacitor ──────────────────────────────
       - name: Capacitor sync
