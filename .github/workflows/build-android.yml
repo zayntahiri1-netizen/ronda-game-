@@ -29,7 +29,7 @@ jobs:
           node-version: '24'
           cache: 'npm'
 
-      # ── 4. تثبيت المكتبات (بما فيها admob) ──────────────
+      # ── 4. تثبيت المكتبات ────────────────────────────────
       - name: Install dependencies
         run: npm install --ignore-scripts --legacy-peer-deps
 
@@ -41,32 +41,46 @@ jobs:
       - name: Add Android platform
         run: npx cap add android
 
-      # ── 7. مزامنة Capacitor (يضيف AdMob native تلقائياً)
+      # ── 7. مزامنة Capacitor ──────────────────────────────
       - name: Capacitor sync
         run: npx cap sync android
 
-      # ── 8. تطبيق الـ patches بأمان ──────────────────────
+      # ── 8. ضبط versionCode و versionName تلقائياً ───────
+      # versionCode = 100 + رقم الـ run (يتزايد مع كل build تلقائياً)
+      # versionName = 1.0.XX — يظهر للمستخدم في المتجر
+      - name: Set versionCode & versionName
+        run: |
+          VERSION_CODE=$((100 + ${{ github.run_number }}))
+          VERSION_NAME="1.0.${{ github.run_number }}"
+          echo "📦 versionCode = $VERSION_CODE"
+          echo "📦 versionName = $VERSION_NAME"
+
+          BUILD_GRADLE="android/app/build.gradle"
+
+          sed -i "s/versionCode .*/versionCode $VERSION_CODE/" "$BUILD_GRADLE"
+          sed -i "s/versionName \".*\"/versionName \"$VERSION_NAME\"/" "$BUILD_GRADLE"
+
+          echo "✓ build.gradle updated:"
+          grep -E "versionCode|versionName" "$BUILD_GRADLE"
+
+      # ── 9. تطبيق الـ patches ─────────────────────────────
       - name: Apply Android patches (safe)
         run: |
-          # ① strings.xml — اسم التطبيق فقط
           mkdir -p android/app/src/main/res/values
           cp android-patches/strings.xml android/app/src/main/res/values/strings.xml
           echo "✓ strings.xml"
 
-          # ② network_security_config.xml
           mkdir -p android/app/src/main/res/xml
           cp android-patches/network_security_config.xml android/app/src/main/res/xml/network_security_config.xml
           echo "✓ network_security_config.xml"
 
-          # ③ استبدال AndroidManifest.xml كاملاً بنسخة android-patches
-          # هذا يضمن وجود Deep Link + AdMob + Permissions بشكل صحيح
           cp android-patches/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
           echo "✓ AndroidManifest.xml replaced from android-patches"
 
           echo "=== Manifest final check ==="
           grep -E "APPLICATION_ID|AD_ID|VIBRATE|networkSecurity|rondatahiro|scheme" android/app/src/main/AndroidManifest.xml || true
 
-      # ── 9. نسخ أيقونات Ronda Tahiro ─────────────────────
+      # ── 10. نسخ أيقونات Ronda Tahiro ─────────────────────
       - name: Apply Ronda Tahiro icons
         run: |
           RES="android/app/src/main/res"
@@ -77,7 +91,7 @@ jobs:
             echo "✓ icons copied → $dir"
           done
 
-      # ── 10. إعداد Keystore ───────────────────────────────
+      # ── 11. إعداد Keystore ───────────────────────────────
       - name: Setup keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
@@ -96,18 +110,18 @@ jobs:
             echo "⚠ Temporary keystore created"
           fi
 
-      # ── 11. صلاحيات gradlew ──────────────────────────────
+      # ── 12. صلاحيات gradlew ──────────────────────────────
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
-      # ── 12. بناء Debug APK ───────────────────────────────
+      # ── 13. بناء Debug APK ───────────────────────────────
       - name: Build Debug APK
         run: |
           cd android
           ./gradlew assembleDebug --no-daemon
         continue-on-error: true
 
-      # ── 13. بناء Release APK ─────────────────────────────
+      # ── 14. بناء Release APK ─────────────────────────────
       - name: Build Release APK
         env:
           KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
@@ -124,7 +138,7 @@ jobs:
             --no-daemon
         continue-on-error: true
 
-      # ── 14. بناء AAB للـ Play Store ──────────────────────
+      # ── 15. بناء AAB للـ Play Store ──────────────────────
       - name: Build Release AAB
         env:
           KEYSTORE_PASS: ${{ secrets.KEYSTORE_PASS }}
@@ -140,7 +154,7 @@ jobs:
             -Pandroid.injected.signing.key.password="$KS_PASS" \
             --no-daemon
 
-      # ── 15. رفع الملفات ──────────────────────────────────
+      # ── 16. رفع الملفات ──────────────────────────────────
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
@@ -162,11 +176,15 @@ jobs:
           path: android/app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: warn
 
-      # ── 16. ملخص ────────────────────────────────────────
+      # ── 17. ملخص ────────────────────────────────────────
       - name: Build Summary
         if: always()
         run: |
+          VERSION_CODE=$((100 + ${{ github.run_number }}))
+          VERSION_NAME="1.0.${{ github.run_number }}"
           echo "## 🎴 Ronda Build Results" >> $GITHUB_STEP_SUMMARY
+          echo "**versionCode:** $VERSION_CODE | **versionName:** $VERSION_NAME" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
           for f in \
             "android/app/build/outputs/apk/debug/app-debug.apk|Debug APK للتصحيح" \
             "android/app/build/outputs/apk/release/app-release.apk|Release APK للإصدار" \
