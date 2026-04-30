@@ -5678,26 +5678,9 @@ document.addEventListener('deviceready', async () => {
             return;
           }
 
-          const _isLinkFlowNative = url.includes('link=google');
-
           const _finishLogin = async (session) => {
             if (!session || window._sessionHandled) return;
             window._sessionHandled = true;
-            const provider = session.user?.app_metadata?.provider;
-            console.log('[AppUrlOpen] provider:', provider, 'linkFlow:', _isLinkFlowNative);
-            if (provider === 'google'){
-              if(_isLinkFlowNative){
-                // ربط الحساب — لا تغيّر loginMethod
-                P.linkedGg = true;
-                P.googleId  = P.googleId || session.user.id;
-                P.email     = P.email || session.user.email || '';
-                saveP();
-                toast(_i18n('toast_google_linked'),'ok');
-                goLobby();
-              } else {
-                await _handleGoogleAuthCallback(session);
-              }
-            }
           };
 
           if (accessToken && refreshToken) {
@@ -5768,10 +5751,7 @@ document.addEventListener('deviceready', async () => {
               const { data: sd } = await _SB.client.auth.getSession();
               if (sd?.session) {
                 window._sessionHandled = true;
-                const provider = sd.session.user?.app_metadata?.provider;
-                console.log('[Foreground-Fallback] provider:', provider);
                 try { const { Browser } = await import('@capacitor/browser'); await Browser.close(); } catch(_){}
-                if (provider === 'google') await _handleGoogleAuthCallback(sd.session);
               }
             } catch(e) { console.warn('[Foreground-Fallback] error:', e); }
           }, 1200);
@@ -5815,7 +5795,6 @@ const RONDA_I18N = {
     logo_ar: 'Ronda — لعبة الملوك',
     logo_lat: 'Royal Moroccan Card Game',
     auth_title: 'اختر طريقة الدخول',
-    google_login: 'تسجيل الدخول بـ Google',
     or: 'أو',
     alias_label: '👤 ادخل باسم مستعار',
     alias_placeholder: 'اسمك في اللعبة...',
@@ -6351,7 +6330,6 @@ const RONDA_I18N = {
     score_sb_total: 'المجموع',
     // Toast messages - Auth
     toast_login_fail: '❌ فشل تسجيل الدخول: ',
-    toast_google_linked: '✅ تم ربط حساب Google بنجاح',
     toast_reconnecting: '🔄 جاري إعادة الاتصال بالمباراة...',
     toast_welcome: (name) => `🎊 أهلاً بك ${name}!`,
     toast_bonus_gold: '💰 500 عملة ذهبية أضيفت لرصيدك!',
@@ -6360,7 +6338,6 @@ const RONDA_I18N = {
     toast_invite_link_copied: '🔗 تم نسخ رابط الدعوة! شاركه الآن 🎁',
     toast_invite_link_plain: 'الرابط: ',
     toast_invite_msg_copied: '📋 تم نسخ رسالة الدعوة!',
-    toast_google_linking: '✅ جارٍ الربط بـ Google...',
     toast_connect_fail: '❌ تعذّر الاتصال',
     toast_img_too_large: '❌ الصورة كبيرة جداً (الحد 5MB)',
     toast_not_image: '❌ الملف ليس صورة',
@@ -6434,8 +6411,6 @@ const RONDA_I18N = {
     toast_hint_play: (rank, suit, extra) => `💡 العب ${rank} ${suit}${extra}`,
     toast_hint_throw: '💡 لا تطابق — ارمِ ورقة على الطاولة',
     toast_vote_timeout: '⏰ انتهى الوقت — لم يوافق جميع اللاعبين',
-    toast_google_ok: '✅ تم ربط حساب Google بنجاح',
-    toast_google_fail: '❌ فشل استكمال تسجيل الدخول بـ Google',
     toast_login_error: '❌ خطأ في تسجيل الدخول',
     toast_room_ready: '🎮 الغرفة جاهزة — شارك الرمز!',
     toast_bot_hint: '💡 يمكنك البدء وسيكون شريكك بوتاً إذا لم يتصل',
@@ -6459,7 +6434,6 @@ const RONDA_I18N = {
     toast_room_access: '😓 تعذّر الوصول للغرفة — تحقق من الإنترنت',
     toast_login_err2: (msg) => `❌ خطأ في تسجيل الدخول: ${msg}`,
     toast_server_err: '❌ تعذّر الاتصال بالخادم',
-    toast_google_ok2: '✅ تم تسجيل الدخول بـ Google',
     toast_conn_restored: '🔄 تم استعادة الاتصال',
     toast_firebase_rules: '⚠ Firebase Rules مغلقة — اللعب الإنترنت لن يعمل. افتح Console (F12) للتفاصيل',
     toast_bought_gold: (amt) => `🎊 تم شراء ${amt} عملة ذهبية بنجاح!`,
@@ -6603,7 +6577,6 @@ const RONDA_I18N = {
     edit_name_placeholder: 'اسمك...',
     save_name_btn: '✓ حفظ',
     link_account_hint: '🔗 اربط حسابك لحفظ بياناتك وصورتك على كل أجهزتك',
-    link_google_btn: 'ربط Google',
     // History
     history_empty_long: 'لا توجد ألعاب بعد — العب وستظهر هنا!',
     // Referral
@@ -6683,7 +6656,6 @@ const RONDA_I18N = {
     pstats_best: '⭐ أعلى نقاط',
     pstats_total: '🎯 إجمالي',
     pstats_close: '✕ إغلاق',
-    google_login_btn: 'تسجيل الدخول بـ Google',
     lb_no_data: 'لا يوجد بيانات بعد',
     lb_loading_top: 'جاري تحميل المتصدرين...',
     lb_games_n: '{n} لعبة',
@@ -6935,7 +6907,6 @@ const RONDA_I18N = {
     logo_ar: 'Ronda — Game of Kings',
     logo_lat: 'Royal Moroccan Card Game',
     auth_title: 'Choose Login Method',
-    google_login: 'Sign in with Google',
     or: 'or',
     alias_label: '👤 Enter a nickname',
     alias_placeholder: 'Your game name...',
@@ -7522,7 +7493,6 @@ const RONDA_I18N = {
     score_sb_total: 'Total',
     // Toast messages - Auth
     toast_login_fail: '❌ Login failed: ',
-    toast_google_linked: '✅ Google account linked successfully',
     toast_reconnecting: '🔄 Reconnecting to match...',
     toast_welcome: (name) => `🎊 Welcome ${name}!`,
     toast_bonus_gold: '💰 500 gold coins added to your balance!',
@@ -7531,7 +7501,6 @@ const RONDA_I18N = {
     toast_invite_link_copied: '🔗 Invite link copied! Share it now 🎁',
     toast_invite_link_plain: 'Link: ',
     toast_invite_msg_copied: '📋 Invite message copied!',
-    toast_google_linking: '✅ Linking with Google...',
     toast_connect_fail: '❌ Connection failed',
     toast_img_too_large: '❌ Image too large (max 5MB)',
     toast_not_image: '❌ File is not an image',
@@ -7605,8 +7574,6 @@ const RONDA_I18N = {
     toast_hint_play: (rank, suit, extra) => `💡 Play ${rank} ${suit}${extra}`,
     toast_hint_throw: '💡 No match — throw a card on the table',
     toast_vote_timeout: '⏰ Time out — not all players agreed',
-    toast_google_ok: '✅ Google account linked successfully',
-    toast_google_fail: '❌ Failed to complete Google sign-in',
     toast_login_error: '❌ Login error',
     toast_room_ready: '🎮 Room ready — share the code!',
     toast_bot_hint: '💡 You can start and your partner will be a bot if not connected',
@@ -7630,7 +7597,6 @@ const RONDA_I18N = {
     toast_room_access: '😓 Cannot access room — check internet',
     toast_login_err2: (msg) => `❌ Login error: ${msg}`,
     toast_server_err: '❌ Cannot connect to server',
-    toast_google_ok2: '✅ Signed in with Google',
     toast_conn_restored: '🔄 Connection restored',
     toast_firebase_rules: '⚠ Firebase Rules closed — online play won\'t work. Open Console (F12) for details',
     toast_bought_gold: (amt) => `🎊 Successfully purchased ${amt} gold coins!`,
@@ -7772,7 +7738,6 @@ const RONDA_I18N = {
     edit_name_placeholder: 'Your name...',
     save_name_btn: '✓ Save',
     link_account_hint: '🔗 Link your account to save your data and photo across all your devices',
-    link_google_btn: 'Link Google',
     // History
     history_empty_long: 'No games yet — play and they will appear here!',
     // Referral
@@ -7852,7 +7817,6 @@ const RONDA_I18N = {
     pstats_best: '⭐ Best Score',
     pstats_total: '🎯 Total',
     pstats_close: '✕ Close',
-    google_login_btn: 'Sign in with Google',
     lb_no_data: 'No data yet',
     lb_loading_top: 'Loading leaderboard...',
     lb_games_n: '{n} games',
@@ -8046,7 +8010,6 @@ const RONDA_I18N = {
     logo_ar: 'Ronda — Juego de Reyes',
     logo_lat: 'Juego de Cartas Real Marroquí',
     auth_title: 'Elige método de acceso',
-    google_login: 'Iniciar sesión con Google',
     or: 'o',
     alias_label: '👤 Ingresa un apodo',
     alias_placeholder: 'Tu nombre en el juego...',
@@ -8614,7 +8577,6 @@ const RONDA_I18N = {
     score_sb_total: 'Total',
     // Toast messages
     toast_login_fail: '❌ Error al iniciar sesión: ',
-    toast_google_linked: '✅ Cuenta de Google vinculada con éxito',
     toast_reconnecting: '🔄 Reconectando a la partida...',
     toast_welcome: (name) => `🎊 ¡Bienvenido ${name}!`,
     toast_bonus_gold: '💰 ¡500 monedas de oro añadidas!',
@@ -8623,7 +8585,6 @@ const RONDA_I18N = {
     toast_invite_link_copied: '🔗 ¡Enlace de invitación copiado! Compártelo ahora 🎁',
     toast_invite_link_plain: 'Enlace: ',
     toast_invite_msg_copied: '📋 ¡Mensaje de invitación copiado!',
-    toast_google_linking: '✅ Vinculando con Google...',
     toast_connect_fail: '❌ Error de conexión',
     toast_img_too_large: '❌ Imagen demasiado grande (máx 5MB)',
     toast_not_image: '❌ El archivo no es una imagen',
@@ -8697,8 +8658,6 @@ const RONDA_I18N = {
     toast_hint_play: (rank, suit, extra) => `💡 Juega ${rank} ${suit}${extra}`,
     toast_hint_throw: '💡 Sin coincidencia — descarta',
     toast_vote_timeout: '⏰ Tiempo agotado',
-    toast_google_ok: '✅ Cuenta Google vinculada',
-    toast_google_fail: '❌ Error al iniciar sesión con Google',
     toast_login_error: '❌ Error de inicio de sesión',
     toast_room_ready: '🎮 ¡Sala lista — comparte el código!',
     toast_bot_hint: '💡 Puedes empezar; tu compañero será bot si no se conecta',
@@ -8722,7 +8681,6 @@ const RONDA_I18N = {
     toast_room_access: '😓 No se puede acceder a la sala',
     toast_login_err2: (msg) => `❌ Error de inicio de sesión: ${msg}`,
     toast_server_err: '❌ No se puede conectar al servidor',
-    toast_google_ok2: '✅ Sesión iniciada con Google',
     toast_conn_restored: '🔄 Conexión restaurada',
     toast_firebase_rules: '⚠ Firebase Rules cerradas — el juego online no funcionará',
     toast_bought_gold: (amt) => `🎊 ¡Compra de ${amt} monedas exitosa!`,
@@ -8864,7 +8822,6 @@ const RONDA_I18N = {
     edit_name_placeholder: 'Tu nombre...',
     save_name_btn: '✓ Guardar',
     link_account_hint: '🔗 Vincula tu cuenta para guardar tus datos y foto en todos tus dispositivos',
-    link_google_btn: 'Vincular Google',
     // History
     history_empty_long: '¡Aún no hay partidas — juega y aparecerán aquí!',
     // Referral
@@ -8948,7 +8905,6 @@ const RONDA_I18N = {
     pstats_best: '⭐ Mejor Puntuación',
     pstats_total: '🎯 Total',
     pstats_close: '✕ Cerrar',
-    google_login_btn: 'Iniciar sesión con Google',
     lb_no_data: 'Sin datos aún',
     lb_loading_top: 'Cargando clasificación...',
     lb_games_n: '{n} partidas',
@@ -9143,7 +9099,6 @@ const RONDA_I18N = {
     logo_ar: 'Ronda — 国王游戏',
     logo_lat: '摩洛哥皇家纸牌游戏',
     auth_title: '选择登录方式',
-    google_login: '使用 Google 登录',
     or: '或',
     alias_label: '👤 输入昵称',
     alias_placeholder: '你的游戏名...',
@@ -9713,7 +9668,6 @@ const RONDA_I18N = {
     score_sb_total: '总计',
     // Toast messages
     toast_login_fail: '❌ 登录失败: ',
-    toast_google_linked: '✅ Google账户绑定成功',
     toast_reconnecting: '🔄 正在重新连接比赛...',
     toast_welcome: (name) => `🎊 欢迎 ${name}!`,
     toast_bonus_gold: '💰 已添加500金币!',
@@ -9722,7 +9676,6 @@ const RONDA_I18N = {
     toast_invite_link_copied: '🔗 邀请链接已复制! 现在分享 🎁',
     toast_invite_link_plain: '链接: ',
     toast_invite_msg_copied: '📋 邀请消息已复制!',
-    toast_google_linking: '✅ 正在绑定Google...',
     toast_connect_fail: '❌ 连接失败',
     toast_img_too_large: '❌ 图片太大 (最大5MB)',
     toast_not_image: '❌ 文件不是图片',
@@ -9796,8 +9749,6 @@ const RONDA_I18N = {
     toast_hint_play: (rank, suit, extra) => `💡 出 ${rank} ${suit}${extra}`,
     toast_hint_throw: '💡 无匹配 — 丢一张牌',
     toast_vote_timeout: '⏰ 时间到 — 并非所有人同意',
-    toast_google_ok: '✅ Google账户绑定成功',
-    toast_google_fail: '❌ Google登录失败',
     toast_login_error: '❌ 登录错误',
     toast_room_ready: '🎮 房间准备好了 — 分享代码!',
     toast_bot_hint: '💡 可以开始，队友未连接则为机器人',
@@ -9821,7 +9772,6 @@ const RONDA_I18N = {
     toast_room_access: '😓 无法访问房间 — 检查网络',
     toast_login_err2: (msg) => `❌ 登录错误: ${msg}`,
     toast_server_err: '❌ 无法连接服务器',
-    toast_google_ok2: '✅ 已用Google登录',
     toast_conn_restored: '🔄 连接已恢复',
     toast_firebase_rules: '⚠ Firebase Rules关闭 — 在线游戏无法工作',
     toast_bought_gold: (amt) => `🎊 成功购买${amt}金币!`,
@@ -9962,7 +9912,6 @@ const RONDA_I18N = {
     edit_name_placeholder: '你的名字...',
     save_name_btn: '✓ 保存',
     link_account_hint: '🔗 绑定账号以在所有设备上保存您的数据和照片',
-    link_google_btn: '绑定 Google',
     // History
     history_empty_long: '还没有游戏记录 — 开始游戏后将显示在这里！',
     // Referral
@@ -10045,7 +9994,6 @@ const RONDA_I18N = {
     pstats_best: '⭐ 最高分',
     pstats_total: '🎯 总计',
     pstats_close: '✕ 关闭',
-    google_login_btn: '使用 Google 登录',
     lb_no_data: '暂无数据',
     lb_loading_top: '正在加载排行榜...',
     lb_games_n: '{n} 场游戏',
@@ -10233,20 +10181,60 @@ const RONDA_I18N = {
   },
 };
 
-/* ── Auto-detect language from browser locale ── */
+/* ── Auto-detect language from device timezone (country-based) ── */
 function _detectLang() {
+  // 1. المستخدم اختار لغة يدوياً — نحترم اختياره دائماً
   try {
     const saved = localStorage.getItem('ronda_lang');
     if (saved && RONDA_I18N[saved]) return saved;
   } catch(e) {}
-  const loc = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
-  // Arabic: ar, ar-* (Saudi, Morocco, Algeria, Egypt, UAE, etc.)
-  if (/^ar/.test(loc)) return 'ar';
-  // Spanish: es, es-* (Spain, Mexico, Argentina, etc.)
-  if (/^es/.test(loc)) return 'es';
-  // Chinese: zh, zh-cn, zh-tw, zh-sg
-  if (/^zh/.test(loc)) return 'zh';
-  // Default: English
+
+  // 2. كشف الدولة عبر المنطقة الزمنية (الأدق — يعمل على Android/iOS/Web)
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+
+    // ── الدول العربية ──────────────────────────────────────────────
+    // المغرب العربي
+    if (/^Africa\/(Casablanca|Ceuta|Algiers|Tunis|Tripoli|Cairo|Khartoum|Juba)$/i.test(tz)) return 'ar';
+    // غرب أفريقيا العربية
+    if (/^Africa\/(Nouakchott|Ndjamena|Asmara|Djibouti|Mogadishu)$/i.test(tz)) return 'ar';
+    // المحيط الهندي العربي
+    if (/^Indian\/(Comoro|Mayotte|Antananarivo)$/i.test(tz)) return 'ar';
+    // الخليج والشرق الأوسط
+    if (/^Asia\/(Riyadh|Kuwait|Baghdad|Aden|Muscat|Qatar|Bahrain|Dubai|Tehran|Kabul)$/i.test(tz)) return 'ar';
+    // بلاد الشام وشمال أفريقيا
+    if (/^Asia\/(Damascus|Beirut|Amman|Gaza|Hebron|Jerusalem|Nicosia)$/i.test(tz)) return 'ar';
+
+    // ── الصين ───────────────────────────────────────────────────────
+    if (/^Asia\/(Shanghai|Hong_Kong|Macau|Taipei|Urumqi|Chongqing|Harbin|Chungking)$/i.test(tz)) return 'zh';
+    if (/^PRC$/i.test(tz)) return 'zh';
+
+    // ── الدول الناطقة بالإسبانية ────────────────────────────────────
+    // إسبانيا
+    if (/^Europe\/(Madrid|Canary)$/i.test(tz)) return 'es';
+    // أمريكا اللاتينية
+    if (/^America\/(Mexico_City|Cancun|Monterrey|Merida|Chihuahua|Mazatlan|Hermosillo|Tijuana)$/i.test(tz)) return 'es';
+    if (/^America\/(Bogota|Lima|Santiago|Caracas|La_Paz|Asuncion|Montevideo|Guayaquil)$/i.test(tz)) return 'es';
+    if (/^America\/(Argentina\/(Buenos_Aires|Cordoba|Salta|Jujuy|Tucuman|Catamarca|La_Rioja|San_Juan|Mendoza|San_Luis|Rio_Gallegos|Ushuaia))$/i.test(tz)) return 'es';
+    if (/^America\/(Havana|Santo_Domingo|Port-au-Prince|Panama|Costa_Rica|Managua|Tegucigalpa|Guatemala|El_Salvador|Belize)$/i.test(tz)) return 'es';
+    if (/^America\/(Puerto_Rico)$/i.test(tz)) return 'es';
+    if (/^Pacific\/(Galapagos|Easter)$/i.test(tz)) return 'es';
+    // غينيا الاستوائية
+    if (/^Africa\/Malabo$/i.test(tz)) return 'es';
+
+    // ── باقي العالم → إنجليزية ─────────────────────────────────────
+    return 'en';
+
+  } catch(e) {}
+
+  // 3. احتياطي: navigator.language إذا فشل كل شيء
+  try {
+    const loc = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+    if (/^ar/.test(loc)) return 'ar';
+    if (/^zh/.test(loc)) return 'zh';
+    if (/^es/.test(loc)) return 'es';
+  } catch(e) {}
+
   return 'en';
 }
 
@@ -10597,13 +10585,7 @@ document.addEventListener('click', function(e) {
     </div>
     <div class="auth-container">
       <div class="auth-title" data-i18n="auth_title">اختر طريقة الدخول</div>
-      <div class="auth-row" style="justify-content:center">
-        <button class="auth-btn ab-gg" id="btnGg" onclick="loginGoogle()" style="max-width:260px;font-weight:600;font-size:.85rem;gap:.6rem;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.15)">
-          <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-          <span data-i18n="google_login">تسجيل الدخول بـ Google</span>
-        </button>
-      </div>
-      <div class="auth-divider"><span data-i18n="or">أو</span></div>
+
       <div class="alias-form" id="aliasForm">
         <div class="alias-label" data-i18n="alias_label">👤 ادخل باسم مستعار</div>
         <div class="alias-input-wrap">
@@ -12091,7 +12073,7 @@ document.addEventListener('click', function(e) {
           <span data-i18n="link_account_hint">🔗 اربط حسابك لحفظ بياناتك وصورتك على كل أجهزتك</span>
         </div>
         <div style="display:flex;gap:.5rem;justify-content:center">
-          <button id="linkGgBtn" onclick="linkSocialAccount('google')" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;padding:.45rem .9rem;border-radius:10px;font-size:.6rem;cursor:pointer;display:flex;align-items:center;gap:.4rem"><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> <span data-i18n="link_google_btn">ربط Google</span></button>
+
         </div>
       </div>
     </div>
@@ -14217,7 +14199,7 @@ function updateUI(){
   const pavNmEl=$('pavNm');
   if(pavNmEl){
     let badge='';
-    if(P.loginMethod==='google') badge='<span style="background:#4285F4;color:#fff;font-size:.45rem;padding:1px 6px;border-radius:10px;vertical-align:middle;font-weight:900;margin-right:4px">G ✓</span>';
+
     pavNmEl.innerHTML=badge+esc(P.name);
   }
   f('pavId',`ID: #${(P.id||'').substr(0,6).toUpperCase()}`);
@@ -14381,13 +14363,11 @@ function _showGift10000Banner(){
 
 function _updateSocialLinkButtons(){
   const sec=$('socialLinkSection');
-  const hasGg = P.loginMethod==='google' || P.linkedGg;
-
   // ━━ عرض الحسابات المربوطة تحت الاسم ━━
   const linkedRow = $('linkedAccountsRow');
   if(linkedRow){
     let chips='';
-    if(hasGg){
+    if(false){
       const fbPhoto = P.fbPhoto
         ? `<img src="${P.fbPhoto}" style="width:18px;height:18px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(24,119,242,.5);flex-shrink:0" onerror="this.style.display='none'">`
         : '<span style="font-size:.8rem">📘</span>';
@@ -14421,7 +14401,7 @@ function _updateSocialLinkButtons(){
   if(!sec) return;
   const fbBtn=$('linkFbBtn'), twBtn=$('linkTwBtn');
   if(fbBtn){
-    if(hasGg){
+    if(false){
       fbBtn.innerHTML='<span style="color:#4ade80;font-size:.85rem">✓</span><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> '+_i18n('fb_connected');
       fbBtn.style.background='rgba(34,196,138,.12)';
       fbBtn.style.borderColor='rgba(34,196,138,.4)';
@@ -14438,72 +14418,9 @@ function _updateSocialLinkButtons(){
       twBtn.onclick=null; twBtn.style.cursor='default';
     }
   }
-  if(hasGg) sec.style.display='none';
-  else sec.style.display='block';
+  sec.style.display='block';
 }
 
-async function linkSocialAccount(provider){
-  if(provider !== 'google') return; // فقط Google مدعوم
-  try{
-    if(!_SB.client) _SB.client=supabase.createClient(_SB.URL,_SB.KEY, {
-        auth: {
-          flowType: 'implicit',
-          detectSessionInUrl: true,
-          persistSession: true
-        }
-      });
-    const isNative = !!window.Capacitor;
-    window._oauthHandled = false; window._sessionHandled = false; // reset OAuth flags
-
-    // [FIX] استخدم linkIdentity إذا كان المستخدم مسجلاً بالفعل (alias login)
-    // وإلا استخدم signInWithOAuth مع ?link=google في الـ redirect
-    const { data: sessionData } = await _SB.client.auth.getSession();
-    const hasActiveSession = !!sessionData?.session;
-
-    if(hasActiveSession){
-      // المستخدم عنده session نشطة — ارتبط مباشرة
-      const redirectTo = isNative
-        ? 'com.rondatahiro.myapp://callback?link='+provider
-        : window.location.origin+window.location.pathname+'?link='+provider;
-      const { error } = await _SB.client.auth.linkIdentity({
-        provider,
-        options:{ redirectTo, skipBrowserRedirect: isNative }
-      });
-      if(error){
-        // linkIdentity غير مدعوم أو فشل — نرجع لـ signInWithOAuth
-        console.warn('[linkSocial] linkIdentity failed, fallback:', error.message);
-        const { data: oauthData, error: err2 } = await _SB.client.auth.signInWithOAuth({
-          provider,
-          options:{ redirectTo, skipBrowserRedirect: isNative }
-        });
-        if(err2) throw err2;
-        if(isNative && oauthData?.url){
-          try{ await Browser.open({ url: oauthData.url }); }
-          catch{ window.open(oauthData.url, '_blank'); }
-        }
-      } else {
-        toast(_i18n('toast_google_linking'),'ok');
-        if(isNative){
-          // appUrlOpen سيتولى الباقي
-        }
-      }
-    } else {
-      // لا session — استخدم signInWithOAuth مع علامة link
-      const redirectTo = isNative
-        ? 'com.rondatahiro.myapp://callback?link='+provider
-        : window.location.origin+window.location.pathname+'?link='+provider;
-      const { data: oauthData, error } = await _SB.client.auth.signInWithOAuth({
-        provider,
-        options:{ redirectTo, skipBrowserRedirect: isNative }
-      });
-      if(error) throw error;
-      if(isNative && oauthData?.url){
-        try{ await Browser.open({ url: oauthData.url }); }
-        catch{ window.open(oauthData.url, '_blank'); }
-      }
-    }
-  }catch(e){ console.error('[linkSocial]', e); toast(_i18n('toast_connect_fail'),'err'); }
-}
 
 /* ══ FEATURE 4: رفع صورة شخصية ══ */
 function uploadProfilePhoto(input){
@@ -14551,7 +14468,7 @@ function saveNewName(){
 /* ══ FEATURE 2: نظام الإحالة 2000 عملة ══ */
 function _processReferral(refCode){
   if(!refCode || P.refBy || P.id===refCode) return;
-  const validLogin = P.loginMethod==='google'||P.name.trim().length>=3;
+  const validLogin = P.name.trim().length>=3;
   if(!validLogin) return;
   P.refBy=refCode;
   P.gold=(P.gold||0)+2000;
@@ -23870,84 +23787,6 @@ function init(){
   liveStats();
   window.addEventListener('resize', drawGeoBg);
 
-  // [FIX-WEB-OAUTH] اكتشاف redirect من Google في بيئة الويب
-  // الـ URL يحتوي على #access_token أو ?code= بعد العودة من Google
-  const _rawHash = window.location.hash || '';
-  const _rawSearch = window.location.search || '';
-  const _hasOAuthTokens = _rawHash.includes('access_token') || _rawSearch.includes('code=');
-  const _isLinkFlow    = _rawSearch.includes('link=google');
-
-  if(_hasOAuthTokens && !window._isCapacitor()){
-    // إنشاء Supabase client فوراً مع detectSessionInUrl قبل أي تنقل
-    if(!_SB.client){
-      _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
-        auth:{ flowType:'implicit', detectSessionInUrl:true, persistSession:true }
-      });
-    }
-    // أظهر شاشة الانتظار ريثما يتم معالجة الـ session
-    go('sHome');
-    const _oBtn = document.getElementById('btnGg');
-    if(_oBtn){ _oBtn.disabled=true; _oBtn.style.opacity='0.7'; _oBtn.innerHTML='<span style="font-size:1.1rem">⏳</span> '+_i18n('routing_btn'); }
-
-    (async ()=>{
-      try{
-        let _session = null;
-        // محاولة 1: implicit flow — tokens في الـ hash
-        const _hp = new URLSearchParams(_rawHash.replace(/^#/,''));
-        const _at = _hp.get('access_token'), _rt = _hp.get('refresh_token');
-        if(_at && _rt){
-          const { data:sd, error:se } = await _SB.client.auth.setSession({ access_token:_at, refresh_token:_rt });
-          if(!se) _session = sd?.session;
-        }
-        // محاولة 2: PKCE code flow
-        if(!_session){
-          const _qp = new URLSearchParams(_rawSearch);
-          const _code = _qp.get('code');
-          if(_code){
-            const _fullUrl = window.location.href;
-            const { data:sd, error:se } = await _SB.client.auth.exchangeCodeForSession(_fullUrl);
-            if(!se) _session = sd?.session;
-          }
-        }
-        // محاولة 3: getSession (detectSessionInUrl فعّال)
-        if(!_session){
-          await new Promise(r=>setTimeout(r,400));
-          const { data:sd } = await _SB.client.auth.getSession();
-          _session = sd?.session;
-        }
-        // نظّف الـ URL من الـ tokens
-        if(window.history && window.history.replaceState){
-          try{ window.history.replaceState({}, document.title, window.location.pathname); }catch(e){}
-        }
-        if(_session){
-          const _provider = _session.user?.app_metadata?.provider;
-          if(_provider === 'google'){
-            if(_isLinkFlow){
-              // ربط الحساب — حدّث بيانات الربط فقط
-              P.linkedGg = true;
-              P.googleId  = _session.user.id;
-              P.email     = P.email || _session.user.email || '';
-              saveP();
-              toast(_i18n('toast_google_ok'),'ok');
-              goLobby();
-            } else {
-              await _handleGoogleAuthCallback(_session);
-            }
-          }
-        } else {
-          toast(_i18n('toast_google_fail'),'err');
-          go('sHome');
-          if(_oBtn){ _oBtn.disabled=false; _oBtn.style.opacity='1'; _oBtn.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> '+_i18n('google_login_btn'); }
-        }
-      }catch(e){
-        console.error('[Web-OAuth-Init]', e);
-        toast(_i18n('toast_login_error'),'err');
-        go('sHome');
-      }
-    })();
-    return; // لا تكمل init العادية — الـ async سيتولى التنقل
-  }
-
   // 1) مباراة محفوظة → استعدها
   if(restoreGameState()) return;
 
@@ -27534,146 +27373,6 @@ window._spUpdateSB = (state) => {
   });
 };
 
-
-async function loginGoogle(){
-  const btn = document.getElementById('btnGg');
-  const _btnReset = () => {
-    if(btn){ btn.disabled=false; btn.style.opacity='1';
-      btn.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> '+_i18n('google_login_btn');
-    }
-  };
-
-  try{
-    if(btn){ btn.disabled=true; btn.style.opacity='0.7'; btn.innerHTML='<span style="font-size:1.1rem">⏳</span> '+_i18n('routing_btn'); }
-
-    if(!_SB.client) _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
-      auth:{ flowType:'implicit', detectSessionInUrl:true, persistSession:true }
-    });
-
-    /* ═══════════════════════════════════════════════════
-       تسجيل أصلي (Capacitor) — Bottom Sheet بدون متصفح
-       ═══════════════════════════════════════════════════ */
-    const isNative = !!(window.Capacitor?.isNativePlatform?.() || window.Capacitor?.isNative);
-    const GoogleAuth = window.Capacitor?.Plugins?.GoogleAuth;
-
-    if(isNative && GoogleAuth){
-      console.log('[GG-Login] Native Google Sign-In...');
-      let googleUser;
-      try{
-        googleUser = await GoogleAuth.signIn();
-      }catch(signInErr){
-        // المستخدم أغلق النافذة أو رفض
-        if(signInErr?.message?.includes('cancel') || signInErr?.code === 12501){
-          toast(_i18n('toast_login_cancelled')||'تم الإلغاء', 'warn', 2000);
-        } else {
-          console.error('[GG-Login] Native sign-in error:', signInErr);
-          toast(_i18n('toast_google_fail')||'فشل تسجيل الدخول بـ Google', 'err');
-        }
-        _btnReset(); return;
-      }
-
-      const idToken = googleUser?.authentication?.idToken;
-      if(!idToken){ toast(_i18n('toast_google_fail')||'فشل: لا يوجد idToken', 'err'); _btnReset(); return; }
-
-      console.log('[GG-Login] Got idToken, signing in with Supabase...');
-      const { data, error } = await _SB.client.auth.signInWithIdToken({
-        provider: 'google',
-        token: idToken,
-      });
-
-      if(error){ console.error('[GG-Login] Supabase error:', error); toast(_i18n('toast_login_err2')(error.message), 'err'); _btnReset(); return; }
-      await _handleGoogleAuthCallback(data.session);
-      return;
-    }
-
-    /* ═══════════════════════════════════════════════════
-       متصفح عادي — OAuth Redirect (السلوك الأصلي)
-       ═══════════════════════════════════════════════════ */
-    console.log('[GG-Login] Web OAuth flow...');
-    const redirectTo = window.location.origin + window.location.pathname;
-    window._oauthHandled = false; window._sessionHandled = false;
-
-    const { data: oauthData, error } = await _SB.client.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo,
-        queryParams: { access_type: 'offline', prompt: 'select_account' }
-      }
-    });
-
-    if(error){
-      console.error('[GG-Login] OAuth error:', error);
-      toast(_i18n('toast_login_err2')(error.message), 'err');
-      _btnReset();
-    }
-
-  }catch(e){
-    console.error('[GG-Login]', e);
-    toast(_i18n('toast_server_err'), 'err');
-    _btnReset();
-  }
-}
-async function _handleGoogleAuthCallback(session){
-  try{
-    if(!session) return false;
-    if(window._ggCallbackRunning) return false; // منع الاستدعاء المزدوج
-    window._ggCallbackRunning = true;
-    window._webOAuthHandled = true;
-    const u = session.user;
-    const meta = u?.user_metadata || {};
-
-    // اسم المستخدم
-    const displayName = meta.full_name || meta.name || meta.email?.split('@')[0] || 'لاعب';
-    const avatar = meta.avatar_url || meta.picture || '';
-
-    P.name        = P.name && P.name.trim().length >= 3 ? P.name : displayName;
-    P.loginMethod = 'google';
-    P.googleId    = u.id;
-    P.email       = u.email || '';
-    if(avatar) P.av = avatar;
-    P.id          = P.id || u.id;
-    P.loggedBefore = true;
-
-    saveP();
-    updateUI();
-    await _sbSaveProfile();
-    _renderProfile();
-    toast(_i18n('toast_google_ok2'), 'ok');
-
-    // انتقل للـ lobby مثل loginAlias
-    setTimeout(()=>{ savePlayerStats(P.id, P.name, P.av, false, null, 0); _lbOnLogin(); }, 2000);
-    setTimeout(_applyPendingRef, 2500);
-    goLobby();
-    return true;
-  }catch(e){
-    console.error('[GG-Callback]', e);
-    window._ggCallbackRunning = false; // أعد التعيين عند الفشل
-    return false;
-  }
-}
-
-(async function _initGoogleAuth(){
-  try{
-    // [FIX] أنشئ client دائماً مع detectSessionInUrl:true
-    // حتى لو كان _SB.client موجوداً بدونها (من _sbInit مثلاً)
-    if(!_SB.client || !_SB.client._detectSessionInUrlDone){
-      _SB.client = supabase.createClient(_SB.URL, _SB.KEY, {
-        auth:{ flowType:'implicit', detectSessionInUrl:true, persistSession:true }
-      });
-      if(_SB.client) _SB.client._detectSessionInUrlDone = true;
-    }
-    _SB.client.auth.onAuthStateChange(async (event, session) => {
-      if((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session){
-        const provider = session.user?.app_metadata?.provider;
-        // [FIX] استقبل الـ session حتى لو loginMethod فارغ (بعد إعادة تحميل الصفحة)
-        if(provider === 'google' && P.loginMethod !== 'google' && !window._webOAuthHandled){
-          window._webOAuthHandled = true;
-          await _handleGoogleAuthCallback(session);
-        }
-      }
-    });
-  }catch(e){ console.warn('[GG-Init]', e); }
-})();
 
 
 // ── MULTI-CHANNEL STATUS DISPLAY ─────────────────────────────────
