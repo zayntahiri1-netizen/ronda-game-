@@ -39,7 +39,7 @@ jobs:
 
       # ── 6. إضافة Android ────────────────────────────────
       - name: Add Android platform
-        run: npx cap add android
+        run: rm -rf android && npx cap add android
 
       # ── 7. مزامنة Capacitor ──────────────────────────────
       - name: Capacitor sync
