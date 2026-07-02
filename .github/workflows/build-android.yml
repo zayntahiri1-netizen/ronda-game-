@@ -1,0 +1,190 @@
+name: 🎴 Ronda - Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    name: Build APK & AAB
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: |
+          npm install \
+            @capacitor/core@6.2.0 \
+            @capacitor/android@6.2.0 \
+            @capacitor/cli@6.2.0 \
+            @capacitor/app@6.0.0 \
+            @capacitor/browser@6.0.0 \
+            @capacitor/haptics@6.0.0 \
+            @capacitor/ios@6.2.0 \
+            @capacitor/keyboard@6.0.0 \
+            @capacitor/network@6.0.0 \
+            @capacitor/splash-screen@6.0.0 \
+            @capacitor/status-bar@6.0.0 \
+            @capacitor-community/admob@6.0.0 \
+            --save --legacy-peer-deps
+
+      - name: Add Android platform
+        run: |
+          rm -rf android
+          npx cap add android
+
+      - name: Capacitor sync
+        run: npx cap sync android
+
+      - name: Set version & SDK
+        run: |
+          VERSION_CODE=$((100 + ${{ github.run_number }}))
+          VERSION_NAME="1.0.${{ github.run_number }}"
+          BUILD_GRADLE="android/app/build.gradle"
+          VARS_GRADLE="android/variables.gradle"
+          sed -i "s/versionCode [0-9]*/versionCode $VERSION_CODE/" "$BUILD_GRADLE"
+          sed -i 's/versionName "[^"]*"/versionName "'"$VERSION_NAME"'"/' "$BUILD_GRADLE"
+          if [ -f "$VARS_GRADLE" ]; then
+            sed -i "s/minSdkVersion = [0-9]*/minSdkVersion = 23/" "$VARS_GRADLE"
+            sed -i "s/compileSdkVersion = [0-9]*/compileSdkVersion = 35/" "$VARS_GRADLE"
+            sed -i "s/targetSdkVersion = [0-9]*/targetSdkVersion = 35/" "$VARS_GRADLE"
+            echo "=== variables.gradle بعد التعديل ===" && cat "$VARS_GRADLE"
+          fi
+          echo "📦 versionCode=$VERSION_CODE versionName=$VERSION_NAME"
+
+      - name: Apply Android patches
+        run: |
+          mkdir -p android/app/src/main/res/values
+          cp android-patches/strings.xml android/app/src/main/res/values/strings.xml
+          mkdir -p android/app/src/main/res/xml
+          cp android-patches/network_security_config.xml android/app/src/main/res/xml/
+          cp android-patches/backup_rules.xml android/app/src/main/res/xml/
+          cp android-patches/AndroidManifest.xml android/app/src/main/AndroidManifest.xml
+
+      - name: Apply Ronda icons
+        run: |
+          RES="android/app/src/main/res"
+          for dir in mipmap-mdpi mipmap-hdpi mipmap-xhdpi mipmap-xxhdpi mipmap-xxxhdpi; do
+            mkdir -p "$RES/$dir"
+            cp "android-patches/res/$dir/"*.png "$RES/$dir/" 2>/dev/null || true
+          done
+
+      - name: Setup keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          SECRET_KS_PASS: ${{ secrets.KEYSTORE_PASS }}
+          SECRET_KS_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          KS_PATH="$GITHUB_WORKSPACE/release-keystore.jks"
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > "$KS_PATH"
+            echo "✓ Keystore من secrets"
+          else
+            keytool -genkeypair -v \
+              -keystore "$KS_PATH" \
+              -alias ronda-key \
+              -keyalg RSA -keysize 2048 -validity 10000 \
+              -storepass ronda2024 -keypass ronda2024 \
+              -dname "CN=Ronda, O=RondaGames, L=Casablanca, C=MA" \
+              -noprompt
+            echo "⚠ Keystore مؤقت"
+          fi
+          FINAL_KS_PASS="${SECRET_KS_PASS:-ronda2024}"
+          FINAL_KS_ALIAS="${SECRET_KS_ALIAS:-ronda-key}"
+          ls -la "$KS_PATH"
+          echo "KEYSTORE_PATH=$KS_PATH"         >> $GITHUB_ENV
+          echo "KS_PASS=$FINAL_KS_PASS"         >> $GITHUB_ENV
+          echo "KS_ALIAS=$FINAL_KS_ALIAS"       >> $GITHUB_ENV
+
+      - name: Inject signing into build.gradle
+        run: |
+          python3 scripts/inject-signing.py \
+            "$KEYSTORE_PATH" "$KS_PASS" "$KS_ALIAS"
+          echo "=== build.gradle (أول 70 سطر) ==="
+          head -70 android/app/build.gradle
+
+
+      - name: Copy google-services.json
+        run: |
+          cp android-patches/google-services.json android/app/google-services.json
+          echo "✓ google-services.json → android/app/"
+          ls -la android/app/google-services.json
+
+      - name: Inject Firebase into Gradle files
+        run: python3 scripts/inject-firebase.py
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
+
+      - name: Build Debug APK
+        run: cd android && ./gradlew assembleDebug --no-daemon
+        continue-on-error: true
+
+      - name: Build Release APK
+        run: cd android && ./gradlew assembleRelease --no-daemon
+        continue-on-error: true
+
+      - name: Build Release AAB
+        run: cd android && ./gradlew bundleRelease --no-daemon
+        continue-on-error: true
+
+      - name: List build outputs
+        if: always()
+        run: |
+          echo "=== كل الملفات المنتجة ==="
+          find android/app/build/outputs -type f 2>/dev/null || echo "لا مخرجات"
+
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ronda-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: warn
+
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ronda-release-apk
+          path: android/app/build/outputs/apk/release/app-release*.apk
+          if-no-files-found: warn
+
+      - name: Upload AAB (Play Store)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ronda-release-aab
+          path: android/app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: warn
+
+      - name: Build Summary
+        if: always()
+        run: |
+          VERSION_CODE=$((100 + ${{ github.run_number }}))
+          VERSION_NAME="1.0.${{ github.run_number }}"
+          echo "## 🎴 Ronda Build Results" >> $GITHUB_STEP_SUMMARY
+          echo "**versionCode:** $VERSION_CODE | **versionName:** $VERSION_NAME" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          for f in \
+            "android/app/build/outputs/apk/debug/app-debug.apk|Debug APK للتصحيح" \
+            "android/app/build/outputs/apk/release/app-release.apk|Release APK للإصدار" \
+            "android/app/build/outputs/bundle/release/app-release.aab|AAB متجر جوجل بلاي"; do
+            FILE="${f%%|*}"; LABEL="${f##*|}"
+            if [ -f "$FILE" ]; then
+              echo "✅ **$LABEL:** $(du -sh $FILE | cut -f1)" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "❌ **$LABEL:** لم يُنشأ" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+          echo "📥 حمّل من **Artifacts** أعلى الصفحة" >> $GITHUB_STEP_SUMMARY
