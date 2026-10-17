@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2732 2732" width="2732" height="2732">
+  <defs>
+    <linearGradient id="splashBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#071410"/>
+      <stop offset="40%"  stop-color="#0a1f0e"/>
+      <stop offset="100%" stop-color="#040d07"/>
+    </linearGradient>
+    <radialGradient id="splashGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#1a4020" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#040d07" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="goldRing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#f0d060"/>
+      <stop offset="30%"  stop-color="#d4a43c"/>
+      <stop offset="70%"  stop-color="#f0d060"/>
+      <stop offset="100%" stop-color="#b8882a"/>
+    </linearGradient>
+    <filter id="textShadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="#000000" flood-opacity="0.8"/>
+    </filter>
+    <filter id="goldGlow">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="18" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <linearGradient id="cardWhite" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f0ede8"/>
+    </linearGradient>
+    <filter id="cardShadow">
+      <feDropShadow dx="10" dy="18" stdDeviation="20" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <!-- خلفية -->
+  <rect width="2732" height="2732" fill="url(#splashBg)"/>
+  <rect width="2732" height="2732" fill="url(#splashGlow)"/>
+
+  <!-- نمط نقاط خفي -->
+  <pattern id="dots" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+    <circle cx="30" cy="30" r="1.5" fill="#1a4020" opacity="0.25"/>
+  </pattern>
+  <rect width="2732" height="2732" fill="url(#dots)"/>
+
+  <!-- دائرة زخرفية خارجية -->
+  <circle cx="1366" cy="1366" r="1100" fill="none" stroke="url(#goldRing)" stroke-width="3" opacity="0.12"/>
+  <circle cx="1366" cy="1366" r="980"  fill="none" stroke="url(#goldRing)" stroke-width="2" opacity="0.08"/>
+  <circle cx="1366" cy="1366" r="820"  fill="none" stroke="url(#goldRing)" stroke-width="1.5" opacity="0.06"/>
+
+  <!-- ورقة لعب وسطى كبيرة — خلفية الـ splash -->
+  <g filter="url(#cardShadow)" opacity="0.25">
+    <rect x="966" y="700" width="800" height="1100" rx="55" ry="55" fill="url(#cardWhite)"/>
+    <text x="1366" y="1280" font-family="Georgia,serif" font-size="380" font-weight="900"
+          text-anchor="middle" fill="#1a1a1a" opacity="0.15">12</text>
+    <text x="1366" y="1480" font-size="200" text-anchor="middle" fill="#111111" opacity="0.12">♠</text>
+  </g>
+
+  <!-- اسم اللعبة -->
+  <!-- توهج -->
+  <text x="1366" y="1450" font-family="Cairo, Tajawal, Arial, sans-serif"
+        font-size="420" font-weight="900" text-anchor="middle"
+        fill="#d4a43c" opacity="0.15" filter="url(#goldGlow)">روندة</text>
+  <!-- النص الرئيسي -->
+  <text x="1366" y="1450" font-family="Cairo, Tajawal, Arial, sans-serif"
+        font-size="420" font-weight="900" text-anchor="middle"
+        fill="url(#goldRing)" filter="url(#textShadow)">روندة</text>
+
+  <!-- خط تحت الاسم -->
+  <line x1="500" y1="1500" x2="2232" y2="1500" stroke="url(#goldRing)" stroke-width="4" opacity="0.4"/>
+  <line x1="700" y1="1520" x2="2032" y2="1520" stroke="url(#goldRing)" stroke-width="2" opacity="0.2"/>
+
+  <!-- نجوم زخرفية -->
+  <text x="480"  y="1472" font-size="80" fill="#d4a43c" opacity="0.6">✦</text>
+  <text x="2172" y="1472" font-size="80" fill="#d4a43c" opacity="0.6">✦</text>
+  <text x="1326" y="1472" font-size="40" fill="#d4a43c" opacity="0.3">✦</text>
+
+  <!-- شعار صغير تحت -->
+  <text x="1366" y="1640" font-family="Cairo, Tajawal, Arial, sans-serif"
+        font-size="92" font-weight="600" text-anchor="middle"
+        fill="#d4a43c" opacity="0.55" letter-spacing="8">لعبة الورق المغربية</text>
+
+  <!-- رموز البطاقات -->
+  <text x="966"  y="1820" font-size="130" text-anchor="middle" fill="#cc2222" opacity="0.5">♥</text>
+  <text x="1166" y="1820" font-size="130" text-anchor="middle" fill="#222222" opacity="0.5">♠</text>
+  <text x="1566" y="1820" font-size="130" text-anchor="middle" fill="#cc2222" opacity="0.5">♦</text>
+  <text x="1766" y="1820" font-size="130" text-anchor="middle" fill="#222222" opacity="0.5">♣</text>
+</svg>
