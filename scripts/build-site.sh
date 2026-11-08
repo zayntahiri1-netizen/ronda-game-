@@ -27,6 +27,14 @@ cp -r www/. "$OUT/"
 cp site/terms.html site/privacy.html site/delete.html "$OUT/"
 cp site/style.css  site/i18n.js                        "$OUT/"
 
+# 2ب) app-ads.txt في الجذر حتماً — تزحف إليه AdMob على
+#     https://ronda-e11cd.web.app/app-ads.txt ولا تقبله في مجلّد فرعي.
+#     ⚠️ يجب أن يكون حقل «الموقع الإلكتروني» في صفحة المتجر هو النطاق
+#        وحده بلا مسار: https://ronda-e11cd.web.app  — فالرابط المنتهي
+#        بـ/play/ يُربك الزاحف ولا تتناوله الوثائق.
+#     cleanUrls لا يمسّ .txt، وFirebase يخدمه بنوع text/plain تلقائياً.
+cp site/app-ads.txt "$OUT/"
+
 # 3) صفحة التعريف في /play/
 cp site/landing.html "$OUT/play/index.html"
 
