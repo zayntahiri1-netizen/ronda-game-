@@ -13218,16 +13218,51 @@ function buildCard(rank, suit, sizeClass, opts={}) {
     outline: opts.sel ? '2.5px solid #F5D87A' : opts.eat ? '2.5px solid #4CAF50' : 'none',
     outlineOffset: '1px'
   });
-  const cv = document.createElement('canvas');
-  cv.width = W; cv.height = H;
-  Object.assign(cv.style, {
-    width: W+'px', height: H+'px',
-    display: 'block', pointerEvents: 'none'
-  });
-  _paintSpanishCard(cv.getContext('2d'), rank, suit, W, H);
-  wrap.appendChild(cv);
+  wrap.appendChild(_cardFace(rank, suit, W, H));
   return wrap;
 }
+
+/* [NEW-DECK] وجه الورقة صار صورة من www/cards/ بدل الرسم على canvas.
+   • المقاسان الظاهران كما كانا تماماً: md = 80×122 · sm = 52×78،
+     والصورة تملأ الصندوق بـobjectFit:fill تماماً كما كان الـcanvas
+     يُرسم في W×H — فالتخطيط لم يتغيّر بكسلاً واحداً.
+   • الملفات 237×366، أي ثلاثة أمثال أكبر مقاس ظاهر، فتبقى حادّة على
+     شاشات 3×. وكان الـcanvas يُرسم بمقاس CSS نفسه فيظهر ضبابياً عليها.
+   • _paintSpanishCard باقٍ احتياطاً: إن تعذّر تحميل صورة لأي سبب
+     رسمناها بالكود، فلا يرى اللاعب ورقة فارغة. */
+function _cardFace(rank, suit, W, H){
+  const img = document.createElement('img');
+  img.alt = ''; img.decoding = 'async'; img.draggable = false;
+  Object.assign(img.style, {
+    width: W+'px', height: H+'px',
+    display: 'block', objectFit: 'fill', pointerEvents: 'none'
+  });
+  img.onerror = function(){
+    const cv = document.createElement('canvas');
+    cv.width = W; cv.height = H;
+    Object.assign(cv.style, {
+      width: W+'px', height: H+'px',
+      display: 'block', pointerEvents: 'none'
+    });
+    try { _paintSpanishCard(cv.getContext('2d'), rank, suit, W, H); } catch(e){}
+    if (img.parentNode) img.parentNode.replaceChild(cv, img);
+  };
+  img.src = 'cards/' + suit + '_' + rank + '.png';
+  return img;
+}
+
+/* [NEW-DECK-PRELOAD] تحميل الرزمة في وقت الخمول بعد الإقلاع، حتى لا
+   تظهر الأوراق متأخّرة أثناء أوّل جولة. محلّية داخل التطبيق فالكلفة
+   لا تُذكر، ومحاطة بـtry فلا يوقف فشلُها شيئاً. */
+(function(){
+  const SUITS_ = ['espadas','copas','oros','bastos'];
+  const RANKS_ = [1,2,3,4,5,6,7,10,11,12];
+  const go = () => { try{
+    SUITS_.forEach(s => RANKS_.forEach(r => { const i = new Image(); i.src = 'cards/'+s+'_'+r+'.png'; }));
+  }catch(e){} };
+  if (typeof requestIdleCallback === 'function') requestIdleCallback(go, {timeout:5000});
+  else setTimeout(go, 3000);
+})();
 
 /* ═══════════════════════════════════════════════════════════
    SPANISH CARD PAINTER — pixel-accurate to real photos
@@ -14356,11 +14391,9 @@ function lotteryRevealAll(){
               overflow:'hidden',flexShrink:'0',cursor:'default',
               position:'relative',display:'inline-block',
               boxShadow:'2px 4px 12px rgba(0,0,0,.7)',pointerEvents:'none'});
-            const cv = document.createElement('canvas');
-            cv.width=W; cv.height=H;
-            Object.assign(cv.style,{width:W+'px',height:H+'px',display:'block'});
-            try { _paintSpanishCard(cv.getContext('2d'), card.rank, card.suit, W, H); } catch(e2){}
-            wEl.appendChild(cv);
+            // [NEW-DECK] كشف القرعة كان ينسخ منطق buildCard بالكامل —
+            // صار يستعمل _cardFace نفسه فلا يتخلّف عن بقيّة اللعبة.
+            wEl.appendChild(_cardFace(card.rank, card.suit, W, H));
             front.appendChild(wEl);
             front.style.display = 'flex';
           }
