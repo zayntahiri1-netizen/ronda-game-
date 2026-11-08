@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "148371997868",
+    "firebase_url": "https://ronda-e11cd-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "ronda-e11cd",
+    "storage_bucket": "ronda-e11cd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:148371997868:android:3a6365d109ca780fd30b09",
+        "android_client_info": {
+          "package_name": "com.rondatahiro.myapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "148371997868-gvsijdbmh314orojqdh929nh44bjkm32.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9EP7pg4rDP5qr8QtqM9nSnB7g2t1wBDE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "148371997868-gvsijdbmh314orojqdh929nh44bjkm32.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

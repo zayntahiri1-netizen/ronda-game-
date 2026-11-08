@@ -1,0 +1,25 @@
+{
+  "hosting": {
+    "public": ".site-build",
+    "ignore": ["**/.*", "**/node_modules/**"],
+
+    "//cleanUrls": "روابط بلا .html: /terms بدل /terms.html. الروابط القديمة لا تنكسر — Firebase يعيد توجيهها 301 إلى النظيفة، وهذا يحمي ما هو مسجَّل في Play Console وGoogle Cloud.",
+    "cleanUrls": true,
+
+    "headers": [
+      {
+        "source": "**/*.@(html)",
+        "headers": [{ "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }]
+      },
+      {
+        "//": "⚠️ عامل الخدمة في الجذر لا في /play/ — اللعبة انتقلت إلى الجذر. لو شملته قاعدة الأصول أدناه لخُزِّن أسبوعاً وثبّت اللاعبين على نسخة قديمة.",
+        "source": "/sw.js",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      },
+      {
+        "source": "**/*.@(css|js|png|jpg|jpeg|svg|webp|woff2)",
+        "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }]
+      }
+    ]
+  }
+}
