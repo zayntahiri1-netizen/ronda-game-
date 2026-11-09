@@ -4798,6 +4798,10 @@ html[lang="ar"] .pbtn-arr {
    (في RTL يظهر oppSideLeft يمين الشاشة وoppSideRight يسارها) */
 #oppSideLeft  .badge-ronda-opp{left:auto!important;right:0!important;transform:none!important}
 #oppSideRight .badge-ronda-opp{left:0!important;right:auto!important;transform:none!important}
+/* وعلامة الموزّع كذلك: تُزاح خارج اللوحة بقيمة سالبة، فتخرج عن الشاشة
+   حين تكون اللوحة ملتصقة بالحافة. نُلصقها بالطرف الداخلي. */
+#oppSideRight .dealer-marker{left:0!important;right:auto!important}
+#oppSideLeft  .dealer-marker{left:auto!important;right:0!important}
 
 .badge-ronda-opp.trinka{background:linear-gradient(135deg,var(--amethi2),var(--amethi));color:#fff;
   box-shadow:0 2px 10px rgba(171,71,188,.9),0 0 0 2px rgba(255,255,255,.3);}
@@ -4823,6 +4827,20 @@ html[lang="ar"] .pbtn-arr {
 /* [COL-GOAL] عزل اتجاهي: «14/10 +4» نصّ لاتيني داخل صفحة عربية، وبلا
    عزلٍ يقلب المحرّك «+4» إلى «4+» ويقذفها إلى الطرف المقابل فتُقرأ خطأً. */
 #gMCol{direction:ltr;unicode-bidi:isolate;display:inline-block}
+/* [LAST-EAT] آخر أكلة: أرقام الأوراق التي التقطها اللاعب في دوره الأخير.
+   تلتفّ على أسطر لأن اللوحة الجانبية عرضها 31px فقط، وmax-width يمنعها
+   من تكرار فيض الحافة الذي أصلحناه. */
+.lasteat{display:flex;gap:2px;justify-content:center;flex-wrap:wrap;
+  margin-top:2px;direction:ltr;max-width:100%}
+.lasteat b{
+  font:800 .52rem/1.45 var(--fd),system-ui;
+  min-width:12px;padding:0 3px;border-radius:4px;
+  background:linear-gradient(180deg,rgba(212,164,60,.32),rgba(212,164,60,.15));
+  border:1px solid rgba(212,164,60,.45);color:#F5D87A;
+  text-shadow:0 1px 2px rgba(0,0,0,.9);
+}
+.lasteat b.more{background:rgba(0,0,0,.45);border-color:rgba(212,164,60,.22);color:var(--t3)}
+
 /* [COL-GOAL] أخضر عند تجاوز عتبة نقاط الأوراق — كل ورقة فوقها نقطة */
 .col-over{color:#5FE39B!important;
   text-shadow:0 0 9px rgba(95,227,155,.5),0 1px 3px rgba(0,0,0,.9)!important}
@@ -13250,8 +13268,10 @@ const PIP_LAYOUTS = {
    FIX: using createElement avoids innerHTML ID collision issues.
 */
 function buildCard(rank, suit, sizeClass, opts={}) {
-  const W = sizeClass==='md' ? 80 : 52;
-  const H = sizeClass==='md' ? 122 : 78;
+  // [BIGGER-CARDS] كانت 80×122 و52×78. كُبّرت 12% مع حفظ النسبة تماماً،
+  // والصور 237×366 تحتمل التكبير بلا ضبابية لأنها أصلاً 3× المقاس القديم.
+  const W = sizeClass==='md' ? 90 : 58;
+  const H = sizeClass==='md' ? 137 : 87;
   const wrap = document.createElement('div');
   wrap.className = `sc ${sizeClass}${opts.sel?' sel':''}${opts.eat?' eat':''}`;
   wrap.dataset.rank = rank; wrap.dataset.suit = suit;
@@ -14431,7 +14451,7 @@ function lotteryRevealAll(){
           if(back) back.style.display = 'none';
           if(front && card){
             front.innerHTML = '';
-            const W=52, H=78;
+            const W=58, H=87;  // [BIGGER-CARDS]
             const wEl = document.createElement('div');
             Object.assign(wEl.style,{width:W+'px',height:H+'px',borderRadius:'6px',
               overflow:'hidden',flexShrink:'0',cursor:'default',
@@ -20140,6 +20160,7 @@ function nextPhase(){
   if(G._multi){
     for(let i=0;i<G.nSeats;i++){
       G.collections[i]=[];
+      if(G.lastEaten) delete G.lastEaten[i];   // [LAST-EAT]
       G.points[i]=0; // [FIX6]
     }
   }else{
@@ -20444,7 +20465,7 @@ function applyPlayM(seat,card,moveId){
 
       if(chain===1){
         // ✅ بومبا أولى: +1 نقطة — يأخذ أوراق الخصم وورقته تبقى على الطاولة للبومبا التالية
-        G.collections[seat].push(...eaten);
+        _eat(seat, eaten);                       // [LAST-EAT]
         G.lastEater=seat;
         // [FIX-MESA-BUMBA] تحقق من الميسا قبل tbl.push (الطاولة فارغة الآن بعد أكل الأوراق)
         const _isMesaB1 = !G.tbl.length && !il;
@@ -20466,7 +20487,7 @@ function applyPlayM(seat,card,moveId){
           G.collections[b.seat]=G.collections[b.seat].filter(c=>!prevCards.some(p=>cid(p)===cid(c)));
         });
         const allCards=[...prevCards,...eaten];
-        G.collections[seat].push(...allCards);
+        _eat(seat, allCards);                    // [LAST-EAT]
         G.lastEater=seat;
         // [FIX-MESA-BUMBA] تحقق من الميسا قبل tbl.push
         const _isMesaB2 = !G.tbl.length && !il;
@@ -20488,7 +20509,7 @@ function applyPlayM(seat,card,moveId){
           G.collections[b.seat]=G.collections[b.seat].filter(c=>!prevCards.some(p=>cid(p)===cid(c)));
         });
         const allCards=[...prevCards,...eaten];
-        G.collections[seat].push(...allCards);
+        _eat(seat, allCards);                    // [LAST-EAT]
         G.lastEater=seat;
         // [FIX-MESA-BUMBA] تحقق من الميسا قبل tbl.push
         const _isMesaB3 = !G.tbl.length && !il;
@@ -20506,7 +20527,7 @@ function applyPlayM(seat,card,moveId){
 
     } else {
       // أكل عادي
-      G.collections[seat].push(...took);
+      _eat(seat, took);                          // [LAST-EAT]
       G.lastEater=seat;
     }
 
@@ -21246,7 +21267,7 @@ function _finalM(){
   }
 
   // ── آخر من أكل يأخذ ما تبقى على الطاولة ──
-  if(G.lastEater!=null) G.collections[G.lastEater].push(...G.tbl);
+  if(G.lastEater!=null) _eat(G.lastEater, G.tbl);  // [LAST-EAT] كنس الطاولة
   G.tbl=[];
   // [FIX-DECL-FINAL] حساب نقاط الروندة/الترينكة قبل نقاط الأوراق
   resolveDeclarations(); clearDeclBadges();
@@ -21994,30 +22015,39 @@ function _dealAnimMyHand(onDone){
   if(!ph||!G.myHand?.length){ renderMyHand(); onDone?.(); return; }
   ph.innerHTML='';
   const n=G.myHand.length;
-  const maxAngle=n<=2?8:n<=4?14:20;
+  // [FAN-PIVOT] نفس معاملات renderMyHand حرفياً، وإلّا قفزت الأوراق
+  // من شكلٍ إلى آخر لحظة انتهاء حركة التوزيع.
+  const maxAngle=n<=2?8:n<=4?18:24;
   const overlapPx=n<=2?0:n<=4?-8:-14;
+  const fanDir=(getComputedStyle(ph).direction==='rtl')?-1:1;   // [FAN-DIR]
+  const CONVERGE=0.55, stepPx=90+overlapPx, midIdx=(n-1)/2;
   let done=0;
-  G.myHand.forEach((c,i)=>{
+  G.myHand.map((c,i)=>({c,i})).reverse().forEach(({c,i}, pos)=>{   // [HAND-ORDER]
     setTimeout(()=>{
       const isSel=false;
       const card=buildCard(c.rank,c.suit,'md',{sel:isSel});
       card.classList.add('hand-card','deal-card-in');
-      const angle=n===1?0:((i/(n-1))-.5)*maxAngle*2;
-      const arcLift=n===1?0:-Math.abs((i/(n-1))-.5)*8;
+      const angle=(n===1?0:((pos/(n-1))-.5)*maxAngle*2)*fanDir;
+      const arcLift=n===1?0:-Math.abs((pos/(n-1))-.5)*8;
+      const dx=(n===1?0:-(pos-midIdx)*stepPx*CONVERGE)*fanDir;
       card.style.transformOrigin='bottom center';
-      card.style.marginRight=i<n-1?overlapPx+'px':'0';
-      card.style.zIndex=String(i+1);
+      card.style.marginRight=pos<n-1?overlapPx+'px':'0';
+      card.style.zIndex=String(pos+1);
+      card.dataset.hi=i;   // [HAND-ORDER]
       card.style.position='relative';
-      card.style.transform=`rotate(${angle}deg) translateY(${arcLift}px)`;
-      card.addEventListener('click',()=>selectCard(i));
+      card.style.transform=`translateX(${dx}px) rotate(${angle}deg) translateY(${arcLift}px)`;
+      card.addEventListener('click',()=>{
+        if(G.selCard && cid(G.selCard)===cid(c)){ doPlay(); return; }   // [TAP2-PLAY]
+        selectCard(i);
+      });
       // hover
       card.addEventListener('mouseenter',()=>{
-        card.style.transform=`rotate(${angle}deg) translateY(${arcLift-10}px) scale(1.07)`;
+        card.style.transform=`translateX(${dx}px) rotate(${angle}deg) translateY(${arcLift-10}px) scale(1.07)`;
         card.style.zIndex='20';
       });
       card.addEventListener('mouseleave',()=>{
-        card.style.transform=`rotate(${angle}deg) translateY(${arcLift}px)`;
-        card.style.zIndex=String(i+1);
+        card.style.transform=`translateX(${dx}px) rotate(${angle}deg) translateY(${arcLift}px)`;
+        card.style.zIndex=String(pos+1);
       });
       ph.appendChild(card);
       SND.card();
@@ -22034,31 +22064,58 @@ function renderMyHand(){
   if(!n) return;
 
   // Fan parameters
-  const maxAngle = n <= 2 ? 8 : n <= 4 ? 14 : 20; // total spread degrees
+  const maxAngle = n <= 2 ? 8 : n <= 4 ? 18 : 24; // total spread degrees
   const overlapPx = n <= 2 ? 0 : n <= 4 ? -8 : -14; // negative = overlap
 
-  G.myHand.forEach((c,i)=>{
+  /* [FAN-PIVOT] كانت كل ورقة تدور حول أسفلها هي، وأسافلها متباعدة
+     بالتساوي — فتتفتّح من الأعلى والأسفل معاً ولا تبدو يداً ممسوكة.
+     نسحب كل ورقة أفقياً نحو المركز بنسبة CONVERGE من بُعدها عنه، فتلتقي
+     الأسافل قرب نقطة واحدة بينما يُبقي الدوران الأعالي مفتوحة.
+     أبقينا تخطيط flex كما هو — لا مواضع مطلقة — فلا تتأثّر مساحات
+     اللمس ولا السحب للأعلى ولا ارتفاع الصفّ. */
+  /* [FAN-DIR] الصفحة RTL فترتيب flex معكوس: i=0 هي اليمنى بصرياً.
+     والزاوية كانت تُحسب بترتيب المصفوفة لا بالترتيب البصري، فتميل
+     الورقة اليمنى يساراً — أي للداخل — فتتجمّع الأعالي وتتباعد
+     الأسافل، وهو عين ما اشتُكي منه. نضرب الزاوية والإزاحة في اتجاه
+     الحاوية فينقلب الميل للخارج وتلتقي الأسافل. */
+  const fanDir = (getComputedStyle(ph).direction === 'rtl') ? -1 : 1;
+  const CONVERGE = 0.55;
+  const stepPx   = 90 + overlapPx;
+  const midIdx   = (n - 1) / 2;
+
+  /* [HAND-ORDER] عكس ترتيب العرض. pos = الموضع البصري، i = فهرس الورقة
+     في اليد. فصلهما ضروري: الهندسة والتراصّ تتبع pos، والاختيار والرمي
+     يتبعان i — ولو خلطناهما لاختار الضغطُ ورقةً غير التي لمسها اللاعب. */
+  G.myHand.map((c,i)=>({c,i})).reverse().forEach(({c,i}, pos)=>{
     const isSel=G.selCard && cid(G.selCard)===cid(c);
     const card=buildCard(c.rank, c.suit, 'md', {sel:isSel});
     card.classList.add('hand-card');
 
     // Fan angle: spread from center
-    const angle = n===1 ? 0 : ((i/(n-1)) - 0.5) * maxAngle * 2;
+    const angle = (n===1 ? 0 : ((pos/(n-1)) - 0.5) * maxAngle * 2) * fanDir;
     // Vertical arc: cards at edges lift slightly
-    const arcLift = n===1 ? 0 : -Math.abs((i/(n-1)) - 0.5) * 8;
+    const arcLift = n===1 ? 0 : -Math.abs((pos/(n-1)) - 0.5) * 8;
+    // [FAN-PIVOT] سحب أفقي نحو المركز يجمع الأسافل
+    const dx = (n===1 ? 0 : -(pos - midIdx) * stepPx * CONVERGE) * fanDir;
 
     card.style.transformOrigin='bottom center';
-    card.style.marginRight = i < n-1 ? overlapPx+'px' : '0';
-    card.style.zIndex = isSel ? '25' : String(i+1);
+    card.style.marginRight = pos < n-1 ? overlapPx+'px' : '0';
+    card.style.zIndex = isSel ? '25' : String(pos+1);
+    card.dataset.hi = i;   // [HAND-ORDER] فهرس الورقة، لا موضعها
     card.style.position='relative';
 
     if(isSel){
-      card.style.transform=`rotate(${angle}deg) translateY(${arcLift - 14}px) scale(1.09)`;
+      card.style.transform=`translateX(${dx}px) rotate(${angle}deg) translateY(${arcLift - 14}px) scale(1.09)`;
     } else {
-      card.style.transform=`rotate(${angle}deg) translateY(${arcLift}px)`;
+      card.style.transform=`translateX(${dx}px) rotate(${angle}deg) translateY(${arcLift}px)`;
     }
 
-    card.addEventListener('click', ()=>selectCard(i));
+    card.addEventListener('click', ()=>{
+      // [TAP2-PLAY] الأولى تختار، والثانية على الورقة نفسها ترميها —
+      // فيستغني اللاعب عن الوصول إلى زرّ «العب» في كل دور إن شاء.
+      if(G.selCard && cid(G.selCard)===cid(c)){ doPlay(); return; }
+      selectCard(i);
+    });
 
     // [Swipe-to-Play] سحب للأعلى → رمي مباشر (بدل click+click)
     let _touchY0=null, _swipeMoved=false;
@@ -22070,7 +22127,7 @@ function renderMyHand(){
       const dy = _touchY0 - e.touches[0].clientY;
       if(dy > 8) _swipeMoved=true;
       // حرّك الورقة بصرياً مع الإصبع (حركة جزئية)
-      if(dy > 0) card.style.transform=`rotate(${angle}deg) translateY(${arcLift - Math.min(dy,30)}px) scale(${1+Math.min(dy,30)*0.002})`;
+      if(dy > 0) card.style.transform=`translateX(${dx}px) rotate(${angle}deg) translateY(${arcLift - Math.min(dy,30)}px) scale(${1+Math.min(dy,30)*0.002})`;
     }, {passive:true});
     card.addEventListener('touchend', e=>{
       const dy = _touchY0!==null ? _touchY0 - e.changedTouches[0].clientY : 0;
@@ -22093,13 +22150,13 @@ function renderMyHand(){
     // Hover effect (only non-selected)
     if(!isSel){
       card.addEventListener('mouseenter',()=>{
-        card.style.transform=`rotate(${angle}deg) translateY(${arcLift - 10}px) scale(1.07)`;
+        card.style.transform=`translateX(${dx}px) rotate(${angle}deg) translateY(${arcLift - 10}px) scale(1.07)`;
         card.style.zIndex='20';
         card.style.boxShadow='0 14px 32px rgba(0,0,0,.9),0 0 16px rgba(212,164,60,.18)';
       });
       card.addEventListener('mouseleave',()=>{
-        card.style.transform=`rotate(${angle}deg) translateY(${arcLift}px)`;
-        card.style.zIndex=String(i+1);
+        card.style.transform=`translateX(${dx}px) rotate(${angle}deg) translateY(${arcLift}px)`;
+        card.style.zIndex=String(pos+1);
         card.style.boxShadow='';
       });
     }
@@ -22302,17 +22359,38 @@ function renderChips(pts, containerId){
 
    العتبة = 40 ÷ عدد المقاعد → 20 في الثنائي · 10 في الرباعي.
 
-   أمّا 2 ضد 2 فالعتبة للفريق لا للمقعد، فلا يصحّ وضع «/20» على
-   عدّاد مقعد مفرد. العدّادات الجانبية تبقى أرقاماً عارية، ولوحة
-   اللاعب وحدها تعرض تقدّم فريقه — ولو وضعنا مجموع الفريق على كل
-   مقعد لظهر الرقم نفسه مرّتين متجاورتين وبدا خللاً لا معلومة.
+   وفي 2 ضد 2 العتبة للفريق لا للمقعد، فيعرض كل مقعد مجموع فريقه
+   مقابل 20 — فيتطابق الزميلان عمداً، لأن النقاط تُحسب للفريق.
 ═══════════════════════════════════════════════════════════ */
-function _colTarget(){ return Math.floor(40 / (G.nSeats || 2)); }
+/* ═══════════════════════════════════════════════════════════
+   [LAST-EAT] تسجيل آخر أكلة لكل مقعد لعرض أرقامها تحته.
+   مركزيّ عمداً: مواضع الأكل خمسة (أكل عادي · بومبا أولى · بومبا
+   متسلسلة مرّتين · كنس الطاولة نهاية التوزيعة)، ولو سجّلنا في كل
+   موضع على حدة لتخلّف أحدها عند أي تعديل لاحق.
+═══════════════════════════════════════════════════════════ */
+function _eat(seat, cards){
+  if(!G.collections || !G.collections[seat] || !cards || !cards.length) return;
+  G.collections[seat].push(...cards);
+  if(!G.lastEaten) G.lastEaten = {};
+  G.lastEaten[seat] = cards.map(c => c.rank);
+  try{ renderLastEaten(); }catch(e){}
+}
 
-function _colTeamTotal(){
-  if(G.pMode !== '2v2' || !G.collections || !G.teams) return null;
-  const t = G.teams[0];                    // مقعدي محلياً هو 0 دائماً
-  return G.collections.reduce((a, c, s) => a + (G.teams[s] === t ? (c?.length || 0) : 0), 0);
+/* العتبة: 20 للفرد في الثنائي · 10 في الرباعي المستقلّ · 20 للفريق في 2v2 */
+function _colTarget(){
+  return (G.pMode === '2v2') ? 20 : Math.floor(40 / (G.nSeats || 2));
+}
+
+/* العدد المعروض لمقعدٍ ما. في 2 ضد 2 نعرض مجموع الفريق لا المقعد، فيتطابق
+   الزميلان عمداً — لأن النقاط تُحسب للفريق، ورقمٌ مفرد مقابل عتبة الفريق
+   يضلّل اللاعب. */
+function _colCount(seat){
+  if(!G.collections) return 0;
+  if(G.pMode === '2v2' && G.teams){
+    const t = G.teams[seat];
+    return G.collections.reduce((a, c, s) => a + (G.teams[s] === t ? (c?.length || 0) : 0), 0);
+  }
+  return G.collections[seat]?.length || 0;
 }
 
 function _colPaint(el, n, target, withIcon){
@@ -22324,17 +22402,47 @@ function _colPaint(el, n, target, withIcon){
   el.classList.toggle('col-over', over);
 }
 
+/* [LAST-EAT] موضع صفّ الأرقام لكل مقعد: مباشرةً تحت عدّاد أوراقه،
+   فيقرأ اللاعب «كم جمع» و«ماذا التقط للتوّ» في مكان واحد. */
+function _colAnchor(seat){
+  if(seat === 0) return document.querySelector('.pcol');
+  if(G._multi && G.nSeats === 4)
+    return $(['', 'oppSideLeftCol', 'oppCol2', 'oppSideRightCol'][seat] || '');
+  return $('oppCol2');
+}
+
+function renderLastEaten(){
+  const N = G.nSeats || 2;
+  for(let seat = 0; seat < 4; seat++){
+    let row = document.getElementById('lastEat' + seat);
+    const anchor = seat < N ? _colAnchor(seat) : null;
+    if(!anchor){ if(row) row.remove(); continue; }
+    if(!row){
+      row = document.createElement('div');
+      row.id = 'lastEat' + seat;
+      row.className = 'lasteat';
+    }
+    if(row.previousElementSibling !== anchor) anchor.insertAdjacentElement('afterend', row);
+    const ranks = (G.lastEaten && G.lastEaten[seat]) || null;
+    if(!ranks || !ranks.length){ row.style.display = 'none'; row.textContent = ''; continue; }
+    row.style.display = '';
+    row.textContent = '';
+    ranks.slice(0, 5).forEach(r => {
+      const b = document.createElement('b'); b.textContent = r; row.appendChild(b);
+    });
+    if(ranks.length > 5){
+      const m = document.createElement('b');
+      m.className = 'more'; m.textContent = '+' + (ranks.length - 5);
+      row.appendChild(m);
+    }
+  }
+}
+
 function updateScores(){
   const f=(id,v)=>{const e=$(id);if(e)e.textContent=v};
   f('gMPts',G.myPts); f('gOPtsD',G.oppPts); f('gOPts',G.oppPts);
-  if(G.myCol){
-    // في 2 ضد 2 نعرض مجموع الفريق مقابل 20، وإلّا أوراقي مقابل 40÷المقاعد
-    const _team = _colTeamTotal();         // غير null في 2 ضد 2 فقط
-    _colPaint($('gMCol'),
-              _team != null ? _team : G.myCol.length,
-              _team != null ? 20 : _colTarget(),
-              false);
-  }
+  if(G.myCol) _colPaint($('gMCol'), _colCount(0), _colTarget(), false);
+  try{ renderLastEaten(); }catch(e){}   // [LAST-EAT] تتجدّد مع كل تحديث نتائج
   // ملاحظة: لا يوجد عنصر id="gOCol" في الصفحة — عدّاد الخصم هو oppCol2،
   // ويُحدَّث في كتلة [FIX-OPPCOL-2P] أدناه.
 
@@ -22365,16 +22473,11 @@ function updateScores(){
   if(_is4pCol && G.collections){
     const colEls=['oppSideLeftCol','oppCol2','oppSideRightCol'];
     const colSeats=[1,2,3];
-    // [COL-GOAL] في 4 مستقلين لكل مقعد عتبته (10)، وفي 2 ضد 2 العتبة
-    // للفريق فنعرض الرقم عارياً — انظر شرح الكتلة أعلى updateScores.
-    const _tg = (G.pMode === '2v2') ? null : _colTarget();
-    colSeats.forEach((s,i)=>{
-      _colPaint($(colEls[i]), G.collections[s]?.length || 0, _tg, true);
-    });
+    colSeats.forEach((s,i)=>{ _colPaint($(colEls[i]), _colCount(s), _colTarget(), true); });
   } else {
     const _o2 = $('oppCol2');
     if(_o2){
-      let _n = 0;
+      let _n = 0; let _oSeat = Math.min(2, (G.nSeats || 2) - 1);
       if(G.oppCol) _n = G.oppCol.length;
       else if(G.collections){
         // نفس صيغة مقعد الخصم المستعملة في مزامنة الحالة أعلاه:
@@ -22382,8 +22485,8 @@ function updateScores(){
         const _oS = Math.min(2, (G.nSeats || 2) - 1);
         _n = G.collections[_oS]?.length || 0;
       }
-      // [COL-GOAL] عدّاد الخصم المقابل — نفس قاعدة العتبة
-      _colPaint(_o2, _n, (G.pMode === '2v2') ? null : _colTarget(), true);
+      // [COL-GOAL] عدّاد الخصم المقابل — نفس قاعدة العتبة والعدّ
+      _colPaint(_o2, G.collections ? _colCount(_oSeat) : _n, _colTarget(), true);
     }
   }
 
@@ -22514,8 +22617,10 @@ function selectCard(i){
 function _highlightSameRank(sel, hand){
   if(!sel) return;
   const cards = document.querySelectorAll('#phand .sc');
-  cards.forEach((el,i)=>{
-    const c = hand[i];
+  cards.forEach(el=>{
+    // [HAND-ORDER] كان يفترض أن ترتيب DOM = ترتيب اليد، وقد انعكس الأول.
+    // نقرأ الفهرس من الورقة نفسها فلا يبقى الربط قائماً على الترتيب.
+    const c = hand[+el.dataset.hi];
     if(!c) return;
     const isSel  = cid(c)===cid(sel);
     const isSame = !isSel && c.rank===sel.rank;
