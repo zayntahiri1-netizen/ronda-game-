@@ -1077,6 +1077,14 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;overflow-x:hidden
 .gtable{
   display:grid;
   grid-template-rows:auto minmax(0,1fr) auto;
+  /* [FIX-EDGE] العمود الضمني في الشبكة مقاسه auto، أي minmax(auto,max-content)،
+     فلا ينزل تحت min-content لأبنائه ويتمدّد أوسع من الشاشة. وبما أن
+     #sGame عليه overflow:hidden فالزائد يُقصّ لا يُمرَّر، و.gtable موسَّطة
+     بـmargin:0 auto فيُقتطع من الحافتين معاً — وهذا ما كان يقصّ أسماء
+     اللاعبين في الشريط العلوي يميناً ويساراً.
+     minmax(0,1fr) يسمح للعمود بالنزول إلى عرض الحاوية، فتعمل بعده
+     min-width:0 وtext-overflow:ellipsis الموجودة أصلاً في .tb-score. */
+  grid-template-columns:minmax(0,1fr);
   height:100dvh;
   height:-webkit-fill-available;
   max-width:680px;margin:0 auto;
@@ -1213,7 +1221,7 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;overflow-x:hidden
 @keyframes avPR{from{box-shadow:0 0 0 2px var(--ruby),0 0 8px rgba(192,57,43,.42)}to{box-shadow:0 0 0 3px var(--ruby2),0 0 24px rgba(231,76,60,.8),0 0 42px rgba(231,76,60,.22)}}
 .pnm{font-weight:800;font-size:clamp(.78rem,2.1vw,.96rem);line-height:1.2;color:var(--t1);text-shadow:0 1px 4px rgba(0,0,0,.8)}
 .ppts{display:inline-flex;align-items:center;gap:.14rem;font-size:clamp(.54rem,1.45vw,.68rem);color:var(--g1);background:rgba(212,164,60,.12);padding:.07rem .3rem;border-radius:8px;margin-top:.05rem;font-weight:800;text-shadow:0 1px 3px rgba(0,0,0,.7)}
-.pcol{font-size:clamp(.52rem,1.3vw,.64rem);color:var(--t2);margin-top:.04rem;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+.pcol{font-size:clamp(.6rem,1.5vw,.74rem);color:var(--t2);margin-top:.04rem;font-weight:800;text-shadow:0 1px 3px rgba(0,0,0,.8)}
 .hand-backs{display:flex;gap:.1rem;align-items:center;flex-shrink:0}
 
 /* ── TIMER ── */
@@ -1771,6 +1779,24 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;overflow-x:hidden
 
 .acbar{display:none} /* مخفي — استُبدل بالجانبين */
 
+/* [FIX-EDGE] الأزرار تبقى داخل الشاشة مهما ضاقت.
+   .phand{flex:1} لكن min-width الضمني auto = عرض الأوراق مجتمعة (296px
+   لأربع أوراق)، فلا ينكمش الصفّ: 40 + 296 + 72 = 408 على شاشة 351،
+   فيُدفع زرّا «تلميح» و«العب» خارج الحافة ويتعذّر الضغط عليهما. */
+.phand{min-width:0}
+
+@media (max-width:430px){
+  /* تداخل أكبر عند أربع أوراق فأكثر — يُحسب بـnth-last-child فلا يمسّ
+     اليد الثنائية أو الثلاثية التي تتّسع أصلاً. */
+  .phand .hand-card:nth-last-child(n+4):not(:last-child),
+  .phand .hand-card:nth-last-child(n+4) ~ .hand-card:not(:last-child){
+    margin-right:-24px!important;
+  }
+  .acbar-right{min-width:clamp(54px,16vw,72px);padding-left:.2rem;padding-right:.2rem}
+  .acbar-right .ac-play{width:clamp(54px,16vw,70px);height:clamp(54px,16vw,70px)}
+  .acbar-left{padding-left:.12rem;padding-right:.12rem}
+}
+
 .ac{
   padding:clamp(.28rem,.7vw,.42rem) clamp(.48rem,1.4vw,.78rem);
   border-radius:50px;border:none;font-family:var(--fa);
@@ -1831,7 +1857,10 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;overflow-x:hidden
 .opp-seat-label{font-size:.54rem;font-weight:900;color:var(--g2);background:rgba(212,164,60,.1);border:1px solid rgba(212,164,60,.18);border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-family:var(--fd);margin-bottom:.07rem}
 .opp-seat-badge{font-size:.56rem;font-weight:900;color:rgba(231,76,60,.9);background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.22);border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;font-family:var(--fd);margin-right:.26rem;flex-shrink:0}
 .opp-side-av{font-size:clamp(1.2rem,3.2vw,1.6rem);transition:box-shadow .35s;border-radius:50%}
-.opp-side-nm{font-size:clamp(.5rem,1.2vw,.65rem);color:var(--t1);font-weight:800;text-align:center;line-height:1.2;max-width:68px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;display:block;text-shadow:0 1px 4px rgba(0,0,0,.9)}
+/* [FIX-EDGE] max-width:68px كان أوسع من لوحة الجانب نفسها (34px على
+   شاشة 360)، واللوحة ملتصقة بالحافة، فيفيض الاسم خارج الشاشة ويُقصّ
+   وسط الكلمة بلا نقاط. تقييده بعرض اللوحة يُبقيه داخلها وينهيه بـ«…». */
+.opp-side-nm{font-size:clamp(.5rem,1.2vw,.65rem);color:var(--t1);font-weight:800;text-align:center;line-height:1.2;max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;display:block;text-shadow:0 1px 4px rgba(0,0,0,.9)}
 .opp-side-pts{font-size:clamp(.56rem,1.3vw,.72rem);font-weight:900;color:var(--g1);text-shadow:0 1px 4px rgba(0,0,0,.9)}
 /* ── SPANISH PLAYING CARDS ── */
 /* FIX: NO SVG gradients with IDs — they conflict across multiple cards.
@@ -2406,7 +2435,8 @@ body{height:100%;height:-webkit-fill-available;overflow:hidden;overflow-x:hidden
   .top-bar{padding:.12rem .2rem}
   .pbar{padding:.1rem .2rem}
   .scorebar{padding:.08rem .25rem;border-radius:16px}
-  .opp-side-nm,.opp-side-pts,.opp-side-col{font-size:clamp(.3rem,.9vw,.38rem)}
+  .opp-side-nm,.opp-side-pts{font-size:clamp(.3rem,.9vw,.38rem)}
+  .opp-side-col{font-size:clamp(.4rem,1.15vw,.5rem)}
   .sb-side-nm,.ts-nm{font-size:clamp(.3rem,.9vw,.38rem)!important}
   .acbar-left .ac span,.acbar-right .ac span{display:none}
   .qchat,.qchat-bar{display:none!important}
@@ -4762,6 +4792,13 @@ html[lang="ar"] .pbtn-arr {
   pointer-events:none;z-index:50;
   white-space:nowrap;animation:badgePop .4s cubic-bezier(.175,.885,.32,1.275) both, badgePulseOpp 2s ease-in-out 0.4s infinite;
 }
+/* [FIX-EDGE] الشارة موسّطة على لوحة عرضها 31px بينما عرضها هي 45px،
+   واللوحتان ملتصقتان بحافتَي الشاشة، فيخرج نصفها. نُثبّتها على الطرف
+   الداخلي لكل لوحة فتمتدّ نحو الطاولة بدل أن تمتدّ خارج الشاشة.
+   (في RTL يظهر oppSideLeft يمين الشاشة وoppSideRight يسارها) */
+#oppSideLeft  .badge-ronda-opp{left:auto!important;right:0!important;transform:none!important}
+#oppSideRight .badge-ronda-opp{left:0!important;right:auto!important;transform:none!important}
+
 .badge-ronda-opp.trinka{background:linear-gradient(135deg,var(--amethi2),var(--amethi));color:#fff;
   box-shadow:0 2px 10px rgba(171,71,188,.9),0 0 0 2px rgba(255,255,255,.3);}
 @keyframes badgePulseOpp{0%,100%{box-shadow:0 2px 10px rgba(212,164,60,.8),0 0 0 2px rgba(255,255,255,.3)}50%{box-shadow:0 2px 18px rgba(212,164,60,1),0 0 0 3px rgba(255,255,255,.5),0 0 24px rgba(212,164,60,.6)}}
@@ -4773,13 +4810,22 @@ html[lang="ar"] .pbtn-arr {
 .pm-btn:hover{background:rgba(255,255,255,.14);border-color:var(--g2);color:var(--t1)}
 .pm-btn.active{background:linear-gradient(135deg,#0d5c40,#16896a);color:#fff;border-color:#22c48a;box-shadow:0 0 16px rgba(22,137,106,.45),0 0 0 1px #22c48a}
 .tbl-wrap{display:flex!important;align-items:center!important;position:relative!important;width:100%!important}
-.opp-side{display:none;flex-direction:column;align-items:center;gap:.1rem;width:var(--opp-sz,64px);min-width:var(--opp-sz,64px);flex-shrink:0;padding:.2rem .1rem}
+.opp-side{display:none;flex-direction:column;align-items:center;gap:.1rem;width:var(--opp-sz,64px);min-width:var(--opp-sz,64px);flex-shrink:0;padding:.2rem .1rem;max-width:100%;overflow:visible}
 .opp-side-av{width:clamp(28px,8vw,52px);height:clamp(28px,8vw,52px);border-radius:50%;background:linear-gradient(135deg,#0a1a2a,#1a2d3a);border:2.5px solid rgba(212,164,60,.5);font-size:clamp(1rem,3vw,1.6rem);display:flex;align-items:center;justify-content:center;transition:box-shadow .3s,transform .2s;text-shadow:0 1px 4px rgba(0,0,0,.5)}
 .opp-side-av[title]:hover{box-shadow:0 0 0 3px rgba(212,164,60,.8),0 0 20px rgba(212,164,60,.4)!important;transform:scale(1.12)!important;cursor:pointer!important}
 .opp-side-av[title]:active{transform:scale(.95)!important}
-.opp-side-nm{font-size:.6rem;color:var(--t1);font-weight:800;text-align:center;max-width:62px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;display:block;text-shadow:0 1px 4px rgba(0,0,0,.9)}
+/* [FIX-EDGE] قاعدة متأخّرة كانت تغلب الأولى بـmax-width:62px فتُعيد الفيض */
+.opp-side-nm{font-size:.6rem;color:var(--t1);font-weight:800;text-align:center;max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;display:block;text-shadow:0 1px 4px rgba(0,0,0,.9)}
 .opp-side-pts{font-size:.62rem;color:var(--g1);font-weight:900;margin-top:.04rem;text-shadow:0 1px 4px rgba(0,0,0,.9)}
-.opp-side-col{font-size:.54rem;color:var(--t2);font-weight:700;text-align:center;text-shadow:0 1px 3px rgba(0,0,0,.9)}
+.opp-side-col{font-size:.63rem;color:var(--t2);font-weight:800;text-align:center;
+  letter-spacing:.2px;text-shadow:0 1px 3px rgba(0,0,0,.9);white-space:nowrap;
+  direction:ltr}
+/* [COL-GOAL] عزل اتجاهي: «14/10 +4» نصّ لاتيني داخل صفحة عربية، وبلا
+   عزلٍ يقلب المحرّك «+4» إلى «4+» ويقذفها إلى الطرف المقابل فتُقرأ خطأً. */
+#gMCol{direction:ltr;unicode-bidi:isolate;display:inline-block}
+/* [COL-GOAL] أخضر عند تجاوز عتبة نقاط الأوراق — كل ورقة فوقها نقطة */
+.col-over{color:#5FE39B!important;
+  text-shadow:0 0 9px rgba(95,227,155,.5),0 1px 3px rgba(0,0,0,.9)!important}
 .team-info{display:none;align-items:center;justify-content:center;gap:.4rem;margin:.35rem 0 .6rem;font-size:.73rem}
 .team-a{background:rgba(21,101,192,.28);color:#82b0f0;padding:.18rem .55rem;border-radius:.3rem}
 .team-b{background:rgba(192,57,43,.28);color:#f08080;padding:.18rem .55rem;border-radius:.3rem}
@@ -22248,10 +22294,47 @@ function renderChips(pts, containerId){
   renderChipTray(pts, `chipsRow${idx}`, `trayPts${idx}`);
 }
 
+/* ═══════════════════════════════════════════════════════════
+   [COL-GOAL] عدّاد الأوراق يعرض الهدف لا الرقم وحده.
+   نقاط الأوراق تُحسب مرّة واحدة نهاية البيضة: كل ورقة فوق العتبة
+   نقطة. فالرقم العاري «🃏 7» لا يُخبر اللاعب أقريبٌ هو من الكسب
+   أم بعيد. صار «🃏 7/20»، ويخضرّ مع «+n» عند التجاوز.
+
+   العتبة = 40 ÷ عدد المقاعد → 20 في الثنائي · 10 في الرباعي.
+
+   أمّا 2 ضد 2 فالعتبة للفريق لا للمقعد، فلا يصحّ وضع «/20» على
+   عدّاد مقعد مفرد. العدّادات الجانبية تبقى أرقاماً عارية، ولوحة
+   اللاعب وحدها تعرض تقدّم فريقه — ولو وضعنا مجموع الفريق على كل
+   مقعد لظهر الرقم نفسه مرّتين متجاورتين وبدا خللاً لا معلومة.
+═══════════════════════════════════════════════════════════ */
+function _colTarget(){ return Math.floor(40 / (G.nSeats || 2)); }
+
+function _colTeamTotal(){
+  if(G.pMode !== '2v2' || !G.collections || !G.teams) return null;
+  const t = G.teams[0];                    // مقعدي محلياً هو 0 دائماً
+  return G.collections.reduce((a, c, s) => a + (G.teams[s] === t ? (c?.length || 0) : 0), 0);
+}
+
+function _colPaint(el, n, target, withIcon){
+  if(!el) return;
+  const over = target != null && n > target;
+  const core = target == null ? String(n)
+             : n + '/' + target + (over ? ' +' + (n - target) : '');
+  el.textContent = withIcon ? ('🃏 ' + core) : core;
+  el.classList.toggle('col-over', over);
+}
+
 function updateScores(){
   const f=(id,v)=>{const e=$(id);if(e)e.textContent=v};
   f('gMPts',G.myPts); f('gOPtsD',G.oppPts); f('gOPts',G.oppPts);
-  if(G.myCol) f('gMCol',G.myCol.length);
+  if(G.myCol){
+    // في 2 ضد 2 نعرض مجموع الفريق مقابل 20، وإلّا أوراقي مقابل 40÷المقاعد
+    const _team = _colTeamTotal();         // غير null في 2 ضد 2 فقط
+    _colPaint($('gMCol'),
+              _team != null ? _team : G.myCol.length,
+              _team != null ? 20 : _colTarget(),
+              false);
+  }
   // ملاحظة: لا يوجد عنصر id="gOCol" في الصفحة — عدّاد الخصم هو oppCol2،
   // ويُحدَّث في كتلة [FIX-OPPCOL-2P] أدناه.
 
@@ -22282,9 +22365,11 @@ function updateScores(){
   if(_is4pCol && G.collections){
     const colEls=['oppSideLeftCol','oppCol2','oppSideRightCol'];
     const colSeats=[1,2,3];
+    // [COL-GOAL] في 4 مستقلين لكل مقعد عتبته (10)، وفي 2 ضد 2 العتبة
+    // للفريق فنعرض الرقم عارياً — انظر شرح الكتلة أعلى updateScores.
+    const _tg = (G.pMode === '2v2') ? null : _colTarget();
     colSeats.forEach((s,i)=>{
-      const el=$(colEls[i]);
-      if(el) el.textContent='🃏 '+(G.collections[s]?.length||0);
+      _colPaint($(colEls[i]), G.collections[s]?.length || 0, _tg, true);
     });
   } else {
     const _o2 = $('oppCol2');
@@ -22297,7 +22382,8 @@ function updateScores(){
         const _oS = Math.min(2, (G.nSeats || 2) - 1);
         _n = G.collections[_oS]?.length || 0;
       }
-      _o2.textContent = '🃏 ' + _n;
+      // [COL-GOAL] عدّاد الخصم المقابل — نفس قاعدة العتبة
+      _colPaint(_o2, _n, (G.pMode === '2v2') ? null : _colTarget(), true);
     }
   }
 
@@ -29415,10 +29501,16 @@ console.log('🚀 [RondaNet] Ably + PubNub + Supabase layers initialized');
 
 /* All player names truncated */
 #oppNm,#oppSideLeftNm,#oppSideRightNm{
-  max-width:56px!important;overflow:hidden!important;white-space:nowrap!important;
+  overflow:hidden!important;white-space:nowrap!important;
   text-overflow:ellipsis!important;display:block!important;
 }
 #oppNm{max-width:70px!important}
+/* [FIX-EDGE] كان هنا max-width:56px!important بمحدِّد المعرّف، فيغلب
+   كل قواعد الصنف. ولوحة الجانب عرضها 31px على شاشة 360 وملتصقة بالحافة،
+   فيفيض الاسم 12px خارج الشاشة ويُقصّ وسط الكلمة بلا نقاط — وهو ما كان
+   يُظهر «…s Blackwe». التقييد بعرض اللوحة يُبقيه داخلها وينهيه بـ«…».
+   #oppNm وحده يبقى 70px لأنه وسط الطاولة لا على حافتها. */
+#oppSideLeftNm,#oppSideRightNm{max-width:100%!important}
 </style>
 
 <!-- ══ LEADERBOARD SCREEN ══ -->
