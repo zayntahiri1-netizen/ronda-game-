@@ -4840,6 +4840,9 @@ html[lang="ar"] .pbtn-arr {
   text-shadow:0 1px 2px rgba(0,0,0,.9);
 }
 .lasteat b.more{background:rgba(0,0,0,.45);border-color:rgba(212,164,60,.22);color:var(--t3)}
+/* الصفر خافت: حاضرٌ ليثبت التخطيط، لا ليزاحم الأرقام الحقيقية */
+.lasteat b.zero{background:rgba(0,0,0,.35);border-color:rgba(212,164,60,.18);
+  color:var(--t3);opacity:.75}
 
 /* [COL-GOAL] أخضر عند تجاوز عتبة نقاط الأوراق — كل ورقة فوقها نقطة */
 .col-over{color:#5FE39B!important;
@@ -20562,6 +20565,7 @@ function applyPlayM(seat,card,moveId){
     }
   }else{
     G.tbl.push(card);
+    _noEat(seat);                       // [LAST-EAT] لعب بلا أكل → صفر
     // تتبع: الموزع رمى بدون أكل في التوزيعة الأخيرة
     if((G.deck||[]).length === 0 && seat===G.dealerSeat) G._dealerLastMoveAteM = false;
   }
@@ -22021,6 +22025,7 @@ function _dealAnimMyHand(onDone){
   const overlapPx=n<=2?0:n<=4?-8:-14;
   const fanDir=(getComputedStyle(ph).direction==='rtl')?-1:1;   // [FAN-DIR]
   const CONVERGE=0.55, stepPx=90+overlapPx, midIdx=(n-1)/2;
+  const zOf=pos=>(fanDir<0)?(n-pos):(pos+1);   // [HAND-STACK]
   let done=0;
   G.myHand.map((c,i)=>({c,i})).reverse().forEach(({c,i}, pos)=>{   // [HAND-ORDER]
     setTimeout(()=>{
@@ -22032,7 +22037,7 @@ function _dealAnimMyHand(onDone){
       const dx=(n===1?0:-(pos-midIdx)*stepPx*CONVERGE)*fanDir;
       card.style.transformOrigin='bottom center';
       card.style.marginRight=pos<n-1?overlapPx+'px':'0';
-      card.style.zIndex=String(pos+1);
+      card.style.zIndex=String(zOf(pos));
       card.dataset.hi=i;   // [HAND-ORDER]
       card.style.position='relative';
       card.style.transform=`translateX(${dx}px) rotate(${angle}deg) translateY(${arcLift}px)`;
@@ -22047,7 +22052,7 @@ function _dealAnimMyHand(onDone){
       });
       card.addEventListener('mouseleave',()=>{
         card.style.transform=`translateX(${dx}px) rotate(${angle}deg) translateY(${arcLift}px)`;
-        card.style.zIndex=String(pos+1);
+        card.style.zIndex=String(zOf(pos));
       });
       ph.appendChild(card);
       SND.card();
@@ -22079,6 +22084,11 @@ function renderMyHand(){
      الأسافل، وهو عين ما اشتُكي منه. نضرب الزاوية والإزاحة في اتجاه
      الحاوية فينقلب الميل للخارج وتلتقي الأسافل. */
   const fanDir = (getComputedStyle(ph).direction === 'rtl') ? -1 : 1;
+  /* [HAND-STACK] الورقة اليمنى فوق الكلّ وما بعدها تنزل تحتها.
+     نربطه باتجاه الحاوية لا برقم ثابت: في RTL تُرسم pos=0 يميناً فتأخذ
+     أعلى طبقة، وفي LTR تُرسم يساراً فتأخذ أدناها — فيبقى «اليمنى فوق»
+     صحيحاً لو تغيّر الاتجاه يوماً. */
+  const zOf = pos => (fanDir < 0) ? (n - pos) : (pos + 1);
   const CONVERGE = 0.55;
   const stepPx   = 90 + overlapPx;
   const midIdx   = (n - 1) / 2;
@@ -22100,7 +22110,7 @@ function renderMyHand(){
 
     card.style.transformOrigin='bottom center';
     card.style.marginRight = pos < n-1 ? overlapPx+'px' : '0';
-    card.style.zIndex = isSel ? '25' : String(pos+1);
+    card.style.zIndex = isSel ? '25' : String(zOf(pos));
     card.dataset.hi = i;   // [HAND-ORDER] فهرس الورقة، لا موضعها
     card.style.position='relative';
 
@@ -22156,7 +22166,7 @@ function renderMyHand(){
       });
       card.addEventListener('mouseleave',()=>{
         card.style.transform=`translateX(${dx}px) rotate(${angle}deg) translateY(${arcLift}px)`;
-        card.style.zIndex=String(pos+1);
+        card.style.zIndex=String(zOf(pos));
         card.style.boxShadow='';
       });
     }
@@ -22376,6 +22386,16 @@ function _eat(seat, cards){
   try{ renderLastEaten(); }catch(e){}
 }
 
+/* [LAST-EAT] دورٌ انتهى بلا أكل: الصفّ يعكس آخر دورٍ للاعب لا آخر أكلة،
+   فإن رمى ورقةً ولم يلتقط شيئاً عاد إلى صفر بدل أن يُبقي أرقاماً قديمة
+   توهم أنه أكل للتوّ. */
+function _noEat(seat){
+  if(seat == null) return;
+  if(!G.lastEaten) G.lastEaten = {};
+  G.lastEaten[seat] = [];
+  try{ renderLastEaten(); }catch(e){}
+}
+
 /* العتبة: 20 للفرد في الثنائي · 10 في الرباعي المستقلّ · 20 للفريق في 2v2 */
 function _colTarget(){
   return (G.pMode === '2v2') ? 20 : Math.floor(40 / (G.nSeats || 2));
@@ -22424,9 +22444,16 @@ function renderLastEaten(){
     }
     if(row.previousElementSibling !== anchor) anchor.insertAdjacentElement('afterend', row);
     const ranks = (G.lastEaten && G.lastEaten[seat]) || null;
-    if(!ranks || !ranks.length){ row.style.display = 'none'; row.textContent = ''; continue; }
     row.style.display = '';
     row.textContent = '';
+    if(!ranks || !ranks.length){
+      // لم يأكل بعد: نُظهر صفراً بدل إخفاء الصفّ، فيبقى مكان العدّاد
+      // ثابتاً ولا يقفز التخطيط عند أوّل أكلة.
+      const z = document.createElement('b');
+      z.className = 'zero'; z.textContent = '0';
+      row.appendChild(z);
+      continue;
+    }
     ranks.slice(0, 5).forEach(r => {
       const b = document.createElement('b'); b.textContent = r; row.appendChild(b);
     });
@@ -22897,6 +22924,7 @@ function applyPlay(who, card, moveId, ptsOverride){
     }
   } else {
     G.tbl.push(card);
+    _noEat(isMe ? 0 : 1);               // [LAST-EAT] لعب بلا أكل → صفر
     // تتبع: الموزع رمى بدون أكل في آخر توزيعة المجموعة
     if(!G._multi && (G.deck||[]).length === 0){
       const meIsDlr = G._2pDealerIsMe;
