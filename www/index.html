@@ -6343,6 +6343,7 @@ const RONDA_I18N = {
     alias_label: '👤 ادخل باسم مستعار',
     alias_go_btn: 'ابدأ اللعب',
     tut_name_txt: 'اكتب اسمك المستعار هنا، ثم اضغط «ابدأ اللعب» للدخول',
+    tut_name_g_txt: 'اختر طريقتك: تابِع بحساب Google ليتبعك ترتيبك على أي هاتف، أو اكتب اسماً مستعاراً واضغط «ابدأ اللعب»',
     tut_world_txt: 'اضغط «اتحد العالم» 🌍 لتلعب أونلاين ضد لاعبين من كل العالم!',
     tut_play_txt: 'اضغط الورقة لتختارها، ثم اضغط عليها ثانيةً لتلعبها — وزرّ 💡 يقترح عليك أفضل ورقة',
     tut_ok: 'فهمت ✓',
@@ -7478,6 +7479,7 @@ const RONDA_I18N = {
     alias_label: '👤 Enter a nickname',
     alias_go_btn: 'Start Playing',
     tut_name_txt: 'Type your nickname here, then tap “Start Playing”',
+    tut_name_g_txt: 'Choose how to start: continue with Google so your rank follows you to any device, or type a nickname and tap “Start Playing”',
     tut_world_txt: 'Tap “Play Online” 🌍 to challenge players from around the world!',
     tut_play_txt: 'Tap a card to select it, then tap it again to play it — the 💡 button suggests your best move',
     tut_ok: 'Got it ✓',
@@ -8604,6 +8606,7 @@ const RONDA_I18N = {
     alias_label: '👤 Ingresa un apodo',
     alias_go_btn: 'Empezar a Jugar',
     tut_name_txt: 'Escribe tu apodo aquí y pulsa «Empezar a Jugar»',
+    tut_name_g_txt: 'Elige cómo entrar: continúa con Google para que tu ranking te siga en cualquier dispositivo, o escribe un apodo y pulsa «Empezar a Jugar»',
     tut_world_txt: '¡Pulsa «Jugar Online» 🌍 para desafiar a jugadores de todo el mundo!',
     tut_play_txt: 'Toca una carta para elegirla y tócala otra vez para jugarla — el botón 💡 te sugiere la mejor jugada',
     tut_ok: 'Entendido ✓',
@@ -9716,6 +9719,7 @@ const RONDA_I18N = {
     alias_label: '👤 输入昵称',
     alias_go_btn: '开始游戏',
     tut_name_txt: '在这里输入你的昵称，然后点击“开始游戏”',
+    tut_name_g_txt: '选择登录方式：使用 Google 继续，你的排名将跟随你到任何设备；或输入昵称并点击“开始游戏”',
     tut_world_txt: '点击“在线游戏”🌍 与全球玩家在线对战！',
     tut_play_txt: '点击一张牌选中，再点一次出牌 — 💡 按钮会提示你最佳出牌',
     tut_ok: '知道了 ✓',
@@ -36496,7 +36500,24 @@ _boot();
 /* ═══════ 🎓 ONBOARDING TUTORIAL — منطق الإرشادات (مرة واحدة فقط لكل جهاز) ═══════ */
 (function(){
 'use strict';
-let _tutKind=null,_tutTgt=null,_tutAt=0,_tutIv=null;
+/* _tutTgt2: هدف ثانٍ اختياري تُضمّه الهالة إلى الأول.
+   تحتاجه خطوة الاسم حين يكون الدخول بـGoogle متاحاً: الاختيار بين
+   الطريقتين لا يُفهم إن أُضيء أحد الخيارين وأُظلم الآخر. */
+let _tutKind=null,_tutTgt=null,_tutTgt2=null,_tutAt=0,_tutIv=null;
+
+/* يضمّ مستطيلَي الهدفين في مستطيل واحد يسعهما */
+function _tutRect(){
+  const a=_tutTgt&&_tutTgt.getBoundingClientRect();
+  if(!a) return null;
+  const vis=(e)=>{ if(!e||!document.body.contains(e)) return null;
+                   const r=e.getBoundingClientRect();
+                   return (r.width>4&&r.height>4)?r:null; };
+  const b=vis(_tutTgt2);
+  if(!b) return a;
+  const L=Math.min(a.left,b.left), T=Math.min(a.top,b.top);
+  const R=Math.max(a.right,b.right), B=Math.max(a.bottom,b.bottom);
+  return {left:L,top:T,right:R,bottom:B,width:R-L,height:B-T};
+}
 
 function _tutT(k){ try{ const v=_i18n(k); return typeof v==='string'?v:k; }catch(e){ return k; } }
 
@@ -36517,8 +36538,8 @@ function _tutEls(){
 function _tutPlace(){
   const t=_tutTgt;
   if(!t||!document.body.contains(t)){ _tutHide(false); return; }
-  const r=t.getBoundingClientRect();
-  if(r.width<4||r.height<4){ _tutHide(false); return; }
+  const r=_tutRect();
+  if(!r||r.width<4||r.height<4){ _tutHide(false); return; }
   const pad=7,L=r.left-pad,T=r.top-pad,W=r.width+pad*2,H=r.height+pad*2;
   const sp=document.getElementById('tutSpot'),rg=document.getElementById('tutRing'),
         bb=document.getElementById('tutBub'),ar=document.getElementById('tutArr');
@@ -36580,10 +36601,18 @@ function _tutShow(kind){
     /* [TUT-OCCLUSION] لا تُرشد إلى هدف لا يستطيع اللاعب لمسه */
     if(!_tutClear(tgt)) return;
     _tutEls();
-    _tutKind=kind; _tutTgt=tgt; _tutAt=Date.now();
+    /* [TUT-GOOGLE] زرّ Google لا يظهر إلا حين يكون المزوّد مهيّأً والحساب
+       غير مربوط (يتولّاه _gPaintAuthUI). فإن كان ظاهراً ضممناه إلى الهالة
+       وبدّلنا النصّ ليعرض الاختيار بين الطريقتين — فإضاءة أحدهما وإظلام
+       الآخر تُوهم أنه الطريق الوحيد. وإن كان مخفيّاً بقيت الخطوة على
+       الاسم المستعار وحده كما هي. */
+    const gBtn=(kind==='name')?document.getElementById('gSigninBtn'):null;
+    const gOn=!!(gBtn&&gBtn.offsetParent!==null&&gBtn.getBoundingClientRect().height>4);
+    _tutKind=kind; _tutTgt=tgt; _tutTgt2=gOn?gBtn:null; _tutAt=Date.now();
     const ov=document.getElementById('tutOv');
     ov.querySelector('.tut-step').textContent=(kind==='name')?'1/3':(kind==='world')?'2/3':'3/3';
-    const key=(kind==='name')?'tut_name_txt':(kind==='world')?'tut_world_txt':'tut_play_txt';
+    const key=(kind==='name')?(gOn?'tut_name_g_txt':'tut_name_txt')
+             :(kind==='world')?'tut_world_txt':'tut_play_txt';
     const tx=ov.querySelector('.tut-txt');
     tx.textContent=_tutT(key); tx.setAttribute('data-i18n',key);
     const ok=ov.querySelector('.tut-ok');
@@ -36599,7 +36628,7 @@ function _tutShow(kind){
 /* إخفاء — markSeen===false يعني إخفاء مؤقت فقط (سيظهر في الإقلاع القادم) */
 function _tutHide(markSeen){
   if(!_tutKind) return;
-  const k=_tutKind; _tutKind=null; _tutTgt=null;
+  const k=_tutKind; _tutKind=null; _tutTgt=null; _tutTgt2=null;
   if(_tutIv){ clearInterval(_tutIv); _tutIv=null; }
   const ov=document.getElementById('tutOv');
   if(ov) ov.classList.remove('on');
@@ -36679,6 +36708,15 @@ function _tutGiftPending(){
 }
 /* يُستدعى بعد أي انتقال محتمل للوبي: يعرض الهدية أولاً ثم الإرشاد */
 function _tutAfterLobby(){
+  /* [TUT-GOOGLE] الوصول إلى اللوبي يعني أن خطوة الدخول انقضت — بأي
+     طريقة كانت. ومسار Google لا يمرّ بـloginAlias، فلولا هذين السطرين
+     لظلّت الخطوة 1 «لم تُرَ» ولَما جاءت الخطوة 2 أصلاً بعد دخول بجوجل. */
+  try{
+    if(typeof P!=='undefined'){
+      if(!P.tutNameSeen){ P.tutNameSeen=true; saveP(); }
+      if(!P.tutWorldSeen && !window._tutWorldPending) window._tutWorldPending=true;
+    }
+  }catch(e){}
   const shownGift=_tutGiftPending();
   if(window._tutWorldPending&&(typeof P==='undefined'||!P.tutWorldSeen)){
     /* إن جُدولت هدية (تظهر بعد 700ms): انتظر ظهورها ثم _tutTryWorld
