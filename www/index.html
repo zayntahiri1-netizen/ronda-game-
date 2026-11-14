@@ -6344,6 +6344,7 @@ const RONDA_I18N = {
     alias_go_btn: 'ابدأ اللعب',
     tut_name_txt: 'اكتب اسمك المستعار هنا، ثم اضغط «ابدأ اللعب» للدخول',
     tut_world_txt: 'اضغط «اتحد العالم» 🌍 لتلعب أونلاين ضد لاعبين من كل العالم!',
+    tut_play_txt: 'اضغط الورقة لتختارها، ثم اضغط عليها ثانيةً لتلعبها — وزرّ 💡 يقترح عليك أفضل ورقة',
     tut_ok: 'فهمت ✓',
     alias_placeholder: 'اسمك في اللعبة...',
     alias_hint: '3-20 حرف، بدون مسافة في البداية',
@@ -7478,6 +7479,7 @@ const RONDA_I18N = {
     alias_go_btn: 'Start Playing',
     tut_name_txt: 'Type your nickname here, then tap “Start Playing”',
     tut_world_txt: 'Tap “Play Online” 🌍 to challenge players from around the world!',
+    tut_play_txt: 'Tap a card to select it, then tap it again to play it — the 💡 button suggests your best move',
     tut_ok: 'Got it ✓',
     alias_placeholder: 'Your game name...',
     alias_hint: '3-20 characters, no leading spaces',
@@ -8603,6 +8605,7 @@ const RONDA_I18N = {
     alias_go_btn: 'Empezar a Jugar',
     tut_name_txt: 'Escribe tu apodo aquí y pulsa «Empezar a Jugar»',
     tut_world_txt: '¡Pulsa «Jugar Online» 🌍 para desafiar a jugadores de todo el mundo!',
+    tut_play_txt: 'Toca una carta para elegirla y tócala otra vez para jugarla — el botón 💡 te sugiere la mejor jugada',
     tut_ok: 'Entendido ✓',
     alias_placeholder: 'Tu nombre en el juego...',
     alias_hint: '3-20 caracteres, sin espacio al inicio',
@@ -9714,6 +9717,7 @@ const RONDA_I18N = {
     alias_go_btn: '开始游戏',
     tut_name_txt: '在这里输入你的昵称，然后点击“开始游戏”',
     tut_world_txt: '点击“在线游戏”🌍 与全球玩家在线对战！',
+    tut_play_txt: '点击一张牌选中，再点一次出牌 — 💡 按钮会提示你最佳出牌',
     tut_ok: '知道了 ✓',
     alias_placeholder: '你的游戏名...',
     alias_hint: '3-20个字符，开头无空格',
@@ -36532,23 +36536,54 @@ function _tutPlace(){
   ar.style.top=(above?(by+bh-6.5):(by-6.5))+'px';
 }
 
-/* عرض إرشاد: 'name' أو 'world' */
+/* [TUT-OCCLUSION] هل الهدف ظاهر فعلاً، أم تحته نافذة أخرى؟
+   كان الفحص السابق يعدّ نوافذ الهدية بأسمائها:
+     if(_gift10000Banner || _gift2000Banner) return;
+   وهو تعدادٌ ينقص كلّما أُضيفت نافذة. ولهذا كانت الخطوة 2 تُضيء زرّ
+   «اتحد العالم» وهو مدفون تحت «مكافآت تسجيل الدخول» — فيضغط اللاعب
+   حيث يشير السهم فتلتقط الضغطةَ تلك النافذة.
+   هنا نسأل المتصفّح نفسه: من يعلو نقطة الهدف؟ فيبقى الفحص صحيحاً مع
+   أي نافذة تُضاف مستقبلاً بلا تعديل سطر.
+   نفحص ثلاث نقاط لا نقطة واحدة، كي لا تخدعنا زاويةٌ مكشوفة من هدف
+   معظمه محجوب. وطبقة الإرشاد نفسها pointer-events:none فلا تحجب. */
+function _tutClear(t){
+  try{
+    if(!t||!document.body.contains(t)) return false;
+    const r=t.getBoundingClientRect();
+    if(r.width<4||r.height<4) return false;
+    if(r.bottom<=0||r.top>=innerHeight||r.right<=0||r.left>=innerWidth) return false;
+    const pts=[[r.left+r.width/2,  r.top+r.height/2],
+               [r.left+r.width*.22,r.top+r.height/2],
+               [r.left+r.width*.78,r.top+r.height/2]];
+    for(let i=0;i<pts.length;i++){
+      const x=pts[i][0], y=pts[i][1];
+      if(x<0||y<0||x>=innerWidth||y>=innerHeight) continue;
+      const top=document.elementFromPoint(x,y);
+      if(!top) continue;
+      if(top===t||t.contains(top)||(top.closest&&top.closest('#tutOv'))) return true;
+    }
+    return false;
+  }catch(e){ return true; }   /* فشل الفحص لا يمنع الإرشاد */
+}
+
+/* عرض إرشاد: 'name' أو 'world' أو 'play' */
 function _tutShow(kind){
   try{
     if(_tutKind) return;
-    /* لا تعرض إرشاداً فوق إشعار هدية مفتوح */
-    if(document.getElementById('_gift10000Banner')||document.getElementById('_gift2000Banner')) return;
-    if(kind==='name'&&(P.tutNameSeen||(P.name&&P.name.length>=3))) return;
+    if(kind==='name' &&(P.tutNameSeen||(P.name&&P.name.length>=3))) return;
     if(kind==='world'&&P.tutWorldSeen) return;
-    const tgt=(kind==='name')
-      ? document.getElementById('aliasForm')
-      : document.getElementById('tutWorldBtn1');
+    if(kind==='play' &&P.tutPlaySeen)  return;
+    const tgt=(kind==='name')  ? document.getElementById('aliasForm')
+             :(kind==='world') ? document.getElementById('tutWorldBtn1')
+             :                   document.getElementById('phand');
     if(!tgt) return;
+    /* [TUT-OCCLUSION] لا تُرشد إلى هدف لا يستطيع اللاعب لمسه */
+    if(!_tutClear(tgt)) return;
     _tutEls();
     _tutKind=kind; _tutTgt=tgt; _tutAt=Date.now();
     const ov=document.getElementById('tutOv');
-    ov.querySelector('.tut-step').textContent=(kind==='name')?'1/2':'2/2';
-    const key=(kind==='name')?'tut_name_txt':'tut_world_txt';
+    ov.querySelector('.tut-step').textContent=(kind==='name')?'1/3':(kind==='world')?'2/3':'3/3';
+    const key=(kind==='name')?'tut_name_txt':(kind==='world')?'tut_world_txt':'tut_play_txt';
     const tx=ov.querySelector('.tut-txt');
     tx.textContent=_tutT(key); tx.setAttribute('data-i18n',key);
     const ok=ov.querySelector('.tut-ok');
@@ -36570,8 +36605,9 @@ function _tutHide(markSeen){
   if(ov) ov.classList.remove('on');
   if(markSeen===false) return;
   try{
-    if(k==='name'){ P.tutNameSeen=true; }
-    else{ P.tutWorldSeen=true; window._tutWorldPending=false; }
+    if(k==='name')       { P.tutNameSeen=true; }
+    else if(k==='world') { P.tutWorldSeen=true; window._tutWorldPending=false; }
+    else                 { P.tutPlaySeen=true; }
     saveP();
   }catch(e){}
 }
@@ -36581,19 +36617,30 @@ function _tutHide(markSeen){
 function _tutTap(e){
   if(!_tutKind||Date.now()-_tutAt<450) return;
   const t=e&&e.target;
-  const hit=!!(t&&t.closest&&(t.closest('#tutBub')||t.closest(_tutKind==='name'?'#aliasForm':'#tutWorldBtn1')));
+  /* [TUT-NAME-SEEN] في خطوة الاسم لا يُسجَّل الإرشاد بلمس الخانة — فالهدف
+     إتمام الدخول لا لمس الحقل. اللمس يُخفيه مؤقّتاً، والتسجيل عند نجاح
+     loginAlias. أما في الخطوتين الأخريين فلمس الهدف هو تحقيقه. */
+  const _sel=(_tutKind==='name')?null:(_tutKind==='world')?'#tutWorldBtn1':'#phand';
+  const hit=!!(t&&t.closest&&(t.closest('#tutBub')||(_sel&&t.closest(_sel))));
   _tutHide(hit);
 }
 document.addEventListener('pointerdown',_tutTap,true);
 document.addEventListener('touchstart',_tutTap,{capture:true,passive:true});
 
-/* التركيز على خانة الاسم = هدف الإرشاد 1 تحقق */
+/* [TUT-NAME-SEEN] التركيز على الخانة = إخفاء مؤقّت لا تسجيل نهائي.
+   كان مجرّد لمس الخانة يُسجّل الإرشاد «رُئي» إلى الأبد، فمن لمسها
+   ثم انصرف قبل أن يُتمّ اسمه لا يراه ثانيةً أبداً. التسجيل النهائي
+   صار عند نجاح الدخول (في غلاف loginAlias أدناه). */
 document.getElementById('aliasInp')?.addEventListener('focus',function(){
-  if(_tutKind==='name') _tutHide();
+  if(_tutKind==='name') _tutHide(false);
 });
 /* الضغط على «اتحد العالم» = هدف الإرشاد 2 تحقق */
 document.getElementById('tutWorldBtn1')?.addEventListener('click',function(){
   if(_tutKind==='world') _tutHide();
+});
+/* [TUT-PLAY] لمس اليد = هدف الإرشاد 3 تحقق */
+document.getElementById('phand')?.addEventListener('click',function(){
+  if(_tutKind==='play') _tutHide();
 });
 /* إعادة تموضع عند تحريك الكاروسيل أو تغيير حجم الشاشة */
 document.getElementById('CAR2')?.addEventListener('scroll',function(){
@@ -36604,11 +36651,21 @@ window.addEventListener('resize',function(){ if(_tutKind) _tutPlace(); });
 /* ── الإرشاد 2 + هدية 10k: يُجدولان من داخل wrapper تسجيل الدخول ──
    ملاحظة حاسمة: goLobby مُعرّفة كـ function declaration، لذا استدعاؤها
    من داخل loginAlias الأصلي لا يمر عبر window.goLobby — لهذا نجدول هنا مباشرة */
-function _tutTryWorld(){
-  const g=document.getElementById('_gift10000Banner')||document.getElementById('_gift2000Banner');
-  if(g){ setTimeout(_tutTryWorld,600); return; } /* انتظر إغلاق أي إشعار هدية */
+function _tutTryWorld(tries){
+  tries = tries|0;
   const lb=document.getElementById('sLobby');
-  if(lb&&lb.classList.contains('on')) _tutShow('world');
+  /* [TUT-OCCLUSION] ننتظر انكشاف الزرّ نفسه، لا اختفاء نافذتَي الهدية
+     وحدهما: في أوّل إقلاع يجتمع في اللوبي «مكافآت تسجيل الدخول»
+     و«صندوق الملوك» وهدية 10,000، وفي الإقلاع الثاني هدية 2,000. */
+  if(lb&&lb.classList.contains('on')&&_tutClear(document.getElementById('tutWorldBtn1'))){
+    _tutShow('world'); return;
+  }
+  /* [TUT-GIVEUP] سقف ~30 ثانية. كان المؤقّت يُعيد جدولة نفسه بلا نهاية
+     ما دامت نافذة حاجبة مفتوحة — ونوافذ الهدية لا تُغلق تلقائياً، فكان
+     مؤقّتٌ يدور في الخلفية ما بقي التطبيق مفتوحاً. نستسلم بهدوء،
+     ويبقى tutWorldSeen=false فيُستأنف الإرشاد في الإقلاع القادم. */
+  if(tries>=50) return;
+  setTimeout(function(){ _tutTryWorld(tries+1); },600);
 }
 function _tutGiftPending(){
   try{
@@ -36637,6 +36694,8 @@ if(typeof loginAlias==='function'){
     const inp=document.getElementById('aliasInp');
     const val=inp?(inp.value||'').trim():'';
     const wasNew=(typeof P!=='undefined')?!P.loggedBefore:false;
+    /* [TUT-NAME-SEEN] التسجيل النهائي للإرشاد 1 هنا: نجح الدخول فعلاً */
+    if(val.length>=3){ try{ P.tutNameSeen=true; saveP(); }catch(e){} }
     if(wasNew&&val.length>=3&&(typeof P==='undefined'||!P.tutWorldSeen)){
       window._tutWorldPending=true;
     }
@@ -36683,12 +36742,57 @@ function _tutBoot(){
 }
 setTimeout(_tutBoot,800);
 
+/* ── [TUT-PLAY] الإرشاد 3: داخل أوّل مباراة ──────────────────────────
+   كانت الجولة تتوقّف عند باب المباراة: الاسم ثم زرّ العالم، ثم يُترك
+   اللاعب الجديد أمام الطاولة بلا دليل — لا شيء يقول أين يضغط ليلعب
+   ورقة، ولا أن الضغطة الثانية على الورقة تدفعها، ولا ما زرّ 💡.
+   نتعلّق بـrenderMyHand لأنها تُنادى عند كل تحديث لليد: فنعرف أن
+   الأوراق صارت على الشاشة فعلاً قبل أن نُشير إليها، بدل مؤقّت يخمّن.
+   وطبقة الإرشاد pointer-events:none فلا تمنع اللمس — يضغط اللاعب
+   ورقته فيختفي الإرشاد، ولا يُعطّل عليه مؤقّت الدور. */
+/* مراقب محدود: ينتظر أن تمتلئ اليد فعلاً ويحين دورك.
+   لا نكتفي بلحظة نداء renderMyHand لأن حركة التوزيع تملأ اليد بعدها،
+   فقد تُنادى واليد لا تزال فارغة ثم لا تُنادى ثانيةً قبل أن تلعب.
+   المراقب بسقف ~48 ثانية، وإن انقضى استسلم وأفسح لتوزيعة لاحقة
+   أن تُعيد تشغيله — فلا مؤقّت أبديّ. */
+function _tutPlayWatch(tries){
+  tries = tries|0;
+  try{
+    if(typeof P==='undefined'||P.tutPlaySeen){ window._tutPlayWatching=false; return; }
+    if(_tutKind==='play'){ window._tutPlayWatching=false; return; } /* ظهر */
+    const sg=document.getElementById('sGame');
+    const ph=document.getElementById('phand');
+    if(!_tutKind && sg && sg.classList.contains('on') && ph && ph.children.length>=2){
+      const myTurn=(typeof G!=='undefined'&&G&&!G.over)&&
+                   (G._multi?(G.currentSeat===G.mySeat):!!G.myTurn);
+      if(myTurn){ _tutShow('play'); }
+    }
+  }catch(e){}
+  if(tries>=60){ window._tutPlayWatching=false; return; }
+  setTimeout(function(){ _tutPlayWatch(tries+1); },800);
+}
+if(typeof renderMyHand==='function'){
+  const _tutRMH=renderMyHand;
+  window.renderMyHand=function(){
+    const r=_tutRMH.apply(this,arguments);
+    try{
+      if(typeof P!=='undefined'&&!P.tutPlaySeen&&!window._tutPlayWatching){
+        window._tutPlayWatching=true;
+        /* تأخير أوّل حتى تستقرّ حركة التوزيع فلا تقفز الهالة */
+        setTimeout(function(){ _tutPlayWatch(0); },1500);
+      }
+    }catch(e){}
+    return r;
+  };
+}
+
 /* أداة اختبار: نفّذ _tutReset() في الكونسول ثم أعد التشغيل لإعادة الإرشادات */
 window._tutReset=function(){
-  try{ delete P.tutNameSeen; delete P.tutWorldSeen; saveP(); }catch(e){}
+  try{ delete P.tutNameSeen; delete P.tutWorldSeen; delete P.tutPlaySeen; saveP(); }catch(e){}
   return 'tut reset ✓';
 };
 window._tutShow=_tutShow;
+window._tutClear=_tutClear;
 })();
 </script>
 
