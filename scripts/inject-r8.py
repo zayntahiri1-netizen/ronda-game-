@@ -54,6 +54,35 @@ def find_block(text, start_idx):
     return None
 
 
+def find_broad_keeps(rules):
+    """[R8-BROAD-GUARD] يرصد قواعد من نوع -keep <نمط جماعي> { *; }.
+
+    قاعدة واحدة من هذا النوع تكفي لتُحصّن مئات الأصناف من التشويش
+    والتقليص فتُبقي النسبة تحت الحدّ — وقد حدث ذلك فعلاً في هذا المشروع:
+    -keep public class * extends com.getcapacitor.Plugin { *; } كانت
+    تحفظ كل عضو في كل إضافة. الحارس هنا يمنع عودتها بصمت.
+
+    لا يُرصَد ما يلي، وهو مقصود:
+      • -keepclassmembers و-keepnames: لا تمنع تقليص الأصناف نفسها.
+      • -keep @interface …: أصناف التعليقات قليلة جداً ولا أثر لها،
+        وحفظها شرط عمل Capacitor.
+      • -keep class <اسم صريح بلا نجمة> { *; }: صنف واحد محدَّد، أثره
+        مهمَل ومقصود أحياناً (نقطة دخول مثلاً).
+    """
+    found = []
+    for m in re.finditer(r"^\s*-keep(\S*)([^\n{]*)\{([^}]*)\}", rules, re.M):
+        kind, head, body = m.group(1), m.group(2), m.group(3)
+        if kind:                       # keepclassmembers / keepnames / …
+            continue
+        if "@interface" in head:
+            continue
+        if "*" not in head:            # صنف واحد مسمّى صراحةً
+            continue
+        if re.fullmatch(r"\s*\*\s*;\s*", body):
+            found.append(("-keep" + head).strip() + " { *; }")
+    return found
+
+
 def main():
     # ── 1) انسخ قواعد الحفظ ─────────────────────────────────────────────
     if not os.path.isfile(SRC_RULES):
@@ -177,6 +206,9 @@ def main():
         for bad in ("-dontobfuscate", "-dontoptimize", "-dontshrink"):
             if re.search(r"^\s*%s\b" % re.escape(bad), rules, re.M):
                 problems.append("%s موجود في القواعد — سيُفشل حدّ الـ25%%" % bad)
+        for broad in find_broad_keeps(rules):
+            problems.append(
+                "قاعدة حفظ واسعة تُحصّن أصنافاً بالجملة وتخفض النسبة: %s" % broad)
 
     print("\n=== كتلة release النهائية ===")
     print("release {" + final_rel + "}")

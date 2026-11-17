@@ -69,17 +69,41 @@ def main():
 
     # ── 2) نسبة إعادة التسمية ──────────────────────────────────────────
     total = renamed = 0
+    m_total = m_renamed = 0
+    kept_by_pkg = {}
     cls_re = re.compile(r"^([\w.$\[\]]+)\s*->\s*([\w.$\[\]]+):")
+    # سطر عضو: مُزاح، وفيه ( ) إن كان طريقة. قد يسبقه مدى أسطر "12:34:".
+    mem_re = re.compile(r"^\s+(?:\d+:\d+:)?.*?\b([\w$]+)\([^)]*\)\s*->\s*([\w$<>]+)\s*$")
+    cur_kept = None
     with open(mp, "r", encoding="utf-8", errors="replace") as f:
         for line in f:
-            if line[:1] in (" ", "\t", "#", "\n", ""):
+            if line[:1] in ("#", "\n", ""):
                 continue
-            m = cls_re.match(line)
-            if not m:
+            if line[:1] not in (" ", "\t"):
+                m = cls_re.match(line)
+                if not m:
+                    cur_kept = None
+                    continue
+                total += 1
+                src, dst = m.group(1), m.group(2)
+                if short(src) != short(dst):
+                    renamed += 1
+                    cur_kept = None
+                else:
+                    cur_kept = src
+                    # [R8-DIAG] أيّ الحزم تُقاوم التشويش؟ هذا ما يكشف أين
+                    # تذهب النسبة: قاعدة حفظ واسعة عندك، أو مكتبة تشحن
+                    # قواعدها الخاصة ولا حيلة فيها.
+                    pkg = src.rsplit(".", 1)[0] if "." in src else "(بلا حزمة)"
+                    parts = pkg.split(".")
+                    pkg = ".".join(parts[:3]) if len(parts) > 3 else pkg
+                    kept_by_pkg[pkg] = kept_by_pkg.get(pkg, 0) + 1
                 continue
-            total += 1
-            if short(m.group(1)) != short(m.group(2)):
-                renamed += 1
+            mm = mem_re.match(line)
+            if mm:
+                m_total += 1
+                if mm.group(1) != mm.group(2):
+                    m_renamed += 1
 
     if total == 0:
         problems.append("لا أصناف في mapping.txt — مخرَج R8 غير سليم")
@@ -93,6 +117,21 @@ def main():
                 "الواسعة في app/proguard-rules.pro" % (pct, MIN_RENAMED_PCT))
         else:
             notes.append("نسبة إعادة التسمية %.1f%% — فوق الحدّ بهامش مريح" % pct)
+
+    # [R8-DIAG] الطرق أكثر عدداً من الأصناف بكثير، وقياس Play ينصبّ على
+    # الرمز لا على الأسماء وحدها — فنسبة الطرق أقرب إلى ما يراه Console.
+    if m_total:
+        print("✓ الطرق في mapping.txt: %d — أُعيدت تسمية %d (%.1f%%)"
+              % (m_total, m_renamed, 100.0 * m_renamed / m_total))
+
+    # [R8-DIAG] أكبر الحزم التي بقيت أسماؤها كما هي. إن ظهرت حزمة من رمزك
+    # أنت أو من Capacitor في الصدارة فالسبب قاعدة حفظ واسعة يمكن تضييقها.
+    # وإن كانت كلّها com.google.* فهي قواعد المكتبات نفسها ولا حيلة فيها.
+    if kept_by_pkg:
+        top = sorted(kept_by_pkg.items(), key=lambda kv: -kv[1])[:8]
+        print("\n=== أكبر الحزم التي لم تُشوَّش (أين تذهب النسبة) ===")
+        for pkg, n in top:
+            print("   %6d  %s" % (n, pkg))
 
     # ── 3) و(4) داخل الـAAB ────────────────────────────────────────────
     aab = None

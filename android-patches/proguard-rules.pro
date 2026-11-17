@@ -53,7 +53,31 @@
     @com.getcapacitor.annotation.Permission <methods>;
     @com.getcapacitor.PluginMethod public <methods>;
 }
--keep public class * extends com.getcapacitor.Plugin { *; }
+# [R8-NARROW] كانت هنا: -keep public class * extends com.getcapacitor.Plugin { *; }
+#
+# تلك القاعدة تحفظ **كل عضو** في **كل إضافة** — حقولها الخاصّة وطرقها
+# الداخلية ومساعداتها — فتمنع تشويشها وتقليصها جميعاً. ورمز Java في هذا
+# التطبيق إضافاتٌ في معظمه (AdMob وBrowser وApp وHaptics وNetwork
+# وStatusBar وSplashScreen وKeyboard وAppLauncher)، فالقاعدة كانت تُحصّن
+# الجزء الأكبر من DEX وتُبقي النسبة التي يقيسها Play منخفضة. وهي تخالف
+# مبدأ هذا الملف المعلَن في ترويسته.
+#
+# ما يلزم حفظه فعلاً ثلاثة أشياء لا أكثر:
+#   • اسم الصنف — Capacitor يقرأ assets/capacitor.plugins.json ويُحمّل كل
+#     إضافة بـClass.forName(classpath)، فاسمٌ مُشوَّش = إضافة لا تُحمَّل.
+#   • المُنشئ الفارغ — PluginHandle يُنشئها بـnewInstance()، ولا نداء
+#     ساكن له، فالوضع الكامل لـR8 يحذفه ما لم يُحفَظ صراحةً.
+#   • الطرق المنعكسة — @PluginMethod وردود الأذونات والأنشطة، يُناديها
+#     Capacitor بالاسم.
+# وما عدا ذلك يُناديه Capacitor نداءً ساكناً من داخل DEX نفسه، فيراه R8
+# ولا يحذفه. والطرق التي تتجاوز أصناف إطار أندرويد لا يمسّها R8 أصلاً.
+-keep public class * extends com.getcapacitor.Plugin {
+    public <init>();
+    @com.getcapacitor.PluginMethod <methods>;
+    @com.getcapacitor.annotation.PermissionCallback <methods>;
+    @com.getcapacitor.annotation.ActivityCallback <methods>;
+    @com.getcapacitor.annotation.Permission <methods>;
+}
 
 # ──────────────────────────────────────────────────────────────────────────
 # [R8-JSBRIDGE] الجسر بين WebView وJava: هذه الطرق تُنادى بالاسم من
@@ -67,7 +91,12 @@
 # [R8-ENTRY] نقطة الدخول: يُنشئها النظام بالاسم من المانيفست.
 # (قواعد AGP المولَّدة تحفظ مكوّنات المانيفست تلقائياً — هذا توكيد صريح.)
 # ملاحظة مقصودة: لا نحفظ حزمة التطبيق كاملة بـ{ *; } لأن ذلك يخفض النسبة.
--keep class com.rondatahiro.myapp.MainActivity { *; }
+# [R8-NARROW] كانت { *; }. النظام يُنشئ النشاط بالاسم من المانيفست فيلزم
+# اسمه ومُنشئه الفارغ. أما onCreate وأخواتها فتتجاوز أصناف إطار أندرويد،
+# وR8 لا يحذف متجاوِزاً لصنف مكتبة ولا يُعيد تسميته — فحفظها كان زائداً.
+-keep class com.rondatahiro.myapp.MainActivity {
+    public <init>();
+}
 
 # ──────────────────────────────────────────────────────────────────────────
 # [R8-ATTRS] السمات اللازمة للتعليقات والأنواع العامة والأصناف الداخلية.
