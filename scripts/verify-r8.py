@@ -67,6 +67,14 @@ def main():
     if size < 2048:
         problems.append("mapping.txt صغير جداً (%d بايت) — التشويش شبه معدوم" % size)
 
+    # [R8-DIAG] ترويسة mapping.txt تحمل هوية المُحسِّن ونسخته. وهي تحسم
+    # سؤالاً لا يحسمه build.gradle: هل عمل R8 فعلاً، وأيّ نسخة منه؟
+    with open(mp, "r", encoding="utf-8", errors="replace") as f:
+        head = [f.readline() for _ in range(12)]
+    for line in head:
+        if re.match(r"^#\s*(compiler|min_api)", line):
+            print("   %s" % line.strip().lstrip("# "))
+
     # ── 2) نسبة إعادة التسمية ──────────────────────────────────────────
     total = renamed = 0
     m_total = m_renamed = 0
@@ -132,6 +140,66 @@ def main():
         print("\n=== أكبر الحزم التي لم تُشوَّش (أين تذهب النسبة) ===")
         for pkg, n in top:
             print("   %6d  %s" % (n, pkg))
+
+    # ── 2ج) [R8-MERGED-CONFIG] التهيئة المدموجة: الحقيقة الحاسمة ───────
+    # Play يعرض «التحسين» و«التقليص» بشرطة حتى مع R8 كامل التفعيل، والسبب
+    # الموثَّق أن -dontoptimize يُعطّل التحسين عالمياً. وهو قد لا يكون في
+    # قواعدنا أصلاً: كل مكتبة تشحن قواعدها في consumerProguardFiles وتندمج
+    # مع قواعدنا، فتكفي مكتبة واحدة لتُعطّله على التطبيق كلّه.
+    # هذا الملف يكتبه R8 بنفسه (-printconfiguration) وفيه كل ما رآه.
+    cfg = os.path.join(os.path.dirname(mp), "full-r8-config.txt")
+    if not os.path.isfile(cfg):
+        notes.append("full-r8-config.txt غير موجود — تقرير R8 المدموج "
+                     "يظهر في البناء القادم بعد حقن -printconfiguration")
+    else:
+        with open(cfg, "r", encoding="utf-8", errors="replace") as f:
+            cfg_lines = f.readlines()
+        print("\n=== التهيئة المدموجة التي رآها R8: %d سطراً ===" % len(cfg_lines))
+        killers = {"-dontoptimize": [], "-dontshrink": [], "-dontobfuscate": []}
+        for i, line in enumerate(cfg_lines):
+            s = line.strip()
+            for k in killers:
+                if s == k or s.startswith(k + " "):
+                    # نلتقط ما قبلها: R8 يكتب تعليقاً باسم مصدر كل كتلة
+                    src = ""
+                    for j in range(i - 1, max(-1, i - 40), -1):
+                        if cfg_lines[j].lstrip().startswith("#"):
+                            src = cfg_lines[j].strip()
+                            break
+                    killers[k].append((i + 1, src))
+        any_killer = False
+        for k, hits in killers.items():
+            if not hits:
+                continue
+            any_killer = True
+            print("::warning::%s موجود في التهيئة المدموجة (%d مرّة) — "
+                  "وهو ما يجعل Play يعرض شرطة بدل نسبة" % (k, len(hits)))
+            for ln, src in hits[:5]:
+                print("     سطر %d   مصدره على الأرجح: %s" % (ln, src or "(غير معروف)"))
+        if not any_killer:
+            print("   ✓ لا -dontoptimize ولا -dontshrink ولا -dontobfuscate "
+                  "في التهيئة المدموجة")
+            notes.append("التهيئة المدموجة نظيفة — لا مُعطِّل للتحسين من أي مكتبة")
+
+    # [R8-DIAG] البذور: كل ما حفظته القواعد. عددها الكبير = تغطية منخفضة.
+    seeds = os.path.join(os.path.dirname(mp), "r8-seeds.txt")
+    if os.path.isfile(seeds):
+        n = 0
+        seed_pkg = {}
+        with open(seeds, "r", encoding="utf-8", errors="replace") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                n += 1
+                cls_name = line.split(":")[0].strip()
+                if "." in cls_name:
+                    parts = cls_name.rsplit(".", 1)[0].split(".")
+                    key = ".".join(parts[:3]) if len(parts) > 3 else ".".join(parts)
+                    seed_pkg[key] = seed_pkg.get(key, 0) + 1
+        print("\n=== البذور المحفوظة: %d ===" % n)
+        for pkg, c in sorted(seed_pkg.items(), key=lambda kv: -kv[1])[:8]:
+            print("   %6d  %s" % (c, pkg))
 
     # ── 3) و(4) داخل الـAAB ────────────────────────────────────────────
     aab = None

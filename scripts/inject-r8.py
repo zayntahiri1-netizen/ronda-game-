@@ -158,6 +158,40 @@ def main():
     else:
         print("✓ كتلة release مضبوطة مسبقاً — لا تغيير")
 
+    # ── 2ب) اجعل R8 يُفصح عن نفسه ───────────────────────────────────────
+    # لماذا: Play يعرض «التحسين» و«التقليص» بشرطة حتى مع تفعيل R8 الكامل،
+    # والسبب الموثَّق أن -dontoptimize يُعطّل التحسين عالمياً. وهو قد لا
+    # يكون في ملفّك أصلاً: كل مكتبة (AdMob، Play Services، Capacitor) تشحن
+    # قواعدها في consumerProguardFiles، وتندمج كلّها مع قواعدك. فحصُ ملفّنا
+    # وحده لا يكشف ما تحقنه المكتبات.
+    #
+    # -printconfiguration يكتب التهيئة **المدموجة** كما رآها R8 فعلاً، بما
+    # فيها كل ما جاء من المكتبات. وهي الحقيقة الوحيدة التي تحسم الأمر.
+    # ونكتبها داخل مجلّد mapping فتُرفَع تلقائياً مع ناتج البناء.
+    out_dir = os.path.abspath("android/app/build/outputs/mapping/release")
+    os.makedirs(out_dir, exist_ok=True)
+    diag = (
+        "\n"
+        "# ── [R8-DIAG] تقارير تشخيصية يكتبها R8 أثناء البناء ──────────────\n"
+        "# يضيفها inject-r8.py بمسارات مطلقة وقت الحقن (المسارات النسبية\n"
+        "# في ProGuard تُحسب من مجلّد عمل Gradle فتضيع الملفات).\n"
+        "# full-r8-config.txt : التهيئة المدموجة من قواعدك + كل المكتبات.\n"
+        "# r8-seeds.txt       : كل صنف وعضو حفظته القواعد (ومن أين).\n"
+        "# r8-usage.txt       : كل ما حذفه التقليص — دليل عمله الملموس.\n"
+        "-printconfiguration %s\n"
+        "-printseeds %s\n"
+        "-printusage %s\n"
+    ) % (os.path.join(out_dir, "full-r8-config.txt"),
+         os.path.join(out_dir, "r8-seeds.txt"),
+         os.path.join(out_dir, "r8-usage.txt"))
+
+    with open(DST_RULES, "r", encoding="utf-8") as f:
+        dst_rules_text = f.read()
+    if "-printconfiguration" not in dst_rules_text:
+        with open(DST_RULES, "a", encoding="utf-8") as f:
+            f.write(diag)
+        print("✓ أُضيفت تقارير R8 التشخيصية (config/seeds/usage)")
+
     # ── 3) الوضع الكامل لـR8 ────────────────────────────────────────────
     props = ""
     if os.path.isfile(GRADLE_PROPS):
@@ -209,6 +243,15 @@ def main():
         for broad in find_broad_keeps(rules):
             problems.append(
                 "قاعدة حفظ واسعة تُحصّن أصنافاً بالجملة وتخفض النسبة: %s" % broad)
+
+    # [AGP-REPORT] نسخة مكوّن Gradle: يقترح Play الترقية إلى 9.0، والقرار
+    # يحتاج معرفة ما نحن عليه الآن. النسخة تأتي من قالب Capacitor 6.2.0
+    # ولا تُضبط في هذا المستودع، فنقرؤها من المولَّد ونطبعها في السجلّ.
+    root_gradle = "android/build.gradle"
+    if os.path.isfile(root_gradle):
+        with open(root_gradle, "r", encoding="utf-8") as f:
+            agp = re.search(r"com\.android\.tools\.build:gradle:([\d.]+)", f.read())
+        print("ℹ️  نسخة AGP الحالية: %s" % (agp.group(1) if agp else "غير معروفة"))
 
     print("\n=== كتلة release النهائية ===")
     print("release {" + final_rel + "}")
