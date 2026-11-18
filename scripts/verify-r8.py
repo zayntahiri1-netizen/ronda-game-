@@ -78,10 +78,16 @@ def main():
     # ── 2) نسبة إعادة التسمية ──────────────────────────────────────────
     total = renamed = 0
     m_total = m_renamed = 0
+    f_total = f_renamed = 0
     kept_by_pkg = {}
     cls_re = re.compile(r"^([\w.$\[\]]+)\s*->\s*([\w.$\[\]]+):")
-    # سطر عضو: مُزاح، وفيه ( ) إن كان طريقة. قد يسبقه مدى أسطر "12:34:".
-    mem_re = re.compile(r"^\s+(?:\d+:\d+:)?.*?\b([\w$]+)\([^)]*\)\s*->\s*([\w$<>]+)\s*$")
+    # سطر الطريقة مُزاح وفيه قوسان. وقد يسبقه مدى أسطر "12:34:" وقد يلحقه
+    # مدى آخر بعد القوس ":12:16" — وإغفال اللاحق كان يُسقط 99% من الأسطر
+    # فتخرج نسبة الطرق 22% بدل 33.5% الحقيقية على بناء 18 نوفمبر.
+    mem_re = re.compile(
+        r"^\s+(?:\d+:\d+:)?.*?\b([\w$]+)\([^)]*\)(?::\d+:\d+)?\s*->\s*([\w$<>]+)\s*$")
+    # سطر الحقل: مُزاح وبلا قوسين.
+    fld_re = re.compile(r"^\s+(?!.*\()([\w.$\[\]]+)\s+([\w$]+)\s*->\s*([\w$]+)\s*$")
     cur_kept = None
     with open(mp, "r", encoding="utf-8", errors="replace") as f:
         for line in f:
@@ -112,6 +118,12 @@ def main():
                 m_total += 1
                 if mm.group(1) != mm.group(2):
                     m_renamed += 1
+                continue
+            ff = fld_re.match(line)
+            if ff:
+                f_total += 1
+                if ff.group(2) != ff.group(3):
+                    f_renamed += 1
 
     if total == 0:
         problems.append("لا أصناف في mapping.txt — مخرَج R8 غير سليم")
@@ -131,6 +143,9 @@ def main():
     if m_total:
         print("✓ الطرق في mapping.txt: %d — أُعيدت تسمية %d (%.1f%%)"
               % (m_total, m_renamed, 100.0 * m_renamed / m_total))
+    if f_total:
+        print("✓ الحقول في mapping.txt: %d — أُعيدت تسمية %d (%.1f%%)"
+              % (f_total, f_renamed, 100.0 * f_renamed / f_total))
 
     # [R8-DIAG] أكبر الحزم التي بقيت أسماؤها كما هي. إن ظهرت حزمة من رمزك
     # أنت أو من Capacitor في الصدارة فالسبب قاعدة حفظ واسعة يمكن تضييقها.
@@ -183,6 +198,7 @@ def main():
 
     # [R8-DIAG] البذور: كل ما حفظته القواعد. عددها الكبير = تغطية منخفضة.
     seeds = os.path.join(os.path.dirname(mp), "r8-seeds.txt")
+    seed_names = []
     if os.path.isfile(seeds):
         n = 0
         seed_pkg = {}
@@ -193,6 +209,7 @@ def main():
                     continue
                 n += 1
                 cls_name = line.split(":")[0].strip()
+                seed_names.append(cls_name)
                 if "." in cls_name:
                     parts = cls_name.rsplit(".", 1)[0].split(".")
                     key = ".".join(parts[:3]) if len(parts) > 3 else ".".join(parts)
@@ -200,6 +217,49 @@ def main():
         print("\n=== البذور المحفوظة: %d ===" % n)
         for pkg, c in sorted(seed_pkg.items(), key=lambda kv: -kv[1])[:8]:
             print("   %6d  %s" % (c, pkg))
+
+    # ── 2د) [R8-BLANKET-COST] ثمن كل قاعدة شاملة، بالبذور ───────────────
+    # هذا التقرير هو ما كشف المشكلة الحقيقية في بناء 18 نوفمبر: قاعدة
+    # واحدة تشحنها firebase-auth —
+    #     -keep class com.google.android.gms.internal.** { *; }
+    # كانت تحتجز 63,574 بذرة من 71,739 (88.6%). النمط ** ابتلع أحشاء
+    # AdMob كلّها لا أصناف firebase-auth وحدها.
+    #
+    # القواعد الشاملة تأتي من consumerProguardFiles داخل المكتبات، فلا
+    # يراها فحص ملفّك. هنا نُسعّرها: كم بذرة تحتجز كلٌّ منها، ومن أين
+    # جاءت. فأي مكتبة تفعلها مستقبلاً تنكشف في أوّل بناء.
+    if os.path.isfile(cfg) and seed_names:
+        blanket = []
+        src = "(غير معروف)"
+        pat_re = re.compile(
+            r"^-keep\S*\s+(?:public\s+|final\s+|abstract\s+)*(?:class|interface|enum)?\s*"
+            r"([\w.$]*?)\*+[\w.$]*\s*\{\s*\*\s*;?\s*\}?\s*$")
+        for line in cfg_lines:
+            s = line.strip()
+            if s.startswith("#"):
+                src = s.lstrip("# ").strip()
+                continue
+            m2 = pat_re.match(s)
+            if not m2:
+                continue
+            prefix = m2.group(1)
+            if len(prefix) < 6:          # نمط فضفاض جداً لا يُنسب لحزمة
+                continue
+            hits = sum(1 for c in seed_names if c.startswith(prefix))
+            if hits:
+                blanket.append((hits, s, src))
+        if blanket:
+            blanket.sort(reverse=True)
+            print("\n=== ثمن القواعد الشاملة (بذور محتجَزة) ===")
+            for hits, rule, s in blanket[:6]:
+                pct = 100.0 * hits / max(1, len(seed_names))
+                print("   %6d بذرة (%.1f%%)  %s" % (hits, pct, rule[:72]))
+                print("            ← %s" % s[:100])
+            worst = blanket[0]
+            if 100.0 * worst[0] / max(1, len(seed_names)) >= 25.0:
+                print("::warning::قاعدة شاملة واحدة تحتجز %.0f%% من البذور. "
+                      "إن كانت من مكتبة لا تستعملها، فحذف المكتبة يرفع النسبة أكثر "
+                      "من أي ضبط آخر." % (100.0 * worst[0] / len(seed_names)))
 
     # ── 3) و(4) داخل الـAAB ────────────────────────────────────────────
     aab = None

@@ -96,12 +96,34 @@ else:
 if "firebase-bom" in app:
     print("✓ App build.gradle: Firebase BoM موجود مسبقاً")
 else:
+    # [R8-FIREBASE-AUTH] حُذفت firebase-auth عمداً. وهذا ليس تنظيفاً
+    # تجميلياً بل إصلاح السبب الأول لانخفاض نسبة تحسين DEX:
+    #
+    #   • القياس على بناء 18 نوفمبر: 71,739 بذرة محفوظة، منها 63,574
+    #     (88.6%) في com.google.android.gms.internal وحدها.
+    #   • مصدرها قاعدة واحدة تشحنها firebase-auth في consumerProguardFiles:
+    #         -keep class com.google.android.gms.internal.** { *; }
+    #     وتعليقها في التهيئة المدموجة يقولها صراحةً: «All the firebase-auth
+    #     classes are proguarded into com.google.android.gms.internal.
+    #     firebase-auth-api*». لكن النمط ** يبتلع الفضاء كلّه — بما فيه
+    #     com.google.android.gms.internal.ads.* أي أحشاء AdMob بأسرها.
+    #   • وتجرّ معها reCAPTCHA (4,197 بذرة) وplay-core-integrity (487)،
+    #     وكلتاهما لمصادقة الهاتف في Firebase Auth ولا شأن لهما باللعبة.
+    #
+    # ولماذا حذفها آمن: التطبيق لا يمسّ Firebase Auth لا من Java ولا من
+    # JavaScript. الويب يستورد firebase-app و firebase-analytics و
+    # firebase-database فقط من gstatic، وصفر إشارة إلى firebase-auth أو
+    # getAuth في الشيفرة كلّها. والدخول بجوجل يمرّ عبر Supabase OAuth
+    # بإضافة Browser، لا عبر Firebase. و firebase-database لا تعتمد عليها
+    # (تعتمد firebase-auth-interop وهي تأتي وحدها).
+    #
+    # ⚠️ إن أضفتَ يوماً مصادقة Firebase أصلية، أعِد السطر — واعلم أن
+    #    النسبة ستهبط ثانيةً، وهذا ثمنها.
     firebase_deps = (
         "\n    // Firebase BoM\n"
         "    implementation platform('com.google.firebase:firebase-bom:33.7.0')\n"
         "    implementation 'com.google.firebase:firebase-analytics'\n"
         "    implementation 'com.google.firebase:firebase-database'\n"
-        "    implementation 'com.google.firebase:firebase-auth'\n"
     )
     if "dependencies {" in app:
         app = re.sub(r'(dependencies \{)', r'\1' + firebase_deps, app, count=1)
